@@ -1,0 +1,40 @@
+site_name: Anovos Docs
+site_url: https://docs.anovos.ai
+theme:
+  name: material
+  logo: assets/logo.png
+  custom_dir: overrides
+  footer_logo: assets/logo.png
+  favicon: assets/favicon.png
+  palette:
+    - scheme: default
+      toggle:
+        icon: material/lightbulb-outline
+        name: Switch to dark mode
+        primary: deep purple
+    - scheme: slate 
+      toggle:
+        icon: material/lightbulb
+        name: Switch to light mode
+extra_css:
+  - stylesheets/extra.css
+
+nav:
+  - Home: index.md
+  - About: about.md
+  - Contribute:
+    - Welcome: contrib/index.md
+    - Contributing to Anovos: contrib/anovos.md
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/anovos
+    - icon: fontawesome/brands/slack
+      link: https://blank.com
+    - icon: fontawesome/brands/twitter
+      link: https://twitter.com/anovos
+
+google_analytics:
+  - UA-52258647-20
+  - auto
