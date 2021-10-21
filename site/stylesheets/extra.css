@@ -112,7 +112,7 @@ pre, code, kbd {
 }
 
 @media screen and (max-width: 76.1875em) {
-    .nav .nav-top {
+    .nav .nav-items {
         margin-right: 5%;
     }
 }
@@ -123,7 +123,7 @@ pre, code, kbd {
         padding-top: 20px
     }
 
-    .nav .nav-top {
+    .nav .nav-items {
         overflow-y: auto;
         white-space: nowrap;
         width: 100%;
