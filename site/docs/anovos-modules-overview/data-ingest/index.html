@@ -1,0 +1,807 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="canonical" href="https://docs.anovos.ai/docs/anovos-modules-overview/data-ingest/">
+      
+      <link rel="icon" href="../../../assets/favicon.png">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-7.3.4">
+    
+    
+      
+        <title>Data Ingest - Anovos Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.db9e7362.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.3f5d1f46.min.css">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
+      
+    
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+    
+    
+      
+  
+
+
+
+  
+  
+
+
+
+  <script>window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga("create","UA-52258647-20","auto"),ga("set","anonymizeIp",!0),ga("send","pageview"),document.addEventListener("DOMContentLoaded",function(){document.forms.search&&document.forms.search.query.addEventListener("blur",function(){var e;this.value&&(e=document.location.pathname,ga("send","pageview",e+"?q="+this.value))}),"undefined"!=typeof location$&&location$.subscribe(function(e){ga("send","pageview",e.pathname)})})</script>
+  <script async src="https://www.google-analytics.com/analytics.js"></script>
+
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="" data-md-color-accent="">
+  
+    
+    <script>function __prefix(e){return new URL("../../..",location).pathname+"."+e}function __get(e,t=localStorage){return JSON.parse(t.getItem(__prefix(e)))}</script>
+    
+      <script>var palette=__get("__palette");if(null!==palette&&"object"==typeof palette.color)for(var key in palette.color)document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#module-anovosdata_ingest" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<header id="site-header">
+  <!-- Button to open drawer -->
+  <nav id="nav-main" class="nav">
+    <div class="md-grid nav-grid-container">
+      <section class="md-grid grid-x row align-right nav-grid-section">
+        <a aria-current="page" class="logo" href="https://docs.anovos.io/">
+          <img src="/assets/anovos-logo.svg" alt="Anovos Logo">
+        </a>
+				<ul class="nav-items">
+					<li class="">
+						<a href="/docs/getting-started/index.md">Get Started</a>
+					</li>
+					<li class="active">
+						<a href="/">Docs</a>
+					</li>
+					<li class="">
+						<a href="https://">Tutorials</a>
+					</li>
+					<li class="last-nav-item">
+						<a href="community/contributing//">Community</a>
+					</li>
+				</ul>
+				<ul class="social-icons">
+					<li class="pre">
+						<a href="https://github.com/anovos/">
+							<i class="fa fa-github"></i>
+						</a>
+					</li>
+					<li class="pre">
+						<a href="https://twitter.com/anovos/">
+							<i class="fa fa-twitter"></i>
+						</a>
+					</li>
+					<li class="pre">
+						<a href="https://go.mlops.community/slack">
+							<i class="fa fa-slack"></i>
+						</a>
+					</li>
+					<li class="pre">
+						<a href="https://www.youtube.com">
+							<i class="fa fa-youtube-play"></i>
+						</a>
+					</li>
+				</ul>
+      </section>
+    </div>
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+    <!-- Site title -->
+    <label class="md-nav__title" for="__drawer">
+        <a href="https://docs.anovos.ai/" title="Anovos Docs" class="md-nav__button md-logo" aria-label="Anovos Docs">
+        </a>
+        Anovos Docs
+    </label>
+    <!-- Repository containing source -->
+    
+    <!-- Render item list -->
+    <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+        
+        
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+        
+        
+        
+        
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../about/" class="md-nav__link">
+        About
+      </a>
+    </li>
+  
+
+        
+        
+        
+        
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/" class="md-nav__link">
+        Getting Started
+      </a>
+    </li>
+  
+
+        
+        
+        
+        
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="nav-4">
+          Community
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Community" data-md-level="1">
+        <label class="md-nav__title" for="nav-4">
+          <span class="md-nav__icon md-icon"></span>
+          Community
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../community/contributing/" class="md-nav__link">
+        Contributing to Anovos
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../community/code-of-conduct/" class="md-nav__link">
+        Code of Conduct
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../community/communication/" class="md-nav__link">
+        Communication
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../community/license/" class="md-nav__link">
+        License
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+        
+        
+        
+        
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="nav-5">
+          In-Depth Docs
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="In-Depth Docs" data-md-level="1">
+        <label class="md-nav__title" for="nav-5">
+          <span class="md-nav__icon md-icon"></span>
+          In-Depth Docs
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../anovos-intro/" class="md-nav__link">
+        Anovos Intro
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../anovos-roadmap/" class="md-nav__link">
+        Anovos Product Roadmap
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../anovos-potential-workflow/" class="md-nav__link">
+        Anovos Potential Workflow
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-5_4" type="checkbox" id="nav-5_4" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="nav-5_4">
+          Anovos Modules
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Anovos Modules" data-md-level="2">
+        <label class="md-nav__title" for="nav-5_4">
+          <span class="md-nav__icon md-icon"></span>
+          Anovos Modules
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../overview/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Data Ingest
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Data Ingest
+      </a>
+      
+        
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#module-anovosdata_ingest" class="md-nav__link">
+    Module ANOVOS.data_ingest
+  </a>
+  
+    <nav class="md-nav" aria-label="Module ANOVOS.data_ingest">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#read_dataset" class="md-nav__link">
+    read_dataset
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#write_dataset" class="md-nav__link">
+    write_dataset
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#concatenate_dataset" class="md-nav__link">
+    concatenate_dataset
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#join_dataset" class="md-nav__link">
+    join_dataset
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#delete_column" class="md-nav__link">
+    delete_column
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#select_column" class="md-nav__link">
+    select_column
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rename_column" class="md-nav__link">
+    rename_column
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recast_column" class="md-nav__link">
+    recast_column
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../data-analyzer/" class="md-nav__link">
+        Data Analyzer
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quality-checker/" class="md-nav__link">
+        Quality Checker
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../association-evaluator/" class="md-nav__link">
+        Association Evaluator
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+        
+    </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#module-anovosdata_ingest" class="md-nav__link">
+    Module ANOVOS.data_ingest
+  </a>
+  
+    <nav class="md-nav" aria-label="Module ANOVOS.data_ingest">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#read_dataset" class="md-nav__link">
+    read_dataset
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#write_dataset" class="md-nav__link">
+    write_dataset
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#concatenate_dataset" class="md-nav__link">
+    concatenate_dataset
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#join_dataset" class="md-nav__link">
+    join_dataset
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#delete_column" class="md-nav__link">
+    delete_column
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#select_column" class="md-nav__link">
+    select_column
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rename_column" class="md-nav__link">
+    rename_column
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recast_column" class="md-nav__link">
+    recast_column
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                  <h1>Data Ingest</h1>
+                
+                <h2 id="module-anovosdata_ingest"><em>Module</em> <strong>ANOVOS.data_ingest</strong></h2>
+<p>This module consists of functions to read the dataset as Spark Dataframe, concatenate/join with other functions (if required), and perform some basic ETL actions such as selecting, deleting, renaming and/or recasting columns. List of functions included in this module are: 
+- read_dataset 
+- write_dataset 
+- concatenate_dataset 
+- join_dataset 
+- delete_column 
+- select_column 
+- rename_column 
+- recast_column </p>
+<h3 id="read_dataset">read_dataset</h3>
+<p>This function reads the input data path and return a Spark Dataframe. Under the hood, this function is based on generic Load functionality of Spark SQL1.  It requires following arguments: </p>
+<ul>
+<li><strong>file_path</strong>: file (or directory) path where the input data is saved. File path can be a local path or s3 path (when running with AWS cloud services) </li>
+<li><strong>file_type</strong>: file format of the input data. Currently, we support csv, parquet or avro. Avro data source requires an external package to run, which can be configured with spark-submit options (--packages org.apache.spark:spark-avro_2.11:2.4.0). </li>
+<li><strong>file_configs</strong> (optional): Rest of the valid configurations can be passed through this argument in a dictionary format. All the key/value pairs written in this argument are passed as options to DataFrameReader, which is created using SparkSession.read. </li>
+</ul>
+<h3 id="write_dataset">write_dataset</h3>
+<p>This function saves Spark Dataframe in the user provided output path. Like read_dataset, this function is based on generic Save functionality of Spark SQL.  It requires following arguments: </p>
+<ul>
+<li><strong>idf</strong>: Spark Dataframe to be saved </li>
+<li><strong>file_path</strong>: file (or directory) path where the output data is to be saved. File path can be a local path or s3 path (when running with AWS cloud services) </li>
+<li><strong>file_type</strong>: file format of the input data. Currently, we support csv, parquet or avro. Avro data source requires an external package to run, which can be configured with spark-submit options (--packages org.apache.spark:spark-avro_2.11:2.4.0). </li>
+<li><strong>file_configs</strong> (optional): Rest of the valid configuration can be passed through this argument in a dictionary format e.g., repartition, mode, compression, header, delimiter etc. All the key/value pairs written in this argument are passed as options to DataFrameWriter is available using Dataset.write operator. If number of repartitions mentioned through this argument is less than the existing Dataframe partitions, then coalesce operation2 is used instead of repartition operation to make the execution efficient. This is because the coalesce operation doesn’t require any shuffling like repartition which is known to be an expensive step. </li>
+</ul>
+<h3 id="concatenate_dataset">concatenate_dataset</h3>
+<p>This function combines multiple dataframes into a single dataframe. To make the operation efficient, pairwise concatenation is done on the dataframes, instead of adding one dataframe at a time to the bigger dataframe. This function is leveraging union3 functionality of Spark SQL. It requires following arguments: </p>
+<ul>
+<li><strong>*idfs</strong>: Varying number of dataframes to be concatenated </li>
+<li><strong>method_type</strong>: index or name. This argument needs to be entered as a keyword argument. “index” method involves concatenating the dataframes by column index. In case, sequence of column is not fixed among the dataframe, this method should be avoided. “name” method involves concatenating by columns names. 1st dataframe passed under idfs will define the final columns in the concatenated dataframe and it will throw error if any column in 1st dataframe is not available in any of other dataframes. </li>
+</ul>
+<h3 id="join_dataset">join_dataset</h3>
+<p>This function joins multiple dataframes into a single dataframe by a joining key column. To make the operation efficient, pairwise joining is done on the dataframes, instead of joining one dataframe at a time to the bigger dataframe. This function is leveraging join4 functionality of Spark SQL. It requires following arguments: </p>
+<ul>
+<li><strong>*idfs</strong>: Varying number of all dataframes to be joined </li>
+<li><strong>join_cols</strong>: Key column(s) to join all dataframes together. In case of multiple columns to join, they can be passed in a list format or a single text format where different column names are separated by pipe delimiter “|” </li>
+<li><strong>join_type</strong>: “inner”, “full”, “left”, “right”, “left_semi”, “left_anti”</li>
+</ul>
+<h3 id="delete_column">delete_column</h3>
+<p>This function is used to delete specific columns from the input data. It is executed using drop functionality5 of Spark SQL. It is advisable to use this function if number of columns to delete are lesser than number of columns to select, otherwise it is recommended to use select_column. It requires following arguments: </p>
+<ul>
+<li><strong>idf</strong>: Input dataframe </li>
+<li><strong>list_of_cols</strong>: This argument, in a list format, is used to specify the columns which are required to be deleted from the input dataframe. Alternatively, instead of list, columns can be specified in a single text format where different column names are separated by pipe delimiter “|” </li>
+<li><strong>print_impact</strong>: This argument is to compare number of columns before and after the operation. </li>
+</ul>
+<h3 id="select_column">select_column</h3>
+<p>This function is used to select specific columns from the input data. It is executed using select operation6 of spark dataframe. It is advisable to use this function if number of columns to select are lesser than number of columns to drop, otherwise it is recommended to use delete_column. It requires following arguments: </p>
+<ul>
+<li><strong>idf</strong>: Input dataframe </li>
+<li><strong>list_of_cols</strong>: This argument, in a list format, is used to specify the columns which are required to be deleted from the input dataframe. Alternatively, instead of list, columns can be specified in a single text format where different column names are separated by pipe delimiter “|” </li>
+<li><strong>print_impact</strong>: This argument is to compare number of columns before and after the operation. </li>
+</ul>
+<h3 id="rename_column">rename_column</h3>
+<p>This function is used to rename columns of the input data. Multiple columns can be renamed, however, sequence in which they passed as argument is critical and needs to be consistent between list_of_cols and list_of_newcols. It requires following arguments: </p>
+<ul>
+<li><strong>idf</strong>: Input dataframe </li>
+<li><strong>list_of_cols</strong>: This argument, in a list format, is used to specify the columns which are required to be renamed in the input dataframe. Alternatively, instead of list, columns can be specified in a single text format where different column names are separated by pipe delimiter “|” </li>
+<li><strong>list_of_newcols</strong>: This argument, in a list format, is used to specify the new column name i.e. first element in list_of_cols will be original column name and corresponding first column in list_of_newcols will be new column name. </li>
+<li><strong>print_impact</strong>: This argument is to compare column names before and after the operation. </li>
+</ul>
+<h3 id="recast_column">recast_column</h3>
+<p>This function is used to modify the datatype of columns. Multiple columns can be casted, however, sequence in which they passed as argument is critical and needs to be consistent between list_of_cols and list_of_dtypes. It requires following arguments: </p>
+<ul>
+<li><strong>idf</strong>: Input dataframe </li>
+<li><strong>list_of_cols</strong>: This argument, in a list format, is used to specify the columns which are required to be recast in the input dataframe. Alternatively, instead of list, columns can be specified in a single text format where different column names are separated by pipe delimiter “|” </li>
+<li><strong>list_of_dtypes</strong>: This argument, in a list format, is used to specify the datatype i.e. first element in list_of_cols will column name and corresponding element in list_of_dtypes will be new datatype such as float, integer, string, double, decimal etc. (case insensitive). </li>
+<li><strong>print_impact</strong>: This argument is to compare schema before and after the operation. </li>
+</ul>
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+        
+      </main>
+      
+        <div id="footer-wrapper" class="middle">
+    <div class="container" id="footer-container">
+        <div class="row">
+            <div class="col-12">
+                <nav id="nav-footer">
+                    <ul>
+                        <li><a href="/community/contributor" title="">Contributor Guide</a></li>
+                        <li><a href="/community/license/" title="">License</a></li>
+                        <li><a href="/community/code-of-conduct/" title="">Code of Coduct</a></li>
+                        
+                    </ul>
+                </nav>
+                <p>
+                    © 2021 <a href="https://www.anovos.ai">Anovos</a>. All right reserved
+                </p>
+                <p>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "../../..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../assets/javascripts/workers/search.8397ff9e.min.js", "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.1e84347e.min.js"></script>
+      
+    
+  </body>
+</html>

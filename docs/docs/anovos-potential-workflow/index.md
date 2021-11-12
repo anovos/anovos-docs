@@ -1,0 +1,3 @@
+Anovos is designed to support the following end to end machine learning workflow. It can be used to support an organization’s end to end machine learning workflow in two ways, either as a full execution by Anovos or use as per the need of current pipeline set up. For example an organization might have an end to end workflow without some key components provided by Anovos. Those features can be incorporated by simply calling the respective API functions out of Anovos. The following workflow diagram shows the potential ways to use Anovos in an end to end workflow settings.
+
+![](/assets/potential-workflow.png)

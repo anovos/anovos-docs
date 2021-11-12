@@ -1,0 +1,805 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="canonical" href="https://docs.anovos.ai/community/contributing/">
+      
+      <link rel="icon" href="../../assets/favicon.png">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-7.3.4">
+    
+    
+      
+        <title>Contributing to Anovos - Anovos Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.db9e7362.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.3f5d1f46.min.css">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
+      
+    
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    
+      
+  
+
+
+
+  
+  
+
+
+
+  <script>window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga("create","UA-52258647-20","auto"),ga("set","anonymizeIp",!0),ga("send","pageview"),document.addEventListener("DOMContentLoaded",function(){document.forms.search&&document.forms.search.query.addEventListener("blur",function(){var e;this.value&&(e=document.location.pathname,ga("send","pageview",e+"?q="+this.value))}),"undefined"!=typeof location$&&location$.subscribe(function(e){ga("send","pageview",e.pathname)})})</script>
+  <script async src="https://www.google-analytics.com/analytics.js"></script>
+
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="" data-md-color-accent="">
+  
+    
+    <script>function __prefix(e){return new URL("../..",location).pathname+"."+e}function __get(e,t=localStorage){return JSON.parse(t.getItem(__prefix(e)))}</script>
+    
+      <script>var palette=__get("__palette");if(null!==palette&&"object"==typeof palette.color)for(var key in palette.color)document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#getting-started-with-anovos" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<header id="site-header">
+  <!-- Button to open drawer -->
+  <nav id="nav-main" class="nav">
+    <div class="md-grid nav-grid-container">
+      <section class="md-grid grid-x row align-right nav-grid-section">
+        <a aria-current="page" class="logo" href="https://docs.anovos.io/">
+          <img src="/assets/anovos-logo.svg" alt="Anovos Logo">
+        </a>
+				<ul class="nav-items">
+					<li class="">
+						<a href="/docs/getting-started/index.md">Get Started</a>
+					</li>
+					<li class="active">
+						<a href="/">Docs</a>
+					</li>
+					<li class="">
+						<a href="https://">Tutorials</a>
+					</li>
+					<li class="last-nav-item">
+						<a href="community/contributing//">Community</a>
+					</li>
+				</ul>
+				<ul class="social-icons">
+					<li class="pre">
+						<a href="https://github.com/anovos/">
+							<i class="fa fa-github"></i>
+						</a>
+					</li>
+					<li class="pre">
+						<a href="https://twitter.com/anovos/">
+							<i class="fa fa-twitter"></i>
+						</a>
+					</li>
+					<li class="pre">
+						<a href="https://go.mlops.community/slack">
+							<i class="fa fa-slack"></i>
+						</a>
+					</li>
+					<li class="pre">
+						<a href="https://www.youtube.com">
+							<i class="fa fa-youtube-play"></i>
+						</a>
+					</li>
+				</ul>
+      </section>
+    </div>
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+    <!-- Site title -->
+    <label class="md-nav__title" for="__drawer">
+        <a href="https://docs.anovos.ai/" title="Anovos Docs" class="md-nav__button md-logo" aria-label="Anovos Docs">
+        </a>
+        Anovos Docs
+    </label>
+    <!-- Repository containing source -->
+    
+    <!-- Render item list -->
+    <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+        
+        
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+        
+        
+        
+        
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../about/" class="md-nav__link">
+        About
+      </a>
+    </li>
+  
+
+        
+        
+        
+        
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/" class="md-nav__link">
+        Getting Started
+      </a>
+    </li>
+  
+
+        
+        
+        
+        
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="nav-4">
+          Community
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Community" data-md-level="1">
+        <label class="md-nav__title" for="nav-4">
+          <span class="md-nav__icon md-icon"></span>
+          Community
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Contributing to Anovos
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Contributing to Anovos
+      </a>
+      
+        
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#getting-started-with-anovos" class="md-nav__link">
+    Getting Started with Anovos
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-get-involved" class="md-nav__link">
+    How To Get Involved
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#contribute-to-anovos" class="md-nav__link">
+    Contribute to Anovos
+  </a>
+  
+    <nav class="md-nav" aria-label="Contribute to Anovos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#write-thorough-commit-messages" class="md-nav__link">
+    Write Thorough Commit Messages
+  </a>
+  
+    <nav class="md-nav" aria-label="Write Thorough Commit Messages">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#commit-messages" class="md-nav__link">
+    Commit messages
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#report-bugs-using-githubs-issues" class="md-nav__link">
+    Report bugs using GitHub's issues
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#license" class="md-nav__link">
+    License
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../code-of-conduct/" class="md-nav__link">
+        Code of Conduct
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../communication/" class="md-nav__link">
+        Communication
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../license/" class="md-nav__link">
+        License
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+        
+        
+        
+        
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="nav-5">
+          In-Depth Docs
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="In-Depth Docs" data-md-level="1">
+        <label class="md-nav__title" for="nav-5">
+          <span class="md-nav__icon md-icon"></span>
+          In-Depth Docs
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../docs/anovos-intro/" class="md-nav__link">
+        Anovos Intro
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../docs/anovos-roadmap/" class="md-nav__link">
+        Anovos Product Roadmap
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../docs/anovos-potential-workflow/" class="md-nav__link">
+        Anovos Potential Workflow
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-5_4" type="checkbox" id="nav-5_4" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="nav-5_4">
+          Anovos Modules
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Anovos Modules" data-md-level="2">
+        <label class="md-nav__title" for="nav-5_4">
+          <span class="md-nav__icon md-icon"></span>
+          Anovos Modules
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../docs/anovos-modules-overview/overview/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../docs/anovos-modules-overview/data-ingest/" class="md-nav__link">
+        Data Ingest
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../docs/anovos-modules-overview/data-analyzer/" class="md-nav__link">
+        Data Analyzer
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../docs/anovos-modules-overview/quality-checker/" class="md-nav__link">
+        Quality Checker
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../docs/anovos-modules-overview/association-evaluator/" class="md-nav__link">
+        Association Evaluator
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+        
+    </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#getting-started-with-anovos" class="md-nav__link">
+    Getting Started with Anovos
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-get-involved" class="md-nav__link">
+    How To Get Involved
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#contribute-to-anovos" class="md-nav__link">
+    Contribute to Anovos
+  </a>
+  
+    <nav class="md-nav" aria-label="Contribute to Anovos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#write-thorough-commit-messages" class="md-nav__link">
+    Write Thorough Commit Messages
+  </a>
+  
+    <nav class="md-nav" aria-label="Write Thorough Commit Messages">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#commit-messages" class="md-nav__link">
+    Commit messages
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#report-bugs-using-githubs-issues" class="md-nav__link">
+    Report bugs using GitHub's issues
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#license" class="md-nav__link">
+    License
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                  <h1>Contributing to Anovos</h1>
+                
+                <p>Welcome to the Anovos Community! We're excited to bring the immense experience of the Mobilewalla team to the data science community, and we'd love to have you join us! Here you'll find all the details you need to get started as an Anovos contributor.</p>
+<h2 id="getting-started-with-anovos">Getting Started with Anovos</h2>
+<p>Anovos is an open source project that brings automation to the feature engineering process.</p>
+<p>To get Anovos up and running on your local machine, follow the <a href="https://docs.anovos.ai/gettingstarted">Getting Started Guide</a></p>
+<p>All repos, sample data, and notebooks you need are located in the  <a href="https://github.com/anovos">Anovos Github Organization</a></p>
+<h2 id="how-to-get-involved">How To Get Involved</h2>
+<p>We love your input! We want to make contributing to this project as easy and transparent as possible, whether it's:</p>
+<ul>
+<li>Reporting a bug</li>
+<li>Discussing the current state of the code</li>
+<li>Submitting a fix</li>
+<li>Proposing new features</li>
+<li>Testing out new features</li>
+<li>Contributing to the docs</li>
+<li>Giving talks about Anovos at Meetups, conferences and webinars</li>
+</ul>
+<p>The latest information about how to interact with the project maintainers and broader community is kept in <a href="https://github.com/anovos/communication.md">COMMUNICATION.md</a>.</p>
+<h2 id="contribute-to-anovos">Contribute to Anovos</h2>
+<p>Pull requests are the best way to propose changes to the codebase. We use GitHub flow and everything happens through pull requests. We welcome your pull requests; to make it simple, here are the steps to contribute:</p>
+<ul>
+<li>Fork the repo you're updating and create your branch from main.</li>
+<li>If you've added code that should be tested, add tests.</li>
+<li>If you've changed APIs, update the documentation.</li>
+<li>Ensure the test suite passes.</li>
+<li>Issue that pull request!</li>
+</ul>
+<p>Any contributions you make will be under the Apache Software License
+In short, when you submit code changes, your submissions are understood to be under the same Apache License that covers the project. Feel free to contact the maintainers if that's a concern.</p>
+<h3 id="write-thorough-commit-messages">Write Thorough Commit Messages</h3>
+<p>Help reviewers know what you're contributing by writing good commit messages. To standardize how things are done, your first line of your commit is your <em>subject</em>, followed by a blank line, then a message describing what the commit does. We use the following guidelines suggested <a href="https://chris.beams.io/posts/git-commit/">by Chris Beams</a>:</p>
+<h4 id="commit-messages">Commit messages</h4>
+<p>The first line of the commit message is the <em>subject</em>, this should be followed by a blank line and then a message describing the intent and purpose of the commit. These guidelines are based upon a <a href="https://chris.beams.io/posts/git-commit/">post by Chris Beams</a>.</p>
+<p>When you commit, you are accepting our DCO:</p>
+<blockquote>
+<p>Developer Certificate of Origin
+Version 1.1</p>
+<p>Copyright (C) 2004, 2006 The Linux Foundation and its contributors.
+1 Letterman Drive
+Suite D4700
+San Francisco, CA, 94129</p>
+<p>Everyone is permitted to copy and distribute verbatim copies of this
+license document, but changing it is not allowed.</p>
+<p>Developer's Certificate of Origin 1.1</p>
+<p>By making a contribution to this project, I certify that:</p>
+<p>(a) The contribution was created in whole or in part by me and I have the right to submit it under the open source license indicated in the file; or</p>
+<p>(b) The contribution is based upon previous work that, to the best of my knowledge, is covered under an appropriate open source license and I have the right under that license to submit that work with modifications, whether created in whole or in part by me, under the same open source license (unless I am permitted to submit under a different license), as indicated in the file; or</p>
+<p>(c) The contribution was provided directly to me by some other person who certified (a), (b) or (c) and I have not modified it.</p>
+<p>(d) I understand and agree that this project and the contribution are public and that a record of the contribution (including all personal information I submit with it, including my sign-off) is maintained indefinitely and may be redistributed consistent with this project or the open source license(s) involved.</p>
+</blockquote>
+<ul>
+<li>When you run <code>git commit</code> make sure you sign-off the commit by typing <code>git commit --signoff</code> or <code>git commit -s</code></li>
+<li>The commit subject-line should start with an uppercase letter</li>
+<li>The commit subject-line should not exceed 72 characters in length</li>
+<li>The commit subject-line should not end with punctuation (., etc)</li>
+</ul>
+<p>Note: please do not use the GitHub suggestions feature, since it will not allow your commits to be signed-off.</p>
+<p>When giving a commit body, be sure to:</p>
+<ul>
+<li>Leave a blank line after the subject-line</li>
+<li>Make sure all lines are wrapped to 72 characters</li>
+</ul>
+<p>Here's an example that would be accepted:</p>
+<pre><code>Add luke to the contributors' _index.md file
+
+We need to add luke to the contributors' _index.md file as a contributor.
+
+Signed-off-by: Hans &lt;hans@anovos.ai&gt;
+</code></pre>
+<p>Some invalid examples:</p>
+<pre><code>(feat) Add page about X to documentation
+</code></pre>
+<blockquote>
+<p>This example does not follow the convention by adding a custom scheme of <code>(feat)</code></p>
+</blockquote>
+<pre><code>Update the documentation for page X so including fixing A, B, C and D and F.
+</code></pre>
+<blockquote>
+<p>This example will be truncated in the GitHub UI and via <code>git log --oneline</code></p>
+</blockquote>
+<p>If you would like to ammend your commit follow this guide: <a href="https://git-scm.com/book/en/v2/Git-Tools-Rewriting-History">Git: Rewriting History</a></p>
+<h3 id="report-bugs-using-githubs-issues">Report bugs using GitHub's issues</h3>
+<p>All bugs are tracked using Github issues. If you find something that needs to be addressed, open a new issue; it's easy!</p>
+<h2 id="license">License</h2>
+<p>By contributing, you agree that your contributions will be licensed under its Apache License, adhere to the Developer Certificate of Origin, and adhere to our code of conduct.</p>
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+        
+      </main>
+      
+        <div id="footer-wrapper" class="middle">
+    <div class="container" id="footer-container">
+        <div class="row">
+            <div class="col-12">
+                <nav id="nav-footer">
+                    <ul>
+                        <li><a href="/community/contributor" title="">Contributor Guide</a></li>
+                        <li><a href="/community/license/" title="">License</a></li>
+                        <li><a href="/community/code-of-conduct/" title="">Code of Coduct</a></li>
+                        
+                    </ul>
+                </nav>
+                <p>
+                    © 2021 <a href="https://www.anovos.ai">Anovos</a>. All right reserved
+                </p>
+                <p>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "../..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../assets/javascripts/workers/search.8397ff9e.min.js", "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.1e84347e.min.js"></script>
+      
+    
+  </body>
+</html>

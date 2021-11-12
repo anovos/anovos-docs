@@ -2,12 +2,77 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://docs.anovos.ai/</loc>
-         <lastmod>2021-10-19</lastmod>
+         <lastmod>2021-11-12</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://docs.anovos.ai/%20about/</loc>
-         <lastmod>2021-10-19</lastmod>
+         <loc>https://docs.anovos.ai/about/</loc>
+         <lastmod>2021-11-12</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://docs.anovos.ai/community/code-of-conduct/</loc>
+         <lastmod>2021-11-12</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://docs.anovos.ai/community/communication/</loc>
+         <lastmod>2021-11-12</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://docs.anovos.ai/community/contributing/</loc>
+         <lastmod>2021-11-12</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://docs.anovos.ai/community/license/</loc>
+         <lastmod>2021-11-12</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://docs.anovos.ai/docs/anovos-intro/</loc>
+         <lastmod>2021-11-12</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://docs.anovos.ai/docs/anovos-modules-overview/association-evaluator/</loc>
+         <lastmod>2021-11-12</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://docs.anovos.ai/docs/anovos-modules-overview/data-analyzer/</loc>
+         <lastmod>2021-11-12</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://docs.anovos.ai/docs/anovos-modules-overview/data-ingest/</loc>
+         <lastmod>2021-11-12</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://docs.anovos.ai/docs/anovos-modules-overview/overview/</loc>
+         <lastmod>2021-11-12</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://docs.anovos.ai/docs/anovos-modules-overview/quality-checker/</loc>
+         <lastmod>2021-11-12</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://docs.anovos.ai/docs/anovos-potential-workflow/</loc>
+         <lastmod>2021-11-12</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://docs.anovos.ai/docs/anovos-roadmap/</loc>
+         <lastmod>2021-11-12</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://docs.anovos.ai/getting-started/</loc>
+         <lastmod>2021-11-12</lastmod>
          <changefreq>daily</changefreq>
     </url>
 </urlset>

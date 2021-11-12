@@ -21,10 +21,24 @@ extra_css:
 
 nav:
   - Home: index.md
-  - About: about.md
-  - Contribute:
-    - Welcome: contrib/index.md
-    - Contributing to Anovos: contrib/anovos.md
+  - About: about/index.md
+  - Getting Started: getting-started/index.md
+  - Community:
+    - Contributing to Anovos: community/contributing/index.md
+    - Code of Conduct: community/code-of-conduct/index.md
+    - Communication: community/communication/index.md
+    - License: community/license/index.md
+  - In-Depth Docs: 
+    - Anovos Intro: docs/anovos-intro/index.md
+    - Anovos Product Roadmap: docs/anovos-roadmap/index.md
+    - Anovos Potential Workflow: docs/anovos-potential-workflow/index.md
+    - Anovos Modules: 
+      - Overview: docs/anovos-modules-overview/overview/index.md
+      - Data Ingest: docs/anovos-modules-overview/data-ingest/index.md
+      - Data Analyzer: docs/anovos-modules-overview/data-analyzer/index.md
+      - Quality Checker: docs/anovos-modules-overview/quality-checker/index.md
+      - Association Evaluator: docs/anovos-modules-overview/association-evaluator/index.md
+
 
 extra:
   social:
