@@ -1,0 +1,969 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="canonical" href="https://anovos.github.io/anovos-docs/docs/data-reports/html-report/">
+      
+      <link rel="icon" href="../../../assets/favicon.png">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-7.3.4">
+    
+    
+      
+        <title>HTML Report - Anovos Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.db9e7362.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.3f5d1f46.min.css">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
+      
+    
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+    
+    
+      
+  
+
+
+
+  
+  
+
+
+
+  <script>window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga("create","UA-52258647-20","auto"),ga("set","anonymizeIp",!0),ga("send","pageview"),document.addEventListener("DOMContentLoaded",function(){document.forms.search&&document.forms.search.query.addEventListener("blur",function(){var e;this.value&&(e=document.location.pathname,ga("send","pageview",e+"?q="+this.value))}),"undefined"!=typeof location$&&location$.subscribe(function(e){ga("send","pageview",e.pathname)})})</script>
+  <script async src="https://www.google-analytics.com/analytics.js"></script>
+
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="" data-md-color-accent="">
+  
+    
+    <script>function __prefix(e){return new URL("../../..",location).pathname+"."+e}function __get(e,t=localStorage){return JSON.parse(t.getItem(__prefix(e)))}</script>
+    
+      <script>var palette=__get("__palette");if(null!==palette&&"object"==typeof palette.color)for(var key in palette.color)document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#executive-summary" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<header id="site-header">
+  <!-- Button to open drawer -->
+  <nav id="nav-main" class="nav">
+    <div class="md-grid nav-grid-container">
+      <section class="md-grid grid-x row align-right nav-grid-section">
+        <a aria-current="page" class="logo" href="https://docs.anovos.io/">
+          <img src="https://anovos.github.io/anovos-docs/assets/logo.png" alt="Anovos Logo">
+        </a>
+				<ul class="nav-items">
+					<li class="">
+						<a href="getting-started/index.md">Get Started</a>
+					</li>
+					<li class="active">
+						<a href="/">Docs</a>
+					</li>
+					<li class="last-nav-item">
+						<a href=".../community/contributing/">Community</a>
+					</li>
+				</ul>
+				<ul class="social-icons">
+					<li class="pre">
+						<a href="https://github.com/anovos/">
+							<i class="fa fa-github"></i>
+						</a>
+					</li>
+					<li class="pre">
+						<a href="https://twitter.com/anovos/">
+							<i class="fa fa-twitter"></i>
+						</a>
+					</li>
+					<li class="pre">
+						<a href="https://go.mlops.community/slack">
+							<i class="fa fa-slack"></i>
+						</a>
+					</li>
+					<li class="pre">
+						<a href="https://www.youtube.com">
+							<i class="fa fa-youtube-play"></i>
+						</a>
+					</li>
+				</ul>
+      </section>
+    </div>
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+    <!-- Site title -->
+    <label class="md-nav__title" for="__drawer">
+        <a href="https://anovos.github.io/anovos-docs/" title="Anovos Docs" class="md-nav__button md-logo" aria-label="Anovos Docs">
+        </a>
+        Anovos Docs
+    </label>
+    <!-- Repository containing source -->
+    
+    <!-- Render item list -->
+    <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+        
+        
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+        
+        
+        
+        
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../about/" class="md-nav__link">
+        About
+      </a>
+    </li>
+  
+
+        
+        
+        
+        
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/" class="md-nav__link">
+        Getting Started
+      </a>
+    </li>
+  
+
+        
+        
+        
+        
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="nav-4">
+          Community
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Community" data-md-level="1">
+        <label class="md-nav__title" for="nav-4">
+          <span class="md-nav__icon md-icon"></span>
+          Community
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../community/contributing/" class="md-nav__link">
+        Contributing to Anovos
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../community/code-of-conduct/" class="md-nav__link">
+        Code of Conduct
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../community/communication/" class="md-nav__link">
+        Communication
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../community/license/" class="md-nav__link">
+        License
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+        
+        
+        
+        
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="nav-5">
+          In-Depth Docs
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="In-Depth Docs" data-md-level="1">
+        <label class="md-nav__title" for="nav-5">
+          <span class="md-nav__icon md-icon"></span>
+          In-Depth Docs
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../anovos-intro/" class="md-nav__link">
+        Anovos Intro
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../anovos-roadmap/" class="md-nav__link">
+        Anovos Product Roadmap
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../anovos-potential-workflow/" class="md-nav__link">
+        Anovos Potential Workflow
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-5_4" type="checkbox" id="nav-5_4" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="nav-5_4">
+          Anovos Modules
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Anovos Modules" data-md-level="2">
+        <label class="md-nav__title" for="nav-5_4">
+          <span class="md-nav__icon md-icon"></span>
+          Anovos Modules
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../anovos-modules-overview/overview/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../anovos-modules-overview/data-ingest/" class="md-nav__link">
+        Data Ingest
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../anovos-modules-overview/data-analyzer/" class="md-nav__link">
+        Data Analyzer
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../anovos-modules-overview/quality-checker/" class="md-nav__link">
+        Quality Checker
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../anovos-modules-overview/association-evaluator/" class="md-nav__link">
+        Association Evaluator
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../anovos-modules-overview/data_drift_and_stability_index/" class="md-nav__link">
+        Data Drift and Stability Index
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../anovos-modules-overview/data_transformer/" class="md-nav__link">
+        Data Transformers
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-5_5" type="checkbox" id="nav-5_5" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="nav-5_5">
+          Data Reports
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Data Reports" data-md-level="2">
+        <label class="md-nav__title" for="nav-5_5">
+          <span class="md-nav__icon md-icon"></span>
+          Data Reports
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../overview/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../intermediate-report-data-generation/" class="md-nav__link">
+        Intermediate Report Data Generation
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../final-report-generation/" class="md-nav__link">
+        Final Report Generation
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          HTML Report
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        HTML Report
+      </a>
+      
+        
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#executive-summary" class="md-nav__link">
+    Executive Summary
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#wiki" class="md-nav__link">
+    Wiki
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#descriptive-statistics" class="md-nav__link">
+    Descriptive Statistics
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quality-check" class="md-nav__link">
+    Quality Check
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#attribute-associations" class="md-nav__link">
+    Attribute Associations
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-drift-data-stability" class="md-nav__link">
+    Data Drift &amp; Data Stability
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../anovos-on-aws-emr/getting-started/" class="md-nav__link">
+        Anovos on AWS EMR
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../anovos-scale-testing/overview/" class="md-nav__link">
+        Anovos Scale Testing
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+        
+    </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#executive-summary" class="md-nav__link">
+    Executive Summary
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#wiki" class="md-nav__link">
+    Wiki
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#descriptive-statistics" class="md-nav__link">
+    Descriptive Statistics
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quality-check" class="md-nav__link">
+    Quality Check
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#attribute-associations" class="md-nav__link">
+    Attribute Associations
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-drift-data-stability" class="md-nav__link">
+    Data Drift &amp; Data Stability
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                  <h1>HTML Report</h1>
+                
+                <p>The final output is generated in form of HTML report. This has 6 sections viz. Executive Summary, Wiki, Descriptive Statistics, Quality Check, Attribute Associations, Data Drift &amp; Data Stability at most which can be seen basis user input. We’ve tried to detail each section based on the analysis performed referring to a publicly available dataset.</p>
+<h3 id="executive-summary">Executive Summary</h3>
+<p><img alt="" src="https://anovos.github.io/anovos-docs/assets/html-reports/executive-report-1.png" /></p>
+<p>The <strong>"Executive Summary"</strong> gives an overall summary of the key statistics from the analyzed data. </p>
+<ul>
+<li><strong>1 &amp; 2</strong> specifies about the dimensions of data &amp; nature of use case whether target variable is involved or not.
+<img alt="" src="https://anovos.github.io/anovos-docs/assets/html-reports/executive-report-2.png" /></li>
+<li><strong>3 &amp; 4</strong> covers the overall view of the data in a nutshell across some of the key metrices. 
+<img alt="" src="https://anovos.github.io/anovos-docs/assets/html-reports/executive-report-3.png" /></li>
+</ul>
+<h3 id="wiki">Wiki</h3>
+<p><img alt="" src="https://anovos.github.io/anovos-docs/assets/html-reports/wiki-1.png" /></p>
+<p>The <strong>"Wiki"</strong> section has two different sections consisting of:</p>
+<ul>
+<li><strong>Data Dictionary</strong>: This section contains the details of the attributes present in the data frame. The user if specifies the attribute wise definition at a specific path, then the details of the same will be populated along with the data type else only the attribute wise datatype will be seen.</li>
+</ul>
+<p><img alt="" src="https://anovos.github.io/anovos-docs/assets/html-reports/wiki-2.png" /></p>
+<ul>
+<li><strong>Metric Dictionary</strong>: Details about the different sections under the report. This could be a quick reference for the user. 
+<img alt="" src="https://anovos.github.io/anovos-docs/assets/html-reports/wiki-3.png" /></li>
+</ul>
+<h3 id="descriptive-statistics">Descriptive Statistics</h3>
+<p><img alt="" src="https://anovos.github.io/anovos-docs/assets/html-reports/descriptive-statistics-1.png" /></p>
+<p>The <strong>Descriptive Statistics</strong> gives specific information about the data elements and their individual. Descriptive Statistics consists of the following modules:</p>
+<ul>
+<li>
+<p><strong>Global Summary</strong>: Details about the data dimensions and the attribute wise information. 
+<img alt="" src="https://anovos.github.io/anovos-docs/assets/html-reports/descriptive-statistics-2.png" /></p>
+</li>
+<li>
+<p><strong>Statistics By Metric Type</strong> includes the following modules:</p>
+<ul>
+<li><strong>Measures of Counts</strong> : Details about the attribute wise count, fill rate, etc. <br />
+<img alt="" src="https://anovos.github.io/anovos-docs/assets/html-reports/descriptive-statistics-3.png" /></li>
+<li><strong>Measures of Central Tendency</strong>: Details about the measurement of central tendency in terms of mean, median, mode.
+<img alt="" src="https://anovos.github.io/anovos-docs/assets/html-reports/descriptive-statistics-4.png" /></li>
+<li><strong>Measures of Cardinality</strong>: Details about the uniqueness in categories for each attribute.
+<img alt="" src="https://anovos.github.io/anovos-docs/assets/html-reports/descriptive-statistics-5.png" /></li>
+<li><strong>Measures of Percentiles</strong>: Indicates the different attribute value associated against the range of percentile cut offs. This helps to understand the spread of attributes. 
+<img alt="" src="https://anovos.github.io/anovos-docs/assets/html-reports/descriptive-statistics-6.png" /></li>
+<li><strong>Measures of Dispersion</strong>:  Explains how much the data is dispersed through metrics like Standard Deviation, Variance, Covariance, IQR and range for each attribute
+<img alt="" src="https://anovos.github.io/anovos-docs/assets/html-reports/descriptive-statistics-7.png" /></li>
+<li><strong>Measures of Shape</strong>: Describe the tail ness of distribution (or pattern) for different attributes through skewness and kurtosis.
+<img alt="" src="https://anovos.github.io/anovos-docs/assets/html-reports/descriptive-statistics-8.png" /></li>
+</ul>
+</li>
+<li>
+<p><strong>Attribute Visuations</strong> includes the following modules:</p>
+<ul>
+<li><strong>Numeric</strong>: Visualize the distributions of Numerical attributes using Histograms
+<img alt="" src="https://anovos.github.io/anovos-docs/assets/html-reports/attribute-visualization-1.png" /></li>
+</ul>
+<p>-<strong>Categorical</strong> - Visualize the distributions of Categorical attributes using Barplot
+<img alt="" src="https://anovos.github.io/anovos-docs/assets/html-reports/attribute-visualization-2.png" /></p>
+</li>
+</ul>
+<h3 id="quality-check">Quality Check</h3>
+<p><img alt="" src="https://anovos.github.io/anovos-docs/assets/html-reports/quality-check-1.png" /></p>
+<p>The <strong>Quality Check</strong> seciont conissts of a qualitative inspection of the data at a row &amp; columnar level. The Quality Check consists of the following modules:</p>
+<ul>
+<li>
+<p><strong>Column Level</strong></p>
+<ul>
+<li>
+<p><strong>Null Columns Detections</strong> – Detect the sparsity of the datasets, e.g., count and percentage of missing value of attributes
+<img alt="" src="https://anovos.github.io/anovos-docs/assets/html-reports/quality-check-2.png" /></p>
+</li>
+<li>
+<p><strong>Outlier Detection</strong> – Used to detect and visualize the outlier present in numerical attributes of the datasets
+<img alt="" src="https://anovos.github.io/anovos-docs/assets/html-reports/quality-check-3.png" /></p>
+</li>
+<li>
+<p><strong>Violin Plot</strong> - Displays the spread of numerical attributes
+<img alt="" src="https://anovos.github.io/anovos-docs/assets/html-reports/quality-check-4.png" /></p>
+</li>
+<li>
+<p><strong>IDness Detection</strong> 
+<img alt="" src="https://anovos.github.io/anovos-docs/assets/html-reports/quality-check-5.png" /></p>
+</li>
+<li>
+<p><strong>Biasedness Detection</strong> 
+<img alt="" src="https://anovos.github.io/anovos-docs/assets/html-reports/quality-check-6.png" /></p>
+</li>
+<li>
+<p><strong>Invalid Entries Detection</strong>
+<img alt="" src="https://anovos.github.io/anovos-docs/assets/html-reports/quality-check-7.png" /></p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Row Level</strong></p>
+<ul>
+<li><strong>Duplicate Detection</strong> – Measure number of rows in the datasets that have same value for each attribute
+<img alt="" src="https://anovos.github.io/anovos-docs/assets/html-reports/quality-check-8.png" /></li>
+<li><strong>NullRows Detection</strong> - Measure the count/percentage of rows which have missing/null attributes
+<img alt="" src="https://anovos.github.io/anovos-docs/assets/html-reports/quality-check-9.png" /></li>
+</ul>
+</li>
+</ul>
+<h3 id="attribute-associations">Attribute Associations</h3>
+<p><img alt="" src="https://anovos.github.io/anovos-docs/assets/html-reports/attribute-association-1.png" /></p>
+<p>Association analysis done for Attributes basis different statistical checks</p>
+<ul>
+<li>
+<p><strong>Association Matrix &amp; Plot</strong> is a Correlation Measure of the strength of relationship among each attribute by finding correlation coefficient having range -1.0 to 1.0. Visualization is shown through heat map to describe the strength of relationship among attributes.
+<img alt="" src="https://anovos.github.io/anovos-docs/assets/html-reports/attribute-association-2.png" /></p>
+</li>
+<li>
+<p><strong>Information Value Computation</strong> is used to rank variables on the basis of their importance. Greater the value of IV higher rthe attribute importance. IV less than 0.02 is not useful for prediction. Bar plot is used to show the significance in descending order.
+<img alt="" src="https://anovos.github.io/anovos-docs/assets/html-reports/attribute-association-3.png" /></p>
+</li>
+<li>
+<p><strong>Information Gain Computation</strong> measures the reduction in entropy by splitting a dataset according to given value of a attribute. Bar plot is used to show the significance in descending order.
+<img alt="" src="https://anovos.github.io/anovos-docs/assets/html-reports/attribute-association-4.png" /></p>
+</li>
+<li>
+<p><strong>Variable Clustering</strong> divides the numerical attributes into disjoint or hierarchical clusters based on linear relationship of attributes. 
+<img alt="" src="https://anovos.github.io/anovos-docs/assets/html-reports/attribute-association-5.png" /></p>
+</li>
+<li>
+<p><strong>Attribute to Target Association</strong> determines the event rate trend across different attribute categories<br>
+    <strong>Numeric</strong>
+    <img alt="" src="https://anovos.github.io/anovos-docs/assets/html-reports/attribute-association-6.png" />
+    <strong>Categorical</strong>
+    <img alt="" src="https://anovos.github.io/anovos-docs/assets/html-reports/attribute-association-7.png" /></p>
+</li>
+</ul>
+<h3 id="data-drift-data-stability">Data Drift &amp; Data Stability</h3>
+<ul>
+<li><strong>Data Drift Analysis</strong></li>
+</ul>
+<p><img alt="" src="https://anovos.github.io/anovos-docs/assets/html-reports/data-drift-analytics-1.png" /></p>
+<p><img alt="" src="https://anovos.github.io/anovos-docs/assets/html-reports/data-drift-analytics-2.png" /></p>
+<ul>
+<li><strong>Overall Data Health</strong></li>
+</ul>
+<p><img alt="" src="https://anovos.github.io/anovos-docs/assets/html-reports/data-drift-analytics-3.png" /></p>
+<ul>
+<li><strong>Data Stability Analysis</strong></li>
+</ul>
+<p><img alt="" src="https://anovos.github.io/anovos-docs/assets/html-reports/data-drift-analytics-4.png" /></p>
+<p><img alt="" src="https://anovos.github.io/anovos-docs/assets/html-reports/data-drift-analytics-5.png" /></p>
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+        
+      </main>
+      
+        <div id="footer-wrapper" class="middle">
+    <div class="container" id="footer-container">
+        <div class="row">
+            <div class="col-12">
+                <nav id="nav-footer">
+                    <ul>
+                        <li><a href="/community/contributor" title="">Contributor Guide</a></li>
+                        <li><a href="/community/license/" title="">License</a></li>
+                        <li><a href="/community/code-of-conduct/" title="">Code of Coduct</a></li>
+                        
+                    </ul>
+                </nav>
+                <p>
+                    © 2021 <a href="https://www.anovos.ai">Anovos</a>. All right reserved
+                </p>
+                <p>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "../../..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../assets/javascripts/workers/search.8397ff9e.min.js", "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.1e84347e.min.js"></script>
+      
+    
+  </body>
+</html>

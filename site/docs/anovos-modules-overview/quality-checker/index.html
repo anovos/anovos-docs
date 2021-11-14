@@ -9,7 +9,7 @@
       
       
       
-        <link rel="canonical" href="https://docs.anovos.ai/docs/anovos-modules-overview/quality-checker/">
+        <link rel="canonical" href="https://anovos.github.io/anovos-docs/docs/anovos-modules-overview/quality-checker/">
       
       <link rel="icon" href="../../../assets/favicon.png">
       <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-7.3.4">
@@ -97,20 +97,17 @@
     <div class="md-grid nav-grid-container">
       <section class="md-grid grid-x row align-right nav-grid-section">
         <a aria-current="page" class="logo" href="https://docs.anovos.io/">
-          <img src="/assets/anovos-logo.svg" alt="Anovos Logo">
+          <img src="https://anovos.github.io/anovos-docs/assets/logo.png" alt="Anovos Logo">
         </a>
 				<ul class="nav-items">
 					<li class="">
-						<a href="/docs/getting-started/index.md">Get Started</a>
+						<a href="getting-started/index.md">Get Started</a>
 					</li>
 					<li class="active">
 						<a href="/">Docs</a>
 					</li>
-					<li class="">
-						<a href="https://">Tutorials</a>
-					</li>
 					<li class="last-nav-item">
-						<a href="community/contributing//">Community</a>
+						<a href=".../community/contributing/">Community</a>
 					</li>
 				</ul>
 				<ul class="social-icons">
@@ -158,7 +155,7 @@
                     <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
     <!-- Site title -->
     <label class="md-nav__title" for="__drawer">
-        <a href="https://docs.anovos.ai/" title="Anovos Docs" class="md-nav__button md-logo" aria-label="Anovos Docs">
+        <a href="https://anovos.github.io/anovos-docs/" title="Anovos Docs" class="md-nav__button md-logo" aria-label="Anovos Docs">
         </a>
         Anovos Docs
     </label>
@@ -528,6 +525,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#invalidentries_detection" class="md-nav__link">
+    invalidEntries_detection
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -556,8 +560,153 @@
 
             
           
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../data_drift_and_stability_index/" class="md-nav__link">
+        Data Drift and Stability Index
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../data_transformer/" class="md-nav__link">
+        Data Transformers
+      </a>
+    </li>
+  
+
+            
+          
         </ul>
       </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-5_5" type="checkbox" id="nav-5_5" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="nav-5_5">
+          Data Reports
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Data Reports" data-md-level="2">
+        <label class="md-nav__title" for="nav-5_5">
+          <span class="md-nav__icon md-icon"></span>
+          Data Reports
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../data-reports/overview/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../data-reports/intermediate-report-data-generation/" class="md-nav__link">
+        Intermediate Report Data Generation
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../data-reports/final-report-generation/" class="md-nav__link">
+        Final Report Generation
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../data-reports/html-report/" class="md-nav__link">
+        HTML Report
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../anovos-on-aws-emr/getting-started/" class="md-nav__link">
+        Anovos on AWS EMR
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../anovos-scale-testing/overview/" class="md-nav__link">
+        Anovos Scale Testing
+      </a>
     </li>
   
 
@@ -642,6 +791,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#invalidentries_detection" class="md-nav__link">
+    invalidEntries_detection
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -694,16 +850,32 @@
 <li>print_impact </li>
 </ul>
 <h3 id="nullrows_detection">nullRows_detection</h3>
-<p>This function inspects the row quality and computes number of columns which are missing for a row. This metric is further aggregated to check how many columns are missing  for how many rows (also at % level). Intuition is if too many columns are missing for a row, removing it from the modelling may give better results than relying on its imputed values. Therefore as the part of treatment, rows with missing columns above the specified threshold are removed. This function returns two dataframes in tuple format – 1st dataframe is input dataset after filtering rows with high number of missing columns (if treated) and  2nd dataframe is of schema – null_cols_count, row_count, row_pct, flagged.  </p>
-<pre><code>|null_cols_count|row_count|row_pct|flagged|
-
-+---------------+---------+-------+-------+
-
-|              5|       11| 3.0E-4|      0|
-
-|              7|     1306| 0.0401|      1|
-</code></pre>
-<p>Interpretation: 1306 rows (4.01% of total rows) have 7 missing columns and flagged for removal because null_cols_count is above the threshold. </p>
+<p>This function inspects the row quality and computes number of columns which are missing for a row. This metric is further aggregated to check how many columns are missing for how many rows (also at % level). Intuition is if too many columns are missing for a row, removing it from the modelling may give better results than relying on its imputed values. Therefore as the part of treatment, rows with missing columns above the specified threshold are removed. This function returns two dataframes in tuple format – 1st dataframe is input dataset after filtering rows with high number of missing columns (if treated) and 2nd dataframe is of schema – null_cols_count, row_count, row_pct, flagged.</p>
+<table>
+<thead>
+<tr>
+<th>null_cols_count</th>
+<th>row_count</th>
+<th>row_pct</th>
+<th>flagged</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>5</td>
+<td>11</td>
+<td>3.0E-4</td>
+<td>0</td>
+</tr>
+<tr>
+<td>7</td>
+<td>1306</td>
+<td>0.0401</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<p>Interpretation: 1306 rows (4.01% of total rows) have 7 missing columns and flagged for removal because null_cols_count is above the threshold.</p>
 <ul>
 <li>idf </li>
 <li>list_of_cols </li>
@@ -776,7 +948,7 @@
 <li><strong>stats_mode</strong>: Arguments corresponding to read_dataset function in dictionary format, to read output from measures_of_centralTendency function of stats generator. </li>
 <li><strong>print_impact</strong> </li>
 </ul>
-<p>4.3.7   invalidEntries_detection</p>
+<h3 id="invalidentries_detection">invalidEntries_detection</h3>
 <p>This function checks for certain suspicious patterns in attributes’ values. These suspicious values can be replaced as null and treated as missing. Patterns that are considered for this quality check:</p>
 <ul>
 <li>Missing Values: The function checks for all text strings which directly or indirectly indicate the missing value in an attribute. Currently, we check the following string values - '', ' ', 'nan', 'null', 'na', 'inf', 'n/a', 'not defined', 'none', 'undefined', 'blank'. The function also check for special characters such as ?, *, to name a few.</li>

@@ -1,5 +1,5 @@
 site_name: Anovos Docs
-site_url: https://docs.anovos.ai
+site_url: https://anovos.github.io/anovos-docs/
 theme:
   name: material
   logo: assets/logo.png
@@ -38,6 +38,16 @@ nav:
       - Data Analyzer: docs/anovos-modules-overview/data-analyzer/index.md
       - Quality Checker: docs/anovos-modules-overview/quality-checker/index.md
       - Association Evaluator: docs/anovos-modules-overview/association-evaluator/index.md
+      - Data Drift and Stability Index: docs/anovos-modules-overview/data_drift_and_stability_index/index.md
+      - Data Transformers: docs/anovos-modules-overview/data_transformer/index.md
+    - Data Reports:
+      - Overview: docs/data-reports/overview/index.md
+      - Intermediate Report Data Generation: docs/data-reports/intermediate-report-data-generation/index.md
+      - Final Report Generation: docs/data-reports/final-report-generation/index.md
+      - HTML Report: docs/data-reports/html-report/index.md
+    - Anovos on AWS EMR: docs/anovos-on-aws-emr/getting-started/index.md
+    - Anovos Scale Testing: docs/anovos-scale-testing/overview/index.md
+    
 
 
 extra:

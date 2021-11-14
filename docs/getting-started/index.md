@@ -63,7 +63,7 @@ Note: Kindly ensure the machine has ~15 GB free space atleast when running using
 2. Set docker settings to use atleast 8GB memory and 4+ cores. Below image shows setting docker settings on Docker Desktop:
 
 <p align="center">
-  <img src="/docker_desktop_settings.png" width="800" title="Docker Desktop Settings">
+  <img src="https://anovos.github.io/anovos-docs/assets/docker_desktop_settings.png" width="800" title="Docker Desktop Settings">
 </p>
 
 3. Ensure dockers is successfully installed by executing the following commands to check docker image and docker container respectively:

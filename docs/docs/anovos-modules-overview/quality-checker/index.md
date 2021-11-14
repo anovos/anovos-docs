@@ -34,17 +34,17 @@ As the name suggests, this function detects duplication in the input dataset. Th
 
 ### nullRows_detection 
 
-This function inspects the row quality and computes number of columns which are missing for a row. This metric is further aggregated to check how many columns are missing  for how many rows (also at % level). Intuition is if too many columns are missing for a row, removing it from the modelling may give better results than relying on its imputed values. Therefore as the part of treatment, rows with missing columns above the specified threshold are removed. This function returns two dataframes in tuple format – 1st dataframe is input dataset after filtering rows with high number of missing columns (if treated) and  2nd dataframe is of schema – null_cols_count, row_count, row_pct, flagged.  
+This function inspects the row quality and computes number of columns which are missing for a row. This metric is further aggregated to check how many columns are missing for how many rows (also at % level). Intuition is if too many columns are missing for a row, removing it from the modelling may give better results than relying on its imputed values. Therefore as the part of treatment, rows with missing columns above the specified threshold are removed. This function returns two dataframes in tuple format – 1st dataframe is input dataset after filtering rows with high number of missing columns (if treated) and 2nd dataframe is of schema – null_cols_count, row_count, row_pct, flagged.
 
-    |null_cols_count|row_count|row_pct|flagged| 
+| null_cols_count | row_count | row_pct | flagged |
+| --- | --- | --- | --- |
+| 5 | 11 | 3.0E-4 | 0 |
+| 7 | 1306 | 0.0401 | 1 |
 
-    +---------------+---------+-------+-------+ 
 
-    |              5|       11| 3.0E-4|      0| 
 
-    |              7|     1306| 0.0401|      1| 
+Interpretation: 1306 rows (4.01% of total rows) have 7 missing columns and flagged for removal because null\_cols\_count is above the threshold.
 
-Interpretation: 1306 rows (4.01% of total rows) have 7 missing columns and flagged for removal because null_cols_count is above the threshold. 
 
 - idf 
 - list_of_cols 
@@ -127,7 +127,7 @@ This function returns two dataframes in tuple format – 1st dataframe is input 
 - **stats_mode**: Arguments corresponding to read_dataset function in dictionary format, to read output from measures_of_centralTendency function of stats generator. 
 - **print_impact** 
 
-4.3.7	invalidEntries_detection
+###	invalidEntries_detection
 
 This function checks for certain suspicious patterns in attributes’ values. These suspicious values can be replaced as null and treated as missing. Patterns that are considered for this quality check:
 

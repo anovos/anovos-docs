@@ -1,0 +1,715 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="canonical" href="https://anovos.github.io/anovos-docs/docs/data-reports/final-report-generation/">
+      
+      <link rel="icon" href="../../../assets/favicon.png">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-7.3.4">
+    
+    
+      
+        <title>Final Report Generation - Anovos Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.db9e7362.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.3f5d1f46.min.css">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
+      
+    
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+    
+    
+      
+  
+
+
+
+  
+  
+
+
+
+  <script>window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga("create","UA-52258647-20","auto"),ga("set","anonymizeIp",!0),ga("send","pageview"),document.addEventListener("DOMContentLoaded",function(){document.forms.search&&document.forms.search.query.addEventListener("blur",function(){var e;this.value&&(e=document.location.pathname,ga("send","pageview",e+"?q="+this.value))}),"undefined"!=typeof location$&&location$.subscribe(function(e){ga("send","pageview",e.pathname)})})</script>
+  <script async src="https://www.google-analytics.com/analytics.js"></script>
+
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="" data-md-color-accent="">
+  
+    
+    <script>function __prefix(e){return new URL("../../..",location).pathname+"."+e}function __get(e,t=localStorage){return JSON.parse(t.getItem(__prefix(e)))}</script>
+    
+      <script>var palette=__get("__palette");if(null!==palette&&"object"==typeof palette.color)for(var key in palette.color)document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<header id="site-header">
+  <!-- Button to open drawer -->
+  <nav id="nav-main" class="nav">
+    <div class="md-grid nav-grid-container">
+      <section class="md-grid grid-x row align-right nav-grid-section">
+        <a aria-current="page" class="logo" href="https://docs.anovos.io/">
+          <img src="https://anovos.github.io/anovos-docs/assets/logo.png" alt="Anovos Logo">
+        </a>
+				<ul class="nav-items">
+					<li class="">
+						<a href="getting-started/index.md">Get Started</a>
+					</li>
+					<li class="active">
+						<a href="/">Docs</a>
+					</li>
+					<li class="last-nav-item">
+						<a href=".../community/contributing/">Community</a>
+					</li>
+				</ul>
+				<ul class="social-icons">
+					<li class="pre">
+						<a href="https://github.com/anovos/">
+							<i class="fa fa-github"></i>
+						</a>
+					</li>
+					<li class="pre">
+						<a href="https://twitter.com/anovos/">
+							<i class="fa fa-twitter"></i>
+						</a>
+					</li>
+					<li class="pre">
+						<a href="https://go.mlops.community/slack">
+							<i class="fa fa-slack"></i>
+						</a>
+					</li>
+					<li class="pre">
+						<a href="https://www.youtube.com">
+							<i class="fa fa-youtube-play"></i>
+						</a>
+					</li>
+				</ul>
+      </section>
+    </div>
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+    <!-- Site title -->
+    <label class="md-nav__title" for="__drawer">
+        <a href="https://anovos.github.io/anovos-docs/" title="Anovos Docs" class="md-nav__button md-logo" aria-label="Anovos Docs">
+        </a>
+        Anovos Docs
+    </label>
+    <!-- Repository containing source -->
+    
+    <!-- Render item list -->
+    <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+        
+        
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+        
+        
+        
+        
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../about/" class="md-nav__link">
+        About
+      </a>
+    </li>
+  
+
+        
+        
+        
+        
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/" class="md-nav__link">
+        Getting Started
+      </a>
+    </li>
+  
+
+        
+        
+        
+        
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="nav-4">
+          Community
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Community" data-md-level="1">
+        <label class="md-nav__title" for="nav-4">
+          <span class="md-nav__icon md-icon"></span>
+          Community
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../community/contributing/" class="md-nav__link">
+        Contributing to Anovos
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../community/code-of-conduct/" class="md-nav__link">
+        Code of Conduct
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../community/communication/" class="md-nav__link">
+        Communication
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../community/license/" class="md-nav__link">
+        License
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+        
+        
+        
+        
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="nav-5">
+          In-Depth Docs
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="In-Depth Docs" data-md-level="1">
+        <label class="md-nav__title" for="nav-5">
+          <span class="md-nav__icon md-icon"></span>
+          In-Depth Docs
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../anovos-intro/" class="md-nav__link">
+        Anovos Intro
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../anovos-roadmap/" class="md-nav__link">
+        Anovos Product Roadmap
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../anovos-potential-workflow/" class="md-nav__link">
+        Anovos Potential Workflow
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-5_4" type="checkbox" id="nav-5_4" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="nav-5_4">
+          Anovos Modules
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Anovos Modules" data-md-level="2">
+        <label class="md-nav__title" for="nav-5_4">
+          <span class="md-nav__icon md-icon"></span>
+          Anovos Modules
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../anovos-modules-overview/overview/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../anovos-modules-overview/data-ingest/" class="md-nav__link">
+        Data Ingest
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../anovos-modules-overview/data-analyzer/" class="md-nav__link">
+        Data Analyzer
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../anovos-modules-overview/quality-checker/" class="md-nav__link">
+        Quality Checker
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../anovos-modules-overview/association-evaluator/" class="md-nav__link">
+        Association Evaluator
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../anovos-modules-overview/data_drift_and_stability_index/" class="md-nav__link">
+        Data Drift and Stability Index
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../anovos-modules-overview/data_transformer/" class="md-nav__link">
+        Data Transformers
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-5_5" type="checkbox" id="nav-5_5" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="nav-5_5">
+          Data Reports
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Data Reports" data-md-level="2">
+        <label class="md-nav__title" for="nav-5_5">
+          <span class="md-nav__icon md-icon"></span>
+          Data Reports
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../overview/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../intermediate-report-data-generation/" class="md-nav__link">
+        Intermediate Report Data Generation
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Final Report Generation
+      </a>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../html-report/" class="md-nav__link">
+        HTML Report
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../anovos-on-aws-emr/getting-started/" class="md-nav__link">
+        Anovos on AWS EMR
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../anovos-scale-testing/overview/" class="md-nav__link">
+        Anovos Scale Testing
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+        
+    </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                  <h1>Final Report Generation</h1>
+                
+                <p>This section covers the final execution part where primarily the output generated by the previous step is being fetched upon and structured in the desirable UI layout. </p>
+<p>The primary function dealt here is <strong>anovos_report</strong> which caters to the:</p>
+<ul>
+<li>reading of available data produced from data analyzer module and chart objects as produced by the report preprocessing module</li>
+<li>computation of additional charts based on available data</li>
+<li>populating the reporting layer leveraging an open-sourced python package called datapane.</li>
+<li>capability of producing stand alone reports for individual sections (Descriptive Statistics, Quality Check, Attribute Associations, Data Drift &amp; Stability)</li>
+</ul>
+<p>The following parameters are specified in the function <strong>anovos_report</strong>:</p>
+<ul>
+<li><strong>master_path</strong>: The path which contains the data of intermediate output in terms of json chart objects, csv file (pandas df)</li>
+<li><strong>id_col</strong>: The ID column is accepted to ensure &amp; restrict unnecessary analysis to be performed on the same</li>
+<li><strong>label_col</strong>: Name of label or target column in the input dataset. By default, the label_col is set as blank.</li>
+<li><strong>corr_threshold</strong>: The threshold chosen beyond which the attributes are found to be redundant</li>
+<li><strong>iv_threshold</strong>: The threshold beyond which the attributes are found to be significant in terms of model.</li>
+<li><strong>drift_threshold_model:</strong> The threshold beyond which the attribute can be flagged as 1 or drifted as measured across different drift metrices specified by the user</li>
+<li><strong>dataDict_path</strong>: The path containing the exact name, definition mapping of the attributes. This is eventually used to populate at the report for easy referencing</li>
+<li><strong>metricDict_path</strong>: The path containing the metric dictionary </li>
+<li>**run_type: Option to specify whether the execution happen locally or in EMR way</li>
+<li><strong>final_report_path</strong>: Path where the final report needs to be saved</li>
+</ul>
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+        
+      </main>
+      
+        <div id="footer-wrapper" class="middle">
+    <div class="container" id="footer-container">
+        <div class="row">
+            <div class="col-12">
+                <nav id="nav-footer">
+                    <ul>
+                        <li><a href="/community/contributor" title="">Contributor Guide</a></li>
+                        <li><a href="/community/license/" title="">License</a></li>
+                        <li><a href="/community/code-of-conduct/" title="">Code of Coduct</a></li>
+                        
+                    </ul>
+                </nav>
+                <p>
+                    © 2021 <a href="https://www.anovos.ai">Anovos</a>. All right reserved
+                </p>
+                <p>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "../../..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../assets/javascripts/workers/search.8397ff9e.min.js", "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.1e84347e.min.js"></script>
+      
+    
+  </body>
+</html>
