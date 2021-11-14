@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#step1-installingdownloading-anovos" class="md-skip">
+        <a href="#step-1-installingdownloading-anovos" class="md-skip">
           Skip to content
         </a>
       
@@ -626,22 +626,22 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#step1-installingdownloading-anovos" class="md-nav__link">
-    Step1: Installing/Downloading Anovos
+  <a href="#step-1-installingdownloading-anovos" class="md-nav__link">
+    Step 1: Installing/Downloading Anovos
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#step2-copy-necessary-files-to-aws-s3" class="md-nav__link">
-    Step2: Copy necessary files to AWS S3
+  <a href="#step-2-copy-necessary-files-to-aws-s3" class="md-nav__link">
+    Step 2: Copy necessary files to AWS S3
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#step3-creating-cluster" class="md-nav__link">
-    Step3: Creating Cluster
+  <a href="#step-3-creating-cluster" class="md-nav__link">
+    Step 3: Creating Cluster
   </a>
   
 </li>
@@ -699,22 +699,22 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#step1-installingdownloading-anovos" class="md-nav__link">
-    Step1: Installing/Downloading Anovos
+  <a href="#step-1-installingdownloading-anovos" class="md-nav__link">
+    Step 1: Installing/Downloading Anovos
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#step2-copy-necessary-files-to-aws-s3" class="md-nav__link">
-    Step2: Copy necessary files to AWS S3
+  <a href="#step-2-copy-necessary-files-to-aws-s3" class="md-nav__link">
+    Step 2: Copy necessary files to AWS S3
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#step3-creating-cluster" class="md-nav__link">
-    Step3: Creating Cluster
+  <a href="#step-3-creating-cluster" class="md-nav__link">
+    Step 3: Creating Cluster
   </a>
   
 </li>
@@ -734,14 +734,14 @@
                 
                   <h1>Anovos on AWS EMR</h1>
                 
-                <h3 id="step1-installingdownloading-anovos">Step1: Installing/Downloading Anovos</h3>
+                <h3 id="step-1-installingdownloading-anovos">Step 1: Installing/Downloading Anovos</h3>
 <p>Clone the Anovos Repository on local environment using command:</p>
 <p><code>git clone https://github.com/anovos/anovos.git</code>
 or 
 <code>pip3 install "git+https://github.com/anovos/anovos.git"</code></p>
 <p>After cloning, go to anovos directory and execute the following command to clean and build the latest modules in dist folder:</p>
 <p><code>make clean build</code></p>
-<h3 id="step2-copy-necessary-files-to-aws-s3">Step2: Copy necessary files to AWS S3</h3>
+<h3 id="step-2-copy-necessary-files-to-aws-s3">Step 2: Copy necessary files to AWS S3</h3>
 <p>Copy the following files to AWS S3:</p>
 <ul>
 <li><code>dist/anovos.zip</code><ul>
@@ -769,7 +769,7 @@ or
 </ul>
 <p>AWS copy command:
 <code>aws s3 cp --recursive  &lt;local file path&gt; &lt;s3 path&gt; --profile  &lt;profile name&gt;</code></p>
-<h2 id="step3-creating-cluster">Step3: Creating Cluster</h2>
+<h2 id="step-3-creating-cluster">Step 3: Creating Cluster</h2>
 <ul>
 <li>
 <p>Software Configuration </p>
