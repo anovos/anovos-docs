@@ -2,117 +2,117 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://anovos.github.io/anovos-docs/</loc>
-         <lastmod>2021-11-14</lastmod>
+         <lastmod>2021-11-15</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://anovos.github.io/anovos-docs/about/</loc>
-         <lastmod>2021-11-14</lastmod>
+         <lastmod>2021-11-15</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://anovos.github.io/anovos-docs/community/code-of-conduct/</loc>
-         <lastmod>2021-11-14</lastmod>
+         <lastmod>2021-11-15</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://anovos.github.io/anovos-docs/community/communication/</loc>
-         <lastmod>2021-11-14</lastmod>
+         <lastmod>2021-11-15</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://anovos.github.io/anovos-docs/community/contributing/</loc>
-         <lastmod>2021-11-14</lastmod>
+         <lastmod>2021-11-15</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://anovos.github.io/anovos-docs/community/license/</loc>
-         <lastmod>2021-11-14</lastmod>
+         <lastmod>2021-11-15</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://anovos.github.io/anovos-docs/docs/anovos-intro/</loc>
-         <lastmod>2021-11-14</lastmod>
+         <lastmod>2021-11-15</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://anovos.github.io/anovos-docs/docs/anovos-modules-overview/association-evaluator/</loc>
-         <lastmod>2021-11-14</lastmod>
+         <lastmod>2021-11-15</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://anovos.github.io/anovos-docs/docs/anovos-modules-overview/data-analyzer/</loc>
-         <lastmod>2021-11-14</lastmod>
+         <lastmod>2021-11-15</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://anovos.github.io/anovos-docs/docs/anovos-modules-overview/data-ingest/</loc>
-         <lastmod>2021-11-14</lastmod>
+         <lastmod>2021-11-15</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://anovos.github.io/anovos-docs/docs/anovos-modules-overview/data_drift_and_stability_index/</loc>
-         <lastmod>2021-11-14</lastmod>
+         <lastmod>2021-11-15</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://anovos.github.io/anovos-docs/docs/anovos-modules-overview/data_transformer/</loc>
-         <lastmod>2021-11-14</lastmod>
+         <lastmod>2021-11-15</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://anovos.github.io/anovos-docs/docs/anovos-modules-overview/overview/</loc>
-         <lastmod>2021-11-14</lastmod>
+         <lastmod>2021-11-15</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://anovos.github.io/anovos-docs/docs/anovos-modules-overview/quality-checker/</loc>
-         <lastmod>2021-11-14</lastmod>
+         <lastmod>2021-11-15</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://anovos.github.io/anovos-docs/docs/anovos-on-aws-emr/getting-started/</loc>
-         <lastmod>2021-11-14</lastmod>
+         <lastmod>2021-11-15</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://anovos.github.io/anovos-docs/docs/anovos-potential-workflow/</loc>
-         <lastmod>2021-11-14</lastmod>
+         <lastmod>2021-11-15</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://anovos.github.io/anovos-docs/docs/anovos-roadmap/</loc>
-         <lastmod>2021-11-14</lastmod>
+         <lastmod>2021-11-15</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://anovos.github.io/anovos-docs/docs/anovos-scale-testing/overview/</loc>
-         <lastmod>2021-11-14</lastmod>
+         <lastmod>2021-11-15</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://anovos.github.io/anovos-docs/docs/data-reports/final-report-generation/</loc>
-         <lastmod>2021-11-14</lastmod>
+         <lastmod>2021-11-15</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://anovos.github.io/anovos-docs/docs/data-reports/html-report/</loc>
-         <lastmod>2021-11-14</lastmod>
+         <lastmod>2021-11-15</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://anovos.github.io/anovos-docs/docs/data-reports/intermediate-report-data-generation/</loc>
-         <lastmod>2021-11-14</lastmod>
+         <lastmod>2021-11-15</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://anovos.github.io/anovos-docs/docs/data-reports/overview/</loc>
-         <lastmod>2021-11-14</lastmod>
+         <lastmod>2021-11-15</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://anovos.github.io/anovos-docs/getting-started/</loc>
-         <lastmod>2021-11-14</lastmod>
+         <lastmod>2021-11-15</lastmod>
          <changefreq>daily</changefreq>
     </url>
 </urlset>

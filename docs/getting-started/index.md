@@ -16,7 +16,8 @@ To install ANOVOS package via git, please execute the following commands:
 
 ## Get Started
 
-Once installed, packages can be imported and the required functionality can be called in the user flow in any application or notebook. <br/>
+Once installed, packages can be imported, and the required functionality can be called in the user flow in any application or notebook. <br/>
+
 Refer to the following links to get started :
 
 - quick-start guide
@@ -25,16 +26,16 @@ Refer to the following links to get started :
 
 ## Steps to Run ANOVOS using spark-submit
 
-After checking out via Git clone, please follow the below instructions to run the E2E ML Anovos Package on the sample income dataset: 
+After checking out the repo via Git clone, follow theses instructions to run the E2E ML Anovos Package on the sample income dataset: 
 
-1. First execute the following command to clean folder, build the latest modules: 
+1. First, execute the following command to clean folder, build the latest modules: 
 	
 	`make clean build`
 
 2. There are 2 ways to run using spark-submit after this:
 
-- Follow A, if you have a working environment already and would just like to use the same configs. (Note: version dependencies are to be ensured by user)
-- Follow B, if you want to run via dockers
+	- Follow A, if you have a working environment already and would just like to use the same configs. (Note: version dependencies are to be ensured by user)
+	- Follow B, if you want to run via dockers
 
 ## A. Running via User's local environment
 
