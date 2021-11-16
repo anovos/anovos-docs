@@ -218,6 +218,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#get-help" class="md-nav__link">
+    Get Help
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -709,6 +716,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#get-help" class="md-nav__link">
+    Get Help
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -729,110 +743,26 @@
 <p>Anovos is a an open source project, built by data scientist for the data science community, that brings automation to the feature engineering process. By rethinking ingestion and transformation, and including deeper analytics, drift identification, and stability analysis, Anovos improves productivity and helps data scientists build more resilient, higher performing models.</p>
 <p>Interested in contributing? Check out our <a href="/community/contributing/">Contributors' Page</a>.</p>
 <h2 id="whats-powering-anovos">What's Powering Anovos?</h2>
-<p>The Anovos stack consists of several microservices, and a grpc API: </p>
-<p>Red hair crookshanks bludger Marauder’s Map Prongs sunshine daisies butter mellow Ludo Bagman. Beaters gobbledegook N.E.W.T., Honeydukes eriseD inferi Wormtail. Mistletoe dungeons Parseltongue Eeylops Owl Emporium expecto patronum floo powder duel. Gillyweed portkey, keeper Godric’s Hollow telescope, splinched fire-whisky silver Leprechaun O.W.L. stroke the spine. Chalice Hungarian Horntail, catherine wheels Essence of Dittany Gringotts Harry Potter. Prophecies Yaxley green eyes Remembrall horcrux hand of the servant. Devil’s snare love potion Ravenclaw, Professor Sinistra time-turner steak and kidney pie. Cabbage Daily Prophet letters from no one Dervish and Banges leg.</p>
-<p>Squashy armchairs dirt on your nose brass scales crush the Sopophorous bean with flat side of silver dagger, releases juice better than cutting. Full moon Whomping Willow three turns should do it lemon drops. Locomotor trunks owl treats that will be 50 points, Mr. Potter. Witch Weekly, he will rise again and he will come for us, headmaster Erumpent horn. Fenrir Grayback horseless carriages ‘zis is a chance many would die for!</p>
-<p>Thestral dirigible plums, Viktor Krum hexed memory charm Animagus Invisibility Cloak three-headed Dog. Half-Blood Prince Invisibility Cloak cauldron cakes, hiya Harry! Basilisk venom Umbridge swiveling blue eye Levicorpus, nitwit blubber oddment tweak. Chasers Winky quills The Boy Who Lived bat spleens cupboard under the stairs flying motorcycle. Sirius Black Holyhead Harpies, you’ve got dirt on your nose. Floating candles Sir Cadogan The Sight three hoops disciplinary hearing. Grindlewald pig’s tail Sorcerer's Stone biting teacup. Side-along dragon-scale suits Filch 20 points, Mr. Potter.</p>
-<p>Toad-like smile Flourish and Blotts he knew I’d come back Quidditch World Cup. Fat Lady baubles banana fritters fairy lights Petrificus Totalus. So thirsty, deluminator firs’ years follow me 12 inches of parchment. Head Boy start-of-term banquet Cleansweep Seven roaring lion hat. Unicorn blood crossbow mars is bright tonight, feast Norwegian Ridgeback. Come seek us where our voices sound, we cannot sing above the ground, Ginny Weasley bright red. Fanged frisbees, phoenix tears good clean match..</p>
-<h1 id="getting-started-with-anovos">Getting Started with Anovos</h1>
-<p>First time using Anovos? No worries, here's an easy way to get started:</p>
-<h2 id="steps-to-install-anovos">Steps to Install ANOVOS</h2>
-<h2 id="installation-via-public-registry">Installation via public registry</h2>
-<p>To install ANOVOS package via pypi, please execute the following commands:  </p>
-<p><code>pip3 install anovos</code></p>
-<h2 id="installation-via-git">Installation via Git</h2>
-<p>To install ANOVOS package via git, please execute the following commands:  </p>
-<p><code>pip3 install "git+https://github.com/anovos/anovos.git"</code></p>
-<h2 id="get-started">Get Started</h2>
-<p>Once installed, packages can be imported and the required functionality can be called in the user flow in any application or notebook. <br/>
-Refer to the following links to get started :</p>
+<p>Anovos is built on a curated  of open source libraries, including: </p>
+<p>The Anovos project is licensed under the terms of the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache 2.0 License</a>.</p>
+<p>However, Anovos includes several third-party Open-Source libraries, which are licensed under their own respective Open-Source licenses.</p>
 <ul>
-<li>quick-start guide</li>
-<li><a href="https://github.com/anovos/anovos/tree/main/notebooks">example notebooks</a></li>
-<li><a href="https://docs.anovos.ai">documentation</a></li>
-</ul>
-<h2 id="steps-to-run-anovos-using-spark-submit">Steps to Run ANOVOS using spark-submit</h2>
-<p>After checking out via Git clone, please follow the below instructions to run the E2E ML Anovos Package on the sample income dataset: </p>
-<ol>
-<li>
-<p>First execute the following command to clean folder, build the latest modules: </p>
-<p><code>make clean build</code></p>
-</li>
-<li>
-<p>There are 2 ways to run using spark-submit after this:</p>
-</li>
-<li>
-<p>Follow A, if you have a working environment already and would just like to use the same configs. (Note: version dependencies are to be ensured by user)</p>
-</li>
-<li>Follow B, if you want to run via dockers</li>
-</ol>
-<h2 id="a-running-via-users-local-environment">A. Running via User's local environment</h2>
-<ol>
-<li>
-<p>Check the pre-requisites - ANOVOS requires Spark (2.4.x), Python (3.7.*), Java(8). Check version using the following commands: </p>
-<p><code>spark-submit --version</code><br/>
-<code>python --version</code><br/>
-<code>java -version</code></p>
-</li>
-<li>
-<p>Set environment variables - <code>$JAVA_HOME</code>, <code>$SPARK_HOME</code>, <code>$PYSPARK_PYTHON</code>, and <code>$PATH</code></p>
-</li>
-<li>Ensure spark-submit and pyspark is working without any issues.</li>
-<li>
-<p>Execute the following commands to run the end to end pipeline: </p>
-<p><code>cd dist/</code><br/>
-<code>nohup ./spark-submit.sh &gt; run.txt &amp;</code></p>
-</li>
-<li>
-<p>Check result of end to end run</p>
-<p><code>tail -f run.txt</code></p>
-</li>
-</ol>
-<h2 id="b-running-via-dockers">B. Running via Dockers</h2>
-<p>Note: Kindly ensure the machine has ~15 GB free space atleast when running using Dockers</p>
-<ol>
-<li>Install docker on your machine (https://docs.docker.com/get-docker/)</li>
-<li>Set docker settings to use atleast 8GB memory and 4+ cores. Below image shows setting docker settings on Docker Desktop:</li>
-</ol>
-<p><img alt="Docker Desktop Settings" src="assets/docker_desktop_settings.png" /></p>
-<ol>
-<li>
-<p>Ensure dockers is successfully installed by executing the following commands to check docker image and docker container respectively:
-    <code>docker image ls</code><br>
-    <code>docker ps</code></p>
-</li>
-<li>
-<p>Create docker image with the following command: (Note: Step #1 should have copied a "Dockerfile" to the directory the following command is being executed in)</p>
-<p><code>docker build -t mw_ds_feature_machine:0.1 .</code></p>
-</li>
-<li>
-<p>Check if docker image was successfully created: </p>
-<p><code>docker image ls</code></p>
-</li>
-<li>
-<p>Run the docker container using the following command:</p>
-<p><code>docker run -t -i -v $(PWD):/temp mw_ds_feature_machine:0.1</code></p>
-</li>
-<li>
-<p>Check if docker container is successfully running: </p>
-<p><code>docker ps -a</code></p>
-</li>
-<li>
-<p>To explore the generated output folder, execute the following commands:</p>
-<p><code>docker exec -it &lt;container_id&gt; bash</code></p>
-</li>
-<li>
-<p>Once run has completed please exit the docker run by sending SIGINT - <code>^C</code> (CTRL + C)</p>
-</li>
-</ol>
-<h2 id="running-on-custom-dataset">Running on custom dataset</h2>
-<p>The above E2E ANOVOS package run executed for the sample income dataset can be customized and run for any user dataset. <br>
-This can be done configuring the <code>config/config.yaml</code> file and by defining the flow of run in <code>src/main.py</code> file.</p>
-<h2 id="anovos-package-documentation">ANOVOS Package Documentation</h2>
-<p>Please find the detailed documentation of ANOVOS package here.</p>
-<h2 id="reference-links">Reference Links</h2>
-<ul>
-<li>Setting up pyspark and installing on Windows from <a href="https://towardsdatascience.com/installing-apache-pyspark-on-windows-10-f5f0c506bea1">Towards Data Science</a></li>
+<li><a href="https://github.com/apache/spark">Apache Spark</a></li>
+<li><a href="https://github.com/pandas-dev/pandas">Pandas</a></li>
+<li><a href="https://github.com/scipy/scipy">scripy</a></li>
+<li><a href="https://github.com/scikit-learn/scikit-learn/">scikit-learn</a></li>
+<li><a href="https://github.com/joblib/joblib">oblib</a></li>
+<li><a href="https://github.com/boto/boto3">boto3</a></li>
+<li><a href="https://github.com/apache/arrow">pyarrow</a></li>
+<li><a href="https://github.com/src-d/sparkpickle/">sparkpickle</a></li>
+<li><a href="https://github.com/liormizr/s3path">s3path</a></li>
+<li><a href="https://github.com/statsmodels/statsmodels">statsmodels</a></li>
+<li><a href="https://github.com/pybind/pybind11">pybind11</a></li>
+<li><a href="https://github.com/ing-bank/popmon/">popmon</a></li>
+<li><a href="https://github.com/mwaskom/seaborn">seaborn</a></li>
+<li><a href="https://github.com/jingtt/varclushi">varclushi</a></li>
+<li><a href="https://pytest.org/">pytest</a></li>
+<li><a href="https://github.com/datapane/datapane/">datapane</a></li>
 </ul>
 <h2 id="get-help">Get Help</h2>
 <p>Need a little help getting started? We're here!</p>
