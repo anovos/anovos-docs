@@ -10,15 +10,29 @@ Interested in contributing? Check out our [Contributors' Page](/community/contri
 
 ## What's Powering Anovos?
 
-The Anovos stack consists of several microservices, and a grpc API: 
+Anovos is built on a curated  of open source libraries, including: 
 
-Red hair crookshanks bludger Marauder’s Map Prongs sunshine daisies butter mellow Ludo Bagman. Beaters gobbledegook N.E.W.T., Honeydukes eriseD inferi Wormtail. Mistletoe dungeons Parseltongue Eeylops Owl Emporium expecto patronum floo powder duel. Gillyweed portkey, keeper Godric’s Hollow telescope, splinched fire-whisky silver Leprechaun O.W.L. stroke the spine. Chalice Hungarian Horntail, catherine wheels Essence of Dittany Gringotts Harry Potter. Prophecies Yaxley green eyes Remembrall horcrux hand of the servant. Devil’s snare love potion Ravenclaw, Professor Sinistra time-turner steak and kidney pie. Cabbage Daily Prophet letters from no one Dervish and Banges leg.
 
-Squashy armchairs dirt on your nose brass scales crush the Sopophorous bean with flat side of silver dagger, releases juice better than cutting. Full moon Whomping Willow three turns should do it lemon drops. Locomotor trunks owl treats that will be 50 points, Mr. Potter. Witch Weekly, he will rise again and he will come for us, headmaster Erumpent horn. Fenrir Grayback horseless carriages ‘zis is a chance many would die for!
+The Anovos project is licensed under the terms of the [Apache 2.0 License](http://www.apache.org/licenses/LICENSE-2.0).
 
-Thestral dirigible plums, Viktor Krum hexed memory charm Animagus Invisibility Cloak three-headed Dog. Half-Blood Prince Invisibility Cloak cauldron cakes, hiya Harry! Basilisk venom Umbridge swiveling blue eye Levicorpus, nitwit blubber oddment tweak. Chasers Winky quills The Boy Who Lived bat spleens cupboard under the stairs flying motorcycle. Sirius Black Holyhead Harpies, you’ve got dirt on your nose. Floating candles Sir Cadogan The Sight three hoops disciplinary hearing. Grindlewald pig’s tail Sorcerer's Stone biting teacup. Side-along dragon-scale suits Filch 20 points, Mr. Potter.
+However, Anovos includes several third-party Open-Source libraries, which are licensed under their own respective Open-Source licenses.
 
-Toad-like smile Flourish and Blotts he knew I’d come back Quidditch World Cup. Fat Lady baubles banana fritters fairy lights Petrificus Totalus. So thirsty, deluminator firs’ years follow me 12 inches of parchment. Head Boy start-of-term banquet Cleansweep Seven roaring lion hat. Unicorn blood crossbow mars is bright tonight, feast Norwegian Ridgeback. Come seek us where our voices sound, we cannot sing above the ground, Ginny Weasley bright red. Fanged frisbees, phoenix tears good clean match..
+- [Apache Spark](https://github.com/apache/spark)
+- [Pandas](https://github.com/pandas-dev/pandas)
+- [scripy](https://github.com/scipy/scipy)
+- [scikit-learn](https://github.com/scikit-learn/scikit-learn/)
+- [oblib](https://github.com/joblib/joblib)
+- [boto3](https://github.com/boto/boto3)
+- [pyarrow](https://github.com/apache/arrow)
+- [sparkpickle](https://github.com/src-d/sparkpickle/)
+- [s3path](https://github.com/liormizr/s3path)
+- [statsmodels](https://github.com/statsmodels/statsmodels)
+- [pybind11](https://github.com/pybind/pybind11)
+- [popmon](https://github.com/ing-bank/popmon/)
+- [seaborn](https://github.com/mwaskom/seaborn)
+- [varclushi](https://github.com/jingtt/varclushi)
+- [pytest](https://pytest.org/)
+- [datapane](https://github.com/datapane/datapane/)
 
 
 # Getting Started with Anovos
