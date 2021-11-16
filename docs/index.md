@@ -36,7 +36,7 @@ However, Anovos includes several third-party Open-Source libraries, which are li
 
 ## Get Help
 
-Need a little help getting started? We're here!
+Need a little help? We're here!
 
 - Check out the [FAQs](https://Anovos.org/faq/) - When there are questions, we document the answers.
 - Join the [MLOps Commuhity](https://slack.cncf.org/). Look for the `#Anovos` channel.
