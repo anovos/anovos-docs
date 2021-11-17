@@ -9,14 +9,14 @@
       
       
       
-        <link rel="canonical" href="https://anovos.github.io/anovos-docs/docs/anovos-modules-overview/data-ingest/">
+        <link rel="canonical" href="https://anovos.github.io/anovos-docs/docs/setting-up-your-environment/anovos-on-local/">
       
       <link rel="icon" href="../../../assets/favicon.png">
       <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-7.3.4">
     
     
       
-        <title>Data Ingest - Anovos Docs</title>
+        <title>Anovos On Local - Anovos Docs</title>
       
     
     
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#module-anovosdata_ingest" class="md-skip">
+        <a href="#step-1-software-prerequisites" class="md-skip">
           Skip to content
         </a>
       
@@ -351,12 +351,14 @@
               
   
   
+    
+  
   
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-5_2" type="checkbox" id="nav-5_2" >
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-5_2" type="checkbox" id="nav-5_2" checked>
       
       
       
@@ -377,11 +379,47 @@
               
   
   
+    
   
-    <li class="md-nav__item">
-      <a href="../../setting-up-your-environment/anovos-on-local/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Anovos On Local
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         Anovos On Local
       </a>
+      
+        
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#step-1-software-prerequisites" class="md-nav__link">
+    Step 1: Software Prerequisites
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -393,7 +431,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../setting-up-your-environment/anovos-on-aws/" class="md-nav__link">
+      <a href="../anovos-on-aws/" class="md-nav__link">
         Anovos on AWS
       </a>
     </li>
@@ -440,14 +478,12 @@
               
   
   
-    
-  
   
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-5_5" type="checkbox" id="nav-5_5" checked>
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-5_5" type="checkbox" id="nav-5_5" >
       
       
       
@@ -470,7 +506,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../overview/" class="md-nav__link">
+      <a href="../../anovos-modules-overview/overview/" class="md-nav__link">
         Overview
       </a>
     </li>
@@ -482,109 +518,11 @@
               
   
   
-    
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-      
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          Data Ingest
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../anovos-modules-overview/data-ingest/" class="md-nav__link">
         Data Ingest
       </a>
-      
-        
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#module-anovosdata_ingest" class="md-nav__link">
-    Module ANOVOS.data_ingest
-  </a>
-  
-    <nav class="md-nav" aria-label="Module ANOVOS.data_ingest">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#read_dataset" class="md-nav__link">
-    read_dataset
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#write_dataset" class="md-nav__link">
-    write_dataset
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#concatenate_dataset" class="md-nav__link">
-    concatenate_dataset
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#join_dataset" class="md-nav__link">
-    join_dataset
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#delete_column" class="md-nav__link">
-    delete_column
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#select_column" class="md-nav__link">
-    select_column
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rename_column" class="md-nav__link">
-    rename_column
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#recast_column" class="md-nav__link">
-    recast_column
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -596,7 +534,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../data-analyzer/" class="md-nav__link">
+      <a href="../../anovos-modules-overview/data-analyzer/" class="md-nav__link">
         Data Analyzer
       </a>
     </li>
@@ -610,7 +548,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../quality-checker/" class="md-nav__link">
+      <a href="../../anovos-modules-overview/quality-checker/" class="md-nav__link">
         Quality Checker
       </a>
     </li>
@@ -624,7 +562,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../association-evaluator/" class="md-nav__link">
+      <a href="../../anovos-modules-overview/association-evaluator/" class="md-nav__link">
         Association Evaluator
       </a>
     </li>
@@ -638,7 +576,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../data_drift_and_stability_index/" class="md-nav__link">
+      <a href="../../anovos-modules-overview/data_drift_and_stability_index/" class="md-nav__link">
         Data Drift and Stability Index
       </a>
     </li>
@@ -652,7 +590,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../data_transformer/" class="md-nav__link">
+      <a href="../../anovos-modules-overview/data_transformer/" class="md-nav__link">
         Data Transformers
       </a>
     </li>
@@ -814,71 +752,9 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#module-anovosdata_ingest" class="md-nav__link">
-    Module ANOVOS.data_ingest
+  <a href="#step-1-software-prerequisites" class="md-nav__link">
+    Step 1: Software Prerequisites
   </a>
-  
-    <nav class="md-nav" aria-label="Module ANOVOS.data_ingest">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#read_dataset" class="md-nav__link">
-    read_dataset
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#write_dataset" class="md-nav__link">
-    write_dataset
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#concatenate_dataset" class="md-nav__link">
-    concatenate_dataset
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#join_dataset" class="md-nav__link">
-    join_dataset
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#delete_column" class="md-nav__link">
-    delete_column
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#select_column" class="md-nav__link">
-    select_column
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rename_column" class="md-nav__link">
-    rename_column
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#recast_column" class="md-nav__link">
-    recast_column
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -895,76 +771,15 @@
               
                 
                 
-                  <h1>Data Ingest</h1>
+                  <h1>Anovos On Local</h1>
                 
-                <h2 id="module-anovosdata_ingest"><em>Module</em> <strong>ANOVOS.data_ingest</strong></h2>
-<p>This module consists of functions to read the dataset as Spark Dataframe, concatenate/join with other functions (if required), and perform some basic ETL actions such as selecting, deleting, renaming and/or recasting columns. List of functions included in this module are: 
-- read_dataset 
-- write_dataset 
-- concatenate_dataset 
-- join_dataset 
-- delete_column 
-- select_column 
-- rename_column 
-- recast_column </p>
-<h3 id="read_dataset">read_dataset</h3>
-<p>This function reads the input data path and return a Spark Dataframe. Under the hood, this function is based on generic Load functionality of Spark SQL1.  It requires following arguments: </p>
-<ul>
-<li><strong>file_path</strong>: file (or directory) path where the input data is saved. File path can be a local path or s3 path (when running with AWS cloud services) </li>
-<li><strong>file_type</strong>: file format of the input data. Currently, we support csv, parquet or avro. Avro data source requires an external package to run, which can be configured with spark-submit options (--packages org.apache.spark:spark-avro_2.11:2.4.0). </li>
-<li><strong>file_configs</strong> (optional): Rest of the valid configurations can be passed through this argument in a dictionary format. All the key/value pairs written in this argument are passed as options to DataFrameReader, which is created using SparkSession.read. </li>
-</ul>
-<h3 id="write_dataset">write_dataset</h3>
-<p>This function saves Spark Dataframe in the user provided output path. Like read_dataset, this function is based on generic Save functionality of Spark SQL.  It requires following arguments: </p>
-<ul>
-<li><strong>idf</strong>: Spark Dataframe to be saved </li>
-<li><strong>file_path</strong>: file (or directory) path where the output data is to be saved. File path can be a local path or s3 path (when running with AWS cloud services) </li>
-<li><strong>file_type</strong>: file format of the input data. Currently, we support csv, parquet or avro. Avro data source requires an external package to run, which can be configured with spark-submit options (--packages org.apache.spark:spark-avro_2.11:2.4.0). </li>
-<li><strong>file_configs</strong> (optional): Rest of the valid configuration can be passed through this argument in a dictionary format e.g., repartition, mode, compression, header, delimiter etc. All the key/value pairs written in this argument are passed as options to DataFrameWriter is available using Dataset.write operator. If number of repartitions mentioned through this argument is less than the existing Dataframe partitions, then coalesce operation2 is used instead of repartition operation to make the execution efficient. This is because the coalesce operation doesn’t require any shuffling like repartition which is known to be an expensive step. </li>
-</ul>
-<h3 id="concatenate_dataset">concatenate_dataset</h3>
-<p>This function combines multiple dataframes into a single dataframe. To make the operation efficient, pairwise concatenation is done on the dataframes, instead of adding one dataframe at a time to the bigger dataframe. This function is leveraging union3 functionality of Spark SQL. It requires following arguments: </p>
-<ul>
-<li><strong>*idfs</strong>: Varying number of dataframes to be concatenated </li>
-<li><strong>method_type</strong>: index or name. This argument needs to be entered as a keyword argument. “index” method involves concatenating the dataframes by column index. In case, sequence of column is not fixed among the dataframe, this method should be avoided. “name” method involves concatenating by columns names. 1st dataframe passed under idfs will define the final columns in the concatenated dataframe and it will throw error if any column in 1st dataframe is not available in any of other dataframes. </li>
-</ul>
-<h3 id="join_dataset">join_dataset</h3>
-<p>This function joins multiple dataframes into a single dataframe by a joining key column. To make the operation efficient, pairwise joining is done on the dataframes, instead of joining one dataframe at a time to the bigger dataframe. This function is leveraging join4 functionality of Spark SQL. It requires following arguments: </p>
-<ul>
-<li><strong>*idfs</strong>: Varying number of all dataframes to be joined </li>
-<li><strong>join_cols</strong>: Key column(s) to join all dataframes together. In case of multiple columns to join, they can be passed in a list format or a single text format where different column names are separated by pipe delimiter “|” </li>
-<li><strong>join_type</strong>: “inner”, “full”, “left”, “right”, “left_semi”, “left_anti”</li>
-</ul>
-<h3 id="delete_column">delete_column</h3>
-<p>This function is used to delete specific columns from the input data. It is executed using drop functionality5 of Spark SQL. It is advisable to use this function if number of columns to delete are lesser than number of columns to select, otherwise it is recommended to use select_column. It requires following arguments: </p>
-<ul>
-<li><strong>idf</strong>: Input dataframe </li>
-<li><strong>list_of_cols</strong>: This argument, in a list format, is used to specify the columns which are required to be deleted from the input dataframe. Alternatively, instead of list, columns can be specified in a single text format where different column names are separated by pipe delimiter “|” </li>
-<li><strong>print_impact</strong>: This argument is to compare number of columns before and after the operation. </li>
-</ul>
-<h3 id="select_column">select_column</h3>
-<p>This function is used to select specific columns from the input data. It is executed using select operation6 of spark dataframe. It is advisable to use this function if number of columns to select are lesser than number of columns to drop, otherwise it is recommended to use delete_column. It requires following arguments: </p>
-<ul>
-<li><strong>idf</strong>: Input dataframe </li>
-<li><strong>list_of_cols</strong>: This argument, in a list format, is used to specify the columns which are required to be deleted from the input dataframe. Alternatively, instead of list, columns can be specified in a single text format where different column names are separated by pipe delimiter “|” </li>
-<li><strong>print_impact</strong>: This argument is to compare number of columns before and after the operation. </li>
-</ul>
-<h3 id="rename_column">rename_column</h3>
-<p>This function is used to rename columns of the input data. Multiple columns can be renamed, however, sequence in which they passed as argument is critical and needs to be consistent between list_of_cols and list_of_newcols. It requires following arguments: </p>
-<ul>
-<li><strong>idf</strong>: Input dataframe </li>
-<li><strong>list_of_cols</strong>: This argument, in a list format, is used to specify the columns which are required to be renamed in the input dataframe. Alternatively, instead of list, columns can be specified in a single text format where different column names are separated by pipe delimiter “|” </li>
-<li><strong>list_of_newcols</strong>: This argument, in a list format, is used to specify the new column name i.e. first element in list_of_cols will be original column name and corresponding first column in list_of_newcols will be new column name. </li>
-<li><strong>print_impact</strong>: This argument is to compare column names before and after the operation. </li>
-</ul>
-<h3 id="recast_column">recast_column</h3>
-<p>This function is used to modify the datatype of columns. Multiple columns can be casted, however, sequence in which they passed as argument is critical and needs to be consistent between list_of_cols and list_of_dtypes. It requires following arguments: </p>
-<ul>
-<li><strong>idf</strong>: Input dataframe </li>
-<li><strong>list_of_cols</strong>: This argument, in a list format, is used to specify the columns which are required to be recast in the input dataframe. Alternatively, instead of list, columns can be specified in a single text format where different column names are separated by pipe delimiter “|” </li>
-<li><strong>list_of_dtypes</strong>: This argument, in a list format, is used to specify the datatype i.e. first element in list_of_cols will column name and corresponding element in list_of_dtypes will be new datatype such as float, integer, string, double, decimal etc. (case insensitive). </li>
-<li><strong>print_impact</strong>: This argument is to compare schema before and after the operation. </li>
-</ul>
+                <h3 id="step-1-software-prerequisites">Step 1: Software Prerequisites</h3>
+<p>Anovosrequires Spark (2.4.x), Python (3.7.*) and Java(8) to be setup in order to run in local environment. Kindly look at the following links for setting up Spark, Python and Java in local: </p>
+<p><a href="https://spark.apache.org/docs/2.4.8/">Spark 2.4.8</a>
+<a href="https://www.python.org/downloads/release/python-378/">Python 3.7</a>
+<a href="https://www.oracle.com/java/technologies/downloads/#java8">Java 8</a> </p>
+<p><a href="https://kevinvecmanis.io/python/pyspark/install/2019/05/31/Installing-Apache-Spark.html">Installing Apache on Mac OSX</a></p>
+<p><a href="https://towardsdatascience.com/installing-apache-pyspark-on-windows-10-f5f0c506bea1">Using PySpark on Windows</a></p>
                 
               
               

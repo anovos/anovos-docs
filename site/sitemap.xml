@@ -111,6 +111,16 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://anovos.github.io/anovos-docs/docs/setting-up-your-environment/anovos-on-aws/</loc>
+         <lastmod>2021-11-17</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://anovos.github.io/anovos-docs/docs/setting-up-your-environment/anovos-on-local/</loc>
+         <lastmod>2021-11-17</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://anovos.github.io/anovos-docs/getting-started/</loc>
          <lastmod>2021-11-17</lastmod>
          <changefreq>daily</changefreq>

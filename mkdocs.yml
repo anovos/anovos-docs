@@ -37,6 +37,9 @@ nav:
     - License: community/license/index.md
   - In-Depth Docs: 
     - Anovos Intro: docs/anovos-intro/index.md
+    - Setting Up Your Environment:
+      - Anovos On Local: docs/setting-up-your-environment/anovos-on-local/index.md
+      - Anovos on AWS: docs/setting-up-your-environment/anovos-on-aws/index.md
     - Anovos Product Roadmap: docs/anovos-roadmap/index.md
     - Anovos Potential Workflow: docs/anovos-potential-workflow/index.md
     - Anovos Modules: 
