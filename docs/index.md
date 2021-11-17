@@ -10,12 +10,7 @@ Interested in contributing? Check out our [Contributors' Page](/community/contri
 
 ## What's Powering Anovos?
 
-Anovos is built on a curated  of open source libraries, including: 
-
-
-The Anovos project is licensed under the terms of the [Apache 2.0 License](http://www.apache.org/licenses/LICENSE-2.0).
-
-However, Anovos includes several third-party Open-Source libraries, which are licensed under their own respective Open-Source licenses.
+Anovos is built on a curated collection of open source libraries, including: 
 
 - [Apache Spark](https://github.com/apache/spark)
 - [Pandas](https://github.com/pandas-dev/pandas)
@@ -38,6 +33,6 @@ However, Anovos includes several third-party Open-Source libraries, which are li
 
 Need a little help? We're here!
 
-- Check out the [FAQs](https://Anovos.org/faq/) - When there are questions, we document the answers.
-- Join the [MLOps Commuhity](https://slack.cncf.org/). Look for the `#Anovos` channel.
-- Submit an issue on [Github](https://github.com/Anovos/).
+- Check out the [FAQs](https://docs.anovos.ai) - When there are questions, we document the answers.
+- Join the [MLOps Commuhity](https://go.mlops.community/slack). Look for the `#oss-anovos` channel.
+- Submit an issue on [Github](https://github.com/anovos/anovos).

@@ -20,7 +20,7 @@ We love your input! We want to make contributing to this project as easy and tra
 - Contributing to the docs
 - Giving talks about Anovos at Meetups, conferences and webinars
 
-The latest information about how to interact with the project maintainers and broader community is kept in [COMMUNICATION.md](https://github.com/anovos/communication.md).
+The latest information about how to interact with the project maintainers and broader community is kept in [COMMUNICATION.md](https://github.com/anovos/anovos/blob/main/.github/COMMUNICATION.md).
 
 ## Contribute to Anovos
 
@@ -32,7 +32,7 @@ Pull requests are the best way to propose changes to the codebase. We use GitHub
 - Ensure the test suite passes.
 - Issue that pull request!
 
-Any contributions you make will be under the Apache Software License
+Any contributions you make will be under the Apache Software License.
 In short, when you submit code changes, your submissions are understood to be under the same Apache License that covers the project. Feel free to contact the maintainers if that's a concern.
 
 ### Write Thorough Commit Messages
