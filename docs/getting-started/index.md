@@ -5,26 +5,19 @@
 *Anovos* provides data scientists and ML engineers with powerful and
 versatile tools for feature engineering.
 
-In this guide, you will learn how to set up *Anovos* and get to know key
-capabilities.
+In this guide, you will learn how to set up *Anovos* and get to know what it can do.
 
 
 ## Setting up and verifying the Python and Spark environment
 
-*Anovos* builds on [Apache Spark](https://spark.apache.org/), a highly
-scalable engine for data engineering. Thus, an installation of Spark is
-required to run any *Anovos* code. Further, the Python bindings for
-Spark (known as `pyspark`) need to be installed in a compatible version.
+Anovos builds on [Apache Spark](https://spark.apache.org/), a highly scalable engine for data engineering, so an installation of Spark is required to run any Anovos code. The Python bindings for Spark (known as pyspark) also need to be installed in a compatible version.
 
-If you are first starting out with *Anovos* and are not yet familiar
-with Spark, we recommend you execute this guide through the provided
-*anovos-demo* Docker container, which provides a full Spark setup along
-with compatible versions of Python and a Jupyter notebook environment.
+If you are first starting out with Anovos and are not yet familiar with Spark, we recommend you execute this guide through the provided anovos-demo Docker container, which provides a full Spark setup along with compatible versions of Python and a Jupyter notebook environment.
 
 [Setting up Anovos on
 Local](https://docs.anovos.ai/docs/setting-up-your-environment/anovos-on-local/)
 
-The currently available Beta version of *Anovos* is specifically built
+The currently version of Anovos is specifically built
 for Spark 2.4.x, Python 3.7.x, and Java 8 (OpenJDK 1.8.x). You can
 verify that you're running the correct versions by executing the
 following lines:
@@ -68,8 +61,7 @@ currently active Python environment:
 
 </div>
 
-As *Anovos* relies on Spark behind the scenes for most of the heavy
-lifting, we need to pass an instantiated
+Since Anovos relies on Spark behind the scenes for most heavy lifting, we need to pass an instantiated
 [`SparkSession`](https://spark.apache.org/docs/2.4.8/api/python/pyspark.sql.html?highlight=sparksession#pyspark.sql.SparkSession)
 to many of the function calls.
 
@@ -151,7 +143,7 @@ df.printSchema()
 
 The [Adult Income
 dataset's](https://archive.ics.uci.edu/ml/datasets/adult) more than 48k
-entries each describe a person along with the information whether they
+entries each describes a person along with the information whether they
 earn more than $50k per year.
 
 In this guide, we will work with just a few of its columns:
@@ -172,9 +164,9 @@ df.printSchema()
 
 ## Learning about the data
 
-Before we can start to engineer features for, we need to understand the
-data at hand. For example, we need to verify that the data has
-sufficient quality or whether we'll have to deal with missing values.
+Before we can start to engineer features, we need to understand the
+data. For example, we need to verify that the data has
+sufficient quality or if there are missing values.
 
 *Anovos*'
 [`data_analyzer`](https://docs.anovos.ai/docs/anovos-modules-overview/data-analyzer/)
@@ -182,12 +174,11 @@ module provides three submodules for this purpose:
 
   - The functions of
     [`data_analyzer.quality_checker`](https://docs.anovos.ai/docs/anovos-modules-overview/quality-checker/)
-    allow us to detect and fix issues such as empty rows or duplicate
+    allow us to detect and fix issues like empty rows or duplicate
     entries
   - [`data_analyzer.stats_generator`](https://docs.anovos.ai/docs/anovos-modules-overview/data-analyzer/)
     offers functions to caculate various statistical properties
-  - Finally,
-    [`data_analyzer.association_evaluator`](https://docs.anovos.ai/docs/anovos-modules-overview/association-evaluator/)
+  - [`data_analyzer.association_evaluator`](https://docs.anovos.ai/docs/anovos-modules-overview/association-evaluator/)
     enables us to examine a dataset for correlations between columns
 
 
@@ -200,27 +191,15 @@ Did we ingest the expected number of unique data points? *Anovos*'
 [`data_analyzer.quality_checker`](https://docs.anovos.ai/docs/anovos-modules-overview/quality-checker/)
 module provides convenient functions to answer these questions.
 
-For sake of time, in this guide, we'll assume that our dataset does not
-exhibit such problems. Instead, we'll move on to a more advanced stage
-of quality assessment and check for outliers in the data. Outliers are
-data points that deviate significantly from the others. These points can
-be problematic when training ML models or during inference, as there is
-very little information about these ranges in the dataset, which in turn
-leads to a high degree of uncertainty.
+For time's sake, we'll assume that our dataset does not
+exhibit any of these problems. Instead, we'll move on to more advanced quality assessments and check for outliers in the data. Outliers are data points that deviate significantly from the others. These points can be problematic when training ML models or during inference because there is very little information about the ranges in the dataset, leading to a high degree of uncertainty.
 
-Outliers in a dataset can be due to rare events. For example, in the
-case of our income dataset, there might be some individuals that work
-well beyond retirement age or have worked their way up to a high paying
-position despite dropping out of high school.
+We immediately see that most people work a standard 40-hour week, while a significant minority reports anywhere between 20 and 60 hours. However, some individuals work very few hours, and others reported almost 100 hours per week, more than twice the median. These are the groups detected by the outlier detector.
 
-However, outliers can also be due to reporting errors. Digits in a
-number might have been swapped or values might have been given in the
-wrong order of magnitude. For example, someone might have mistakenly
-entered a weight in grams instead of kilograms.
+We cannot only detect that there are outliers, but we can also deal with them right away. For example, let's remove the rows where individuals reported an excessive amount of hours worked per week:
 
 How we deal with outliers depends on their origin and the application
 context.
-
 
 <div class="cell code">
 
@@ -246,7 +225,7 @@ more than 3 standard deviations, or they lie below `Q1 - 1.5*IQR` or
 above `Q3 + 1.5*IQR`, where `Q1` and `Q3` are the first and third
 quartile, respectively, and `IQR` is the [Interquartile
 Range](https://en.wikipedia.org/wiki/Interquartile_range). (For more
-details and information on how to utilize additional methods for outlier
+details and information on utilizing additional methods for outlier
 detection, see [the
 documentation](https://docs.anovos.ai/docs/anovos-modules-overview/quality-checker/#outlier_detection).
 
@@ -297,17 +276,9 @@ px.histogram(df.toPandas(), x='hours-per-week')
 
 ### Understand how your data is distributed
 
-When familiarizing ourselves with a dataset, one of the first steps is
-to understand the ranges of values each column contains and how the
-values are distributed. At the very least, we should learn the minimal
-and maximal values as well as examine the distribution within that range
-(e.g., by computing the mean, median, and standard deviation).
+When familiarizing ourselves with a dataset, one of the first steps is to understand the ranges of values each column contains and how the values are distributed. At the very least, we should learn the minimal and maximal values and examine the distribution within that range (e.g., by computing the mean, median, and standard deviation).
 
-This information is vital to know. For many popular kinds of ML models,
-each feature column should be scaled to the same order of magnitude.
-Further, ML models will generally only work well for ranges of feature
-values that they were trained on, so we should check that the data
-points they see during inference lie within the ranges we find.
+This information is vital to know. For many popular ML models, each feature column should be scaled to the same order of magnitude. Further, ML models will generally only work well for ranges of feature values trained on, so we should check that the data points they see during inference lie within the ranges we find.
 
 *Anovos*'
 [`data_analyzer.stats_generator`](https://docs.anovos.ai/docs/anovos-modules-overview/data-analyzer/)
