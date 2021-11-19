@@ -1,6 +1,6 @@
 ### Step 1: Software Prerequisites
 
-Anovos requires Spark (2.4.x), Python (3.7.*) and Java(8) to be setup in order to run in local environment. Kindly look at the following links for setting up Spark, Python and Java in local: 
+Anovos requires Spark (2.4.x), Python (3.7.*) and Java(8) to be set up to run in a local environment. The following links are useful for setting up Spark, Python and Java in local: 
 
 [Spark 2.4.8](https://spark.apache.org/docs/2.4.8/ )
 [Python 3.7](https://www.python.org/downloads/release/python-378/)
@@ -13,22 +13,22 @@ Anovos requires Spark (2.4.x), Python (3.7.*) and Java(8) to be setup in order t
 
 ### Step2 : Running on local 
 
-Anovos can be run on local in two ways: 
+Anovos can run locally in one of two ways:
 
 1.  By cloning the repo and running it via spark-submit 
-    - Clone the Anovos repository on local environment using command: 
+    - Clone the Anovos repository in your local environment using the command: 
     `git clone https://github.com/anovos/anovos.git`
     - After cloning, go to the Anovos directory and execute the following command to clean and build the latest modules in dist folder: 
     `make clean build` 
     - Then go to dist/ folder and  
-        - Update configs.yaml for all input & output paths. All other changes depends upon the dataset being used. Also update configs.yaml for other threshold settings for different functionalities. 
-        - Update main.py - This is sample script to show how different functions from Anovos module can be stitched together to create a workflow. 
-        - Update spark-submit.sh – This is a sample shell script to run spark application via spark-submit. 
+        - Update configs.yaml for all input & output paths. All other changes depend on the dataset being used. Also, update configs.yaml for other threshold settings for different functionalities. 
+        - Update main.py - This sample script demonstrates how different functions from Anovos module can be stitched together to create a workflow.
+        - Update spark-submit.sh – This sample shell script runs the spark application via spark-submit.
     - Run using spark submit shell script 
     `nohup ./spark-submit.sh > run.txt &`
     - Check stdout logs while running 
     `tail -f run.txt`
-    - Once the run has completed, the script will automatically open the final generated report "report_stats/ml_anovos_report.html" on the browser. 
+    - Once the run completes, the script will automatically open the final generated report "report_stats/ml_anovos_report.html" on the browser. 
 
 2. By installing Anovos and importing it as you need it
     - Install anovos on local using: 
