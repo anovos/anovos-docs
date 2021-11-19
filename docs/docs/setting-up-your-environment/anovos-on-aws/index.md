@@ -23,8 +23,8 @@ Copy the following files to AWS S3:
     -	The users can create their own workflow script by importing the necessary functions.
     -	This script takes input from a yaml configuration file
 - `dist/configs.yaml`
-    -	This is the sample yaml configuration file which sets the argument for all functions.
-    -	Update configs.yaml for all input & output s3 paths. All other changes depends upon the dataset being used.
+    -	This is the sample yaml configuration file that sets the argument for all functions.
+    -	Update configs.yaml for all input & output s3 paths. All other changes depend on the dataset used.
     - bin/req_packages_anovos.sh
     -	This shell script is used to install all required packages to run Anovos on EMR 
 
