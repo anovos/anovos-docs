@@ -9,7 +9,7 @@
       
       
       
-        <link rel="canonical" href="https://anovos.github.io/anovos-docs/getting-started/">
+        <link rel="canonical" href="https://anovos.ai/getting-started/">
       
       <link rel="icon" href="../assets/favicon.png">
       <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-7.3.4">
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#steps-to-install-anovos" class="md-skip">
+        <a href="#getting-started-with-anovos" class="md-skip">
           Skip to content
         </a>
       
@@ -110,7 +110,7 @@
 						<a href="/">Docs</a>
 					</li>
 					<li class="last-nav-item">
-						<a href="community/contributing/">Community</a>
+						<a href="https://docs.anovos.ai/community/contributing/">Community</a>
 					</li>
 				
 				</ul>
@@ -159,7 +159,7 @@
                     <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
     <!-- Site title -->
     <label class="md-nav__title" for="__drawer">
-        <a href="https://anovos.github.io/anovos-docs/" title="Anovos Docs" class="md-nav__button md-logo" aria-label="Anovos Docs">
+        <a href="https://anovos.ai/" title="Anovos Docs" class="md-nav__button md-logo" aria-label="Anovos Docs">
         </a>
         Anovos Docs
     </label>
@@ -239,43 +239,63 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#installation-via-public-registry" class="md-nav__link">
-    Installation via public registry
+  <a href="#setting-up-and-verifying-the-python-and-spark-environment" class="md-nav__link">
+    Setting up and verifying the Python and Spark environment
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#installation-via-git" class="md-nav__link">
-    Installation via Git
+  <a href="#loading-data" class="md-nav__link">
+    Loading data
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#get-started" class="md-nav__link">
-    Get Started
+  <a href="#learning-about-the-data" class="md-nav__link">
+    Learning about the data
   </a>
+  
+    <nav class="md-nav" aria-label="Learning about the data">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#assess-the-data-quality" class="md-nav__link">
+    Assess the data quality
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#understand-how-your-data-is-distributed" class="md-nav__link">
+    Understand how your data is distributed
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#detect-correlations-within-the-dataset" class="md-nav__link">
+    Detect correlations within the dataset
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#examine-drift" class="md-nav__link">
+    Examine Drift
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#steps-to-run-anovos-using-spark-submit" class="md-nav__link">
-    Steps to Run ANOVOS using spark-submit
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#a-running-via-users-local-environment" class="md-nav__link">
-    A. Running via User's local environment
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#b-running-via-dockers" class="md-nav__link">
-    B. Running via Dockers
+  <a href="#transform-the-data" class="md-nav__link">
+    Transform the data
   </a>
   
 </li>
@@ -789,43 +809,63 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#installation-via-public-registry" class="md-nav__link">
-    Installation via public registry
+  <a href="#setting-up-and-verifying-the-python-and-spark-environment" class="md-nav__link">
+    Setting up and verifying the Python and Spark environment
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#installation-via-git" class="md-nav__link">
-    Installation via Git
+  <a href="#loading-data" class="md-nav__link">
+    Loading data
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#get-started" class="md-nav__link">
-    Get Started
+  <a href="#learning-about-the-data" class="md-nav__link">
+    Learning about the data
   </a>
+  
+    <nav class="md-nav" aria-label="Learning about the data">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#assess-the-data-quality" class="md-nav__link">
+    Assess the data quality
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#understand-how-your-data-is-distributed" class="md-nav__link">
+    Understand how your data is distributed
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#detect-correlations-within-the-dataset" class="md-nav__link">
+    Detect correlations within the dataset
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#examine-drift" class="md-nav__link">
+    Examine Drift
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#steps-to-run-anovos-using-spark-submit" class="md-nav__link">
-    Steps to Run ANOVOS using spark-submit
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#a-running-via-users-local-environment" class="md-nav__link">
-    A. Running via User's local environment
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#b-running-via-dockers" class="md-nav__link">
-    B. Running via Dockers
+  <a href="#transform-the-data" class="md-nav__link">
+    Transform the data
   </a>
   
 </li>
@@ -843,108 +883,505 @@
               
                 
                 
-                <h1 id="steps-to-install-anovos">Steps to Install ANOVOS</h1>
-<h2 id="installation-via-public-registry">Installation via public registry</h2>
-<p>To install ANOVOS package via pypi, please execute the following commands:  </p>
-<p><code>pip3 install anovos</code></p>
-<h2 id="installation-via-git">Installation via Git</h2>
-<p>To install ANOVOS package via git, please execute the following commands:  </p>
-<p><code>pip3 install "git+https://github.com/anovos/anovos.git"</code></p>
-<h2 id="get-started">Get Started</h2>
-<p>Once installed, packages can be imported, and the required functionality can be called in the user flow in any application or notebook. <br/></p>
-<p>Refer to the following links to get started :</p>
-<ul>
-<li>quick-start guide</li>
-<li><a href="https://github.com/anovos/anovos/tree/main/notebooks">example notebooks</a></li>
-<li><a href="https://docs.anovos.ai">documentation</a></li>
-</ul>
-<h2 id="steps-to-run-anovos-using-spark-submit">Steps to Run ANOVOS using spark-submit</h2>
-<p>After checking out the repo via Git clone, follow theses instructions to run the E2E ML Anovos Package on the sample income dataset: </p>
-<ol>
-<li>
-<p>First, execute the following command to clean folder, build the latest modules: </p>
-<p><code>make clean build</code></p>
-</li>
-<li>
-<p>There are 2 ways to run using spark-submit after this:</p>
-<ul>
-<li>Follow A, if you have a working environment already and would just like to use the same configs. (Note: version dependencies are to be ensured by user)</li>
-<li>Follow B, if you want to run via dockers</li>
-</ul>
-</li>
-</ol>
-<h2 id="a-running-via-users-local-environment">A. Running via User's local environment</h2>
-<ol>
-<li>
-<p>Check the pre-requisites - ANOVOS requires Spark (2.4.x), Python (3.7.*), Java(8). Check version using the following commands: </p>
-<p><code>spark-submit --version</code><br/>
-<code>python --version</code><br/>
-<code>java -version</code></p>
-</li>
-<li>
-<p>Set environment variables - <code>$JAVA_HOME</code>, <code>$SPARK_HOME</code>, <code>$PYSPARK_PYTHON</code>, and <code>$PATH</code></p>
-</li>
-<li>Ensure spark-submit and pyspark is working without any issues.</li>
-<li>
-<p>Execute the following commands to run the end to end pipeline: </p>
-<p><code>cd dist/</code><br/>
-<code>nohup ./spark-submit.sh &gt; run.txt &amp;</code></p>
-</li>
-<li>
-<p>Check result of end to end run</p>
-<p><code>tail -f run.txt</code></p>
-</li>
-</ol>
-<h2 id="b-running-via-dockers">B. Running via Dockers</h2>
-<p>Note: Kindly ensure the machine has ~15 GB free space atleast when running using Dockers</p>
-<ol>
-<li>Install docker on your machine (https://docs.docker.com/get-docker/)</li>
-<li>Set docker settings to use atleast 8GB memory and 4+ cores. Below image shows setting docker settings on Docker Desktop:</li>
-</ol>
-<p align="center">
-  <img src="https://anovos.github.io/anovos-docs/assets/docker_desktop_settings.png" width="800" title="Docker Desktop Settings">
-</p>
+                <h1 id="getting-started-with-anovos">Getting Started with Anovos</h1>
+<p><em>Anovos</em> provides data scientists and ML engineers with powerful and
+versatile tools for feature engineering.</p>
+<p>In this guide, you will learn how to set up <em>Anovos</em> and get to know key
+capabilities.</p>
+<h2 id="setting-up-and-verifying-the-python-and-spark-environment">Setting up and verifying the Python and Spark environment</h2>
+<p><em>Anovos</em> builds on <a href="https://spark.apache.org/">Apache Spark</a>, a highly
+scalable engine for data engineering. Thus, an installation of Spark is
+required to run any <em>Anovos</em> code. Further, the Python bindings for
+Spark (known as <code>pyspark</code>) need to be installed in a compatible version.</p>
+<p>If you are first starting out with <em>Anovos</em> and are not yet familiar
+with Spark, we recommend you execute this guide through the provided
+<em>anovos-demo</em> Docker container, which provides a full Spark setup along
+with compatible versions of Python and a Jupyter notebook environment.</p>
+<p><a href="https://docs.anovos.ai/docs/setting-up-your-environment/anovos-on-local/">Setting up Anovos on
+Local</a></p>
+<p>The currently available Beta version of <em>Anovos</em> is specifically built
+for Spark 2.4.x, Python 3.7.x, and Java 8 (OpenJDK 1.8.x). You can
+verify that you're running the correct versions by executing the
+following lines:</p>
+<div class="cell code">
 
-<ol>
-<li>
-<p>Ensure dockers is successfully installed by executing the following commands to check docker image and docker container respectively:
-    <code>docker image ls</code><br>
-    <code>docker ps</code></p>
-</li>
-<li>
-<p>Create docker image with the following command: (Note: Step #1 should have copied a "Dockerfile" to the directory the following command is being executed in)</p>
-<p><code>docker build -t mw_ds_feature_machine:0.1 .</code></p>
-</li>
-<li>
-<p>Check if docker image was successfully created: </p>
-<p><code>docker image ls</code></p>
-</li>
-<li>
-<p>Run the docker container using the following command:</p>
-<p><code>docker run -t -i -v $(PWD):/temp mw_ds_feature_machine:0.1</code></p>
-</li>
-<li>
-<p>Check if docker container is successfully running: </p>
-<p><code>docker ps -a</code></p>
-</li>
-<li>
-<p>To explore the generated output folder, execute the following commands:</p>
-<p><code>docker exec -it &lt;container_id&gt; bash</code></p>
-</li>
-<li>
-<p>Once run has completed please exit the docker run by sending SIGINT - <code>^C</code> (CTRL + C)</p>
-</li>
-</ol>
-<h1 id="running-on-custom-dataset">Running on custom dataset</h1>
-<p>The above E2E ANOVOS package run executed for the sample income dataset can be customized and run for any user dataset. <br>
-This can be done configuring the <code>config/config.yaml</code> file and by defining the flow of run in <code>src/main.py</code> file.</p>
-<h1 id="anovos-package-documentation">ANOVOS Package Documentation</h1>
-<p>Please find the detailed documentation of ANOVOS package here.</p>
-<h1 id="reference-links">Reference Links</h1>
-<ol>
-<li>Setting up pyspark and installing on Windows <br>
-https://towardsdatascience.com/installing-apache-pyspark-on-windows-10-f5f0c506bea1</li>
-</ol>
+
+<pre><code class="language-python">!python --version
+</code></pre>
+
+
+</div>
+
+<div class="cell code">
+
+
+<pre><code class="language-python">!spark-submit --version
+</code></pre>
+
+</div>
+
+<p>Let's also check that a compatible version of <code>pyspark</code> is available
+within our Python environment:</p>
+<div class="cell code">
+
+
+<pre><code class="language-python">import pyspark
+pyspark.__version__
+</code></pre>
+
+
+</div>
+
+<p>If you haven't done so already, let's install <em>Anovos</em> into the
+currently active Python environment:</p>
+<div class="cell code">
+
+
+<pre><code class="language-python">!pip install anovos
+</code></pre>
+
+
+</div>
+
+<p>As <em>Anovos</em> relies on Spark behind the scenes for most of the heavy
+lifting, we need to pass an instantiated
+<a href="https://spark.apache.org/docs/2.4.8/api/python/pyspark.sql.html?highlight=sparksession#pyspark.sql.SparkSession"><code>SparkSession</code></a>
+to many of the function calls.</p>
+<p><a href="https://docs.anovos.ai/docs/setting-up-your-environment/anovos-on-local/">Setting up Spark Session for
+Anovos</a></p>
+<p>For the purposes of this guide, we'll use the pre-configured
+<code>SparkSession</code> instance provided by
+<a href="https://github.com/anovos/anovos/blob/main/src/main/anovos/shared/spark.py"><code>anovos.shared.spark</code></a>:</p>
+<div class="cell code">
+
+
+<pre><code class="language-python">from anovos.shared.spark import spark
+</code></pre>
+
+</div>
+
+<p>(Don't worry if this import takes some time and prints a lot of output.
+You should see that settings are loaded, dependencies are added, and the
+logger is configured.)</p>
+<h2 id="loading-data">Loading data</h2>
+<p>Data ingestion is the first step in any feature engineering project.
+<em>Anovos</em> builds on <a href="https://spark.apache.org/docs/2.4.8/api/python/pyspark.sql.html">Spark's data loading
+capabilites</a>
+and can handle different common file formats such as CSV, Parquet, and
+Avro.</p>
+<p><em>Anovos</em>
+<a href="https://docs.anovos.ai/docs/anovos-modules-overview/data-ingest/"><code>data_ingest</code></a>
+module provides all data ingestion functionality. It includes functions
+to merge multiple datasets as well as to select subsets of the loaded
+data.</p>
+<p>Let's load the classic <a href="https://archive.ics.uci.edu/ml/datasets/adult">Adult Income
+dataset</a> in CSV format,
+which we'll use throughout this guide:</p>
+<div class="cell code">
+
+
+<pre><code class="language-python">from anovos.data_ingest.data_ingest import read_dataset
+
+df = read_dataset(
+    spark,  # Remember: The first argument of Anovos functions is always an instantiated SparkSession
+    file_path='../data/income_dataset/csv',
+    file_type='csv',
+    file_configs={'header': 'True', 'delimiter': ',', 'inferSchema': 'True'}
+)
+</code></pre>
+
+
+</div>
+
+<p>Note that <code>df</code> is a standard Spark
+<a href="https://spark.apache.org/docs/2.4.8/api/python/pyspark.sql.html?highlight=sparksession#pyspark.sql.DataFrame"><code>DataFrame</code></a>:</p>
+<div class="cell code">
+
+
+<pre><code class="language-python">type(df)
+</code></pre>
+
+
+</div>
+
+<p>Thus, you can use all the built-in methods you might be familiar with,
+e.g.</p>
+<div class="cell code">
+
+
+<pre><code class="language-python">df.printSchema()
+</code></pre>
+
+
+</div>
+
+<p>The <a href="https://archive.ics.uci.edu/ml/datasets/adult">Adult Income
+dataset's</a> more than 48k
+entries each describe a person along with the information whether they
+earn more than $50k per year.</p>
+<p>In this guide, we will work with just a few of its columns:</p>
+<div class="cell code">
+
+
+<pre><code class="language-python">from anovos.data_ingest.data_ingest import select_column
+
+df = select_column(df, list_of_cols=['age', 'education', 'education-num', 'occupation', 'hours-per-week', 'income'])
+df = df.withColumn('income', (df['income'] == '&gt;50K').cast('integer'))  # convert label to integer
+df.printSchema()
+</code></pre>
+
+
+</div>
+
+<h2 id="learning-about-the-data">Learning about the data</h2>
+<p>Before we can start to engineer features for, we need to understand the
+data at hand. For example, we need to verify that the data has
+sufficient quality or whether we'll have to deal with missing values.</p>
+<p><em>Anovos</em>'
+<a href="https://docs.anovos.ai/docs/anovos-modules-overview/data-analyzer/"><code>data_analyzer</code></a>
+module provides three submodules for this purpose:</p>
+<ul>
+<li>The functions of
+    <a href="https://docs.anovos.ai/docs/anovos-modules-overview/quality-checker/"><code>data_analyzer.quality_checker</code></a>
+    allow us to detect and fix issues such as empty rows or duplicate
+    entries</li>
+<li><a href="https://docs.anovos.ai/docs/anovos-modules-overview/data-analyzer/"><code>data_analyzer.stats_generator</code></a>
+    offers functions to caculate various statistical properties</li>
+<li>Finally,
+    <a href="https://docs.anovos.ai/docs/anovos-modules-overview/association-evaluator/"><code>data_analyzer.association_evaluator</code></a>
+    enables us to examine a dataset for correlations between columns</li>
+</ul>
+<h3 id="assess-the-data-quality">Assess the data quality</h3>
+<p>Once a new dataset is loaded, its quality should be assessed. Does the
+dataset contain all the columns we expect? Do we have duplicate values?
+Did we ingest the expected number of unique data points? <em>Anovos</em>'
+<a href="https://docs.anovos.ai/docs/anovos-modules-overview/quality-checker/"><code>data_analyzer.quality_checker</code></a>
+module provides convenient functions to answer these questions.</p>
+<p>For sake of time, in this guide, we'll assume that our dataset does not
+exhibit such problems. Instead, we'll move on to a more advanced stage
+of quality assessment and check for outliers in the data. Outliers are
+data points that deviate significantly from the others. These points can
+be problematic when training ML models or during inference, as there is
+very little information about these ranges in the dataset, which in turn
+leads to a high degree of uncertainty.</p>
+<p>Outliers in a dataset can be due to rare events. For example, in the
+case of our income dataset, there might be some individuals that work
+well beyond retirement age or have worked their way up to a high paying
+position despite dropping out of high school.</p>
+<p>However, outliers can also be due to reporting errors. Digits in a
+number might have been swapped or values might have been given in the
+wrong order of magnitude. For example, someone might have mistakenly
+entered a weight in grams instead of kilograms.</p>
+<p>How we deal with outliers depends on their origin and the application
+context.</p>
+<div class="cell code">
+
+
+<pre><code class="language-python">from anovos.data_analyzer.quality_checker import outlier_detection
+
+output_df, metric_df = outlier_detection(spark, df, detection_side='both', print_impact=True)
+</code></pre>
+
+
+</div>
+
+<p>This tells us that we have little data for older people, which might be
+an issue later when we are trying to predict the income of this group,
+so we should keep this in mind.</p>
+<p>We can ignore the value for <code>education-num</code>, a categorical column for
+which the calculations performed by the
+<a href="https://docs.anovos.ai/docs/anovos-modules-overview/quality-checker/#outlier_detection"><code>outlier_detection</code></a>
+function are meaningless: In its standard configuration, it checks for
+values that fulfill at least two of the following criteria: They belong
+to the smallest or largest 5% of values, they deviate from the mean by
+more than 3 standard deviations, or they lie below <code>Q1 - 1.5*IQR</code> or
+above <code>Q3 + 1.5*IQR</code>, where <code>Q1</code> and <code>Q3</code> are the first and third
+quartile, respectively, and <code>IQR</code> is the <a href="https://en.wikipedia.org/wiki/Interquartile_range">Interquartile
+Range</a>. (For more
+details and information on how to utilize additional methods for outlier
+detection, see <a href="https://docs.anovos.ai/docs/anovos-modules-overview/quality-checker/#outlier_detection">the
+documentation</a>.</p>
+<p>To better understand this, let's examine the hours worked per week
+reported by the surveyed people:</p>
+<div class="cell code">
+
+
+<pre><code class="language-python">import plotly.express as px
+
+px.histogram(df.toPandas(), x='hours-per-week')
+</code></pre>
+
+
+</div>
+
+<p>We immediately see that the vast majority of people works a standard
+40-hour week, while a significant minority reports anywhere between 20
+and 60 hours. However, there are also individuals that work very few
+hours as well as people that reported almost 100 hours per week, more
+than twice the median. These are the groups detected by the outlier
+detector.</p>
+<p>We cannot only detect that there are outliers, we can also deal with
+them right away. For example, let's remove the rows where individuals
+reported an excessive amount of hours worked per week:</p>
+<div class="cell code">
+
+
+<pre><code class="language-python">df, metric_df = outlier_detection(spark, df, detection_side='both', list_of_cols=['hours-per-week'], treatment=True, treatment_method='row_removal')
+</code></pre>
+
+
+</div>
+
+<p>Let's check that we have indeed reduced the dataset to entries where the
+number of hours worked per week lies within a common range:</p>
+<div class="cell code">
+
+
+<pre><code class="language-python">px.histogram(df.toPandas(), x='hours-per-week')
+</code></pre>
+
+
+</div>
+
+<h3 id="understand-how-your-data-is-distributed">Understand how your data is distributed</h3>
+<p>When familiarizing ourselves with a dataset, one of the first steps is
+to understand the ranges of values each column contains and how the
+values are distributed. At the very least, we should learn the minimal
+and maximal values as well as examine the distribution within that range
+(e.g., by computing the mean, median, and standard deviation).</p>
+<p>This information is vital to know. For many popular kinds of ML models,
+each feature column should be scaled to the same order of magnitude.
+Further, ML models will generally only work well for ranges of feature
+values that they were trained on, so we should check that the data
+points they see during inference lie within the ranges we find.</p>
+<p><em>Anovos</em>'
+<a href="https://docs.anovos.ai/docs/anovos-modules-overview/data-analyzer/"><code>data_analyzer.stats_generator</code></a>
+module provides an easy way to quickly calculate a set of common
+properties for the columns in a dataset:</p>
+<div class="cell code">
+
+
+<pre><code class="language-python">from anovos.data_analyzer.stats_generator import global_summary
+
+global_summary(spark, df).toPandas()
+</code></pre>
+
+
+</div>
+
+<p>In most real-world use cases, we are faced with incomplete datasets. For
+example, customer records might be missing values because we have not
+had a chance to ask the customer about them. In other cases, there might
+have been a broken sensor, leading to missing values in a certain time
+period.</p>
+<p>In any case, we should know which columns in our dataset might exhibit
+such issues in order to consider this during feature selection and
+modeling. We can use the
+<a href="https://docs.anovos.ai/docs/anovos-modules-overview/data-analyzer/"><code>data_analyzer.stats_generator</code></a>
+module to check this:</p>
+<div class="cell code">
+
+
+<pre><code class="language-python">from anovos.data_analyzer.stats_generator import measures_of_counts
+
+measures_of_counts(spark, df).toPandas()
+</code></pre>
+
+
+</div>
+
+<p>There are various ways to deal with missing or unknown values. For
+example, we could replace missing entries in our dataset with the mean
+or the median of the respective column. If a column contains mostly null
+values, it might also be an option to drop it entirely. If a dataset
+contains a lot of unknown values across all of its columns, it will
+likely be necessary to design a model that can explicitly handle this
+situation.</p>
+<p>Whatever is appropriate in a given scenario, <em>Anovos</em> offers convient
+functions for this purpose in its
+<a href="https://docs.anovos.ai/docs/anovos-modules-overview/data_transformer/"><code>data_transformer</code></a>
+module, which we will have a look at later in this guide.</p>
+<h3 id="detect-correlations-within-the-dataset">Detect correlations within the dataset</h3>
+<p>In machine learning, we are often interested in predicting a class or
+value (the <em>label</em>) from a set of <em>features</em>. To decide which features
+to use in a specific scenario, it is often helpful to determine which
+columns in a dataset are correlated with the label column. In other
+words, we would like to find out which columns hold "predictive power".</p>
+<p><em>Anovos</em>'
+<a href="https://docs.anovos.ai/docs/anovos-modules-overview/association-evaluator/"><code>data_analyzer.association_evaluator</code></a>
+provides several functions for this purpose.</p>
+<p>A commonly used tool is a correlation matrix. It visualizes the degree
+of pairwise correlation between multiple columns at once.</p>
+<div class="cell code">
+
+
+<pre><code class="language-python">from anovos.data_analyzer.association_evaluator import correlation_matrix
+
+correlation_matrix(spark, df, list_of_cols=['age', 'education-num', 'income']).toPandas()
+</code></pre>
+
+
+</div>
+
+<p>From the matrix we see that age and education correlate with income: The
+older or the higher educated a person, the higher the likelihood that
+they earn above $50k. However, education and income exhibit a higher
+degree of correlation than age and income.</p>
+<h3 id="examine-drift">Examine Drift</h3>
+<p>Further, we have the drift detection. Drift is a problem for ML models.
+If over time the distribution changes compared to that of the training,
+validation, and test data, model performance might degrade. If you're
+new to this topic, <a href="https://towardsdatascience.com/an-introduction-to-machine-learning-engineering-for-production-part-1-2247bbca8a61">this introductory blog
+post</a>
+provides a first overview.</p>
+<p><em>Anovos</em> provides an entire module dedicated to detecting various kinds
+of data drift. We recommend you check how the data you're planning to
+use evolves over time prior to starting feature engineering.</p>
+<p>As we only have one dataset, we will artificially create a dataset that
+has drift by duplicating our dataset and shifting the age column,
+artificially aging the population an entire decade:</p>
+<div class="cell code">
+
+
+<pre><code class="language-python">df_shifted = df.withColumn('age', df['age']+10)
+</code></pre>
+
+
+</div>
+
+<p>With the
+<a href="https://docs.anovos.ai/docs/anovos-modules-overview/data_drift_and_stability_index/#drift_statistics"><code>drift_detector.drift_statistics</code></a>
+function we can compare a given dataset to a baseline. Let's try this:</p>
+<div class="cell code">
+
+
+<pre><code class="language-python">from anovos.data_drift.drift_detector import drift_statistics
+
+drift_statistics(spark, df_shifted, df).toPandas()
+</code></pre>
+
+
+</div>
+
+<p>We see that the drift detector has flagged the <code>age</code> column as
+exhibiting drift. The calculated <a href="https://medium.com/model-monitoring-psi/population-stability-index-psi-ab133b0a5d42">Population Stability
+Index</a>
+signals that the column's value distribution differs significantly from
+that of the baseline.</p>
+<h2 id="transform-the-data">Transform the data</h2>
+<p>Up to this point, we have only analyzed the dataset and removed entire
+entries based on these analyses. Now it's time to apply changes to the
+dataset to make it more suitable for future ML model training.</p>
+<p>Above, we discovered that there are missing values in all five feature
+columns of the dataset. If we would like to later use an ML model that
+cannot handle missing values, it might be a sensible option to replace
+missing values with the feature column's average value.</p>
+<p><em>Anovos</em>'
+<a href="https://docs.anovos.ai/docs/anovos-modules-overview/data_transformer/"><code>data_transformer</code></a>
+module provides a handy utility function for this and similar
+transformations:</p>
+<div class="cell code">
+
+
+<pre><code class="language-python">from anovos.data_transformer.transformers import imputation_MMM
+
+transformed_df = imputation_MMM(spark, df, list_of_cols=['age', 'hours-per-week'], method_type='mean')
+</code></pre>
+
+
+</div>
+
+<p>Let's check that we indeed replaced all missing values in the <code>age</code> and
+<code>hours-per-week</code> columns:</p>
+<div class="cell code">
+
+
+<pre><code class="language-python">measures_of_counts(spark, transformed_df).toPandas()
+</code></pre>
+
+
+</div>
+
+<p>Note that the data transformation capabilites of <em>Anovos</em> are currently
+limited. Future versions of the library will offer capabilites like auto
+encoders and methods for dimensionality reduction. For more information,
+see the <a href="https://docs.anovos.ai/docs/anovos-roadmap/">Anovos Product
+Roadmap</a>.</p>
+<h1 id="generate-a-report">Generate a report</h1>
+<p>Documenting datasets is an important component of any data governance
+strategy. Thus, <em>Anovos</em> integrates <a href="https://datapane.com/">datapane</a>, a
+library to create interactive reports.</p>
+<p>A basic report can be generated with just one line of code:</p>
+<div class="cell code">
+
+
+<pre><code class="language-python">from anovos.data_report.basic_report_generation import anovos_basic_report
+
+anovos_basic_report(spark, transformed_df, output_path='./report')
+</code></pre>
+
+
+</div>
+
+<p>Once the report generation is finished, you can download and view the
+generated <code>basic_report.html</code> stored in <a href="./report/">./report</a> in any
+browser.</p>
+<p>Please note that due to Jupyter's security settings, it is currently not
+possible to view it directly from within the Jupyter environment spun up
+by the Docker container.</p>
+<p>Of course, the format and content of the basic report will likely not be
+sufficient for your organization's specific needs. Hence, <em>Anovos</em>
+allows you to conveniently configure and create custom reports using the
+functions in the
+<a href="https://docs.anovos.ai/docs/data-reports/final-report-generation/"><code>data_report.report_generation</code></a>
+submodule.</p>
+<h2 id="store-the-data">Store the data</h2>
+<p>Once we've prepared and documented the data, it's time to store it so we
+can use it to train and evaluate ML models.</p>
+<p>Similar to data ingestion, data storage in <em>Anovos</em> is handled through
+<a href="">Spark's versatile capabilities</a>. Using the
+<code>data_ingest.write_dataset</code> function, we can write our processed
+DataFrame to disk:</p>
+<div class="cell code">
+
+
+<pre><code class="language-python">from anovos.data_ingest.data_ingest import write_dataset
+
+write_dataset(transformed_df, file_path=&quot;./export.csv&quot;, file_type=&quot;csv&quot;, file_configs={&quot;header&quot;: &quot;True&quot;, &quot;delimiter&quot;: &quot;,&quot;})
+</code></pre>
+
+
+</div>
+
+<p>For now, this final step of data preparation (and this introductory
+guide) is where <em>Anovos</em>' capabilities end. However, over the course of
+the upcoming releases we will extend <em>Anovos</em> to include adapters for
+popular AutoML solutions and Feature Stores, allowing you to seamlessly
+move to model trainin and serving as well as data monitoring. For more
+details and to see what else is ahead, see the <a href="https://docs.anovos.ai/docs/anovos-roadmap/">Anovos Product
+Roadmap</a>.</p>
+<h2 id="whats-next">What's next?</h2>
+<p>In this guide, you've had a glimpse at the different capabilities
+offered by <em>Anovos</em>. Of course, we've just scratched the surface and
+there is much more to see and explore:</p>
+<ul>
+<li>The <a href="https://docs.anovos.ai/">Anovos documentation</a> is a great place
+    to get an overview of the available functionality.</li>
+<li>To see how different parts of <em>Anovos</em> can be used in practice, have
+    a look at the <a href="https://github.com/anovos/anovos/tree/main/examples/notebooks">Jupyter
+    notebooks</a>
+    our team has prepared for each of the modules.</li>
+<li>Finally, to understand how <em>Anovos</em> can be integrated into your
+    Spark ecosystem, see these
+    <a href="https://docs.anovos.ai/docs/anovos-on-aws-emr/getting-started/">hints</a></li>
+</ul>
+<div class="cell code">
+
+
+<pre><code class="language-python"></code></pre>
+
+
+</div>
                 
               
               

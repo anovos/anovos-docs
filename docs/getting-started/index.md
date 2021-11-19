@@ -296,15 +296,9 @@ global_summary(spark, df).toPandas()
 </div>
 
 
-In most real-world use cases, we are faced with incomplete datasets. For
-example, customer records might be missing values because we have not
-had a chance to ask the customer about them. In other cases, there might
-have been a broken sensor, leading to missing values in a certain time
-period.
+In the real world, incomplete datasets are a common problem for data scientists. For example, customer records might be missing values because we have not had a chance to ask the customer about them. There might have been a broken sensor in other cases, leading to missing values in a certain time period.
 
-In any case, we should know which columns in our dataset might exhibit
-such issues in order to consider this during feature selection and
-modeling. We can use the
+In any case, we should know which columns in our dataset might exhibit such issues to consider during feature selection and modeling. We can use the 
 [`data_analyzer.stats_generator`](https://docs.anovos.ai/docs/anovos-modules-overview/data-analyzer/)
 module to check this:
 
@@ -318,18 +312,11 @@ measures_of_counts(spark, df).toPandas()
 
 </div>
 
-There are various ways to deal with missing or unknown values. For
-example, we could replace missing entries in our dataset with the mean
-or the median of the respective column. If a column contains mostly null
-values, it might also be an option to drop it entirely. If a dataset
-contains a lot of unknown values across all of its columns, it will
-likely be necessary to design a model that can explicitly handle this
-situation.
+There are various ways to deal with missing or unknown values. We could replace missing entries in our dataset with the mean or the median of the respective column. If a column contains mostly null values, it might also be an option to drop it entirely. If a dataset contains a lot of unknown values across all of its columns, it will likely be necessary to design a model that can explicitly handle this situation.
 
-Whatever is appropriate in a given scenario, *Anovos* offers convient
-functions for this purpose in its
+However you choose to handle these situations, Anovos offers convenient functions in the
 [`data_transformer`](https://docs.anovos.ai/docs/anovos-modules-overview/data_transformer/)
-module, which we will have a look at later in this guide.
+module which we will look at later in this guide.
 
 
 ### Detect correlations within the dataset
@@ -338,7 +325,7 @@ In machine learning, we are often interested in predicting a class or
 value (the *label*) from a set of *features*. To decide which features
 to use in a specific scenario, it is often helpful to determine which
 columns in a dataset are correlated with the label column. In other
-words, we would like to find out which columns hold "predictive power".
+words, we would like to find out which columns hold "predictive power."
 
 *Anovos*'
 [`data_analyzer.association_evaluator`](https://docs.anovos.ai/docs/anovos-modules-overview/association-evaluator/)
@@ -358,28 +345,15 @@ correlation_matrix(spark, df, list_of_cols=['age', 'education-num', 'income']).t
 
 </div>
 
-From the matrix we see that age and education correlate with income: The
-older or the higher educated a person, the higher the likelihood that
-they earn above $50k. However, education and income exhibit a higher
-degree of correlation than age and income.
-
+The matrix shows that age and education correlate with income: The older or, the higher educated a person, the higher the likelihood of earning above $50k. However, education and income exhibit a higher degree of correlation than age and income.
 
 ### Examine Drift
 
-Further, we have the drift detection. Drift is a problem for ML models.
-If over time the distribution changes compared to that of the training,
-validation, and test data, model performance might degrade. If you're
-new to this topic, [this introductory blog
-post](https://towardsdatascience.com/an-introduction-to-machine-learning-engineering-for-production-part-1-2247bbca8a61)
-provides a first overview.
+Anovos has drift detection built-in, solving one problem for machine learning models. Model performance might degrade if the distribution changes over time compared to the training, validation, and test data. For a more in-depth look into data drift, reference [this article](https://towardsdatascience.com/an-introduction-to-machine-learning-engineering-for-production-part-1-2247bbca8a61).
 
-*Anovos* provides an entire module dedicated to detecting various kinds
-of data drift. We recommend you check how the data you're planning to
-use evolves over time prior to starting feature engineering.
+Anovos provides an entire module dedicated to detecting various kinds of data drift. We recommend checking how the data you're planning to use evolves before beginning feature engineering.
 
-As we only have one dataset, we will artificially create a dataset that
-has drift by duplicating our dataset and shifting the age column,
-artificially aging the population an entire decade:
+As we only have one dataset, we will artificially create a dataset that has drift by duplicating our dataset and shifting the age column, artificially aging the population an entire decade:
 
 <div class="cell code">
 
@@ -406,20 +380,15 @@ drift_statistics(spark, df_shifted, df).toPandas()
 We see that the drift detector has flagged the `age` column as
 exhibiting drift. The calculated [Population Stability
 Index](https://medium.com/model-monitoring-psi/population-stability-index-psi-ab133b0a5d42)
-signals that the column's value distribution differs significantly from
-that of the baseline.
+signals that the column's value distribution differs significantly from the baseline.
 
 
 ## Transform the data
 
-Up to this point, we have only analyzed the dataset and removed entire
-entries based on these analyses. Now it's time to apply changes to the
-dataset to make it more suitable for future ML model training.
+So far, we have only analyzed the dataset and removed entire entries based on these analyses. Now it's time to apply changes to the dataset to prepare it for future ML model training.
 
-Above, we discovered that there are missing values in all five feature
-columns of the dataset. If we would like to later use an ML model that
-cannot handle missing values, it might be a sensible option to replace
-missing values with the feature column's average value.
+We discovered that there are missing values in all five feature
+columns of the dataset. If we choose to use this dataset in an ML model that cannot handle missing values, we should consider replacing missing values with the feature column's average value.
 
 *Anovos*'
 [`data_transformer`](https://docs.anovos.ai/docs/anovos-modules-overview/data_transformer/)
@@ -438,7 +407,7 @@ transformed_df = imputation_MMM(spark, df, list_of_cols=['age', 'hours-per-week'
 </div>
 
 
-Let's check that we indeed replaced all missing values in the `age` and
+Let's confirm that we replaced all missing values in the `age` and
 `hours-per-week` columns:
 
 
@@ -451,20 +420,18 @@ measures_of_counts(spark, transformed_df).toPandas()
 </div>
 
 
-Note that the data transformation capabilites of *Anovos* are currently
-limited. Future versions of the library will offer capabilites like auto
-encoders and methods for dimensionality reduction. For more information,
+Note that the data transformation capabilities of Anovos are currently limited. We have plans for improved capabilities, like auto-encoders and methods for dimensionality reduction. For more information,
 see the [Anovos Product
 Roadmap](https://docs.anovos.ai/docs/anovos-roadmap/).
 
 
-# Generate a report
+## Generate a report
 
-Documenting datasets is an important component of any data governance
-strategy. Thus, *Anovos* integrates [datapane](https://datapane.com/), a
+Documenting datasets is an essential component of any data governance
+strategy, so Anovos integrates [datapane](https://datapane.com/), a
 library to create interactive reports.
 
-A basic report can be generated with just one line of code:
+You can generate a basic report with just one line of code:
 
 
 <div class="cell code">
@@ -485,10 +452,7 @@ Please note that due to Jupyter's security settings, it is currently not
 possible to view it directly from within the Jupyter environment spun up
 by the Docker container.
 
-Of course, the format and content of the basic report will likely not be
-sufficient for your organization's specific needs. Hence, *Anovos*
-allows you to conveniently configure and create custom reports using the
-functions in the
+Chances are the format and content of the basic report will not be work for your teams's specific needs, so Anovos allows you to conveniently configure and create custom reports using the 
 [`data_report.report_generation`](https://docs.anovos.ai/docs/data-reports/final-report-generation/)
 submodule.
 
@@ -498,8 +462,8 @@ submodule.
 Once we've prepared and documented the data, it's time to store it so we
 can use it to train and evaluate ML models.
 
-Similar to data ingestion, data storage in *Anovos* is handled through
-[Spark's versatile capabilities](). Using the
+Similar to data ingestion, Anovos handles data storage through
+[Spark's versatile capabilities](https://notebooks.githubusercontent.com/view/ipynb?browser=chrome&color_mode=auto&commit=0404c6612249fb5e0067e9e54fa1d282f3340896&device=unknown_device&enc_url=68747470733a2f2f7261772e67697468756275736572636f6e74656e742e636f6d2f616e6f766f732f616e6f766f732f303430346336363132323439666235653030363765396535346661316432383266333334303839362f6578616d706c65732f6775696465732f67657474696e675f737461727465645f776974685f616e6f766f732e6970796e62&logged_in=true&nwo=anovos%2Fanovos&path=examples%2Fguides%2Fgetting_started_with_anovos.ipynb&platform=mac&repository_id=419297841&repository_type=Repository&version=95). Using the
 `data_ingest.write_dataset` function, we can write our processed
 DataFrame to disk:
 
@@ -513,11 +477,7 @@ write_dataset(transformed_df, file_path="./export.csv", file_type="csv", file_co
 
 </div>
 
-For now, this final step of data preparation (and this introductory
-guide) is where *Anovos*' capabilities end. However, over the course of
-the upcoming releases we will extend *Anovos* to include adapters for
-popular AutoML solutions and Feature Stores, allowing you to seamlessly
-move to model trainin and serving as well as data monitoring. For more
+As of now, this final step of data preparation (and this introductory guide) is where Anovos' capabilities end. However, upcoming releases will extend Anovos to include adapters for popular AutoML solutions and Feature Stores, allowing you to seamlessly move to model training and serving as well as data monitoring For more
 details and to see what else is ahead, see the [Anovos Product
 Roadmap](https://docs.anovos.ai/docs/anovos-roadmap/).
 
@@ -525,8 +485,7 @@ Roadmap](https://docs.anovos.ai/docs/anovos-roadmap/).
 ## What's next?
 
 In this guide, you've had a glimpse at the different capabilities
-offered by *Anovos*. Of course, we've just scratched the surface and
-there is much more to see and explore:
+offered by *Anovos*. However, we've just scratched the surface, and there is much more to see and explore:
 
   - The [Anovos documentation](https://docs.anovos.ai/) is a great place
     to get an overview of the available functionality.

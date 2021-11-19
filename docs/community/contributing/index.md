@@ -4,9 +4,9 @@ Welcome to the Anovos Community! We're excited to bring the immense experience o
 
 Anovos is an open source project that brings automation to the feature engineering process.
 
-To get Anovos up and running on your local machine, follow the [Getting Started Guide](https://docs.anovos.ai/gettingstarted)
+To get Anovos up and running on your local machine, follow the [Getting Started Guide](https://docs.anovos.ai/gettingstarted).
 
-All repos, sample data, and notebooks you need are located in the  [Anovos Github Organization](https://github.com/anovos)
+The [Anovos Github Organization](https://github.com/anovos) contains all repos, sample data, and notebooks you need.
 
 ## How To Get Involved
 
@@ -18,13 +18,13 @@ We love your input! We want to make contributing to this project as easy and tra
 - Proposing new features
 - Testing out new features
 - Contributing to the docs
-- Giving talks about Anovos at Meetups, conferences and webinars
+- Giving talks about Anovos at Meetups, conferences, and webinars
 
-The latest information about how to interact with the project maintainers and broader community is kept in [COMMUNICATION.md](https://github.com/anovos/anovos/blob/main/.github/COMMUNICATION.md).
+For the latest information about interacting with the project maintainers and the broader community, please visit the [COMMUNICATION.md](https://github.com/anovos/anovos/blob/main/.github/COMMUNICATION.md) file in Github.
 
 ## Contribute to Anovos
 
-Pull requests are the best way to propose changes to the codebase. We use GitHub flow and everything happens through pull requests. We welcome your pull requests; to make it simple, here are the steps to contribute:
+Pull requests are the best way to propose changes to the codebase. We use GitHub flow, and everything happens through pull requests. We welcome your pull requests; to make it simple, here are the steps to contribute:
 
 - Fork the repo you're updating and create your branch from main.
 - If you've added code that should be tested, add tests.
@@ -37,11 +37,7 @@ In short, when you submit code changes, your submissions are understood to be un
 
 ### Write Thorough Commit Messages
 
-Help reviewers know what you're contributing by writing good commit messages. To standardize how things are done, your first line of your commit is your _subject_, followed by a blank line, then a message describing what the commit does. We use the following guidelines suggested [by Chris Beams](https://chris.beams.io/posts/git-commit/):
-
-#### Commit messages
-
-The first line of the commit message is the _subject_, this should be followed by a blank line and then a message describing the intent and purpose of the commit. These guidelines are based upon a [post by Chris Beams](https://chris.beams.io/posts/git-commit/).
+Help reviewers know what you're contributing by writing good commit messages. The first line of the commit message is the subject; this should be followed by a blank line and then a message describing the intent and purpose of the commit. We based these guidelines on a [post by Chris Beams](https://chris.beams.io/posts/git-commit/).
 
 When you commit, you are accepting our DCO:
 
@@ -104,11 +100,11 @@ Update the documentation for page X so including fixing A, B, C and D and F.
 
 > This example will be truncated in the GitHub UI and via `git log --oneline`
 
-If you would like to ammend your commit follow this guide: [Git: Rewriting History](https://git-scm.com/book/en/v2/Git-Tools-Rewriting-History)
+If you would like to amend your commit, follow this guide: [Git: Rewriting History](https://git-scm.com/book/en/v2/Git-Tools-Rewriting-History)
 
 ### Report bugs using GitHub's issues
 
-All bugs are tracked using Github issues. If you find something that needs to be addressed, open a new issue; it's easy!
+The team tracks all bugs by using Github issues. If you find something that needs to be addressed, open a new issue; it's easy!
 
 ## License
 
