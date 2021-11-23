@@ -300,6 +300,27 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#generate-a-report" class="md-nav__link">
+    Generate a report
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#store-the-data" class="md-nav__link">
+    Store the data
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-next" class="md-nav__link">
+    What's next?
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -870,6 +891,27 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#generate-a-report" class="md-nav__link">
+    Generate a report
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#store-the-data" class="md-nav__link">
+    Store the data
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-next" class="md-nav__link">
+    What's next?
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -886,20 +928,13 @@
                 <h1 id="getting-started-with-anovos">Getting Started with Anovos</h1>
 <p><em>Anovos</em> provides data scientists and ML engineers with powerful and
 versatile tools for feature engineering.</p>
-<p>In this guide, you will learn how to set up <em>Anovos</em> and get to know key
-capabilities.</p>
+<p>In this guide, you will learn how to set up <em>Anovos</em> and get to know what it can do.</p>
 <h2 id="setting-up-and-verifying-the-python-and-spark-environment">Setting up and verifying the Python and Spark environment</h2>
-<p><em>Anovos</em> builds on <a href="https://spark.apache.org/">Apache Spark</a>, a highly
-scalable engine for data engineering. Thus, an installation of Spark is
-required to run any <em>Anovos</em> code. Further, the Python bindings for
-Spark (known as <code>pyspark</code>) need to be installed in a compatible version.</p>
-<p>If you are first starting out with <em>Anovos</em> and are not yet familiar
-with Spark, we recommend you execute this guide through the provided
-<em>anovos-demo</em> Docker container, which provides a full Spark setup along
-with compatible versions of Python and a Jupyter notebook environment.</p>
+<p>Anovos builds on <a href="https://spark.apache.org/">Apache Spark</a>, a highly scalable engine for data engineering, so an installation of Spark is required to run any Anovos code. The Python bindings for Spark (known as pyspark) also need to be installed in a compatible version.</p>
+<p>If you are first starting out with Anovos and are not yet familiar with Spark, we recommend you execute this guide through the provided anovos-demo Docker container, which provides a full Spark setup along with compatible versions of Python and a Jupyter notebook environment.</p>
 <p><a href="https://docs.anovos.ai/docs/setting-up-your-environment/anovos-on-local/">Setting up Anovos on
 Local</a></p>
-<p>The currently available Beta version of <em>Anovos</em> is specifically built
+<p>The currently version of Anovos is specifically built
 for Spark 2.4.x, Python 3.7.x, and Java 8 (OpenJDK 1.8.x). You can
 verify that you're running the correct versions by executing the
 following lines:</p>
@@ -943,8 +978,7 @@ currently active Python environment:</p>
 
 </div>
 
-<p>As <em>Anovos</em> relies on Spark behind the scenes for most of the heavy
-lifting, we need to pass an instantiated
+<p>Since Anovos relies on Spark behind the scenes for most heavy lifting, we need to pass an instantiated
 <a href="https://spark.apache.org/docs/2.4.8/api/python/pyspark.sql.html?highlight=sparksession#pyspark.sql.SparkSession"><code>SparkSession</code></a>
 to many of the function calls.</p>
 <p><a href="https://docs.anovos.ai/docs/setting-up-your-environment/anovos-on-local/">Setting up Spark Session for
@@ -1017,7 +1051,7 @@ e.g.</p>
 
 <p>The <a href="https://archive.ics.uci.edu/ml/datasets/adult">Adult Income
 dataset's</a> more than 48k
-entries each describe a person along with the information whether they
+entries each describes a person along with the information whether they
 earn more than $50k per year.</p>
 <p>In this guide, we will work with just a few of its columns:</p>
 <div class="cell code">
@@ -1034,21 +1068,20 @@ df.printSchema()
 </div>
 
 <h2 id="learning-about-the-data">Learning about the data</h2>
-<p>Before we can start to engineer features for, we need to understand the
-data at hand. For example, we need to verify that the data has
-sufficient quality or whether we'll have to deal with missing values.</p>
+<p>Before we can start to engineer features, we need to understand the
+data. For example, we need to verify that the data has
+sufficient quality or if there are missing values.</p>
 <p><em>Anovos</em>'
 <a href="https://docs.anovos.ai/docs/anovos-modules-overview/data-analyzer/"><code>data_analyzer</code></a>
 module provides three submodules for this purpose:</p>
 <ul>
 <li>The functions of
     <a href="https://docs.anovos.ai/docs/anovos-modules-overview/quality-checker/"><code>data_analyzer.quality_checker</code></a>
-    allow us to detect and fix issues such as empty rows or duplicate
+    allow us to detect and fix issues like empty rows or duplicate
     entries</li>
 <li><a href="https://docs.anovos.ai/docs/anovos-modules-overview/data-analyzer/"><code>data_analyzer.stats_generator</code></a>
     offers functions to caculate various statistical properties</li>
-<li>Finally,
-    <a href="https://docs.anovos.ai/docs/anovos-modules-overview/association-evaluator/"><code>data_analyzer.association_evaluator</code></a>
+<li><a href="https://docs.anovos.ai/docs/anovos-modules-overview/association-evaluator/"><code>data_analyzer.association_evaluator</code></a>
     enables us to examine a dataset for correlations between columns</li>
 </ul>
 <h3 id="assess-the-data-quality">Assess the data quality</h3>
@@ -1057,21 +1090,10 @@ dataset contain all the columns we expect? Do we have duplicate values?
 Did we ingest the expected number of unique data points? <em>Anovos</em>'
 <a href="https://docs.anovos.ai/docs/anovos-modules-overview/quality-checker/"><code>data_analyzer.quality_checker</code></a>
 module provides convenient functions to answer these questions.</p>
-<p>For sake of time, in this guide, we'll assume that our dataset does not
-exhibit such problems. Instead, we'll move on to a more advanced stage
-of quality assessment and check for outliers in the data. Outliers are
-data points that deviate significantly from the others. These points can
-be problematic when training ML models or during inference, as there is
-very little information about these ranges in the dataset, which in turn
-leads to a high degree of uncertainty.</p>
-<p>Outliers in a dataset can be due to rare events. For example, in the
-case of our income dataset, there might be some individuals that work
-well beyond retirement age or have worked their way up to a high paying
-position despite dropping out of high school.</p>
-<p>However, outliers can also be due to reporting errors. Digits in a
-number might have been swapped or values might have been given in the
-wrong order of magnitude. For example, someone might have mistakenly
-entered a weight in grams instead of kilograms.</p>
+<p>For time's sake, we'll assume that our dataset does not
+exhibit any of these problems. Instead, we'll move on to more advanced quality assessments and check for outliers in the data. Outliers are data points that deviate significantly from the others. These points can be problematic when training ML models or during inference because there is very little information about the ranges in the dataset, leading to a high degree of uncertainty.</p>
+<p>We immediately see that most people work a standard 40-hour week, while a significant minority reports anywhere between 20 and 60 hours. However, some individuals work very few hours, and others reported almost 100 hours per week, more than twice the median. These are the groups detected by the outlier detector.</p>
+<p>We cannot only detect that there are outliers, but we can also deal with them right away. For example, let's remove the rows where individuals reported an excessive amount of hours worked per week:</p>
 <p>How we deal with outliers depends on their origin and the application
 context.</p>
 <div class="cell code">
@@ -1098,7 +1120,7 @@ more than 3 standard deviations, or they lie below <code>Q1 - 1.5*IQR</code> or
 above <code>Q3 + 1.5*IQR</code>, where <code>Q1</code> and <code>Q3</code> are the first and third
 quartile, respectively, and <code>IQR</code> is the <a href="https://en.wikipedia.org/wiki/Interquartile_range">Interquartile
 Range</a>. (For more
-details and information on how to utilize additional methods for outlier
+details and information on utilizing additional methods for outlier
 detection, see <a href="https://docs.anovos.ai/docs/anovos-modules-overview/quality-checker/#outlier_detection">the
 documentation</a>.</p>
 <p>To better understand this, let's examine the hours worked per week
@@ -1144,16 +1166,8 @@ number of hours worked per week lies within a common range:</p>
 </div>
 
 <h3 id="understand-how-your-data-is-distributed">Understand how your data is distributed</h3>
-<p>When familiarizing ourselves with a dataset, one of the first steps is
-to understand the ranges of values each column contains and how the
-values are distributed. At the very least, we should learn the minimal
-and maximal values as well as examine the distribution within that range
-(e.g., by computing the mean, median, and standard deviation).</p>
-<p>This information is vital to know. For many popular kinds of ML models,
-each feature column should be scaled to the same order of magnitude.
-Further, ML models will generally only work well for ranges of feature
-values that they were trained on, so we should check that the data
-points they see during inference lie within the ranges we find.</p>
+<p>When familiarizing ourselves with a dataset, one of the first steps is to understand the ranges of values each column contains and how the values are distributed. At the very least, we should learn the minimal and maximal values and examine the distribution within that range (e.g., by computing the mean, median, and standard deviation).</p>
+<p>This information is vital to know. For many popular ML models, each feature column should be scaled to the same order of magnitude. Further, ML models will generally only work well for ranges of feature values trained on, so we should check that the data points they see during inference lie within the ranges we find.</p>
 <p><em>Anovos</em>'
 <a href="https://docs.anovos.ai/docs/anovos-modules-overview/data-analyzer/"><code>data_analyzer.stats_generator</code></a>
 module provides an easy way to quickly calculate a set of common
@@ -1169,14 +1183,8 @@ global_summary(spark, df).toPandas()
 
 </div>
 
-<p>In most real-world use cases, we are faced with incomplete datasets. For
-example, customer records might be missing values because we have not
-had a chance to ask the customer about them. In other cases, there might
-have been a broken sensor, leading to missing values in a certain time
-period.</p>
-<p>In any case, we should know which columns in our dataset might exhibit
-such issues in order to consider this during feature selection and
-modeling. We can use the
+<p>In the real world, incomplete datasets are a common problem for data scientists. For example, customer records might be missing values because we have not had a chance to ask the customer about them. There might have been a broken sensor in other cases, leading to missing values in a certain time period.</p>
+<p>In any case, we should know which columns in our dataset might exhibit such issues to consider during feature selection and modeling. We can use the 
 <a href="https://docs.anovos.ai/docs/anovos-modules-overview/data-analyzer/"><code>data_analyzer.stats_generator</code></a>
 module to check this:</p>
 <div class="cell code">
@@ -1190,23 +1198,16 @@ measures_of_counts(spark, df).toPandas()
 
 </div>
 
-<p>There are various ways to deal with missing or unknown values. For
-example, we could replace missing entries in our dataset with the mean
-or the median of the respective column. If a column contains mostly null
-values, it might also be an option to drop it entirely. If a dataset
-contains a lot of unknown values across all of its columns, it will
-likely be necessary to design a model that can explicitly handle this
-situation.</p>
-<p>Whatever is appropriate in a given scenario, <em>Anovos</em> offers convient
-functions for this purpose in its
+<p>There are various ways to deal with missing or unknown values. We could replace missing entries in our dataset with the mean or the median of the respective column. If a column contains mostly null values, it might also be an option to drop it entirely. If a dataset contains a lot of unknown values across all of its columns, it will likely be necessary to design a model that can explicitly handle this situation.</p>
+<p>However you choose to handle these situations, Anovos offers convenient functions in the
 <a href="https://docs.anovos.ai/docs/anovos-modules-overview/data_transformer/"><code>data_transformer</code></a>
-module, which we will have a look at later in this guide.</p>
+module which we will look at later in this guide.</p>
 <h3 id="detect-correlations-within-the-dataset">Detect correlations within the dataset</h3>
 <p>In machine learning, we are often interested in predicting a class or
 value (the <em>label</em>) from a set of <em>features</em>. To decide which features
 to use in a specific scenario, it is often helpful to determine which
 columns in a dataset are correlated with the label column. In other
-words, we would like to find out which columns hold "predictive power".</p>
+words, we would like to find out which columns hold "predictive power."</p>
 <p><em>Anovos</em>'
 <a href="https://docs.anovos.ai/docs/anovos-modules-overview/association-evaluator/"><code>data_analyzer.association_evaluator</code></a>
 provides several functions for this purpose.</p>
@@ -1223,23 +1224,11 @@ correlation_matrix(spark, df, list_of_cols=['age', 'education-num', 'income']).t
 
 </div>
 
-<p>From the matrix we see that age and education correlate with income: The
-older or the higher educated a person, the higher the likelihood that
-they earn above $50k. However, education and income exhibit a higher
-degree of correlation than age and income.</p>
+<p>The matrix shows that age and education correlate with income: The older or, the higher educated a person, the higher the likelihood of earning above $50k. However, education and income exhibit a higher degree of correlation than age and income.</p>
 <h3 id="examine-drift">Examine Drift</h3>
-<p>Further, we have the drift detection. Drift is a problem for ML models.
-If over time the distribution changes compared to that of the training,
-validation, and test data, model performance might degrade. If you're
-new to this topic, <a href="https://towardsdatascience.com/an-introduction-to-machine-learning-engineering-for-production-part-1-2247bbca8a61">this introductory blog
-post</a>
-provides a first overview.</p>
-<p><em>Anovos</em> provides an entire module dedicated to detecting various kinds
-of data drift. We recommend you check how the data you're planning to
-use evolves over time prior to starting feature engineering.</p>
-<p>As we only have one dataset, we will artificially create a dataset that
-has drift by duplicating our dataset and shifting the age column,
-artificially aging the population an entire decade:</p>
+<p>Anovos has drift detection built-in, solving one problem for machine learning models. Model performance might degrade if the distribution changes over time compared to the training, validation, and test data. For a more in-depth look into data drift, reference <a href="https://towardsdatascience.com/an-introduction-to-machine-learning-engineering-for-production-part-1-2247bbca8a61">this article</a>.</p>
+<p>Anovos provides an entire module dedicated to detecting various kinds of data drift. We recommend checking how the data you're planning to use evolves before beginning feature engineering.</p>
+<p>As we only have one dataset, we will artificially create a dataset that has drift by duplicating our dataset and shifting the age column, artificially aging the population an entire decade:</p>
 <div class="cell code">
 
 
@@ -1266,16 +1255,11 @@ drift_statistics(spark, df_shifted, df).toPandas()
 <p>We see that the drift detector has flagged the <code>age</code> column as
 exhibiting drift. The calculated <a href="https://medium.com/model-monitoring-psi/population-stability-index-psi-ab133b0a5d42">Population Stability
 Index</a>
-signals that the column's value distribution differs significantly from
-that of the baseline.</p>
+signals that the column's value distribution differs significantly from the baseline.</p>
 <h2 id="transform-the-data">Transform the data</h2>
-<p>Up to this point, we have only analyzed the dataset and removed entire
-entries based on these analyses. Now it's time to apply changes to the
-dataset to make it more suitable for future ML model training.</p>
-<p>Above, we discovered that there are missing values in all five feature
-columns of the dataset. If we would like to later use an ML model that
-cannot handle missing values, it might be a sensible option to replace
-missing values with the feature column's average value.</p>
+<p>So far, we have only analyzed the dataset and removed entire entries based on these analyses. Now it's time to apply changes to the dataset to prepare it for future ML model training.</p>
+<p>We discovered that there are missing values in all five feature
+columns of the dataset. If we choose to use this dataset in an ML model that cannot handle missing values, we should consider replacing missing values with the feature column's average value.</p>
 <p><em>Anovos</em>'
 <a href="https://docs.anovos.ai/docs/anovos-modules-overview/data_transformer/"><code>data_transformer</code></a>
 module provides a handy utility function for this and similar
@@ -1291,7 +1275,7 @@ transformed_df = imputation_MMM(spark, df, list_of_cols=['age', 'hours-per-week'
 
 </div>
 
-<p>Let's check that we indeed replaced all missing values in the <code>age</code> and
+<p>Let's confirm that we replaced all missing values in the <code>age</code> and
 <code>hours-per-week</code> columns:</p>
 <div class="cell code">
 
@@ -1302,16 +1286,14 @@ transformed_df = imputation_MMM(spark, df, list_of_cols=['age', 'hours-per-week'
 
 </div>
 
-<p>Note that the data transformation capabilites of <em>Anovos</em> are currently
-limited. Future versions of the library will offer capabilites like auto
-encoders and methods for dimensionality reduction. For more information,
+<p>Note that the data transformation capabilities of Anovos are currently limited. We have plans for improved capabilities, like auto-encoders and methods for dimensionality reduction. For more information,
 see the <a href="https://docs.anovos.ai/docs/anovos-roadmap/">Anovos Product
 Roadmap</a>.</p>
-<h1 id="generate-a-report">Generate a report</h1>
-<p>Documenting datasets is an important component of any data governance
-strategy. Thus, <em>Anovos</em> integrates <a href="https://datapane.com/">datapane</a>, a
+<h2 id="generate-a-report">Generate a report</h2>
+<p>Documenting datasets is an essential component of any data governance
+strategy, so Anovos integrates <a href="https://datapane.com/">datapane</a>, a
 library to create interactive reports.</p>
-<p>A basic report can be generated with just one line of code:</p>
+<p>You can generate a basic report with just one line of code:</p>
 <div class="cell code">
 
 
@@ -1329,17 +1311,14 @@ browser.</p>
 <p>Please note that due to Jupyter's security settings, it is currently not
 possible to view it directly from within the Jupyter environment spun up
 by the Docker container.</p>
-<p>Of course, the format and content of the basic report will likely not be
-sufficient for your organization's specific needs. Hence, <em>Anovos</em>
-allows you to conveniently configure and create custom reports using the
-functions in the
+<p>Chances are the format and content of the basic report will not be work for your teams's specific needs, so Anovos allows you to conveniently configure and create custom reports using the 
 <a href="https://docs.anovos.ai/docs/data-reports/final-report-generation/"><code>data_report.report_generation</code></a>
 submodule.</p>
 <h2 id="store-the-data">Store the data</h2>
 <p>Once we've prepared and documented the data, it's time to store it so we
 can use it to train and evaluate ML models.</p>
-<p>Similar to data ingestion, data storage in <em>Anovos</em> is handled through
-<a href="">Spark's versatile capabilities</a>. Using the
+<p>Similar to data ingestion, Anovos handles data storage through
+<a href="https://notebooks.githubusercontent.com/view/ipynb?browser=chrome&amp;color_mode=auto&amp;commit=0404c6612249fb5e0067e9e54fa1d282f3340896&amp;device=unknown_device&amp;enc_url=68747470733a2f2f7261772e67697468756275736572636f6e74656e742e636f6d2f616e6f766f732f616e6f766f732f303430346336363132323439666235653030363765396535346661316432383266333334303839362f6578616d706c65732f6775696465732f67657474696e675f737461727465645f776974685f616e6f766f732e6970796e62&amp;logged_in=true&amp;nwo=anovos%2Fanovos&amp;path=examples%2Fguides%2Fgetting_started_with_anovos.ipynb&amp;platform=mac&amp;repository_id=419297841&amp;repository_type=Repository&amp;version=95">Spark's versatile capabilities</a>. Using the
 <code>data_ingest.write_dataset</code> function, we can write our processed
 DataFrame to disk:</p>
 <div class="cell code">
@@ -1353,17 +1332,12 @@ write_dataset(transformed_df, file_path=&quot;./export.csv&quot;, file_type=&quo
 
 </div>
 
-<p>For now, this final step of data preparation (and this introductory
-guide) is where <em>Anovos</em>' capabilities end. However, over the course of
-the upcoming releases we will extend <em>Anovos</em> to include adapters for
-popular AutoML solutions and Feature Stores, allowing you to seamlessly
-move to model trainin and serving as well as data monitoring. For more
+<p>As of now, this final step of data preparation (and this introductory guide) is where Anovos' capabilities end. However, upcoming releases will extend Anovos to include adapters for popular AutoML solutions and Feature Stores, allowing you to seamlessly move to model training and serving as well as data monitoring For more
 details and to see what else is ahead, see the <a href="https://docs.anovos.ai/docs/anovos-roadmap/">Anovos Product
 Roadmap</a>.</p>
 <h2 id="whats-next">What's next?</h2>
 <p>In this guide, you've had a glimpse at the different capabilities
-offered by <em>Anovos</em>. Of course, we've just scratched the surface and
-there is much more to see and explore:</p>
+offered by <em>Anovos</em>. However, we've just scratched the surface, and there is much more to see and explore:</p>
 <ul>
 <li>The <a href="https://docs.anovos.ai/">Anovos documentation</a> is a great place
     to get an overview of the available functionality.</li>
@@ -1403,7 +1377,7 @@ there is much more to see and explore:</p>
                     <ul>
                         <li><a href="/community/contributor" title="">Contributor Guide</a></li>
                         <li><a href="/community/license/" title="">License</a></li>
-                        <li><a href="/community/code-of-conduct/" title="">Code of Coduct</a></li>
+                        <li><a href="/community/code-of-conduct/" title="">Code of Codduct</a></li>
                         
                     </ul>
                 </nav>

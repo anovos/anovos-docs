@@ -788,33 +788,33 @@
                   <h1>Anovos On Local</h1>
                 
                 <h3 id="step-1-software-prerequisites">Step 1: Software Prerequisites</h3>
-<p>Anovos requires Spark (2.4.x), Python (3.7.*) and Java(8) to be setup in order to run in local environment. Kindly look at the following links for setting up Spark, Python and Java in local: </p>
+<p>Anovos requires Spark (2.4.x), Python (3.7.*) and Java(8) to be set up to run in a local environment. The following links are useful for setting up Spark, Python and Java in local: </p>
 <p><a href="https://spark.apache.org/docs/2.4.8/">Spark 2.4.8</a>
 <a href="https://www.python.org/downloads/release/python-378/">Python 3.7</a>
 <a href="https://www.oracle.com/java/technologies/downloads/#java8">Java 8</a> </p>
 <p><a href="https://kevinvecmanis.io/python/pyspark/install/2019/05/31/Installing-Apache-Spark.html">Installing Apache on Mac OSX</a></p>
 <p><a href="https://towardsdatascience.com/installing-apache-pyspark-on-windows-10-f5f0c506bea1">Using PySpark on Windows</a></p>
 <h3 id="step2-running-on-local">Step2 : Running on local</h3>
-<p>Anovos can be run on local in two ways: </p>
+<p>Anovos can run locally in one of two ways:</p>
 <ol>
 <li>
 <p>By cloning the repo and running it via spark-submit </p>
 <ul>
-<li>Clone the Anovos repository on local environment using command: 
+<li>Clone the Anovos repository in your local environment using the command: 
 <code>git clone https://github.com/anovos/anovos.git</code></li>
 <li>After cloning, go to the Anovos directory and execute the following command to clean and build the latest modules in dist folder: 
 <code>make clean build</code> </li>
 <li>Then go to dist/ folder and  <ul>
-<li>Update configs.yaml for all input &amp; output paths. All other changes depends upon the dataset being used. Also update configs.yaml for other threshold settings for different functionalities. </li>
-<li>Update main.py - This is sample script to show how different functions from Anovos module can be stitched together to create a workflow. </li>
-<li>Update spark-submit.sh – This is a sample shell script to run spark application via spark-submit. </li>
+<li>Update configs.yaml for all input &amp; output paths. All other changes depend on the dataset being used. Also, update configs.yaml for other threshold settings for different functionalities. </li>
+<li>Update main.py - This sample script demonstrates how different functions from Anovos module can be stitched together to create a workflow.</li>
+<li>Update spark-submit.sh – This sample shell script runs the spark application via spark-submit.</li>
 </ul>
 </li>
 <li>Run using spark submit shell script 
 <code>nohup ./spark-submit.sh &gt; run.txt &amp;</code></li>
 <li>Check stdout logs while running 
 <code>tail -f run.txt</code></li>
-<li>Once the run has completed, the script will automatically open the final generated report "report_stats/ml_anovos_report.html" on the browser. </li>
+<li>Once the run completes, the script will automatically open the final generated report "report_stats/ml_anovos_report.html" on the browser. </li>
 </ul>
 </li>
 <li>
@@ -866,7 +866,7 @@ pre-configured SparkSession instance provided by anovos.shared.spark:
                     <ul>
                         <li><a href="/community/contributor" title="">Contributor Guide</a></li>
                         <li><a href="/community/license/" title="">License</a></li>
-                        <li><a href="/community/code-of-conduct/" title="">Code of Coduct</a></li>
+                        <li><a href="/community/code-of-conduct/" title="">Code of Codduct</a></li>
                         
                     </ul>
                 </nav>
