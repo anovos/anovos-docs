@@ -1,6 +1,6 @@
 # Anovos Scale Testing
 
-We tested Anovos modules on a Mobilewalla bid stream data with the following attributes:
+We tested Anovos modules on a Mobilewalla's mobile engagement data with the following attributes:
 
 | Data Size | 50 GB |
 | --- | --- |
