@@ -1,10 +1,14 @@
 # The Anovos Docs
 
-Everything you need to know about Anovos and its major component microservices.
-​
+Everything you need to know about Anovos and its major components.
+
 ## What is Anovos?
 
-Anovos is a an open source project, built by data scientist for the data science community, that brings automation to the feature engineering process. By rethinking ingestion and transformation, and including deeper analytics, drift identification, and stability analysis, Anovos improves productivity and helps data scientists build more resilient, higher performing models.
+Anovos is an open source project, built by data scientist for the data science community,
+that brings automation to the feature engineering process.
+By rethinking ingestion and transformation, and including deeper analytics, drift identification,
+and stability analysis, Anovos improves productivity and helps data scientists build more resilient,
+higher performing models.
 
 Interested in contributing? Check out our [Contributors' Page](/community/contributing/).
 
@@ -13,26 +17,19 @@ Interested in contributing? Check out our [Contributors' Page](/community/contri
 Anovos is built on a curated collection of open source libraries, including: 
 
 - [Apache Spark](https://github.com/apache/spark)
+- [datapane](https://github.com/datapane/datapane/)
 - [Pandas](https://github.com/pandas-dev/pandas)
-- [scripy](https://github.com/scipy/scipy)
-- [scikit-learn](https://github.com/scikit-learn/scikit-learn/)
-- [oblib](https://github.com/joblib/joblib)
-- [boto3](https://github.com/boto/boto3)
-- [pyarrow](https://github.com/apache/arrow)
-- [sparkpickle](https://github.com/src-d/sparkpickle/)
-- [s3path](https://github.com/liormizr/s3path)
-- [statsmodels](https://github.com/statsmodels/statsmodels)
-- [pybind11](https://github.com/pybind/pybind11)
 - [popmon](https://github.com/ing-bank/popmon/)
 - [seaborn](https://github.com/mwaskom/seaborn)
+- [scipy](https://github.com/scipy/scipy)
+- [scikit-learn](https://github.com/scikit-learn/scikit-learn/)
+- [statsmodels](https://github.com/statsmodels/statsmodels)
 - [varclushi](https://github.com/jingtt/varclushi)
-- [pytest](https://pytest.org/)
-- [datapane](https://github.com/datapane/datapane/)
 
 ## Get Help
 
 Need a little help? We're here!
 
 - Check out the [FAQs](https://docs.anovos.ai) - When there are questions, we document the answers.
-- Join the [MLOps Commuhity](https://go.mlops.community/slack). Look for the `#oss-anovos` channel.
-- Submit an issue on [Github](https://github.com/anovos/anovos).
+- Join the [MLOps Community Slack](https://go.mlops.community/slack) and look for the `#oss-anovos` channel.
+- Submit an issue on [GitHub](https://github.com/anovos/anovos).
