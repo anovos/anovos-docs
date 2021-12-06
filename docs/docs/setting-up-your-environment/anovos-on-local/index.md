@@ -21,6 +21,7 @@ Anovos can run locally in one of two ways:
     - After cloning, go to the Anovos directory and execute the following command to clean and build the latest modules
       in the dist folder:
       `make clean build`
+    - Install Anovos' requirements by running `pip install -r requirements.txt`
     - Then go to the dist/ folder and
         - Update configs.yaml for all input & output paths. All other changes depend on the dataset being used. Also,
           update configs.yaml for other threshold settings for different functionalities.
