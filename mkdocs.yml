@@ -69,7 +69,6 @@ extra:
     - icon: fontawesome/brands/twitter
       link: https://twitter.com/anovos
 
-extra:
   analytics:
     provider: google
     property: UA-52258647-20
