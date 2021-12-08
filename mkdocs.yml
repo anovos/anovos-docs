@@ -57,13 +57,7 @@ nav:
       - HTML Report: docs/data-reports/html-report/index.md
     - Anovos on AWS EMR: docs/anovos-on-aws-emr/getting-started/index.md
     - Anovos Scale Testing: docs/anovos-scale-testing/overview/index.md
-    - API Specifications:
-      - Overview: docs/api/overview/index.md
-      - Data Analyzer: 
-        - Overview: docs/api/data-analyzer/overview/index.md
-        - Association Evaluator: docs/api/data-analyzer/association-evaluator/index.md
-        - Quality Cheker: docs/api/data-analyzer/quality-checker/index.md
-        - Stats Generator: docs/api/data-analyzer/stats-generator/index.md
+    - Limitations: docs/limitations/index.md
     
 
 
