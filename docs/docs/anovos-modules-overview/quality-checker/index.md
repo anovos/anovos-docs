@@ -1,20 +1,19 @@
 ## Module **ANOVOS.quality_checker**
 
-This submodule focus on assessing the data quality at both row level and column level and also provides an appropriate treatment option to fix those quality issues. 
+This submodule focuses on assessing the data quality at both row-level and column-level and also provides an appropriate treatment option to fix quality issues.
+Columns subjected to this analysis can be controlled by the right combination of arguments - list_of_cols and drop_cols. All functions have the following arguments:
 
-Columns which are subjected to these analysis can be controlled by right combination of arguments - list_of_cols and drop_cols. All functions have following common arguments: 
+- **idf**: Input dataframe 
+- **list_of_cols**: This argument, in a list format, is used to specify the columns subjected to the analysis in the input dataframe. Instead of a list, columns can be specified in a single text format where different column names are separated by pipe delimiter “|”. The user can also use “all” as an input to this argument to consider all columns. This is super useful instead of specifying all column names manually.
+- **drop_cols**: In a list format, this argument is used to specify the columns that need to be dropped from list_of_cols. Instead of list, columns can be specified in a single text format where different column names are separated by pipe delimiter “|”. It is most useful when coupled with the “all” value of list_of_cols, when we need to consider all columns except a few handful of them.
+- **print_impact**: This argument is to print out the statistics. 
 
-- idf: Input dataframe 
-- list_of_cols: This argument, in a list format, is used to specify the columns which are subjected to the analysis in the input dataframe. Alternatively, instead of list, columns can be specified in a single text format where different column names are separated by pipe delimiter “|”. The user can also use “all” as an input to this argument to consider all columns. This is super useful instead of specifying all column names manually. 
-- drop_cols: This argument, in a list format, is used to specify the columns which needs to be dropped from list_of_cols. Alternatively, instead of list, columns can be specified in a single text format where different column names are separated by pipe delimiter “|”. It is most useful when used coupled with “all” value of list_of_cols, when we need to consider all columns except few handful of them. 
-- print_impact: This argument is to print out the statistics. 
-
-At row level, the following checks are done: 
+At the row level, the following checks are done: 
 
 - duplicate_detection 
 - nullRows_detection 
 
-At column level, the following checks are done: 
+At the column level, the following checks are done: 
 
 - nullColumns_detection 
 - outlier_detection 
@@ -24,17 +23,17 @@ At column level, the following checks are done:
 
 ### duplicate_detection 
 
-As the name suggests, this function detects duplication in the input dataset. This means, for a pair of duplicate rows, the values in each column coincide. Duplication check is confined to the list of columns passed in the arguments. As the part of treatment, duplicated rows are removed. This function returns two dataframes in tuple format – 1st dataframe is input dataset after deduplication (if treated) and  2nd dataframe is of schema – metric, value and contains total number of rows and number of unique rows. 
+As the name implies, this function detects duplication in the input dataset. This means, for a pair of duplicate rows, the values in each column coincide. Duplication check is confined to the list of columns passed in the arguments. As part of treatment, duplicated rows are removed. This function returns two dataframes in tuple format; the 1st dataframe is the input dataset after deduplication (if treated).  The 2nd dataframe is of schema – metric, value and contains the total number of rows and number of unique rows.
 
-- idf 
-- list_of_cols 
-- drop_cols 
-- treatment: This argument takes Boolean type input – True or False. If true, duplicate rows are removed from the input dataset. 
-- print_impact 
+- **idf** 
+- **list_of_cols**
+- **drop_cols** 
+- **treatment**: This argument takes Boolean type input – True or False. If true, duplicate rows are removed from the input dataset. 
+- **print_impact**
 
 ### nullRows_detection 
 
-This function inspects the row quality and computes number of columns which are missing for a row. This metric is further aggregated to check how many columns are missing for how many rows (also at % level). Intuition is if too many columns are missing for a row, removing it from the modelling may give better results than relying on its imputed values. Therefore as the part of treatment, rows with missing columns above the specified threshold are removed. This function returns two dataframes in tuple format – 1st dataframe is input dataset after filtering rows with high number of missing columns (if treated) and 2nd dataframe is of schema – null_cols_count, row_count, row_pct, flagged.
+This function inspects the row quality and computes the number of columns that are missing for a row. This metric is further aggregated to check how many columns are missing for how many rows (also at % level). Intuition is if too many columns are missing for a row, removing it from the modeling may give better results than relying on its imputed values. Therefore as part of the treatment, rows with missing columns above the specified threshold are removed. This function returns two dataframes in tuple format; the 1st dataframe is the input dataset after filtering rows with a high number of missing columns (if treated). The 2nd dataframe is of schema – null_cols_count, row_count, row_pct, flagged.
 
 | null_cols_count | row_count | row_pct | flagged |
 | --- | --- | --- | --- |
@@ -43,26 +42,26 @@ This function inspects the row quality and computes number of columns which are 
 
 
 
-Interpretation: 1306 rows (4.01% of total rows) have 7 missing columns and flagged for removal because null\_cols\_count is above the threshold.
+Interpretation: 1306 rows (4.01% of total rows) have 7 missing columns and flagged for are removal because null\_cols\_count is above the threshold.
 
 
-- idf 
-- list_of_cols 
-- drop_cols 
-- treatment: This argument takes Boolean type input – True or False. If true, rows with high null columns (defined by treatment_threshold argument) are removed from the input dataset. 
-- treatment_threshold: This argument takes value between 0 to 1 with default 0.8, which means 80% of columns allowed to be Null per row. If it is more than the threshold, then it is flagged and if treatment is True, then affected rows are removed. If threshold is 0, it means, rows with any missing value will be flagged. If threshold is 1, it means rows with all missing value will be flagged. 
-- print_impact 
+- **idf** 
+- **list_of_cols**
+- **drop_cols** 
+- **treatment**: This argument takes Boolean type input – True or False. If true, rows with high null columns (defined by treatment_threshold argument) are removed from the input dataset. 
+- **treatment_threshold**: This argument takes a value between 0 to 1 with default 0.8, which means 80% of columns are allowed to be Null per row. If it is more than the threshold, then it is flagged and if treatment is True, then affected rows are removed. If the threshold is 0, it means rows with any missing value will be flagged. If the threshold is 1, it means rows with all missing values will be flagged. 
+- **print_impact** 
 
 ### nullColumns_detection 
 
-This function inspects the column quality and computes number of rows which are missing for a column. This function also leverages statistics which were computed as the part of the State Generator module so that statistics are not computed twice if already available.  
+This function inspects the column quality and computes the number of rows that are missing for a column. This function also leverages statistics computed as part of the State Generator module. Statistics are not computed twice if already available.
 
-As part of treatments, it currently supports 3 methods – Mean Median Mode (MMM), row_removal or column_removal (more methods to be added soon). MMM replaces null value by the measure of central tendency (mode for categorical features and mean/median for numerical features). row_removal removes all rows with any missing value (output of this treatment is same as nullRows_detection with treatment_threshold of 0). column_removal remove a column if %rows with missing value is above treatment_threshold. 
+As part of treatments, it currently supports 3 methods – Mean Median Mode (MMM), row_removal or column_removal (more methods to be added soon). MMM replaces null value with the measure of central tendency (mode for categorical features and mean/median for numerical features). row_removal removes all rows with any missing value (output of this treatment is same as nullRows_detection with treatment_threshold of 0). column_removal remove a column if %rows with a missing value is above treatment_threshold.
 
 This function returns two dataframes in tuple format – 1st dataframe is input dataset after imputation (if treated else the original dataset) and  2nd dataframe is of schema – attribute, missing_count, missing_pct. 
 
 - **idf**
-- **list_of_cols**: "all" can be passed to include all (non-array) columns for analysis. "missing" (default) can be passed to include only those columns with missing values. One of the use cases where "all" may be preferable over "missing" is when the user wants to save the imputation model for the future use e.g. a column may not have missing value in the training dataset but missing values may possibly appear in the prediction dataset. 
+- **list_of_cols**: "all" can be passed to include all (non-array) columns for analysis. "missing" (default) can be passed to include only those columns with missing values. One of the use cases where "all" may be preferable over "missing" is when the user wants to save the imputation model for future use e.g. a column may not have missing value in the training dataset. Still, missing values may possibly appear in the prediction dataset.
 - **drop_cols**
 - **treatment**: This argument takes Boolean type input – True or False. If true, missing values are treated as per treatment_method argument
 - **treatment_method**: MMM, row_removal or column_removal 
@@ -74,11 +73,11 @@ This function returns two dataframes in tuple format – 1st dataframe is input 
 
 ### outlier_detection 
 
-In Machine Learning, outlier detection is the identification of values that deviates drastically from the rest of the attribute values. An outlier may be caused simply by chance, measurement error or inherent heavy-tailed distribution. This function identify extreme values in both directions (or any direction provided by the user via detection_side argument). Outlier is identified by 3 different methodologies and tagged an outlier only if it is validated by at least 2 methodologies (can be changed by the user via min_validation under detection_configs argument). 
+In Machine Learning, outlier detection identifies values that deviate drastically from the rest of the attribute values. An outlier may be caused simply by chance, measurement error, or inherent heavy-tailed distribution. This function identifies extreme values in both directions (or any direction provided by the user via detection_side argument). Outlier is identified by 3 different methodologies and tagged an outlier only if it is validated by at least 2 methods (can be changed by the user via min_validation under detection_configs argument).
 
-- Percentile Method: In this methodology, a value higher than a certain (default 95th) percentile value is considered as an outlier. Similarly, a value lower than a certain (default 5th) percentile value is considered as an outlier. 
-- Standard Deviation Method: In this methodology, if a value is certain number of standard deviations (default 3) away from the mean, then it is identified as an outlier. 
-- Interquartile Range (IQR) Method: A value which is below Q1 – 1.5 IQR or above Q3 + 1.5 IQR are identified as outliers, where Q1 is first quantile/25th percentile, Q3 is third quantile/75th percentile and IQR is difference between third quantile & first quantile. 
+- **Percentile Method**: In this methodology, a value higher than a certain (default 95th) percentile value is considered as an outlier. Similarly, a value lower than a certain (default 5th) percentile value is considered as an outlier. 
+- **Standard Deviation Method**: In this methodology, if a value is a certain number of standard deviations (default 3) away from the mean, it is identified as an outlier.
+- **Interquartile Range (IQR) Method**: A value below Q1 – 1.5 IQR or above Q3 + 1.5 IQR are identified as outliers, where Q1 is in first quantile/25th percentile, Q3 is in third quantile/75th percentile, and IQR is the difference between third quantile & first quantile. 
 
 This function also leverages statistics which were computed as the part of the State Generator module so that statistics are not computed twice if already available. 
 
