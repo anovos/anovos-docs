@@ -1,3 +1,5 @@
+# About Anovos
+
 ## Why Anovos?
 Data science teams spend up to 80% of their time on feature engineering and still end up building models
 with poor resilience. _Anovos_ seeks to address both these issues (lack of modeler productivity and insufficient
