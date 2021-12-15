@@ -1,9 +1,7 @@
 site_name: Anovos Docs
 site_url: https://anovos.ai 
-# Plugins
 plugins:
   - search
-
 
 theme:
   name: material
@@ -30,19 +28,26 @@ nav:
   - Home: index.md
   - About: about/index.md
   - Getting Started: getting-started/index.md
+  - Using Anovos:
+    - Setting up your environment:
+      - Locally: docs/setting-up-your-environment/anovos-on-local/index.md
+      - on AWS: docs/setting-up-your-environment/anovos-on-aws/index.md
+    - Workflow: docs/anovos-potential-workflow/index.md
+    - Data Reports:
+      - Overview: docs/data-reports/overview/index.md
+      - Intermediate Report Data Generation: docs/data-reports/intermediate-report-data-generation/index.md
+      - Final Report Generation: docs/data-reports/final-report-generation/index.md
+      - HTML Report: docs/data-reports/html-report/index.md
+    - Scaling Up: docs/anovos-scale-testing/overview/index.md
+    - Limitations: docs/limitations/index.md
+    - Product Roadmap: docs/anovos-roadmap/index.md
   - Community:
-    - Contributing to Anovos: community/contributing/index.md
-    - Code of Conduct: community/code-of-conduct/index.md
-    - Communication: community/communication/index.md
-    - License: community/license/index.md
-  - In-Depth Docs: 
-    - Anovos Intro: docs/anovos-intro/index.md
-    - Setting Up Your Environment:
-      - Anovos On Local: docs/setting-up-your-environment/anovos-on-local/index.md
-      - Anovos on AWS: docs/setting-up-your-environment/anovos-on-aws/index.md
-    - Anovos Product Roadmap: docs/anovos-roadmap/index.md
-    - Anovos Potential Workflow: docs/anovos-potential-workflow/index.md
-    - Anovos Modules: 
+      - Contributing to Anovos: community/contributing/index.md
+      - Communication Channels: community/communication/index.md
+      - Code of Conduct: community/code-of-conduct/index.md
+
+  - License: community/license/index.md
+  - API Docs:
       - Overview: docs/anovos-modules-overview/overview/index.md
       - Data Ingest: docs/anovos-modules-overview/data-ingest/index.md
       - Data Analyzer: docs/anovos-modules-overview/data-analyzer/index.md
@@ -50,16 +55,6 @@ nav:
       - Association Evaluator: docs/anovos-modules-overview/association-evaluator/index.md
       - Data Drift and Stability Index: docs/anovos-modules-overview/data_drift_and_stability_index/index.md
       - Data Transformers: docs/anovos-modules-overview/data_transformer/index.md
-    - Data Reports:
-      - Overview: docs/data-reports/overview/index.md
-      - Intermediate Report Data Generation: docs/data-reports/intermediate-report-data-generation/index.md
-      - Final Report Generation: docs/data-reports/final-report-generation/index.md
-      - HTML Report: docs/data-reports/html-report/index.md
-    - Anovos on AWS EMR: docs/anovos-on-aws-emr/getting-started/index.md
-    - Anovos Scale Testing: docs/anovos-scale-testing/overview/index.md
-    - Limitations: docs/limitations/index.md
-    
-
 
 extra:
   social:
