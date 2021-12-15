@@ -17,5 +17,5 @@ The following parameters are specified in the function **anovos_report**:
 - **drift_threshold_model:** The threshold beyond which the attribute can be flagged as 1 or drifted as measured across different drift metrices specified by the user
 - **dataDict_path**: The path containing the exact name, definition mapping of the attributes. This is eventually used to populate at the report for easy referencing
 - **metricDict_path**: The path containing the metric dictionary 
-- **run_type: Option to specify whether the execution happen locally or in EMR way
+- **run_type**: Option to specify whether the execution happen locally or in EMR way
 - **final_report_path**: Path where the final report needs to be saved
