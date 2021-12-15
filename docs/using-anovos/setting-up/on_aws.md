@@ -1,17 +1,21 @@
-### Step 1: Installing/Downloading Anovos
+# Setting up Anovos on AWS EMR
+
+For large workloads, you can set up _Anovos_ on [AWS EMR](https://aws.amazon.com/emr/).
+
+## Installing/ Downloading Anovos
 
 Clone the Anovos repository on you local environment using command:
 
 `git clone https://github.com/anovos/anovos.git`
-or 
-`pip3 install anovos`
+
 
 After cloning, go to the anovos directory and execute the following command to clean and build the latest modules in dist folder:
 
 `make clean build`
 
-### Step 2: Copy necessary files to AWS S3
-Copy the following files to AWS S3:
+## Copy all required files into an S3 bucket
+
+Copy the following files to [AWS S3](https://aws.amazon.com/s3/):
 
 - `dist/anovos.zip`
     -	This file contains all Anovos modules
@@ -31,7 +35,7 @@ Copy the following files to AWS S3:
 AWS copy command:
 `aws s3 cp --recursive  <local file path> <s3 path> --profile  <profile name>`
 
-##  Step 3: Creating Cluster
+##  Create a cluster
 
 -   Software Configuration 
     - Emr-5.33.0 
@@ -70,6 +74,4 @@ AWS copy command:
         <path to config.yaml>, <local_or_emr> 
     - Bootstrap Actions 
         script location : (bootsrap_shell_scrip_path/{file_name.sh})
-
- 
 

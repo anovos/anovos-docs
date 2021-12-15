@@ -1,4 +1,4 @@
-# Setting up your local environment for Anovos
+# Setting up Anovos locally
 
 ## Software Prerequisites
 

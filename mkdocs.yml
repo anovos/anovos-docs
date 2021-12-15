@@ -32,6 +32,7 @@ nav:
       - Setting up:
           - Locally: using-anovos/setting-up/locally.md
           - On AWS: using-anovos/setting-up/on_aws.md
+          - Spark cluster: using-anovos/setting-up/spark_cluster.md
       - Workflow: using-anovos/workflow.md
       - Data Reports:
           - Overview: using-anovos/data-reports/overview.md
