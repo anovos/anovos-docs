@@ -1,5 +1,5 @@
 site_name: Anovos Docs
-site_url: https://anovos.ai 
+site_url: https://anovos.ai
 plugins:
   - search
 
@@ -15,7 +15,7 @@ theme:
         icon: material/lightbulb-outline
         name: Switch to dark mode
         primary: deep purple
-    - scheme: slate 
+    - scheme: slate
       toggle:
         icon: material/lightbulb
         name: Switch to light mode
@@ -26,26 +26,25 @@ extra_javascript:
 
 nav:
   - Home: index.md
-  - About: about/index.md
-  - Getting Started: getting-started/index.md
+  - About: about.md
+  - Getting Started: getting-started.md
   - Using Anovos:
-    - Setting up your environment:
-      - Locally: docs/setting-up-your-environment/anovos-on-local/index.md
-      - on AWS: docs/setting-up-your-environment/anovos-on-aws/index.md
-    - Workflow: docs/anovos-potential-workflow/index.md
-    - Data Reports:
-      - Overview: docs/data-reports/overview/index.md
-      - Intermediate Report Data Generation: docs/data-reports/intermediate-report-data-generation/index.md
-      - Final Report Generation: docs/data-reports/final-report-generation/index.md
-      - HTML Report: docs/data-reports/html-report/index.md
-    - Scaling Up: docs/anovos-scale-testing/overview/index.md
-    - Limitations: docs/limitations/index.md
-    - Product Roadmap: docs/anovos-roadmap/index.md
+      - Setting up:
+          - Locally: docs/using-anovos/setting-up/locally.md
+          - On AWS: docs/using-anovos/setting-up/on_aws.md
+      - Workflow: using-anovos/workflow.md
+      - Data Reports:
+          - Overview: using-anovos/data-reports/overview.md
+          - Intermediate Report: using-anovos/data-reports/intermediate_report.md
+          - Final Report: using-anovos/data-reports/final_report.md
+          - HTML Report: using-anovos/data-reports/html_report.md
+      - Scaling Up: using-anovos/scaling.md
+      - Limitations: limitations.md
+      - Product Roadmap: roadmap.md
   - Community:
       - Contributing to Anovos: community/contributing/index.md
       - Communication Channels: community/communication/index.md
       - Code of Conduct: community/code-of-conduct/index.md
-
   - License: community/license/index.md
   - API Docs:
       - Overview: docs/anovos-modules-overview/overview/index.md
