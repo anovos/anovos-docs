@@ -30,8 +30,8 @@ nav:
   - Getting Started: getting-started.md
   - Using Anovos:
       - Setting up:
-          - Locally: docs/using-anovos/setting-up/locally.md
-          - On AWS: docs/using-anovos/setting-up/on_aws.md
+          - Locally: using-anovos/setting-up/locally.md
+          - On AWS: using-anovos/setting-up/on_aws.md
       - Workflow: using-anovos/workflow.md
       - Data Reports:
           - Overview: using-anovos/data-reports/overview.md
@@ -39,8 +39,8 @@ nav:
           - Final Report: using-anovos/data-reports/final_report.md
           - HTML Report: using-anovos/data-reports/html_report.md
       - Scaling Up: using-anovos/scaling.md
-      - Limitations: limitations.md
-      - Product Roadmap: roadmap.md
+      - Limitations: using-anovos/limitations.md
+      - Product Roadmap: using-anovos/roadmap.md
   - Community:
       - Contributing to Anovos: community/contributing/index.md
       - Communication Channels: community/communication/index.md
