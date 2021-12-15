@@ -1,0 +1,27 @@
+name: Build docs
+on:
+  push:
+    branches-ignore:
+      - main
+
+jobs:
+  build:
+    name: Deploy docs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2.3.1
+        with:
+          python-version: '3.x'
+
+      - name: Install MkDocs
+        run: |
+          pip install --upgrade pip
+          pip install mkdocs mkdocs-material
+
+      - name: Build docs
+        run: |
+          mkdocs build --strict
