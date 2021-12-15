@@ -28,9 +28,9 @@ The global summary function computes the following universal statistics/metrics 
 ### measures_of_counts
 
 The Measures of Counts function computes different count metrics for each column (interchangeably called an attribute in the document). It returns a Spark DataFrame with schema – attribute, fill_count, fill_pct, missing_count, missing_pct, nonzero_count, nonzero_pct. 
-- Fill Count/Rate is defined as number of rows with non-null values in a column both in terms of absolute count and its proportion to row count. It leverages count statistic from summary7 functionality of Spark SQL. 
+- Fill Count/Rate is defined as number of rows with non-null values in a column both in terms of absolute count and its proportion to row count. It leverages count statistic from summary functionality of Spark SQL. 
 - Missing Count/Rate is defined as null (or missing) values seen in a column both in terms of absolute count and its proportion to row count. It is directly derivable from Fill Count/Rate.  
-- Non Zero Count/Rate is defined as non-zero values seen in a numerical column both in terms of absolute count and its proportion to row count. For categorical column, it will show null value. Also, it uses a subfunction nonzeroCount_computation, which is later called under measures_of_counts. Under the hood, it leverage Multivariate Statistical Summary8 of Spark MLlib. 
+- Non Zero Count/Rate is defined as non-zero values seen in a numerical column both in terms of absolute count and its proportion to row count. For categorical column, it will show null value. Also, it uses a subfunction nonzeroCount_computation, which is later called under measures_of_counts. Under the hood, it leverage Multivariate Statistical Summary of Spark MLlib. 
 
 ### measures_of_centralTendency 
 
@@ -41,26 +41,10 @@ The Measures of Central Tendency function provides summary statistics that repre
 - Mode is most frequently seen value in a column. Mode is calculated only for discrete columns (categorical + Integer/Long columns) 
 - Mode Pct is defined as % of rows seen with Mode value. Mode Pct is calculated only for discrete columns (categorical + Integer/Long columns) 
 
-### measures_of_counts 
-
-The Measures of Counts function computes different count metric for each column (interchangeably called as attribute in the document). It returns a Spark DataFrame with schema – attribute, fill_count, fill_pct, missing_count, missing_pct, nonzero_count, nonzero_pct. 
-
-- Fill Count/Rate is defined as the number of rows with non-null values in a column in terms of absolute count and its proportion to row count. It leverages count statistics from the summary7 functionality of Spark SQL.
-- Missing Count/Rate is defined as null (or missing) values seen in a column in terms of absolute count and its proportion to row count. It is directly derivable from Fill Count/Rate.
-- Non Zero Count/Rate is defined as non-zero values seen in a numerical column in terms of absolute count and its proportion to row count. For categorical columns, it will show a null value. Also, it uses a subfunction nonzeroCount_computation, which is later called under measures_of_counts. Under the hood, it leverages Multivariate Statistical Summary8 of Spark MLlib.
-
-### measures_of_centralTendency 
-The Measures of Central Tendency function provides summary statistics representing the attribute's center point or most likely value. It returns a Spark DataFrame with schema – attribute, mean, median, mode, mode_pct.
-
-- Mean is the arithmetic average of a column i.e., the sum of all values seen in the column divided by the number of rows. It leverage mean statistic from the summary functionality of Spark SQL.
-- Median is the 50th percentile or the middle value in a column when the values are arranged in ascending or descending order. It leverage '50%' statistic from the summary functionality of Spark SQL. 
-- Mode is the most frequently seen value in a column. Mode is calculated only for discrete columns (categorical + Integer/Long columns).
-- Mode Pct is defined as % of rows seen with Mode value. Mode Pct is calculated only for discrete columns (categorical + Integer/Long columns)
-
 ### measures_of_cardinality 
 The Measures of Cardinality function provides statistics that are related to unique values seen in an attribute. These statistics are calculated only for discrete columns (categorical + Integer/Long columns). It returns a Spark Dataframe with schema – attribute, unique_values, IDness.
 
-- Unique Value is defined as a distinct value count of a column. It relies on a subfunction uniqueCount_computation for its computation and leverages the countDistinct9 functionality of Spark SQL.
+- Unique Value is defined as a distinct value count of a column. It relies on a subfunction uniqueCount_computation for its computation and leverages the countDistinct functionality of Spark SQL.
 - IDness is calculated as Unique Values divided by non-null values seen in a column. Non-null values count is used instead of total count because too many null values can give misleading results even if the column have all unique values (except null). It uses subfunctions - uniqueCount_computation and missingCount_computation.
 
 ### measures_of_dispersion  
@@ -91,7 +75,7 @@ It returns a Spark Dataframe with schema – attribute, min, 1%, 5%, 10%, 25%, 5
 
 The Measures of Shapes function provides statistics related to the shape of an attribute's distribution. Alternatively, these statistics are also known as measures of the moment and are computed only for numerical attributes. It returns a Spark Dataframe with schema – attribute, skewness, kurtosis.
 
-- Skewness describes how much-skewed values are relative to a perfect bell curve observed in normal distribution and the direction of skew. If the majority of the values are at the left and the right tail is longer, we say that the distribution is skewed right or positively skewed; if the peak is toward the right and the left tail is longer, we say that the distribution is skewed left or negatively skewed. It leverage skewness10 functionality of Spark SQL.
-- (Excess) Kurtosis describes how tall and sharp the central peak is relative to a perfect bell curve observed in the normal distribution. The reference standard is a normal distribution, which has a kurtosis of 3. In token of this, often, the excess kurtosis is presented: excess kurtosis is simply kurtosis−3. Higher (positive) values indicate a higher, sharper peak; lower (negative) values indicate a less distinct peak. It leverages kurtosis11 functionality of Spark SQL.
+- Skewness describes how much-skewed values are relative to a perfect bell curve observed in normal distribution and the direction of skew. If the majority of the values are at the left and the right tail is longer, we say that the distribution is skewed right or positively skewed; if the peak is toward the right and the left tail is longer, we say that the distribution is skewed left or negatively skewed. It leverage skewness functionality of Spark SQL.
+- (Excess) Kurtosis describes how tall and sharp the central peak is relative to a perfect bell curve observed in the normal distribution. The reference standard is a normal distribution, which has a kurtosis of 3. In token of this, often, the excess kurtosis is presented: excess kurtosis is simply kurtosis−3. Higher (positive) values indicate a higher, sharper peak; lower (negative) values indicate a less distinct peak. It leverages kurtosis functionality of Spark SQL.
 
  

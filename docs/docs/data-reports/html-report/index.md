@@ -52,7 +52,7 @@ The **Descriptive Statistics** gives specific information about the data element
     - **Numeric**: Visualize the distributions of Numerical attributes using Histograms
     ![](https://anovos.github.io/anovos-docs/assets/html-reports/attribute-visualization-1.png)
 
-    -**Categorical** - Visualize the distributions of Categorical attributes using Barplot
+    - **Categorical**: Visualize the distributions of Categorical attributes using Barplot
     ![](https://anovos.github.io/anovos-docs/assets/html-reports/attribute-visualization-2.png)
 
 ### Quality Check 

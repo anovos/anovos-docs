@@ -4,7 +4,7 @@ Clone the Anovos repository on you local environment using command:
 
 `git clone https://github.com/anovos/anovos.git`
 or 
-`pip3 install "git+https://github.com/anovos/anovos.git"`
+`pip3 install anovos`
 
 After cloning, go to the anovos directory and execute the following command to clean and build the latest modules in dist folder:
 
@@ -61,15 +61,15 @@ AWS copy command:
         --conf spark.executor.extraJavaOptions=-XX:+UseG1GC  
         --conf spark.driver.extraJavaOptions=-XX:+UseG1GC  
         --packages org.apache.spark:spark-avro_2.11:2.4.0  
-        --jars s3://mw.com.ds.kajanan/Vishnu/ml_ingest/jars/histogrammar-sparksql_2.11-1.0.20.jar,s3://mw.com.ds.kajanan/Vishnu/ml_ingest/jars/histogrammar_2.11-1.0.20.jar  
-        --py-files s3://mw.com.ds.kajanan/Sumit/Anovos_testing/income_data_emr/com.zip 
+        --jars {s3_bucket}/jars/histogrammar-sparksql_2.11-1.0.20.jar,{s3_bucket}/jars/histogrammar_2.11-1.0.20.jar  
+        --py-files {s3_bucket}/{test_folder}/com.zip 
         
         Application location*: s3 path of main.py file 
         
         Arguments:  
         <path to config.yaml>, <local_or_emr> 
     - Bootstrap Actions 
-        script location : path of bootstrap shell script (req_packages_anovos.sh) 
+        script location : (bootsrap_shell_scrip_path/{file_name.sh})
 
  
 
