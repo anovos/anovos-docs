@@ -1,4 +1,4 @@
-# Contributor Covenant Code of Conduct
+# Anovos Code of Conduct
 
 ## Our Pledge
 

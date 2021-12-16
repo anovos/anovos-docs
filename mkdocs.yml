@@ -22,7 +22,7 @@ theme:
 extra_css:
   - stylesheets/extra.css
 extra_javascript:
-  - javascripts/shortcuts.js
+  - javascript/shortcuts.js
 
 nav:
   - Home: index.md
@@ -41,11 +41,11 @@ nav:
           - HTML Report: using-anovos/data-reports/html_report.md
       - Scaling Up: using-anovos/scaling.md
       - Limitations: using-anovos/limitations.md
-      - Product Roadmap: using-anovos/roadmap.md
+      - Roadmap: using-anovos/roadmap.md
   - Community:
-      - Contributing to Anovos: community/contributing/index.md
-      - Communication Channels: community/communication/index.md
-      - Code of Conduct: community/code-of-conduct/index.md
+      - Contributing to Anovos: community/contributing.md
+      - Communication Channels: community/communication.md
+      - Code of Conduct: community/code-of-conduct.md
   - License: license.md
   - API Docs:
       - Overview: docs/anovos-modules-overview/overview/index.md

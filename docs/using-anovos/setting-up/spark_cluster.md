@@ -2,4 +2,4 @@
 
 _COMING SOON_
 
-[Let us know](../../community/communication/index.md) if you're interested in learning more!
+[Let us know](../../community/communication.md) if you're interested in learning more!

@@ -1,3 +1,5 @@
+# Anovos Communication Channels
+
 There are different ways and channels that you can use as a community member or maintainer to raise questions, collaborate or to have some fun!
 
 ## Slack

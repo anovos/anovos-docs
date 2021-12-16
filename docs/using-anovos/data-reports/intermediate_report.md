@@ -1,3 +1,5 @@
+# Generating Intermediate Data for Reports
+
 This section largely covers the data pre–processing. The primary function which is used to address all the subsequent modules is **charts_to_objects**. It precisely helps in saving the chart data in form of objects, which is eventually read by the final report generation script. The objects saved are specifically used at the modules shown at the Report based on the user input. Wide variations of chart are used for showcasing the data trends through Bar Plot, Histogram, Violin Plot, Heat Map, Gauge Chart, Line Chart, etc.
 
 Following arguments are specified in the primary function **charts_to_objects**:

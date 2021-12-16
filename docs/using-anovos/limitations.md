@@ -1,3 +1,5 @@
+# Limitations of the Library
+ 
 - Anovos currently only supports numerical and categorical columns. Other data types such as date, time stamp, array, struct array etc may be supported in the later releases.
 - Computing mode and/or distinct count are most expensive operations in Anovos. We aim to further optimize them in the upcoming releases.
 - Correlation Matrix may throw memory issues if very high cardinality categorical features are involved – a limitation that was propagated from phik library. Therefore, it is highly recommended to drop columns with high IDness.

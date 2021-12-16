@@ -1,4 +1,4 @@
-# Anovos Scale Testing
+# Using Anovos at Scale
 
 We tested Anovos modules on Mobilewalla's mobile engagement data with the following attributes:
 
@@ -35,9 +35,3 @@ The entire pipeline was optimized so computed statistics can be reused by other 
 Limitations:
 - Computing mode and/or distinct count are most expensive operations in Anovos. We aim to further optimize them in the upcoming releases.
 - Correlation Matrix may throw memory issues if very high cardinality categorical features are involved – a limitation that was propagated from phik library.
-
-
-
-
- 
-
