@@ -46,7 +46,7 @@ nav:
       - Contributing to Anovos: community/contributing/index.md
       - Communication Channels: community/communication/index.md
       - Code of Conduct: community/code-of-conduct/index.md
-  - License: community/license/index.md
+  - License: license.md
   - API Docs:
       - Overview: docs/anovos-modules-overview/overview/index.md
       - Data Ingest: docs/anovos-modules-overview/data-ingest/index.md

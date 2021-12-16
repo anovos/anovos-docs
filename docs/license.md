@@ -1,4 +1,4 @@
-# License.md
+# License
 
 Copyright 2021 Anovos Developers
 
@@ -264,7 +264,7 @@ License: GPL 3.0 License
 
 ### pytest
 
-Licsnse: MIT License [https://docs.pytest.org/en/latest/license.html](https://docs.pytest.org/en/latest/license.html)
+License: MIT License [https://docs.pytest.org/en/latest/license.html](https://docs.pytest.org/en/latest/license.html)
 
 ### datapane
 
