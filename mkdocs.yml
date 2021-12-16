@@ -4,7 +4,7 @@ site_description: Stable Features yield Resilient Models. Documentation for the 
 site_author: Anovos Developers, Mobilewalla
 
 repo_url: https://github.com/anovos/anovos-docs
-dit_uri: edit/main/docs
+edit_uri: edit/main/docs
 plugins:
   - search
 
