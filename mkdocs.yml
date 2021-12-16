@@ -1,5 +1,5 @@
 site_name: Anovos Docs
-site_url: https://anovos.ai
+site_url: https://docs.anovos.ai
 plugins:
   - search
 

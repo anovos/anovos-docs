@@ -2,7 +2,7 @@
 
 Here you'll find everything you need to know about [_Anovos_](https://www.anovos.ai)!
 
-## What is Anovos?
+## 🧭 What is Anovos?
 
 Anovos is an open source project, built by data scientist for the data science community,
 that brings automation to the feature engineering process.
@@ -14,7 +14,7 @@ higher performing models.
 
 To get a first impression of _Anovos_' capabilities, check out our [interactive Getting Started guide](getting-started.md).
 
-## Nee help?
+## ❓ Need help?
 
 Need a little help? We're here!
 
@@ -27,7 +27,7 @@ If you have any questions on how to use _Anovos_ or would like to suggest future
 We're happy to welcome you as an _Anovos_ contributor!
 Check out our [Contributors' page](community/contributing.md) for more information.
 
-## What's Powering Anovos?
+## 🔋 What's Powering Anovos?
 
 _Anovos_ is built on a curated collection of powerful open source libraries, including: 
 

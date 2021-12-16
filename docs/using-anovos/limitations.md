@@ -1,4 +1,4 @@
-# Limitations of the Library
+# Current Limitations of Anovos
  
 - Anovos currently only supports numerical and categorical columns. Other data types such as date, time stamp, array, struct array etc may be supported in the later releases.
 - Computing mode and/or distinct count are most expensive operations in Anovos. We aim to further optimize them in the upcoming releases.
