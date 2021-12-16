@@ -27,7 +27,7 @@ extra_javascript:
 nav:
   - Home: index.md
   - About: about.md
-  - Getting Started: getting-started.md
+  - Getting Started 🚀: getting-started.md
   - Using Anovos:
       - Setting up:
           - Locally: using-anovos/setting-up/locally.md
@@ -43,8 +43,8 @@ nav:
       - Limitations: using-anovos/limitations.md
       - Roadmap: using-anovos/roadmap.md
   - Community:
-      - Contributing to Anovos: community/contributing.md
-      - Communication Channels: community/communication.md
+      - Contributing: community/contributing.md
+      - Communication: community/communication.md
       - Code of Conduct: community/code-of-conduct.md
   - License: license.md
   - API Docs:

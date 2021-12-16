@@ -1,4 +1,4 @@
-# Getting Started with Anovos
+# Getting Started with Anovos 🚀
 
 _Anovos_ provides data scientists and ML engineers with powerful and versatile tools for feature engineering.
 
