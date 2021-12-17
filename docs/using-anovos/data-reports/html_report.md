@@ -1,3 +1,5 @@
+# Generating HTML Reports with Anovos
+
 The final output is generated in form of HTML report. This has 6 sections viz. Executive Summary, Wiki, Descriptive Statistics, Quality Check, Attribute Associations, Data Drift & Data Stability at most which can be seen basis user input. We’ve tried to detail each section based on the analysis performed referring to a publicly available dataset.
 
 

@@ -1,16 +1,22 @@
-Welcome to the Anovos Community! We're excited to bring the immense experience of the Mobilewalla team to the data science community, and we'd love to have you join us! Here you'll find all the details you need to get started as an Anovos contributor.
+# Contributing to Anovos
 
-## Getting Started with Anovos
+We'd love to have you join us in making _Anovos_ the number one choice for ML feature engineering!
 
-Anovos is an open source project that brings automation to the feature engineering process.
+## 🚀 Getting Started with Anovos Development
 
-To get Anovos up and running on your local machine, follow the [Getting Started Guide](https://docs.anovos.ai/gettingstarted).
+_Anovos_ is an open source project that brings automation to the feature engineering process.
 
-The [Anovos Github Organization](https://github.com/anovos) contains all repos, sample data, and notebooks you need.
+To get Anovos up and running on your local machine,
+follow the [Getting Started Guide](../getting-started.md).
 
-## How To Get Involved
+The [Anovos GitHub Organization](https://github.com/anovos) contains all the repositories, sample data, and notebooks
+you need to start working on improvements to the library.
 
-We love your input! We want to make contributing to this project as easy and transparent as possible, whether it's:
+## 🛠 How to Get Involved
+
+First of all: We appreciate each and every contribution, and we'd love to get your input!
+
+Contributions to _Anovos_ can take many different shapes and forms, for example:
 
 - Reporting a bug
 - Discussing the current state of the code
@@ -18,26 +24,35 @@ We love your input! We want to make contributing to this project as easy and tra
 - Proposing new features
 - Testing out new features
 - Contributing to the docs
-- Giving talks about Anovos at Meetups, conferences, and webinars
+- Giving talks about Anovos at meetups, conferences, and webinars
 
-For the latest information about interacting with the project maintainers and the broader community, please visit the [COMMUNICATION.md](https://github.com/anovos/anovos/blob/main/.github/COMMUNICATION.md) file in Github.
+If you're interested in contributing but don't quite know where to start,
+please don't hesitate to [reach out to the maintainers](./communication.md).
 
-## Contribute to Anovos
+## ⌨ Contributing Code to Anovos
 
-Pull requests are the best way to propose changes to the codebase. We use GitHub flow, and everything happens through pull requests. We welcome your pull requests; to make it simple, here are the steps to contribute:
+[Pull requests](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests)
+are the best way to propose changes to the codebase.
+We follow the [GitHub Flow](https://githubflow.github.io/) pattern, and everything happens through pull requests.
 
-- Fork the repo you're updating and create your branch from main.
-- If you've added code that should be tested, add tests.
-- If you've changed APIs, update the documentation.
-- Ensure the test suite passes.
-- Issue that pull request!
+We welcome pull requests by community contributors at all times.
+To make it simple, please follow these steps to contribute:
 
-Any contributions you make will be under the Apache Software License.
-In short, when you submit code changes, your submissions are understood to be under the same Apache License that covers the project. Feel free to contact the maintainers if that's a concern.
+1. Fork the repo you're updating and create your branch from main.
+2. If you've added code, add the corresponding tests.
+3. If you've changed APIs, update the documentation.
+4. Ensure that the test suite passes.
+5. Issue that pull request!
 
-### Write Thorough Commit Messages
+ℹ Any contributions you make will be under the Apache Software License 2.0.
+See the [License page](../license.md) for more information.
 
-Help reviewers know what you're contributing by writing good commit messages. The first line of the commit message is the subject; this should be followed by a blank line and then a message describing the intent and purpose of the commit. We based these guidelines on a [post by Chris Beams](https://chris.beams.io/posts/git-commit/).
+## 📝 Conventions for Commit Messages
+
+Help reviewers know what you're contributing by writing good commit messages.
+The first line of the commit message is the subject; this should be followed by a blank line
+and then a message describing the intent and purpose of the commit.
+We based these guidelines on a [post by Chris Beams](https://chris.beams.io/posts/git-commit/).
 
 When you commit, you are accepting our DCO:
 
@@ -101,11 +116,3 @@ Update the documentation for page X so including fixing A, B, C and D and F.
 > This example will be truncated in the GitHub UI and via `git log --oneline`
 
 If you would like to amend your commit, follow this guide: [Git: Rewriting History](https://git-scm.com/book/en/v2/Git-Tools-Rewriting-History)
-
-### Report bugs using GitHub's issues
-
-The team tracks all bugs by using Github issues. If you find something that needs to be addressed, open a new issue; it's easy!
-
-## License
-
-By contributing, you agree that your contributions will be licensed under its Apache License, adhere to the Developer Certificate of Origin, and adhere to our code of conduct.

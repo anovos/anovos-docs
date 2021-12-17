@@ -1,4 +1,4 @@
-# Anovos Scale Testing
+# Using Anovos at Scale
 
 We tested Anovos modules on Mobilewalla's mobile engagement data with the following attributes:
 
@@ -9,7 +9,7 @@ We tested Anovos modules on Mobilewalla's mobile engagement data with the follow
 | No. of Numerical Columns | 4 |
 | No. of Categorical Columns | 31 |
 
-The entire pipeline was optimized so computed statistics can be reused by other functions e.g. mode (most frequently seen value) computed under statistics generator (**measures_of_centralTendency**) were also used for imputation while treating null values in a column (**nullColumns_detection**) or detecting biasedness in a column (**biasedness_detection**). The time taken by a function in a pipeline may differ significantly from the time taken by the same function on running in solitary. Also, Spark does its own set of optimizations transformations under the hood while running multiple functions together, which further adds to the time difference. For further detail, please refer to the  `main.py` script in the Github.
+The entire pipeline was optimized so computed statistics can be reused by other functions e.g. mode (most frequently seen value) computed under statistics generator (**measures_of_centralTendency**) were also used for imputation while treating null values in a column (**nullColumns_detection**) or detecting biasedness in a column (**biasedness_detection**). The time taken by a function in a pipeline may differ significantly from the time taken by the same function on running in solitary. Also, Spark does its own set of optimizations transformations under the hood while running multiple functions together, which further adds to the time difference. For further detail, please refer to the  `main.py script` in the Github.
 
 | **Function** | **Time (mins)** |
 | --- | --- |
@@ -35,9 +35,3 @@ The entire pipeline was optimized so computed statistics can be reused by other 
 Limitations:
 - Computing mode and/or distinct count are most expensive operations in Anovos. We aim to further optimize them in the upcoming releases.
 - Correlation Matrix may throw memory issues if very high cardinality categorical features are involved – a limitation that was propagated from phik library.
-
-
-
-
- 
-
