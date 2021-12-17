@@ -11,7 +11,7 @@ open source library for every data scientists’ use.
 
 ![https://anovos.github.io/anovos-docs/assets/roadmap.png](https://anovos.github.io/anovos-docs/assets/roadmap.png)
 
-## The Roadmap
+## 🛣 The Roadmap
 We plan to bring full functionality to _Anovos_ over the course of three major releases: Alpha, Beta, and versio 1.0.
 
 ### Alpha Release
@@ -34,7 +34,8 @@ The Beta release will also have another explainer of each attributes’ contribu
 call the “Attribute -> Feature” mapper.
 
 ### Version 1.0
-We'll release the GA release of _Anovos_ in June 2022 with the functionalities to support an end-to-end
+
+We'll release version 1.0 of _Anovos_ in June 2022 with the functionalities to support an end-to-end
 machine learning workflow. It will be able to store the generated features in an open source feature store,
 like Feast. It will also support running open source based Auto ML models and ML workflow integration.
 

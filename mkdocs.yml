@@ -7,6 +7,13 @@ repo_url: https://github.com/anovos/anovos-docs
 edit_uri: edit/main/docs
 plugins:
   - search
+markdown_extensions:
+  - fenced_code
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
 
 theme:
   name: material

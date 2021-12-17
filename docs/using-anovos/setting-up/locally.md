@@ -1,6 +1,6 @@
-# Setting up Anovos locally
+# Setting up _Anovos_ locally
 
-## Software Prerequisites
+## 💿 Software Prerequisites
 
 _Anovos_ requires Spark (2.4.x), Python (3.7.x), and Java (8) to be set up:
 
@@ -16,42 +16,74 @@ The following tutorials can be helpful in setting up Apache Spark:
 ## Installing Anovos
 
 _Anovos_ can be installed and used in one of two ways:
-- Cloning the GitHub repository and running via `spark-submit`
+
+- Cloning [the GitHub repository](https://github.com/anovos/anovos) and running via `spark-submit`
 - Installing through `pip` and importing it into your own Python scripts
 
-### Cloning the GitHub repository
+### ⭐ Clone the GitHub repository to use Anovos with `spark-submit`
 
-- Clone the Anovos repository in your local environment using the command:
-  `git clone https://github.com/anovos/anovos.git`
-- After cloning, go to the Anovos directory and execute the following command to clean and build the latest modules
-  in the dist folder:
-  `make clean build`
-- Install Anovos' requirements by running `pip install -r requirements.txt`
-- Then go to the dist/ folder and
-    - Update configs.yaml for all input & output paths. All other changes depend on the dataset being used. Also,
-      update configs.yaml for other threshold settings for different functionalities.
-    - Update main.py - This sample script demonstrates how different functions from Anovos module can be stitched
-      together to create a workflow.
-    - Update spark-submit.sh – This sample shell script runs the spark application via spark-submit.
-- Run using the spark submit shell script
-  `nohup ./spark-submit.sh > run.txt &`
-- Check the stdout logs while running
-  `tail -f run.txt`
-- Once the run completes, the script will automatically open the final generated report "
-  report_stats/ml_anovos_report.html" on the browser.
+Clone [the _Anovos_ repository](https://github.com/anovos/anovos) to your local environment using the command:
+```shell
+git clone https://github.com/anovos/anovos.git
+```
 
-### Installing through `pip`
+Afterwards, go to the newly created `anovos` directory and execute the following command to clean and build
+the latest modules:
+```shell
+make clean build
+```
 
-- Install anovos on local using `pip install anovos`
-- Import Anovos as a package in your Spark application `import anovos`
-- Ensure dependent external packages are included in SparkSession
-    - If using your own SparkSession, include the following dependent packages while initializing:
-        - "io.github.histogrammar:histogrammar_2.11:1.0.20",
-        - "io.github.histogrammar:histogrammar-sparksql_2.11:1.0.20",
-        - "org.apache.spark:spark-avro_2.11:2.4.0"
-    - You can find the associated JAR files by following these links:
-        - [https://repo1.maven.org/maven2/io/github/histogrammar/histogrammar-sparksql_2.11/1.0.20/](https://repo1.maven.org/maven2/io/github/histogrammar/histogrammar-sparksql_2.11/1.0.20/)
-        - [https://repo1.maven.org/maven2/io/github/histogrammar/histogrammar_2.11/1.0.20/](https://repo1.maven.org/maven2/io/github/histogrammar/histogrammar_2.11/1.0.20/)
-        - [https://mvnrepository.com/artifact/org.apache.spark/spark-avro_2.11/2.4](https://mvnrepository.com/artifact/org.apache.spark/spark-avro_2.11/2.4.0)
-- Alternatively, if creating a new `SparkSession`, please use the pre-configured `SparkSession` provided
-  by `anovos.shared.spark`: `from anovos.shared.spark import spark` 
+Next, install _Anovos_' dependencies by running
+```shell
+pip install -r requirements.txt
+```
+
+and go to the `dist/` folder. There, you should
+
+- Update the input and output paths in `configs.yaml` and configure the data set.
+  You might also want to adapt the threshold settings to your needs.
+
+- Adapt the `main.py` sample script. It demonstrates how different functions from _Anovos_ can be stitched
+  together to create a workflow.
+
+- If necessary, update `spark-submit.sh`. This is the shell script used to run the Spark application via `spark-submit`.
+
+Once everything is configured, you can start your workflow run using the aforementioned script:
+```shell
+nohup ./spark-submit.sh > run.txt &
+```
+
+While the job is running, you can check the logs written to `stdout` using
+```shell
+tail -f run.txt
+```
+
+Once the run completes, the script will attempt to automatically open the final report
+(`report_stats/ml_anovos_report.html`) in your web browser.
+
+### 🐍 Install through `pip` to use Anovos within your Python applications
+
+To install _Anovos_, simply run
+```shell
+pip install anovos
+```
+
+Then, you can import _Anovos_ as a module into your Python applications using
+```python
+import anovos
+```
+
+To trigger Spark workloads from Python, you have to ensure that the necessary external packages
+are included in the [`SparkSession`](https://spark.apache.org/docs/latest/api/python/reference/api/pyspark.sql.SparkSession.html).
+
+For this, you can either use the pre-configured `SparkSession` provided by _Anovos_:
+
+```python
+from anovos.shared.spark import spark
+```
+
+If you need to use your own custom `SparkSession`, make sure to include the following dependencies:
+
+- [io.github.histogrammar:histogrammar_2.11:1.0.20](https://repo1.maven.org/maven2/io/github/histogrammar/histogrammar_2.11/1.0.20/)
+- [io.github.histogrammar:histogrammar-sparksql_2.11:1.0.20](https://repo1.maven.org/maven2/io/github/histogrammar/histogrammar-sparksql_2.11/1.0.20/)
+- [org.apache.spark:spark-avro_2.11:2.4.0](https://mvnrepository.com/artifact/org.apache.spark/spark-avro_2.11/2.4.0)
