@@ -27,14 +27,14 @@ In the Beta release of _Anovos_, the library will support ingesting from cloud s
 like MS Azure and will have mechanisms to read/write different file formats such as Avro and nested Json.
 It will also enable ingesting various data types (see the above figure for the details).
 
-The key differentiating functionality of beta release would be the “Feature Wiki” for data scientists
-and end-users to resolve their cold-start problems, which will immensely reduce their literature search time.
+The key differentiating functionality of beta release would be the “Feature Wiki/ Feature Recommender” for data scientists
+and end-users to resolve their cold-start problems, which will immensely reduce their literature review time.
 
-The Beta release will also have another explain each attributes’ contribution in feature building which we 
+The Beta release will also have another explainer of each attributes’ contribution in feature building which we 
 call the “Attribute -> Feature” mapper.
 
 ### Version 1.0
-We'll release the GA release of _Anovos_ in March 2022 with the functionalities to support an end-to-end
+We'll release the GA release of _Anovos_ in June 2022 with the functionalities to support an end-to-end
 machine learning workflow. It will be able to store the generated features in an open source feature store,
 like Feast. It will also support running open source based Auto ML models and ML workflow integration.
 
