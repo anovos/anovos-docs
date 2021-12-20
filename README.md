@@ -1,36 +1,38 @@
 # Anovos Docs
 
-This repo is where the Anovos Documentation is maintained. The docs are built using a static site generator called  [`mkdocs`](https://github.com/mkdocs/mkdocs) using the [`mkdocs-material`]((https://squidfunk.github.io/mkdocs-material/) theme and deployed to [docs.anovos.ai](https://docs.anovos.ai).
+This is the repository for [_Anovos_](https://github.com/anovos/anovos)' documentation.
+
+The docs are built using [`mkdocs`](https://github.com/mkdocs/mkdocs) using the [`mkdocs-material`](https://squidfunk.github.io/mkdocs-material/) theme and deployed to [docs.anovos.ai](https://docs.anovos.ai).
 
 ## Contributing to the Anovos Docs
 
-### Installing MkDocs Locaally
+### Setting up
 
-To get started, you'll need to install `mkdocs` by running:
+To get started, first clone the repository:
 
-`pip install mkdocs`
+`git clone https://github.com/anovos/anovos-docs.git`
 
-Next, you'll need to install the `mkdocs-material` theme:
+Then, enter the newly created `anovos-docs` folder and install `mkdocs` and the other dependencies by running:
 
-`pip install mkdocs-material`
+`pip install -r requirements.txt`
 
-To build the docs locally, clone the repo and, from the anovos-docs repo folder, run:
+To build and serve the docs locally, run:
 
 `mkdocs serve`
 
-### Updating the Docs
+### Editing the docs
 
-We write all the in markdown as `index.md` files stored in nested folders for page hierarchy. Open the `index.md` file in the folder for the page you wish to edit. Make your changes, save the file, and commit your changes to a branch in the repo that can be reviewed and merged. 
+Simply edit the Markdown files or add new ones. If you added a new file and would like it to show up in the navigation bar, don't forget to add it to the `nav` section in [`mkdocs.yml`](./mkdocs.yml).
 
-### Adding a New Page
-
-To add a new page, you'll need to create a folder for the page and place it within the correct folder to maintain site/page hierarchy. Create an `index.md` file in that folder where you will put the new page content. Once it is saved, be sure to go to the `mkdocs.yml` file and add it to the `nav`.
+Once you're done, commit your changes and push them to a new branch in the repo so that they can be reviewed and merged. 
 
 ### Adding Images
 
 All images for the site are stored in the `docs/assets`. Upload your images in this folder, then put those images in the correct pages using Markdown:
 
+```markdown
 ![alt-text](path-to-the-image)
+```
 
 ### Merging and Deploying
 
