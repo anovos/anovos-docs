@@ -20,7 +20,7 @@ jobs:
       - name: Install MkDocs
         run: |
           pip install --upgrade pip
-          pip install mkdocs mkdocs-material
+          pip install mkdocs mkdocs-material mkdocs-include-dir-to-nav
 
       - name: Build docs
         run: |

@@ -1,0 +1,63 @@
+name: Update API Docs
+
+on:
+  workflow_dispatch:
+  push:
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Docs
+        uses: actions/checkout@v2
+
+      - name: Checkout Anovos
+        uses: actions/checkout@v2
+        with:
+          repository: anovos/anovos
+          path: anovos
+
+      - name: Set up Python
+        uses: actions/setup-python@v2.3.1
+        with:
+          python-version: '3.7'
+
+      - uses: actions/setup-java@v1
+        with:
+          java-version: 8
+
+      - uses: vemonet/setup-spark@v1
+        with:
+          spark-version: '2.4.8'
+          hadoop-version: '2.7'
+
+      - name: Install Anovos Python requirements
+        run: |
+          cd anovos
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Install Docs Python requirements
+        run: |
+          pip install pdoc3 pyment
+
+      - name: Generate API docs
+        run: |
+          cd anovos/src/main
+          ls
+          pyment -o google -w anovos
+          pdoc --output-dir=./api anovos
+          ls ./api
+
+      - name: Merge API docs into docs
+        run: |
+          rm -rf docs/api || true
+          cp -r anovos/src/main/api docs/
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v3
+        with:
+          add-paths: |
+            docs/api/**
+          title: Update API Docs
+          body: Automatically created via GitHub Actions

@@ -9,6 +9,7 @@ lib_repo_url: https://github.com/anovos/anovos
 lib_repo_name: anovos/anovos
 plugins:
   - search
+  - include_dir_to_nav
 markdown_extensions:
   - fenced_code
   - pymdownx.highlight:
@@ -57,13 +58,7 @@ nav:
       - Code of Conduct: community/code-of-conduct.md
   - License: license.md
   - API Docs:
-      - Overview: docs/anovos-modules-overview/overview/index.md
-      - Data Ingest: docs/anovos-modules-overview/data-ingest/index.md
-      - Data Analyzer: docs/anovos-modules-overview/data-analyzer/index.md
-      - Quality Checker: docs/anovos-modules-overview/quality-checker/index.md
-      - Association Evaluator: docs/anovos-modules-overview/association-evaluator/index.md
-      - Data Drift and Stability Index: docs/anovos-modules-overview/data_drift_and_stability_index/index.md
-      - Data Transformers: docs/anovos-modules-overview/data_transformer/index.md
+      - api
 
 extra:
   social:
