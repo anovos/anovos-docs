@@ -46,7 +46,9 @@ jobs:
           cd anovos/src/main
           ls
           pyment -o google -w anovos
-          pdoc --output-dir=./api anovos
+          pdoc --output-dir=./api --template-dir=../../../pdoc-template --html anovos
+          ls ./api
+          find . -name '*.html' -exec sh -c 'mv "$0" "${0%.html}.md"' {} \;
           ls ./api
 
       - name: Merge API docs into docs
