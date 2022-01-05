@@ -5,3 +5,11 @@
 [data-md-color-scheme=slate] {
     --md-typeset-a-color: var(--md-accent-fg-color);
 }
+
+.md-nav__link code {
+    margin-right: auto;
+}
+
+.md-nav__link code::before {
+    content: "\00a0";
+}

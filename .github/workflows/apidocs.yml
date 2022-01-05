@@ -39,7 +39,7 @@ jobs:
 
       - name: Install Docs Python requirements
         run: |
-          pip install pdoc pyment
+          pip install pdoc3 pyment
 
       - name: Generate API docs
         run: |
@@ -47,7 +47,7 @@ jobs:
           ls
           pyment -o google -w anovos
           ls ../../../pdoc-template
-          pdoc --output-dir=./api --template-dir=../../../pdoc-template anovos
+          pdoc --output-dir=./api --template-dir=../../../pdoc-template --html anovos
           ls ./api
           find . -name '*.html' -exec sh -c 'mv "$0" "${0%.html}.md"' {} \;
           ls ./api
