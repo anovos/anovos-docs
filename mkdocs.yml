@@ -1,10 +1,12 @@
-site_name: Anovos Docs
+site_name: Anovos Documentation
 site_url: https://docs.anovos.ai
 site_description: Stable Features yield Resilient Models. Documentation for the Feature Engineering Library Anovos.
 site_author: Anovos Developers, Mobilewalla
 
 repo_url: https://github.com/anovos/anovos-docs
-edit_uri: edit/main/docs
+repo_name: anovos/anovos-docs
+lib_repo_url: https://github.com/anovos/anovos
+lib_repo_name: anovos/anovos
 plugins:
   - search
 markdown_extensions:
@@ -26,15 +28,10 @@ theme:
       toggle:
         icon: material/lightbulb-outline
         name: Switch to dark mode
-        primary: deep purple
     - scheme: slate
       toggle:
         icon: material/lightbulb
         name: Switch to light mode
-extra_css:
-  - stylesheets/extra.css
-extra_javascript:
-  - javascript/shortcuts.js
 
 nav:
   - Home: index.md
