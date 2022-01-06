@@ -8,7 +8,7 @@ and its processing. Data reports are an important component of many data governa
 _Anovos_ generates reports in two steps:
 
 1. The data that will be included in the report is generated using the functions of the 
-   [`data_analyzer`](../../docs/anovos-modules-overview/data-analyzer/index.md) module.
+   [`data_analyzer`](../../docs/anovos-modules-overview/data-analyzer/index.md)[`association_evaluator`](../../docs/anovos-modules-overview/association-evaluator/index.md)[`data_drift_stability`](../../docs/anovos-modules-overview/data_drift_and_stability_index/index.md)[`quality_checker`](../../docs/anovos-modules-overview/quality-checker/index.md) module.
    As all _Anovos_ data operations, this happens in a distributed fashion,
    fully utilizing the power of _Apache Spark_.
    We call the result the "intermediate report."
@@ -22,7 +22,7 @@ Using the configuration file, or through individual modules.
 
 *Here the user specifies the desired options / input parameters as done for other modules*
 
-- Basic Report : In case the user doesn't want an exhaustive report containing all the detailed elements of the [`data_analyzer`](../../docs/anovos-modules-overview/data-analyzer/index.md) output, the user may wish to choose a fairly comprehensive view which can be achieved through `anovos_basic_report`. To generate that, there's only a small block which needs to be updated at the config file. Setting the `basic_report` option as `True` can enable this functionality. Alongside, the user should explicity specify the input parameters details such as `id_col`, `label_col`, `event_label` & the `output_path`.
+- Basic Report : In case the user doesn't want an exhaustive report containing all the detailed elements of the [`data_analyzer`](../../docs/anovos-modules-overview/data-analyzer/index.md)[`association_evaluator`](../../docs/anovos-modules-overview/association-evaluator/index.md)[`data_drift_stability`](../../docs/anovos-modules-overview/data_drift_and_stability_index/index.md)[`quality_checker`](../../docs/anovos-modules-overview/quality-checker/index.md) output, the user may wish to choose a fairly comprehensive view which can be achieved through `anovos_basic_report`. To generate that, there's only a small block which needs to be updated at the config file. Setting the `basic_report` option as `True` can enable this functionality. Alongside, the user should explicity specify the input parameters details such as `id_col`, `label_col`, `event_label` & the `output_path`.
 
 ```yaml
 anovos_basic_report:
@@ -34,8 +34,8 @@ anovos_basic_report:
     output_path: 
 ```
 
-- Overall Report : The detailed & the exhaustive view form can be achieved through the Overall Report. A structured & a well formatted output from the [`data_analyzer`] is displayed along with eye catching visualizations thereby making it easier to capture data trends across different cut points. There are precisely two sections which needed to be updated viz. `report_preprocessing` & `report_generation`.
-   - Inside `report_preprocessing` block we've the requirement for `master_path` which is precisely the location where all the reporting stats are saved as computed from the different modules. Likewise, the `charts_to_objects` also seeks for the details pertaining to the data & preprocessing options. 
+- Overall Report : The detailed & the exhaustive view form can be achieved through the Overall Report. A structured & a well formatted output from the [`data_analyzer`](../../docs/anovos-modules-overview/data-analyzer/index.md)[`association_evaluator`](../../docs/anovos-modules-overview/association-evaluator/index.md)[`data_drift_stability`](../../docs/anovos-modules-overview/data_drift_and_stability_index/index.md)[`quality_checker`](../../docs/anovos-modules-overview/quality-checker/index.md) is displayed along with eye catching visualizations thereby making it easier to capture data trends across different cut points. There are precisely two sections which needed to be updated viz. `report_preprocessing` & `report_generation`.
+- Inside `report_preprocessing` block we've the requirement for `master_path` which is precisely the location where all the reporting stats are saved as computed from the different modules. Likewise, the `charts_to_objects` also seeks for the details pertaining to the data & preprocessing options. 
 
 ```yaml
 report_preprocessing:
