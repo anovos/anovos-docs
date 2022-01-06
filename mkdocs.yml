@@ -7,9 +7,6 @@ repo_url: https://github.com/anovos/anovos-docs
 repo_name: anovos/anovos-docs
 edit_uri: edit/main/docs
 
-lib_repo_url: https://github.com/anovos/anovos
-lib_repo_name: anovos/anovos
-
 use_directory_urls: false
 
 plugins:
@@ -77,3 +74,6 @@ extra:
   analytics:
     provider: google
     property: UA-52258647-20
+
+  lib_repo_url: https://github.com/anovos/anovos
+  lib_repo_name: anovos/anovos
