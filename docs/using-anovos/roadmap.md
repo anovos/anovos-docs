@@ -12,15 +12,48 @@ open source library for every data scientists’ use.
 ![https://anovos.github.io/anovos-docs/assets/roadmap.png](https://anovos.github.io/anovos-docs/assets/roadmap.png)
 
 ## 🛣 The Roadmap
-We plan to bring full functionality to _Anovos_ over the course of three major releases: Alpha, Beta, and versio 1.0.
+We plan to bring fully functional _Anovos_ over the course of three major releases: Alpha, Beta, and versio 1.0.
 
 ### Alpha Release
 
 The Alpha release of _Anovos_ has all the essential data ingestion and comprehensive data analysis functionalities,
 as well as the data pre-processing and cleaning mechanisms. It also has some key differentiating functionalities,
-like data drift and stability computations, which are crucial in deciding the need for model refreshing/tweaking
-options. Another benefit of Anovos is a dynamic visualization component configured based on data ingestion pipelines. Every data metric computed from the Anovos ingestion process can be visualized and utilized for CXO level decision-making.
+like data drift and stability computations, which are crucial in deciding the need for model refresh/tweak
+options. Another benefit of _Anovos_ is a dynamic visualization component configured based on data ingestion pipelines.
+Every data metric computed from the _Anovos_ ingestion process can be visualized and utilized for CXO level decision-making.
 
+#### Details
+
+- **Data Ingest**
+  - AWS S3 Storage integration
+  - Read and write to/from local files
+  - Column selection and renaming
+  - Support for Parquet and CSV files
+  - Support for numerical and categorical data types
+- **Data Analyzer and Diagnostics**
+  - Frequency analysis
+  - Attribute/feature vs. target
+  - Attribute/feature interaction/association
+- **Data Preprocessing and Cleaning**
+  - Outlier detection (IQR/Standardization)
+  - Treatment of invalid values
+  - Missing attributes analysis
+- **Data Health and Monitoring**
+  - Data drift identification (Hellinger Distance, KS, JSD, and PSI)
+  - Attribute stability analysis
+  - Overall data quality analysis
+- **Run time Environment support**
+  - Local 
+  - Docker based
+  - AWS EMR 
+- **Report Visualization**
+  - Comprehensive 360 degree view report of the ingested data (Numerical & Categorical)
+     - Executive summary
+     - Wiki
+     - Descriptive statistics
+     - Quality Checker
+     - Attribute association
+     - Data drift & stability
 ### Beta Release
 
 In the Beta release of _Anovos_, the library will support ingesting from cloud service providers
@@ -30,9 +63,36 @@ It will also enable ingesting various data types (see the above figure for the d
 The key differentiating functionality of beta release would be the “Feature Wiki/ Feature Recommender” for data scientists
 and end-users to resolve their cold-start problems, which will immensely reduce their literature review time.
 
-The Beta release will also have another explainer of each attributes’ contribution in feature building which we 
-call the “Attribute -> Feature” mapper.
+The Beta release will also have another capability named as Feature Stability estimator based on the composition of a given feature using set of attribute/s
 
+#### Details
+
+- **Data Ingest**
+  - Microsoft Azure Blob Storage integration
+  - Support for Avro and nested JSON files
+  - Support for additional data types: Time stamps columns 
+- **Data Cleaning and Transformation**
+  - Parsing
+  - Merging
+  - Converting/Coding
+  - Derivations
+  - Calculations
+  - Imputations
+  - Auto encoders
+  - Dimension reduction
+- **Feature Wiki / Feature recommender**
+  - Industry specific use cases and respective features
+    - Telco
+    - BFSI
+    - Retail
+    - Healthcare
+    - Transportation
+    - Supply chain
+  - Recommend potential features based on the Inustry, Use Case and ingested data dictionary
+- **Feature Stability**
+  - This will be an extension of attribute stability of alpha release
+- **Run time Environment support**
+  - Microsoft Azure 
 ### Version 1.0
 
 We'll release version 1.0 of _Anovos_ in June 2022 with the functionalities to support an end-to-end
@@ -40,3 +100,10 @@ machine learning workflow. It will be able to store the generated features in an
 like Feast. It will also support running open source based Auto ML models and ML workflow integration.
 
 This release will also include a mechanism to explain the model behavior by having the respective Shapley values. 
+
+#### Details
+
+- **Feature Store Integration:** APIs to integrate _Anovos_ with existing OSS Feature Stores
+- **Explainable AI:** SHAP value computations
+- **Auto ML Integration:** APIs to integrate _Anovos_ with existing OSS Auto ML solutions
+- **ML Flow** workflow integration
