@@ -25,35 +25,35 @@ Every data metric computed from the _Anovos_ ingestion process can be visualized
 #### Details
 
 - **Data Ingest**
-  - AWS S3 Storage integration
-  - Read and write to/from local files
-  - Column selection and renaming
-  - Support for Parquet and CSV files
-  - Support for numerical and categorical data types
+      - AWS S3 Storage integration
+      - Read and write to/from local files
+      - Column selection and renaming
+      - Support for Parquet and CSV files
+      - Support for numerical and categorical data types
 - **Data Analyzer and Diagnostics**
-  - Frequency analysis
-  - Attribute/feature vs. target
-  - Attribute/feature interaction/association
+      - Frequency analysis
+      - Attribute/feature vs. target
+      - Attribute/feature interaction/association
 - **Data Preprocessing and Cleaning**
-  - Outlier detection (IQR/Standardization)
-  - Treatment of invalid values
-  - Missing attributes analysis
+      - Outlier detection (IQR/Standardization)
+      - Treatment of invalid values
+      - Missing attributes analysis
 - **Data Health and Monitoring**
-  - Data drift identification (Hellinger Distance, KS, JSD, and PSI)
-  - Attribute stability analysis
-  - Overall data quality analysis
-- **Run time Environment support**
-  - Local 
-  - Docker based
-  - AWS EMR 
+      - Data drift identification (Hellinger Distance, KS, JSD, and PSI)
+      - Attribute stability analysis
+      - Overall data quality analysis
+- **Runtime Environment support**
+      - Local 
+      - Docker-based
+      - AWS EMR 
 - **Report Visualization**
-  - Comprehensive 360 degree view report of the ingested data (Numerical & Categorical)
-     - Executive summary
-     - Wiki
-     - Descriptive statistics
-     - Quality Checker
-     - Attribute association
-     - Data drift & stability
+      - Comprehensive 360 degree view report of the ingested data (Numerical & Categorical)
+          - Executive summary
+          - Wiki
+          - Descriptive statistics
+          - Quality Checker
+          - Attribute association
+          - Data drift & stability
 ### Beta Release
 
 In the Beta release of _Anovos_, the library will support ingesting from cloud service providers
@@ -68,31 +68,31 @@ The Beta release will also have another capability named as Feature Stability es
 #### Details
 
 - **Data Ingest**
-  - Microsoft Azure Blob Storage integration
-  - Support for Avro and nested JSON files
-  - Support for additional data types: Time stamps columns 
+    - Microsoft Azure Blob Storage integration
+    - Support for Avro and nested JSON files
+    - Support for additional data types: Time stamps columns 
 - **Data Cleaning and Transformation**
-  - Parsing
-  - Merging
-  - Converting/Coding
-  - Derivations
-  - Calculations
-  - Imputations
-  - Auto encoders
-  - Dimension reduction
+    - Parsing
+    - Merging
+    - Converting/Coding
+    - Derivations
+    - Calculations
+    - Imputations
+    - Auto encoders
+    - Dimension reduction
 - **Feature Wiki / Feature recommender**
-  - Industry specific use cases and respective features
-    - Telco
-    - BFSI
-    - Retail
-    - Healthcare
-    - Transportation
-    - Supply chain
-  - Recommend potential features based on the Inustry, Use Case and ingested data dictionary
+  to recommend potential features based on the industry, use case, and the ingested data dictionary
+    - Industry specific use cases and respective features
+        - Telco
+        - BFSI
+        - Retail
+        - Healthcare
+        - Transportation
+        - Supply chain
 - **Feature Stability**
-  - This will be an extension of attribute stability of alpha release
-- **Run time Environment support**
-  - Microsoft Azure 
+    - This will be an extension of the attribute stability capabilities of the Alpha release
+- **Runtime Environment support**
+    - Microsoft Azure 
 ### Version 1.0
 
 We'll release version 1.0 of _Anovos_ in June 2022 with the functionalities to support an end-to-end
