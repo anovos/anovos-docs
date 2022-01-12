@@ -54,7 +54,6 @@ Every data metric computed from the _Anovos_ ingestion process can be visualized
           - Quality Checker
           - Attribute association
           - Data drift & stability
-
 ### Beta Release
 
 In the Beta release of _Anovos_, the library will support ingesting from cloud service providers
