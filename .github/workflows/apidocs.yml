@@ -3,6 +3,8 @@ name: Update API Docs
 on:
   workflow_dispatch:
   push:
+    paths-ignore:
+      - 'docs/api/**'
 
 jobs:
   generate:
@@ -49,6 +51,10 @@ jobs:
           ls ../../../pdoc-template
           pdoc --output-dir=./api --template-dir=../../../pdoc-template --html anovos
           ls ./api
+          mv ./api/anovos/* ./api/
+          ls ./api
+          rmdir ./api/anovos
+          ls ./api
           find . -name '*.html' -exec sh -c 'mv "$0" "${0%.html}.md"' {} \;
           ls ./api
 
@@ -64,3 +70,5 @@ jobs:
             docs/api/**
           title: Update API Docs
           body: Automatically created via GitHub Actions
+          branch: update-api-docs
+          delete-branch: true

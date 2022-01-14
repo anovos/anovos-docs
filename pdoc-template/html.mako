@@ -114,7 +114,6 @@
     ${module.docstring | to_html}
     ${show_source(module)}
 
-
     % if submodules:
     ${'##'} Sub-modules
 
