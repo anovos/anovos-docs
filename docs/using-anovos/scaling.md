@@ -17,9 +17,9 @@ with the following attributes:
 To benchmark _Anovos_' performance, we ran a pipeline on this dataset.
 
 The entire pipeline was optimized such that the computed statistics could be reused by other functions as much as possible.
-For example, the modes (the most frequently seen values) computed by the [`measures_of_centralTendency`](../api/anovos-modules-overview/data-analyzer/index.md#measures_of_centraltendency)
-function were also used for imputation while treating null values in a column with [`nullColumns_detection`](../api/anovos-modules-overview/quality-checker/index.md#nullcolumns_detection)
-or detecting a columns' biasedness using [`biasedness_detection`](../api/anovos-modules-overview/quality-checker/index.md#biasedness_detection).
+For example, the modes (the most frequently seen values) computed by the [`measures_of_centralTendency`](../api/anovos/data_analyzer/stats_generator.md#measures_of_centraltendency)
+function were also used for imputation while treating null values in a column with [`nullColumns_detection`](../api/anovos/data_analyzer/quality_checker.md#nullcolumns_detection)
+or detecting a columns' biasedness using [`biasedness_detection`](../api/anovos/data_analyzer/quality_checker.md#biasedness_detection).
 
 Hence, the time recorded for a function in the benchmark might differ significantly from the time taken by the same function
 when running in isolation.
@@ -27,26 +27,26 @@ when running in isolation.
 Further, Apache Spark does its own set of optimizations of transformations under the hood while running multiple
 functions together, which further adds to the time difference.
 
-| Function                                                                                                            | Time (minutes) |
-|---------------------------------------------------------------------------------------------------------------------|----------------|
-| [`global_summary`](../api/anovos-modules-overview/data-analyzer/index.md#global_summary)                           | 1              |
-| [`measures_of_counts`](../api/anovos-modules-overview/data-analyzer/index.md#measures_of_counts)                   | 6              |
-| [`measures_of_centralTendency`](../api/anovos-modules-overview/data-analyzer/index.md#measures_of_centraltendency) | 38             |
-| [`measures_of_cardinality`](../api/anovos-modules-overview/data-analyzer/index.md#measures_of_cardinality)         | 65             |
-| [`measures_of_percentiles`](../api/anovos-modules-overview/data-analyzer/index.md#measures_of_percentiles)         | 2              |
-| [`measures_of_dispersion`](../api/anovos-modules-overview/data-analyzer/index.md#measures_of_dispersion)           | 2              |
-| [`measures_of_shape`](../api/anovos-modules-overview/data-analyzer/index.md#measures_of_shape)                     | 3              |
-| [`duplicate_detection`](../api/anovos-modules-overview/quality-checker/index.md#duplicate_detection)               | 6              |
-| [`nullRows_detection`](../api/anovos-modules-overview/quality-checker/index.md#nullrows_detection)                 | 3              |
-| [`invalidEntries_detection`](../api/anovos-modules-overview/quality-checker/index.md#invalidentries_detection)     | 17             |
-| [`IDness_detection`](../api/anovos-modules-overview/quality-checker/index.md#idness_detection)                     | 2              |
-| [`biasedness_detection`](../api/anovos-modules-overview/quality-checker/index.md#biasedness_detection)             | 2              |
-| [`outlier_detection`](../api/anovos-modules-overview/quality-checker/index.md#outlier_detection)                   | 4              |
-| [`nullColumns_detection`](../api/anovos-modules-overview/quality-checker/index.md#nullcolumns_detection)           | 2              |
-| [`variable_clustering`](../api/anovos-modules-overview/association-evaluator/index.md#variable_clustering)         | 2              |
-| [`IV_calculation`](../api/anovos-modules-overview/association-evaluator/index.md#iv_calculation)\*                 | 16             |
-| [`IG_calculation`](../api/anovos-modules-overview/association-evaluator/index.md#ig_calculation)\*                 | 12             |
-| \* A binary categorical column was selected as a target variable to test this function.                             |                |
+| Function                                                                                                    | Time (minutes) |
+|-------------------------------------------------------------------------------------------------------------|----------------|
+| [`global_summary`](../api/anovos/data_analyzer/stats_generator.md#global_summary)                           | 1              |
+| [`measures_of_counts`](../api/anovos/data_analyzer/stats_generator.md#measures_of_counts)                   | 6              |
+| [`measures_of_centralTendency`](../api/anovos/data_analyzer/stats_generator.md#measures_of_centraltendency) | 38             |
+| [`measures_of_cardinality`](../api/anovos/data_analyzer/stats_generator.md#measures_of_cardinality)         | 65             |
+| [`measures_of_percentiles`](../api/anovos/data_analyzer/stats_generator.md#measures_of_percentiles)         | 2              |
+| [`measures_of_dispersion`](../api/anovos/data_analyzer/stats_generator.md#measures_of_dispersion)           | 2              |
+| [`measures_of_shape`](../api/anovos/data_analyzer/stats_generator.md#measures_of_shape)                     | 3              |
+| [`duplicate_detection`](../api/anovos/data_analyzer/quality_checker.md#duplicate_detection)                 | 6              |
+| [`nullRows_detection`](../api/anovos/data_analyzer/quality_checker.md#nullrows_detection)                   | 3              |
+| [`invalidEntries_detection`](../api/anovos/data_analyzer/quality_checker.md#invalidentries_detection)       | 17             |
+| [`IDness_detection`](../api/anovos/data_analyzer/quality_checker.md#idness_detection)                       | 2              |
+| [`biasedness_detection`](../api/anovos/data_analyzer/quality_checker.md#biasedness_detection)               | 2              |
+| [`outlier_detection`](../api/anovos/data_analyzer/quality_checker.md#outlier_detection)                     | 4              |
+| [`nullColumns_detection`](../api/anovos/data_analyzer/quality_checker.md#nullcolumns_detection)             | 2              |
+| [`variable_clustering`](../api/anovos/data_analyzer/association_evaluator.md#variable_clustering)           | 2              |
+| [`IV_calculation`](../api/anovos/data_analyzer/association_evaluator.md#iv_calculation)\*                   | 16             |
+| [`IG_calculation`](../api/anovos/data_analyzer/association_evaluator.md#ig_calculation)\*                   | 12             |
+| \* A binary categorical column was selected as a target variable to test this function.                     |                |
 
 ## Limitations
 
