@@ -1,4 +1,4 @@
-# Module <code>utils</code>
+# <code>utils</code>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -7,79 +7,79 @@
 from itertools import chain
 from pyspark.sql import functions as F
 def flatten_dataframe(idf, fixed_cols):
-&#34;&#34;&#34;
+"""
 Args:
 idf: Input Dataframe
 fixed_cols: All columns except in this list will be melted/unpivoted
 Returns:
 Flatten/Melted dataframe
-&#34;&#34;&#34;
+"""
 valid_cols = [e for e in idf.columns if e not in fixed_cols]
 key_and_val = F.create_map(list(chain.from_iterable([[F.lit(c), F.col(c)] for c in valid_cols])))
 odf = idf.select(*fixed_cols, F.explode(key_and_val))
 return odf
 def transpose_dataframe(idf, fixed_col):
-&#34;&#34;&#34;
+"""
 Args:
 idf: Input Dataframe
 fixed_col: Values in this column will be converted into columns as header.
 Ideally all values should be unique
 Returns:
 Transposed dataframe
-&#34;&#34;&#34;
+"""
 idf_flatten = flatten_dataframe(idf, fixed_cols=[fixed_col])
-odf = idf_flatten.groupBy(&#39;key&#39;).pivot(fixed_col).agg(F.first(&#39;value&#39;))
+odf = idf_flatten.groupBy('key').pivot(fixed_col).agg(F.first('value'))
 return odf
 def attributeType_segregation(idf):
-&#34;&#34;&#34;
+"""
 Args:
 idf: Input Dataframe
 Returns:
 list1, list2, list3)
 3 lists - each corresponding to numerical, categorical, and others columns
-&#34;&#34;&#34;
+"""
 cat_cols = []
 num_cols = []
 other_cols = []
 for i in idf.dtypes:
-if i[1] == &#39;string&#39;:
+if i[1] == 'string':
 cat_cols.append(i[0])
-elif (i[1] in (&#39;double&#39;, &#39;int&#39;, &#39;bigint&#39;, &#39;float&#39;, &#39;long&#39;)) | (i[1].startswith(&#39;decimal&#39;)):
+elif (i[1] in ('double', 'int', 'bigint', 'float', 'long')) | (i[1].startswith('decimal')):
 num_cols.append(i[0])
 else:
 other_cols.append(i[0])
 return num_cols, cat_cols, other_cols
 def get_dtype(idf, col):
-&#34;&#34;&#34;
+"""
 Args:
 idf: Input Dataframe
 col: Column Name for datatype detection
 Returns:
 data type
-&#34;&#34;&#34;
+"""
 return [dtype for name, dtype in idf.dtypes if name == col][0]
-def ends_with(string, end_str=&#34;/&#34;):
-&#34;&#34;&#34;
+def ends_with(string, end_str="/"):
+"""
 Args:
-string: s3:mw-bucket&#34;
-end_str: return: &#34;s3:mw-bucket/&#34; (Default value = &#34;/&#34;)
+string: s3:mw-bucket"
+end_str: return: "s3:mw-bucket/" (Default value = "/")
 Returns:
-s3:mw-bucket/&#34;
-&#34;&#34;&#34;
+s3:mw-bucket/"
+"""
 string = str(string)
 if string.endswith(end_str):
 return string
 return string + end_str
 def pairwise_reduce(op, x):
-&#34;&#34;&#34;
+"""
 Args:
 op:
 x:
 Returns:
-&#34;&#34;&#34;
-while len(x) &gt; 1:
+"""
+while len(x) > 1:
 v = [op(i, j) for i, j in zip(x[::2], x[1::2])]
-if len(x) &gt; 1 and len(x) % 2 == 1:
+if len(x) > 1 and len(x) % 2 == 1:
 v[-1] = op(v[-1], x[-1])
 x = v
 return x[0]
@@ -105,20 +105,20 @@ return x[0]
 </summary>
 ```python
 def attributeType_segregation(idf):
-&#34;&#34;&#34;
+"""
 Args:
 idf: Input Dataframe
 Returns:
 list1, list2, list3)
 3 lists - each corresponding to numerical, categorical, and others columns
-&#34;&#34;&#34;
+"""
 cat_cols = []
 num_cols = []
 other_cols = []
 for i in idf.dtypes:
-if i[1] == &#39;string&#39;:
+if i[1] == 'string':
 cat_cols.append(i[0])
-elif (i[1] in (&#39;double&#39;, &#39;int&#39;, &#39;bigint&#39;, &#39;float&#39;, &#39;long&#39;)) | (i[1].startswith(&#39;decimal&#39;)):
+elif (i[1] in ('double', 'int', 'bigint', 'float', 'long')) | (i[1].startswith('decimal')):
 num_cols.append(i[0])
 else:
 other_cols.append(i[0])
@@ -144,14 +144,14 @@ return num_cols, cat_cols, other_cols
 <span>Expand source code</span>
 </summary>
 ```python
-def ends_with(string, end_str=&#34;/&#34;):
-&#34;&#34;&#34;
+def ends_with(string, end_str="/"):
+"""
 Args:
-string: s3:mw-bucket&#34;
-end_str: return: &#34;s3:mw-bucket/&#34; (Default value = &#34;/&#34;)
+string: s3:mw-bucket"
+end_str: return: "s3:mw-bucket/" (Default value = "/")
 Returns:
-s3:mw-bucket/&#34;
-&#34;&#34;&#34;
+s3:mw-bucket/"
+"""
 string = str(string)
 if string.endswith(end_str):
 return string
@@ -178,13 +178,13 @@ return string + end_str
 </summary>
 ```python
 def flatten_dataframe(idf, fixed_cols):
-&#34;&#34;&#34;
+"""
 Args:
 idf: Input Dataframe
 fixed_cols: All columns except in this list will be melted/unpivoted
 Returns:
 Flatten/Melted dataframe
-&#34;&#34;&#34;
+"""
 valid_cols = [e for e in idf.columns if e not in fixed_cols]
 key_and_val = F.create_map(list(chain.from_iterable([[F.lit(c), F.col(c)] for c in valid_cols])))
 odf = idf.select(*fixed_cols, F.explode(key_and_val))
@@ -211,13 +211,13 @@ return odf
 </summary>
 ```python
 def get_dtype(idf, col):
-&#34;&#34;&#34;
+"""
 Args:
 idf: Input Dataframe
 col: Column Name for datatype detection
 Returns:
 data type
-&#34;&#34;&#34;
+"""
 return [dtype for name, dtype in idf.dtypes if name == col][0]
 ```
 </details>
@@ -240,15 +240,15 @@ return [dtype for name, dtype in idf.dtypes if name == col][0]
 </summary>
 ```python
 def pairwise_reduce(op, x):
-&#34;&#34;&#34;
+"""
 Args:
 op:
 x:
 Returns:
-&#34;&#34;&#34;
-while len(x) &gt; 1:
+"""
+while len(x) > 1:
 v = [op(i, j) for i, j in zip(x[::2], x[1::2])]
-if len(x) &gt; 1 and len(x) % 2 == 1:
+if len(x) > 1 and len(x) % 2 == 1:
 v[-1] = op(v[-1], x[-1])
 x = v
 return x[0]
@@ -275,16 +275,16 @@ return x[0]
 </summary>
 ```python
 def transpose_dataframe(idf, fixed_col):
-&#34;&#34;&#34;
+"""
 Args:
 idf: Input Dataframe
 fixed_col: Values in this column will be converted into columns as header.
 Ideally all values should be unique
 Returns:
 Transposed dataframe
-&#34;&#34;&#34;
+"""
 idf_flatten = flatten_dataframe(idf, fixed_cols=[fixed_col])
-odf = idf_flatten.groupBy(&#39;key&#39;).pivot(fixed_col).agg(F.first(&#39;value&#39;))
+odf = idf_flatten.groupBy('key').pivot(fixed_col).agg(F.first('value'))
 return odf
 ```
 </details>

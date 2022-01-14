@@ -1,4 +1,4 @@
-# Namespace <code>data_report</code>
+# <code>data_report</code>
 ## Sub-modules
 <dl>
 <dt><code class="name"><a title="anovos.data_report.basic_report_generation" href="basic_report_generation.html">anovos.data_report.basic_report_generation</a></code></dt>
