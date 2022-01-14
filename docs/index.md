@@ -18,7 +18,7 @@ To get a first impression of _Anovos_' capabilities, check out our [interactive 
 
 Need a little help? We're here!
 
-This documentation provides a thorough introduction to _Anovos_ and includes a comprehensive [API documentation](api/anovos-modules-overview/overview/index.md).
+This documentation provides a thorough introduction to _Anovos_ and includes a comprehensive [API documentation](api/index.md).
 
 If you have any questions on how to use _Anovos_ or would like to suggest future enhancements, [here's how to reach out](community/communication.md).
 
