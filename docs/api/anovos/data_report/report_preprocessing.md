@@ -1,0 +1,890 @@
+# Module <code>report_preprocessing</code>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+```python
+import subprocess
+from pathlib import Path
+import numpy as np
+import pandas as pd
+import plotly.express as px
+import plotly.graph_objects as go
+import pyspark
+from anovos.data_analyzer.stats_generator import uniqueCount_computation
+from anovos.data_ingest.data_ingest import read_dataset
+from anovos.data_transformer.transformers import outlier_categories, imputation_MMM, attribute_binning
+from anovos.shared.utils import attributeType_segregation, ends_with
+from pyspark.sql import functions as F
+from pyspark.sql import types as T
+from pyspark.sql.window import Window
+global_theme = px.colors.sequential.Plasma
+global_theme_r = px.colors.sequential.Plasma_r
+global_plot_bg_color = &#39;rgba(0,0,0,0)&#39;
+global_paper_bg_color = &#39;rgba(0,0,0,0)&#39;
+num_cols = []
+cat_cols = []
+def save_stats(spark, idf, master_path, function_name, reread=False, run_type=&#34;local&#34;):
+&#34;&#34;&#34;
+Args:
+spark: Spark Session
+idf: input dataframe
+master_path: Path to master folder under which all statistics will be saved in a csv file format.
+function_name: Function Name for which statistics need to be saved. file name will be saved as csv
+reread:
+(Default value = False)
+run_type:
+(Default value = &#34;local&#34;)
+Returns:
+None, dataframe saved
+:run_type: local or emr based on the mode of execution. Default value is kept as local
+:reread: option to reread. Default value is kept as False
+&#34;&#34;&#34;
+if run_type == &#34;local&#34;:
+local_path = master_path
+else:
+local_path = &#34;report_stats&#34;
+Path(local_path).mkdir(parents=True, exist_ok=True)
+idf.toPandas().to_csv(ends_with(local_path) + function_name + &#34;.csv&#34;, index=False)
+if run_type == &#39;emr&#39;:
+bash_cmd = &#34;aws s3 cp &#34; + ends_with(local_path) + function_name + &#34;.csv &#34; + ends_with(master_path)
+output = subprocess.check_output([&#39;bash&#39;, &#39;-c&#39;, bash_cmd])
+if reread:
+odf = spark.read.csv(ends_with(master_path) + function_name + &#34;.csv&#34;, header=True, inferSchema=True)
+return odf
+def edit_binRange(col):
+&#34;&#34;&#34;
+Args:
+col: The column which is passed as input and needs to be treated. The generated output will not contain any range whose value at either side is the same.
+Returns:
+&#34;&#34;&#34;
+try:
+list_col = col.split(&#34;-&#34;)
+deduped_col = list(set(list_col))
+if len(list_col) != len(deduped_col):
+return deduped_col[0]
+else:
+return col
+except:
+pass
+f_edit_binRange = F.udf(edit_binRange, T.StringType())
+def binRange_to_binIdx(spark, col, cutoffs_path):
+&#34;&#34;&#34;
+Args:
+spark: Spark Session
+col: The input column which is needed to by mapped with respective index
+cutoffs_path: paths containing the range cutoffs applicable for each index
+Returns:
+&#34;&#34;&#34;
+bin_cutoffs = spark.read.parquet(cutoffs_path).where(F.col(&#39;attribute&#39;) == col).select(&#39;parameters&#39;) \
+.rdd.flatMap(lambda x: x).collect()[0]
+bin_ranges = []
+max_cat = len(bin_cutoffs) + 1
+for idx in range(0, max_cat):
+if idx == 0:
+bin_ranges.append(&#34;&lt;= &#34; + str(round(bin_cutoffs[idx], 4)))
+elif idx &lt; (max_cat - 1):
+bin_ranges.append(str(round(bin_cutoffs[idx - 1], 4)) + &#34;-&#34; + str(round(bin_cutoffs[idx], 4)))
+else:
+bin_ranges.append(&#34;&gt; &#34; + str(round(bin_cutoffs[idx - 1], 4)))
+mapping = spark.createDataFrame(zip(range(1, max_cat + 1), bin_ranges), schema=[&#34;bin_idx&#34;, col])
+return mapping
+def plot_frequency(spark, idf, col, cutoffs_path):
+&#34;&#34;&#34;
+Args:
+spark: Spark Session
+idf: Input dataframe which would be referred for producing the frequency charts in form of bar plots / histograms
+col: Analysis column
+cutoffs_path: Path containing the range cut offs details for the analysis column
+Returns:
+&#34;&#34;&#34;
+odf = idf.groupBy(col).count() \
+.withColumn(&#34;count_%&#34;, 100 * (F.col(&#34;count&#34;) / F.sum(&#34;count&#34;).over(Window.partitionBy()))) \
+.withColumn(col, f_edit_binRange(col))
+if col in cat_cols:
+odf_pd = odf.orderBy(&#34;count&#34;, ascending=False).toPandas().fillna(&#34;Missing&#34;)
+odf_pd.loc[odf_pd[col] == &#34;others&#34;, col] = &#34;others*&#34;
+if col in num_cols:
+mapping = binRange_to_binIdx(spark, col, cutoffs_path)
+odf_pd = odf.join(mapping, col, &#39;left_outer&#39;).orderBy(&#39;bin_idx&#39;).toPandas().fillna(&#34;Missing&#34;)
+fig = px.bar(odf_pd, x=col, y=&#39;count&#39;, text=odf_pd[&#39;count_%&#39;].apply(lambda x: &#39;{0:1.2f}%&#39;.format(x)),
+color_discrete_sequence=global_theme)
+fig.update_traces(textposition=&#39;outside&#39;)
+fig.update_layout(title_text=str(&#39;Frequency Distribution for &#39; + str(col.upper())))
+fig.update_xaxes(type=&#39;category&#39;)
+# fig.update_layout(barmode=&#39;stack&#39;, xaxis={&#39;categoryorder&#39;:&#39;total descending&#39;})
+fig.layout.plot_bgcolor = global_plot_bg_color
+fig.layout.paper_bgcolor = global_paper_bg_color
+# plotly.offline.plot(fig, auto_open=False, validate=False, filename=f&#34;{base_loc}/{file_name_}bar_graph.html&#34;)
+return fig
+def plot_outlier(spark, idf, col, split_var=None, sample_size=500000):
+&#34;&#34;&#34;
+Args:
+spark: Spark Session
+idf: Input dataframe which would be referred for capturing the outliers in form of violin charts
+col: Analysis column
+split_var: Column which is needed. Default value is kept as None
+sample_size: Maximum Sample size. Default value is kept as 500000
+Returns:
+&#34;&#34;&#34;
+idf_sample = idf.select(col).sample(False, min(1.0, float(sample_size) / idf.count()), 0)
+idf_sample.persist(pyspark.StorageLevel.MEMORY_AND_DISK).count()
+idf_imputed = imputation_MMM(spark, idf_sample)
+idf_pd = idf_imputed.toPandas()
+fig = px.violin(idf_pd, y=col, color=split_var, box=True, points=&#34;outliers&#34;,
+color_discrete_sequence=[global_theme_r[8], global_theme_r[4]])
+fig.layout.plot_bgcolor = global_plot_bg_color
+fig.layout.paper_bgcolor = global_paper_bg_color
+fig.update_layout(legend=dict(orientation=&#34;h&#34;, x=0.5, yanchor=&#34;bottom&#34;, xanchor=&#34;center&#34;))
+return fig
+def plot_eventRate(spark, idf, col, label_col, event_label, cutoffs_path):
+&#34;&#34;&#34;
+Args:
+spark: Spark Session
+idf: Input dataframe which would be referred for producing the frequency charts in form of bar plots / histogram
+col: Analysis column
+label_col: Label column
+event_label: Event label
+cutoffs_path: Path containing the range cut offs details for the analysis column
+Returns:
+&#34;&#34;&#34;
+odf = idf.withColumn(label_col, F.when(F.col(label_col) == event_label, 1).otherwise(0))\
+.groupBy(col).pivot(label_col).count().fillna(0, subset=[&#34;0&#34;,&#34;1&#34;]) \
+.withColumn(&#34;event_rate&#34;, 100 * (F.col(&#34;1&#34;) / (F.col(&#34;0&#34;) + F.col(&#34;1&#34;))))\
+.withColumn(&#34;attribute_name&#34;, F.lit(col)) \
+.withColumn(col, f_edit_binRange(col))
+if col in cat_cols:
+odf_pd = odf.orderBy(&#34;event_rate&#34;, ascending=False).toPandas()
+odf_pd.loc[odf_pd[col] == &#34;others&#34;, col] = &#34;others*&#34;
+if col in num_cols:
+mapping = binRange_to_binIdx(spark, col, cutoffs_path)
+odf_pd = odf.join(mapping, col, &#39;left_outer&#39;).orderBy(&#39;bin_idx&#39;).toPandas()
+fig = px.bar(odf_pd, x=col, y=&#39;event_rate&#39;, text=odf_pd[&#39;event_rate&#39;].apply(lambda x: &#39;{0:1.2f}%&#39;.format(x)),
+color_discrete_sequence=global_theme)
+fig.update_traces(textposition=&#39;outside&#39;)
+fig.update_layout(title_text=str(
+&#39;Event Rate Distribution for &#39; + str(col.upper()) + str(&#34; [Target Variable : &#34; + str(event_label) + str(&#34;]&#34;))))
+fig.update_xaxes(type=&#39;category&#39;)
+fig.layout.plot_bgcolor = global_plot_bg_color
+fig.layout.paper_bgcolor = global_paper_bg_color
+# plotly.offline.plot(fig, auto_open=False, validate=False, filename=f&#34;{base_loc}/{file_name_}feat_analysis_label.html&#34;)
+return fig
+def plot_comparative_drift(spark, idf, source, col, cutoffs_path):
+&#34;&#34;&#34;
+Args:
+spark: Spark Session
+idf: Target dataframe which would be referred for producing the frequency charts in form of bar plots / histogram
+source: Source dataframe of comparison
+col: Analysis column
+sourcecutoffs_path: Path containing the range cut offs details for the analysis column
+cutoffs_path:
+Returns:
+&#34;&#34;&#34;
+odf = idf.groupBy(col).agg((F.count(col) / idf.count()).alias(&#39;countpct_target&#39;)).fillna(np.nan, subset=[col])
+if col in cat_cols:
+odf_pd = odf.join(source.withColumnRenamed(&#34;p&#34;, &#34;countpct_source&#34;).fillna(np.nan, subset=[col]), col,
+&#34;full_outer&#34;) \
+.orderBy(&#34;countpct_target&#34;, ascending=False).toPandas()
+if col in num_cols:
+mapping = binRange_to_binIdx(spark, col, cutoffs_path)
+odf_pd = odf.join(mapping, col, &#39;left_outer&#39;).fillna(np.nan, subset=[&#39;bin_idx&#39;]) \
+.join(source.fillna(np.nan, subset=[col]).select(F.col(col).alias(&#39;bin_idx&#39;),
+F.col(&#34;p&#34;).alias(&#34;countpct_source&#34;)), &#39;bin_idx&#39;,
+&#34;full_outer&#34;) \
+.orderBy(&#39;bin_idx&#39;).toPandas()
+odf_pd.fillna({col: &#39;Missing&#39;, &#39;countpct_source&#39;: 0, &#39;countpct_target&#39;: 0}, inplace=True)
+odf_pd[&#39;%_diff&#39;] = (((odf_pd[&#39;countpct_target&#39;] / odf_pd[&#39;countpct_source&#39;]) - 1) * 100)
+fig = go.Figure()
+fig.add_bar(y=list(odf_pd.countpct_source.values), x=odf_pd[col], name=&#34;source&#34;, marker=dict(color=global_theme))
+fig.update_traces(overwrite=True, marker={&#34;opacity&#34;: 0.7})
+fig.add_bar(y=list(odf_pd.countpct_target.values), x=odf_pd[col], name=&#34;target&#34;,
+text=odf_pd[&#39;%_diff&#39;].apply(lambda x: &#39;{0:0.2f}%&#39;.format(x)), marker=dict(color=global_theme))
+fig.update_traces(textposition=&#39;outside&#39;)
+fig.update_layout(paper_bgcolor=global_paper_bg_color, plot_bgcolor=global_plot_bg_color, showlegend=False)
+fig.update_layout(title_text=str(&#39;Drift Comparison for &#39; + col + &#39;&lt;br&gt;&lt;sup&gt;(L-&gt;R : Source-&gt;Target)&lt;/sup&gt;&#39;))
+fig.update_traces(marker=dict(color=global_theme))
+fig.update_xaxes(type=&#39;category&#39;)
+# fig.add_trace(go.Scatter(x=odf_pd[col], y=odf_pd.countpct_target.values, mode=&#39;lines+markers&#39;,
+#
+line=dict(color=px.colors.qualitative.Antique[10], width=3, dash=&#39;dot&#39;)))
+fig.update_layout(xaxis_tickfont_size=14, yaxis=dict(title=&#39;frequency&#39;, titlefont_size=16, tickfont_size=14))
+return fig
+def charts_to_objects(spark, idf, list_of_cols=&#39;all&#39;, drop_cols=[], label_col=None, event_label=1,
+bin_method=&#34;equal_range&#34;, bin_size=10, coverage=1.0,
+drift_detector=False, source_path=&#34;NA&#34;, master_path=&#39;.&#39;, stats_unique={}, run_type=&#34;local&#34;):
+&#34;&#34;&#34;
+Args:
+spark: Spark Session
+idf: Input dataframe
+list_of_cols: List of columns passed for analysis (Default value = &#39;all&#39;)
+drop_cols: List of columns dropped from analysis (Default value = [])
+label_col: Label column (Default value = None)
+event_label: Event label (Default value = 1)
+bin_method: Binning method equal_range or equal_frequency (Default value = &#34;equal_range&#34;)
+bin_size: Maximum bin size categories. Default value is kept as 10
+coverage: Maximum coverage of categories. Default value is kept as 1.0 (which is 100%)
+drift_detector: True or False as per the availability. Default value is kept as False
+source_path: Source data path. Default value is kept as &#34;NA&#34;
+master_path: Path where the output needs to be saved, ideally the same path where the analyzed data output is also saved (Default value = &#39;.&#39;)
+run_type: local or emr run type. Default value is kept as local
+stats_unique:
+(Default value = {})
+Returns:
+&#34;&#34;&#34;
+global num_cols
+global cat_cols
+if list_of_cols == &#39;all&#39;:
+num_cols, cat_cols, other_cols = attributeType_segregation(idf)
+list_of_cols = num_cols + cat_cols
+if isinstance(list_of_cols, str):
+list_of_cols = [x.strip() for x in list_of_cols.split(&#39;|&#39;)]
+if isinstance(drop_cols, str):
+drop_cols = [x.strip() for x in drop_cols.split(&#39;|&#39;)]
+if stats_unique == {}:
+remove_cols = uniqueCount_computation(spark, idf, list_of_cols).where(F.col(&#39;unique_values&#39;) &lt; 2) \
+.select(&#39;attribute&#39;).rdd.flatMap(lambda x: x).collect()
+else:
+remove_cols = read_dataset(spark, **stats_unique).where(F.col(&#39;unique_values&#39;) &lt; 2) \
+.select(&#39;attribute&#39;).rdd.flatMap(lambda x: x).collect()
+list_of_cols = list(set([e for e in list_of_cols if e not in (drop_cols + remove_cols)]))
+if any(x not in idf.columns for x in list_of_cols) | (len(list_of_cols) == 0):
+raise TypeError(&#39;Invalid input for Column(s)&#39;)
+num_cols, cat_cols, other_cols = attributeType_segregation(idf.select(list_of_cols))
+if cat_cols:
+idf_cleaned = outlier_categories(spark, idf, list_of_cols=cat_cols, coverage=coverage, max_category=bin_size)
+else:
+idf_cleaned = idf
+if drift_detector:
+encoding_model_exists = True
+binned_cols = spark.read.parquet(source_path + &#34;/drift_statistics/attribute_binning&#34;)\
+.select(&#39;attribute&#39;).rdd.flatMap(lambda x:x).collect()
+to_be_binned = [e for e in num_cols if e not in binned_cols]
+else:
+encoding_model_exists = False
+binned_cols = []
+to_be_binned = num_cols
+if to_be_binned:
+idf_encoded = attribute_binning(spark, idf_cleaned, list_of_cols=to_be_binned, method_type=bin_method,
+bin_size=bin_size,
+bin_dtype=&#34;categorical&#34;, pre_existing_model=False,
+model_path=source_path + &#34;/charts_to_objects&#34;, output_mode=&#39;append&#39;)
+else:
+idf_encoded = idf_cleaned
+if binned_cols:
+idf_encoded = attribute_binning(spark, idf_encoded, list_of_cols=binned_cols, method_type=bin_method,
+bin_size=bin_size,
+bin_dtype=&#34;categorical&#34;, pre_existing_model=True,
+model_path=source_path + &#34;/drift_statistics&#34;, output_mode=&#39;append&#39;)
+cutoffs_path1 = source_path + &#34;/charts_to_objects/attribute_binning&#34;
+cutoffs_path2 = source_path + &#34;/drift_statistics/attribute_binning&#34;
+idf_encoded.persist(pyspark.StorageLevel.MEMORY_AND_DISK)
+if run_type == &#34;local&#34;:
+local_path = master_path
+else:
+local_path = &#34;report_stats&#34;
+Path(local_path).mkdir(parents=True, exist_ok=True)
+for idx, col in enumerate(list_of_cols):
+if col in binned_cols:
+cutoffs_path = cutoffs_path2
+else:
+cutoffs_path = cutoffs_path1
+if col in cat_cols:
+f = plot_frequency(spark, idf_encoded, col, cutoffs_path)
+f.write_json(ends_with(local_path) + &#34;freqDist_&#34; + col)
+if label_col:
+if col != label_col:
+f = plot_eventRate(spark, idf_encoded, col, label_col, event_label, cutoffs_path)
+f.write_json(ends_with(local_path) + &#34;eventDist_&#34; + col)
+if drift_detector:
+try:
+frequency_path = source_path + &#34;/drift_statistics/frequency_counts/&#34; + col
+idf_source = spark.read.csv(frequency_path, header=True, inferSchema=True)
+f = plot_comparative_drift(spark, idf_encoded, idf_source, col, cutoffs_path)
+f.write_json(ends_with(local_path) + &#34;drift_&#34; + col)
+except:
+pass
+if col in num_cols:
+f = plot_outlier(spark, idf, col, split_var=None)
+f.write_json(ends_with(local_path) + &#34;outlier_&#34; + col)
+f = plot_frequency(spark, idf_encoded.drop(col).withColumnRenamed(col + &#34;_binned&#34;, col), col, cutoffs_path)
+f.write_json(ends_with(local_path) + &#34;freqDist_&#34; + col)
+if label_col:
+if col != label_col:
+f = plot_eventRate(spark, idf_encoded.drop(col).withColumnRenamed(col + &#34;_binned&#34;, col), col, label_col,
+event_label, cutoffs_path)
+f.write_json(ends_with(local_path) + &#34;eventDist_&#34; + col)
+if drift_detector:
+try:
+frequency_path = source_path + &#34;/drift_statistics/frequency_counts/&#34; + col
+idf_source = spark.read.csv(frequency_path, header=True, inferSchema=True)
+f = plot_comparative_drift(spark, idf_encoded.drop(col).withColumnRenamed(col + &#34;_binned&#34;, col),
+idf_source, col, cutoffs_path)
+f.write_json(ends_with(local_path) + &#34;drift_&#34; + col)
+except:
+pass
+pd.DataFrame(idf.dtypes, columns=[&#34;attribute&#34;, &#34;data_type&#34;]).to_csv(ends_with(local_path) + &#34;data_type.csv&#34;,
+index=False)
+if run_type == &#39;emr&#39;:
+bash_cmd = &#34;aws s3 cp --recursive &#34; + ends_with(local_path) + &#34; &#34; + ends_with(master_path)
+output = subprocess.check_output([&#39;bash&#39;, &#39;-c&#39;, bash_cmd])
+```
+</details>
+## Functions
+<dl>
+<dt id="anovos.data_report.report_preprocessing.binRange_to_binIdx"><code class="name flex">
+<span>def <span class="ident">binRange_to_binIdx</span></span>(<span>spark, col, cutoffs_path)</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>spark</code></strong></dt>
+<dd>Spark Session</dd>
+<dt><strong><code>col</code></strong></dt>
+<dd>The input column which is needed to by mapped with respective index</dd>
+<dt><strong><code>cutoffs_path</code></strong></dt>
+<dd>paths containing the range cutoffs applicable for each index</dd>
+</dl>
+<p>Returns:</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+```python
+def binRange_to_binIdx(spark, col, cutoffs_path):
+&#34;&#34;&#34;
+Args:
+spark: Spark Session
+col: The input column which is needed to by mapped with respective index
+cutoffs_path: paths containing the range cutoffs applicable for each index
+Returns:
+&#34;&#34;&#34;
+bin_cutoffs = spark.read.parquet(cutoffs_path).where(F.col(&#39;attribute&#39;) == col).select(&#39;parameters&#39;) \
+.rdd.flatMap(lambda x: x).collect()[0]
+bin_ranges = []
+max_cat = len(bin_cutoffs) + 1
+for idx in range(0, max_cat):
+if idx == 0:
+bin_ranges.append(&#34;&lt;= &#34; + str(round(bin_cutoffs[idx], 4)))
+elif idx &lt; (max_cat - 1):
+bin_ranges.append(str(round(bin_cutoffs[idx - 1], 4)) + &#34;-&#34; + str(round(bin_cutoffs[idx], 4)))
+else:
+bin_ranges.append(&#34;&gt; &#34; + str(round(bin_cutoffs[idx - 1], 4)))
+mapping = spark.createDataFrame(zip(range(1, max_cat + 1), bin_ranges), schema=[&#34;bin_idx&#34;, col])
+return mapping
+```
+</details>
+</dd>
+<dt id="anovos.data_report.report_preprocessing.charts_to_objects"><code class="name flex">
+<span>def <span class="ident">charts_to_objects</span></span>(<span>spark, idf, list_of_cols='all', drop_cols=[], label_col=None, event_label=1, bin_method='equal_range', bin_size=10, coverage=1.0, drift_detector=False, source_path='NA', master_path='.', stats_unique={}, run_type='local')</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>spark</code></strong></dt>
+<dd>Spark Session</dd>
+<dt><strong><code>idf</code></strong></dt>
+<dd>Input dataframe</dd>
+<dt><strong><code>list_of_cols</code></strong></dt>
+<dd>List of columns passed for analysis (Default value = 'all')</dd>
+<dt><strong><code>drop_cols</code></strong></dt>
+<dd>List of columns dropped from analysis (Default value = [])</dd>
+<dt><strong><code>label_col</code></strong></dt>
+<dd>Label column (Default value = None)</dd>
+<dt><strong><code>event_label</code></strong></dt>
+<dd>Event label (Default value = 1)</dd>
+<dt><strong><code>bin_method</code></strong></dt>
+<dd>Binning method equal_range or equal_frequency (Default value = "equal_range")</dd>
+<dt><strong><code>bin_size</code></strong></dt>
+<dd>Maximum bin size categories. Default value is kept as 10</dd>
+<dt><strong><code>coverage</code></strong></dt>
+<dd>Maximum coverage of categories. Default value is kept as 1.0 (which is 100%)</dd>
+<dt><strong><code>drift_detector</code></strong></dt>
+<dd>True or False as per the availability. Default value is kept as False</dd>
+<dt><strong><code>source_path</code></strong></dt>
+<dd>Source data path. Default value is kept as "NA"</dd>
+<dt><strong><code>master_path</code></strong></dt>
+<dd>Path where the output needs to be saved, ideally the same path where the analyzed data output is also saved (Default value = '.')</dd>
+<dt><strong><code>run_type</code></strong></dt>
+<dd>local or emr run type. Default value is kept as local</dd>
+<dt><strong><code>stats_unique</code></strong></dt>
+<dd>(Default value = {})</dd>
+</dl>
+<p>Returns:</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+```python
+def charts_to_objects(spark, idf, list_of_cols=&#39;all&#39;, drop_cols=[], label_col=None, event_label=1,
+bin_method=&#34;equal_range&#34;, bin_size=10, coverage=1.0,
+drift_detector=False, source_path=&#34;NA&#34;, master_path=&#39;.&#39;, stats_unique={}, run_type=&#34;local&#34;):
+&#34;&#34;&#34;
+Args:
+spark: Spark Session
+idf: Input dataframe
+list_of_cols: List of columns passed for analysis (Default value = &#39;all&#39;)
+drop_cols: List of columns dropped from analysis (Default value = [])
+label_col: Label column (Default value = None)
+event_label: Event label (Default value = 1)
+bin_method: Binning method equal_range or equal_frequency (Default value = &#34;equal_range&#34;)
+bin_size: Maximum bin size categories. Default value is kept as 10
+coverage: Maximum coverage of categories. Default value is kept as 1.0 (which is 100%)
+drift_detector: True or False as per the availability. Default value is kept as False
+source_path: Source data path. Default value is kept as &#34;NA&#34;
+master_path: Path where the output needs to be saved, ideally the same path where the analyzed data output is also saved (Default value = &#39;.&#39;)
+run_type: local or emr run type. Default value is kept as local
+stats_unique:
+(Default value = {})
+Returns:
+&#34;&#34;&#34;
+global num_cols
+global cat_cols
+if list_of_cols == &#39;all&#39;:
+num_cols, cat_cols, other_cols = attributeType_segregation(idf)
+list_of_cols = num_cols + cat_cols
+if isinstance(list_of_cols, str):
+list_of_cols = [x.strip() for x in list_of_cols.split(&#39;|&#39;)]
+if isinstance(drop_cols, str):
+drop_cols = [x.strip() for x in drop_cols.split(&#39;|&#39;)]
+if stats_unique == {}:
+remove_cols = uniqueCount_computation(spark, idf, list_of_cols).where(F.col(&#39;unique_values&#39;) &lt; 2) \
+.select(&#39;attribute&#39;).rdd.flatMap(lambda x: x).collect()
+else:
+remove_cols = read_dataset(spark, **stats_unique).where(F.col(&#39;unique_values&#39;) &lt; 2) \
+.select(&#39;attribute&#39;).rdd.flatMap(lambda x: x).collect()
+list_of_cols = list(set([e for e in list_of_cols if e not in (drop_cols + remove_cols)]))
+if any(x not in idf.columns for x in list_of_cols) | (len(list_of_cols) == 0):
+raise TypeError(&#39;Invalid input for Column(s)&#39;)
+num_cols, cat_cols, other_cols = attributeType_segregation(idf.select(list_of_cols))
+if cat_cols:
+idf_cleaned = outlier_categories(spark, idf, list_of_cols=cat_cols, coverage=coverage, max_category=bin_size)
+else:
+idf_cleaned = idf
+if drift_detector:
+encoding_model_exists = True
+binned_cols = spark.read.parquet(source_path + &#34;/drift_statistics/attribute_binning&#34;)\
+.select(&#39;attribute&#39;).rdd.flatMap(lambda x:x).collect()
+to_be_binned = [e for e in num_cols if e not in binned_cols]
+else:
+encoding_model_exists = False
+binned_cols = []
+to_be_binned = num_cols
+if to_be_binned:
+idf_encoded = attribute_binning(spark, idf_cleaned, list_of_cols=to_be_binned, method_type=bin_method,
+bin_size=bin_size,
+bin_dtype=&#34;categorical&#34;, pre_existing_model=False,
+model_path=source_path + &#34;/charts_to_objects&#34;, output_mode=&#39;append&#39;)
+else:
+idf_encoded = idf_cleaned
+if binned_cols:
+idf_encoded = attribute_binning(spark, idf_encoded, list_of_cols=binned_cols, method_type=bin_method,
+bin_size=bin_size,
+bin_dtype=&#34;categorical&#34;, pre_existing_model=True,
+model_path=source_path + &#34;/drift_statistics&#34;, output_mode=&#39;append&#39;)
+cutoffs_path1 = source_path + &#34;/charts_to_objects/attribute_binning&#34;
+cutoffs_path2 = source_path + &#34;/drift_statistics/attribute_binning&#34;
+idf_encoded.persist(pyspark.StorageLevel.MEMORY_AND_DISK)
+if run_type == &#34;local&#34;:
+local_path = master_path
+else:
+local_path = &#34;report_stats&#34;
+Path(local_path).mkdir(parents=True, exist_ok=True)
+for idx, col in enumerate(list_of_cols):
+if col in binned_cols:
+cutoffs_path = cutoffs_path2
+else:
+cutoffs_path = cutoffs_path1
+if col in cat_cols:
+f = plot_frequency(spark, idf_encoded, col, cutoffs_path)
+f.write_json(ends_with(local_path) + &#34;freqDist_&#34; + col)
+if label_col:
+if col != label_col:
+f = plot_eventRate(spark, idf_encoded, col, label_col, event_label, cutoffs_path)
+f.write_json(ends_with(local_path) + &#34;eventDist_&#34; + col)
+if drift_detector:
+try:
+frequency_path = source_path + &#34;/drift_statistics/frequency_counts/&#34; + col
+idf_source = spark.read.csv(frequency_path, header=True, inferSchema=True)
+f = plot_comparative_drift(spark, idf_encoded, idf_source, col, cutoffs_path)
+f.write_json(ends_with(local_path) + &#34;drift_&#34; + col)
+except:
+pass
+if col in num_cols:
+f = plot_outlier(spark, idf, col, split_var=None)
+f.write_json(ends_with(local_path) + &#34;outlier_&#34; + col)
+f = plot_frequency(spark, idf_encoded.drop(col).withColumnRenamed(col + &#34;_binned&#34;, col), col, cutoffs_path)
+f.write_json(ends_with(local_path) + &#34;freqDist_&#34; + col)
+if label_col:
+if col != label_col:
+f = plot_eventRate(spark, idf_encoded.drop(col).withColumnRenamed(col + &#34;_binned&#34;, col), col, label_col,
+event_label, cutoffs_path)
+f.write_json(ends_with(local_path) + &#34;eventDist_&#34; + col)
+if drift_detector:
+try:
+frequency_path = source_path + &#34;/drift_statistics/frequency_counts/&#34; + col
+idf_source = spark.read.csv(frequency_path, header=True, inferSchema=True)
+f = plot_comparative_drift(spark, idf_encoded.drop(col).withColumnRenamed(col + &#34;_binned&#34;, col),
+idf_source, col, cutoffs_path)
+f.write_json(ends_with(local_path) + &#34;drift_&#34; + col)
+except:
+pass
+pd.DataFrame(idf.dtypes, columns=[&#34;attribute&#34;, &#34;data_type&#34;]).to_csv(ends_with(local_path) + &#34;data_type.csv&#34;,
+index=False)
+if run_type == &#39;emr&#39;:
+bash_cmd = &#34;aws s3 cp --recursive &#34; + ends_with(local_path) + &#34; &#34; + ends_with(master_path)
+output = subprocess.check_output([&#39;bash&#39;, &#39;-c&#39;, bash_cmd])
+```
+</details>
+</dd>
+<dt id="anovos.data_report.report_preprocessing.edit_binRange"><code class="name flex">
+<span>def <span class="ident">edit_binRange</span></span>(<span>col)</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>col</code></strong></dt>
+<dd>The column which is passed as input and needs to be treated. The generated output will not contain any range whose value at either side is the same.</dd>
+</dl>
+<p>Returns:</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+```python
+def edit_binRange(col):
+&#34;&#34;&#34;
+Args:
+col: The column which is passed as input and needs to be treated. The generated output will not contain any range whose value at either side is the same.
+Returns:
+&#34;&#34;&#34;
+try:
+list_col = col.split(&#34;-&#34;)
+deduped_col = list(set(list_col))
+if len(list_col) != len(deduped_col):
+return deduped_col[0]
+else:
+return col
+except:
+pass
+```
+</details>
+</dd>
+<dt id="anovos.data_report.report_preprocessing.f_edit_binRange"><code class="name flex">
+<span>def <span class="ident">f_edit_binRange</span></span>(<span>col)</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>col</code></strong></dt>
+<dd>The column which is passed as input and needs to be treated. The generated output will not contain any range whose value at either side is the same.</dd>
+</dl>
+<p>Returns:</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+```python
+def edit_binRange(col):
+&#34;&#34;&#34;
+Args:
+col: The column which is passed as input and needs to be treated. The generated output will not contain any range whose value at either side is the same.
+Returns:
+&#34;&#34;&#34;
+try:
+list_col = col.split(&#34;-&#34;)
+deduped_col = list(set(list_col))
+if len(list_col) != len(deduped_col):
+return deduped_col[0]
+else:
+return col
+except:
+pass
+```
+</details>
+</dd>
+<dt id="anovos.data_report.report_preprocessing.plot_comparative_drift"><code class="name flex">
+<span>def <span class="ident">plot_comparative_drift</span></span>(<span>spark, idf, source, col, cutoffs_path)</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>spark</code></strong></dt>
+<dd>Spark Session</dd>
+<dt><strong><code>idf</code></strong></dt>
+<dd>Target dataframe which would be referred for producing the frequency charts in form of bar plots / histogram</dd>
+<dt><strong><code>source</code></strong></dt>
+<dd>Source dataframe of comparison</dd>
+<dt><strong><code>col</code></strong></dt>
+<dd>Analysis column</dd>
+<dt><strong><code>sourcecutoffs_path</code></strong></dt>
+<dd>Path containing the range cut offs details for the analysis column</dd>
+<dt><strong><code>cutoffs_path</code></strong></dt>
+<dd>&nbsp;</dd>
+</dl>
+<p>Returns:</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+```python
+def plot_comparative_drift(spark, idf, source, col, cutoffs_path):
+&#34;&#34;&#34;
+Args:
+spark: Spark Session
+idf: Target dataframe which would be referred for producing the frequency charts in form of bar plots / histogram
+source: Source dataframe of comparison
+col: Analysis column
+sourcecutoffs_path: Path containing the range cut offs details for the analysis column
+cutoffs_path:
+Returns:
+&#34;&#34;&#34;
+odf = idf.groupBy(col).agg((F.count(col) / idf.count()).alias(&#39;countpct_target&#39;)).fillna(np.nan, subset=[col])
+if col in cat_cols:
+odf_pd = odf.join(source.withColumnRenamed(&#34;p&#34;, &#34;countpct_source&#34;).fillna(np.nan, subset=[col]), col,
+&#34;full_outer&#34;) \
+.orderBy(&#34;countpct_target&#34;, ascending=False).toPandas()
+if col in num_cols:
+mapping = binRange_to_binIdx(spark, col, cutoffs_path)
+odf_pd = odf.join(mapping, col, &#39;left_outer&#39;).fillna(np.nan, subset=[&#39;bin_idx&#39;]) \
+.join(source.fillna(np.nan, subset=[col]).select(F.col(col).alias(&#39;bin_idx&#39;),
+F.col(&#34;p&#34;).alias(&#34;countpct_source&#34;)), &#39;bin_idx&#39;,
+&#34;full_outer&#34;) \
+.orderBy(&#39;bin_idx&#39;).toPandas()
+odf_pd.fillna({col: &#39;Missing&#39;, &#39;countpct_source&#39;: 0, &#39;countpct_target&#39;: 0}, inplace=True)
+odf_pd[&#39;%_diff&#39;] = (((odf_pd[&#39;countpct_target&#39;] / odf_pd[&#39;countpct_source&#39;]) - 1) * 100)
+fig = go.Figure()
+fig.add_bar(y=list(odf_pd.countpct_source.values), x=odf_pd[col], name=&#34;source&#34;, marker=dict(color=global_theme))
+fig.update_traces(overwrite=True, marker={&#34;opacity&#34;: 0.7})
+fig.add_bar(y=list(odf_pd.countpct_target.values), x=odf_pd[col], name=&#34;target&#34;,
+text=odf_pd[&#39;%_diff&#39;].apply(lambda x: &#39;{0:0.2f}%&#39;.format(x)), marker=dict(color=global_theme))
+fig.update_traces(textposition=&#39;outside&#39;)
+fig.update_layout(paper_bgcolor=global_paper_bg_color, plot_bgcolor=global_plot_bg_color, showlegend=False)
+fig.update_layout(title_text=str(&#39;Drift Comparison for &#39; + col + &#39;&lt;br&gt;&lt;sup&gt;(L-&gt;R : Source-&gt;Target)&lt;/sup&gt;&#39;))
+fig.update_traces(marker=dict(color=global_theme))
+fig.update_xaxes(type=&#39;category&#39;)
+# fig.add_trace(go.Scatter(x=odf_pd[col], y=odf_pd.countpct_target.values, mode=&#39;lines+markers&#39;,
+#
+line=dict(color=px.colors.qualitative.Antique[10], width=3, dash=&#39;dot&#39;)))
+fig.update_layout(xaxis_tickfont_size=14, yaxis=dict(title=&#39;frequency&#39;, titlefont_size=16, tickfont_size=14))
+return fig
+```
+</details>
+</dd>
+<dt id="anovos.data_report.report_preprocessing.plot_eventRate"><code class="name flex">
+<span>def <span class="ident">plot_eventRate</span></span>(<span>spark, idf, col, label_col, event_label, cutoffs_path)</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>spark</code></strong></dt>
+<dd>Spark Session</dd>
+<dt><strong><code>idf</code></strong></dt>
+<dd>Input dataframe which would be referred for producing the frequency charts in form of bar plots / histogram</dd>
+<dt><strong><code>col</code></strong></dt>
+<dd>Analysis column</dd>
+<dt><strong><code>label_col</code></strong></dt>
+<dd>Label column</dd>
+<dt><strong><code>event_label</code></strong></dt>
+<dd>Event label</dd>
+<dt><strong><code>cutoffs_path</code></strong></dt>
+<dd>Path containing the range cut offs details for the analysis column</dd>
+</dl>
+<p>Returns:</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+```python
+def plot_eventRate(spark, idf, col, label_col, event_label, cutoffs_path):
+&#34;&#34;&#34;
+Args:
+spark: Spark Session
+idf: Input dataframe which would be referred for producing the frequency charts in form of bar plots / histogram
+col: Analysis column
+label_col: Label column
+event_label: Event label
+cutoffs_path: Path containing the range cut offs details for the analysis column
+Returns:
+&#34;&#34;&#34;
+odf = idf.withColumn(label_col, F.when(F.col(label_col) == event_label, 1).otherwise(0))\
+.groupBy(col).pivot(label_col).count().fillna(0, subset=[&#34;0&#34;,&#34;1&#34;]) \
+.withColumn(&#34;event_rate&#34;, 100 * (F.col(&#34;1&#34;) / (F.col(&#34;0&#34;) + F.col(&#34;1&#34;))))\
+.withColumn(&#34;attribute_name&#34;, F.lit(col)) \
+.withColumn(col, f_edit_binRange(col))
+if col in cat_cols:
+odf_pd = odf.orderBy(&#34;event_rate&#34;, ascending=False).toPandas()
+odf_pd.loc[odf_pd[col] == &#34;others&#34;, col] = &#34;others*&#34;
+if col in num_cols:
+mapping = binRange_to_binIdx(spark, col, cutoffs_path)
+odf_pd = odf.join(mapping, col, &#39;left_outer&#39;).orderBy(&#39;bin_idx&#39;).toPandas()
+fig = px.bar(odf_pd, x=col, y=&#39;event_rate&#39;, text=odf_pd[&#39;event_rate&#39;].apply(lambda x: &#39;{0:1.2f}%&#39;.format(x)),
+color_discrete_sequence=global_theme)
+fig.update_traces(textposition=&#39;outside&#39;)
+fig.update_layout(title_text=str(
+&#39;Event Rate Distribution for &#39; + str(col.upper()) + str(&#34; [Target Variable : &#34; + str(event_label) + str(&#34;]&#34;))))
+fig.update_xaxes(type=&#39;category&#39;)
+fig.layout.plot_bgcolor = global_plot_bg_color
+fig.layout.paper_bgcolor = global_paper_bg_color
+# plotly.offline.plot(fig, auto_open=False, validate=False, filename=f&#34;{base_loc}/{file_name_}feat_analysis_label.html&#34;)
+return fig
+```
+</details>
+</dd>
+<dt id="anovos.data_report.report_preprocessing.plot_frequency"><code class="name flex">
+<span>def <span class="ident">plot_frequency</span></span>(<span>spark, idf, col, cutoffs_path)</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>spark</code></strong></dt>
+<dd>Spark Session</dd>
+<dt><strong><code>idf</code></strong></dt>
+<dd>Input dataframe which would be referred for producing the frequency charts in form of bar plots / histograms</dd>
+<dt><strong><code>col</code></strong></dt>
+<dd>Analysis column</dd>
+<dt><strong><code>cutoffs_path</code></strong></dt>
+<dd>Path containing the range cut offs details for the analysis column</dd>
+</dl>
+<p>Returns:</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+```python
+def plot_frequency(spark, idf, col, cutoffs_path):
+&#34;&#34;&#34;
+Args:
+spark: Spark Session
+idf: Input dataframe which would be referred for producing the frequency charts in form of bar plots / histograms
+col: Analysis column
+cutoffs_path: Path containing the range cut offs details for the analysis column
+Returns:
+&#34;&#34;&#34;
+odf = idf.groupBy(col).count() \
+.withColumn(&#34;count_%&#34;, 100 * (F.col(&#34;count&#34;) / F.sum(&#34;count&#34;).over(Window.partitionBy()))) \
+.withColumn(col, f_edit_binRange(col))
+if col in cat_cols:
+odf_pd = odf.orderBy(&#34;count&#34;, ascending=False).toPandas().fillna(&#34;Missing&#34;)
+odf_pd.loc[odf_pd[col] == &#34;others&#34;, col] = &#34;others*&#34;
+if col in num_cols:
+mapping = binRange_to_binIdx(spark, col, cutoffs_path)
+odf_pd = odf.join(mapping, col, &#39;left_outer&#39;).orderBy(&#39;bin_idx&#39;).toPandas().fillna(&#34;Missing&#34;)
+fig = px.bar(odf_pd, x=col, y=&#39;count&#39;, text=odf_pd[&#39;count_%&#39;].apply(lambda x: &#39;{0:1.2f}%&#39;.format(x)),
+color_discrete_sequence=global_theme)
+fig.update_traces(textposition=&#39;outside&#39;)
+fig.update_layout(title_text=str(&#39;Frequency Distribution for &#39; + str(col.upper())))
+fig.update_xaxes(type=&#39;category&#39;)
+# fig.update_layout(barmode=&#39;stack&#39;, xaxis={&#39;categoryorder&#39;:&#39;total descending&#39;})
+fig.layout.plot_bgcolor = global_plot_bg_color
+fig.layout.paper_bgcolor = global_paper_bg_color
+# plotly.offline.plot(fig, auto_open=False, validate=False, filename=f&#34;{base_loc}/{file_name_}bar_graph.html&#34;)
+return fig
+```
+</details>
+</dd>
+<dt id="anovos.data_report.report_preprocessing.plot_outlier"><code class="name flex">
+<span>def <span class="ident">plot_outlier</span></span>(<span>spark, idf, col, split_var=None, sample_size=500000)</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>spark</code></strong></dt>
+<dd>Spark Session</dd>
+<dt><strong><code>idf</code></strong></dt>
+<dd>Input dataframe which would be referred for capturing the outliers in form of violin charts</dd>
+<dt><strong><code>col</code></strong></dt>
+<dd>Analysis column</dd>
+<dt><strong><code>split_var</code></strong></dt>
+<dd>Column which is needed. Default value is kept as None</dd>
+<dt><strong><code>sample_size</code></strong></dt>
+<dd>Maximum Sample size. Default value is kept as 500000</dd>
+</dl>
+<p>Returns:</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+```python
+def plot_outlier(spark, idf, col, split_var=None, sample_size=500000):
+&#34;&#34;&#34;
+Args:
+spark: Spark Session
+idf: Input dataframe which would be referred for capturing the outliers in form of violin charts
+col: Analysis column
+split_var: Column which is needed. Default value is kept as None
+sample_size: Maximum Sample size. Default value is kept as 500000
+Returns:
+&#34;&#34;&#34;
+idf_sample = idf.select(col).sample(False, min(1.0, float(sample_size) / idf.count()), 0)
+idf_sample.persist(pyspark.StorageLevel.MEMORY_AND_DISK).count()
+idf_imputed = imputation_MMM(spark, idf_sample)
+idf_pd = idf_imputed.toPandas()
+fig = px.violin(idf_pd, y=col, color=split_var, box=True, points=&#34;outliers&#34;,
+color_discrete_sequence=[global_theme_r[8], global_theme_r[4]])
+fig.layout.plot_bgcolor = global_plot_bg_color
+fig.layout.paper_bgcolor = global_paper_bg_color
+fig.update_layout(legend=dict(orientation=&#34;h&#34;, x=0.5, yanchor=&#34;bottom&#34;, xanchor=&#34;center&#34;))
+return fig
+```
+</details>
+</dd>
+<dt id="anovos.data_report.report_preprocessing.save_stats"><code class="name flex">
+<span>def <span class="ident">save_stats</span></span>(<span>spark, idf, master_path, function_name, reread=False, run_type='local')</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>spark</code></strong></dt>
+<dd>Spark Session</dd>
+<dt><strong><code>idf</code></strong></dt>
+<dd>input dataframe</dd>
+<dt><strong><code>master_path</code></strong></dt>
+<dd>Path to master folder under which all statistics will be saved in a csv file format.</dd>
+<dt><strong><code>function_name</code></strong></dt>
+<dd>Function Name for which statistics need to be saved. file name will be saved as csv</dd>
+<dt><strong><code>reread</code></strong></dt>
+<dd>(Default value = False)</dd>
+<dt><strong><code>run_type</code></strong></dt>
+<dd>(Default value = "local")</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None, dataframe saved
+:run_type: local or emr based on the mode of execution. Default value is kept as local
+:reread: option to reread. Default value is kept as False</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+```python
+def save_stats(spark, idf, master_path, function_name, reread=False, run_type=&#34;local&#34;):
+&#34;&#34;&#34;
+Args:
+spark: Spark Session
+idf: input dataframe
+master_path: Path to master folder under which all statistics will be saved in a csv file format.
+function_name: Function Name for which statistics need to be saved. file name will be saved as csv
+reread:
+(Default value = False)
+run_type:
+(Default value = &#34;local&#34;)
+Returns:
+None, dataframe saved
+:run_type: local or emr based on the mode of execution. Default value is kept as local
+:reread: option to reread. Default value is kept as False
+&#34;&#34;&#34;
+if run_type == &#34;local&#34;:
+local_path = master_path
+else:
+local_path = &#34;report_stats&#34;
+Path(local_path).mkdir(parents=True, exist_ok=True)
+idf.toPandas().to_csv(ends_with(local_path) + function_name + &#34;.csv&#34;, index=False)
+if run_type == &#39;emr&#39;:
+bash_cmd = &#34;aws s3 cp &#34; + ends_with(local_path) + function_name + &#34;.csv &#34; + ends_with(master_path)
+output = subprocess.check_output([&#39;bash&#39;, &#39;-c&#39;, bash_cmd])
+if reread:
+odf = spark.read.csv(ends_with(master_path) + function_name + &#34;.csv&#34;, header=True, inferSchema=True)
+return odf
+```
+</details>
+</dd>
+</dl>
