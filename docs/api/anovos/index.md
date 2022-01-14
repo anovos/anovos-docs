@@ -1,4 +1,4 @@
-# Namespace <code>anovos</code>
+# <code>anovos</code>
 ## Sub-modules
 <dl>
 <dt><code class="name"><a title="anovos.data_analyzer" href="data_analyzer/index.html">anovos.data_analyzer</a></code></dt>
