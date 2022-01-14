@@ -2,9 +2,7 @@ name: Update API Docs
 
 on:
   workflow_dispatch:
-  push:
-    paths-ignore:
-      - 'docs/api/**'
+
 
 jobs:
   generate:
