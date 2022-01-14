@@ -1,4 +1,4 @@
-# Module <code>report_generation</code>
+# <code>report_generation</code>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -15,237 +15,237 @@ import plotly.graph_objects as go
 from anovos.shared.utils import ends_with
 global_theme = px.colors.sequential.Plasma
 global_theme_r = px.colors.sequential.Plasma_r
-global_plot_bg_color = &#39;rgba(0,0,0,0)&#39;
-global_paper_bg_color = &#39;rgba(0,0,0,0)&#39;
+global_plot_bg_color = 'rgba(0,0,0,0)'
+global_paper_bg_color = 'rgba(0,0,0,0)'
 default_template = dp.HTML(
-&#39;&lt;html&gt;&lt;img src=&#34;https://mobilewalla-anovos.s3.amazonaws.com/anovos.png&#34; style=&#34;height:100px;display:flex;margin:auto;float:right&#34;&gt;&lt;/img&gt;&lt;/html&gt;&#39;), dp.Text(
-&#34;# ML-Anovos Report&#34;)
+'<html><img src="https://mobilewalla-anovos.s3.amazonaws.com/anovos.png" style="height:100px;display:flex;margin:auto;float:right"></img></html>'), dp.Text(
+"# ML-Anovos Report")
 def remove_u_score(col):
-&#34;&#34;&#34;
+"""
 Args:
-col: Analysis column containing &#34;_&#34; present gets replaced along with upper case conversion
+col: Analysis column containing "_" present gets replaced along with upper case conversion
 Returns:
-&#34;&#34;&#34;
-col_ = col.split(&#34;_&#34;)
+"""
+col_ = col.split("_")
 bl = []
 for i in col_:
-if i == &#34;nullColumns&#34; or i == &#34;nullRows&#34;:
-bl.append(&#34;Null&#34;)
+if i == "nullColumns" or i == "nullRows":
+bl.append("Null")
 else:
 bl.append(i[0].upper() + i[1:])
-return &#34; &#34;.join(bl)
+return " ".join(bl)
 def line_chart_gen_stability(df1, df2, col):
-&#34;&#34;&#34;
+"""
 Args:
 df1: Analysis dataframe pertaining to summarized stability metrics
 df2: Analysis dataframe pertaining to historical data
 col: Analysis column
 Returns:
-&#34;&#34;&#34;
+"""
 def val_cat(val):
-&#34;&#34;&#34;
+"""
 Args:
 val:
 Returns:
-&#34;&#34;&#34;
-if val &gt;= 3.5:
-return &#34;Very Stable&#34;
-elif val &gt;= 3 and val &lt; 3.5:
-return &#34;Stable&#34;
-elif val &gt;= 2 and val &lt; 3:
-return &#34;Marginally Stable&#34;
-elif val &gt;= 1 and val &lt; 2:
-return &#34;Unstable&#34;
-elif val &gt;= 0 and val &lt; 1:
-return &#34;Very Unstable&#34;
+"""
+if val >= 3.5:
+return "Very Stable"
+elif val >= 3 and val < 3.5:
+return "Stable"
+elif val >= 2 and val < 3:
+return "Marginally Stable"
+elif val >= 1 and val < 2:
+return "Unstable"
+elif val >= 0 and val < 1:
+return "Very Unstable"
 else:
-return &#34;Out of Range&#34;
-val_si = list(df2[df2[&#34;attribute&#34;] == col].stability_index.values)[0]
+return "Out of Range"
+val_si = list(df2[df2["attribute"] == col].stability_index.values)[0]
 f1 = go.Figure()
 f1.add_trace(go.Indicator(
-mode=&#34;gauge+number&#34;,
+mode="gauge+number",
 value=val_si,
 gauge={
-&#39;axis&#39;: {&#39;range&#39;: [None, 4], &#39;tickwidth&#39;: 1, &#39;tickcolor&#39;: &#34;black&#34;},
-&#39;bgcolor&#39;: &#34;white&#34;,
-&#39;steps&#39;: [
-{&#39;range&#39;: [0, 1], &#39;color&#39;: px.colors.sequential.Reds[7]},
-{&#39;range&#39;: [1, 2], &#39;color&#39;: px.colors.sequential.Reds[6]},
-{&#39;range&#39;: [2, 3], &#39;color&#39;: px.colors.sequential.Oranges[4]},
-{&#39;range&#39;: [3, 3.5], &#39;color&#39;: px.colors.sequential.BuGn[7]},
-{&#39;range&#39;: [3.5, 4], &#39;color&#39;: px.colors.sequential.BuGn[8]}],
-&#39;threshold&#39;: {
-&#39;line&#39;: {&#39;color&#39;: &#34;black&#34;, &#39;width&#39;: 3},
-&#39;thickness&#39;: 1,
-&#39;value&#39;: val_si},
-&#39;bar&#39;: {&#39;color&#39;: global_plot_bg_color}},
-title={&#39;text&#39;: &#34;Order of Stability: &#34; + val_cat(val_si)}))
-f1.update_layout(height=400, font={&#39;color&#39;: &#34;black&#34;, &#39;family&#39;: &#34;Arial&#34;})
-f5 = &#34;Stability Index for &#34; + str(col.upper())
-if len(df1.columns) &gt; 0:
-df1 = df1[df1[&#34;attribute&#34;] == col]
-f2 = px.line(df1, x=&#39;idx&#39;, y=&#39;mean&#39;, markers=True,
-title=&#39;CV of Mean is &#39; + str(list(df2[df2[&#34;attribute&#34;] == col].mean_cv.values)[0]))
+'axis': {'range': [None, 4], 'tickwidth': 1, 'tickcolor': "black"},
+'bgcolor': "white",
+'steps': [
+{'range': [0, 1], 'color': px.colors.sequential.Reds[7]},
+{'range': [1, 2], 'color': px.colors.sequential.Reds[6]},
+{'range': [2, 3], 'color': px.colors.sequential.Oranges[4]},
+{'range': [3, 3.5], 'color': px.colors.sequential.BuGn[7]},
+{'range': [3.5, 4], 'color': px.colors.sequential.BuGn[8]}],
+'threshold': {
+'line': {'color': "black", 'width': 3},
+'thickness': 1,
+'value': val_si},
+'bar': {'color': global_plot_bg_color}},
+title={'text': "Order of Stability: " + val_cat(val_si)}))
+f1.update_layout(height=400, font={'color': "black", 'family': "Arial"})
+f5 = "Stability Index for " + str(col.upper())
+if len(df1.columns) > 0:
+df1 = df1[df1["attribute"] == col]
+f2 = px.line(df1, x='idx', y='mean', markers=True,
+title='CV of Mean is ' + str(list(df2[df2["attribute"] == col].mean_cv.values)[0]))
 f2.update_traces(line_color=global_theme[2], marker=dict(size=14))
 f2.layout.plot_bgcolor = global_plot_bg_color
 f2.layout.paper_bgcolor = global_paper_bg_color
-f3 = px.line(df1, x=&#39;idx&#39;, y=&#39;stddev&#39;, markers=True,
-title=&#39;CV of Stddev is &#39; + str(list(df2[df2[&#34;attribute&#34;] == col].stddev_cv.values)[0]))
+f3 = px.line(df1, x='idx', y='stddev', markers=True,
+title='CV of Stddev is ' + str(list(df2[df2["attribute"] == col].stddev_cv.values)[0]))
 f3.update_traces(line_color=global_theme[6], marker=dict(size=14))
 f3.layout.plot_bgcolor = global_plot_bg_color
 f3.layout.paper_bgcolor = global_paper_bg_color
-f4 = px.line(df1, x=&#39;idx&#39;, y=&#39;kurtosis&#39;, markers=True,
-title=&#39;CV of Kurtosis is &#39; + str(list(df2[df2[&#34;attribute&#34;] == col].kurtosis_cv.values)[0]))
+f4 = px.line(df1, x='idx', y='kurtosis', markers=True,
+title='CV of Kurtosis is ' + str(list(df2[df2["attribute"] == col].kurtosis_cv.values)[0]))
 f4.update_traces(line_color=global_theme[4], marker=dict(size=14))
 f4.layout.plot_bgcolor = global_plot_bg_color
 f4.layout.paper_bgcolor = global_paper_bg_color
-return dp.Group(dp.Text(&#34;#&#34;), dp.Text(f5), dp.Plot(f1),
+return dp.Group(dp.Text("#"), dp.Text(f5), dp.Plot(f1),
 dp.Group(dp.Plot(f2), dp.Plot(f3), dp.Plot(f4), columns=3), rows=4, label=col)
 else:
-return dp.Group(dp.Text(&#34;#&#34;), dp.Text(f5), dp.Plot(f1), rows=3, label=col)
+return dp.Group(dp.Text("#"), dp.Text(f5), dp.Plot(f1), rows=3, label=col)
 def data_analyzer_output(master_path, avl_recs_tab, tab_name):
-&#34;&#34;&#34;
+"""
 Args:
 master_path: Path containing all the output from analyzed data
 avl_recs_tab: Available file names from the analysis tab
 tab_name: Analysis tab from association_evaluator / quality_checker / stats_generator
 Returns:
-&#34;&#34;&#34;
+"""
 df_list = []
 txt_list = []
 plot_list = []
 df_plot_list = []
-avl_recs_tab = [x for x in avl_recs_tab if &#34;global_summary&#34; not in x]
+avl_recs_tab = [x for x in avl_recs_tab if "global_summary" not in x]
 for index, i in enumerate(avl_recs_tab):
-data = pd.read_csv(ends_with(master_path) + str(i) + &#34;.csv&#34;)
+data = pd.read_csv(ends_with(master_path) + str(i) + ".csv")
 if len(data.index) == 0:
 continue
-if tab_name == &#34;quality_checker&#34;:
-if i == &#34;duplicate_detection&#34;:
-duplicate_recs = pd.read_csv(ends_with(master_path) + str(i) + &#34;.csv&#34;).round(3)
-unique_rows_count = &#34; No. Of Unique Rows: **&#34; + str(
-format(int(duplicate_recs[duplicate_recs[&#34;metric&#34;] == &#34;unique_rows_count&#34;].value.values),
-&#34;,&#34;)) + &#34;**&#34;
-rows_count = &#34; No. of Rows: **&#34; + str(
-format(int(duplicate_recs[duplicate_recs[&#34;metric&#34;] == &#34;rows_count&#34;].value.values), &#34;,&#34;)) + &#34;**&#34;
-duplicate_rows = &#34; No. of Duplicate Rows: **&#34; + str(
-format(int(duplicate_recs[duplicate_recs[&#34;metric&#34;] == &#34;duplicate_rows&#34;].value.values), &#34;,&#34;)) + &#34;**&#34;
-duplicate_pct = &#34; Percentage of Duplicate Rows: **&#34; + str(
-float(duplicate_recs[duplicate_recs[&#34;metric&#34;] == &#34;duplicate_pct&#34;].value.values * 100.0)) + &#34; %&#34; + &#34;**&#34;
-df_list.append([dp.Text(&#34;### &#34; + str(remove_u_score(i))),
+if tab_name == "quality_checker":
+if i == "duplicate_detection":
+duplicate_recs = pd.read_csv(ends_with(master_path) + str(i) + ".csv").round(3)
+unique_rows_count = " No. Of Unique Rows: **" + str(
+format(int(duplicate_recs[duplicate_recs["metric"] == "unique_rows_count"].value.values),
+",")) + "**"
+rows_count = " No. of Rows: **" + str(
+format(int(duplicate_recs[duplicate_recs["metric"] == "rows_count"].value.values), ",")) + "**"
+duplicate_rows = " No. of Duplicate Rows: **" + str(
+format(int(duplicate_recs[duplicate_recs["metric"] == "duplicate_rows"].value.values), ",")) + "**"
+duplicate_pct = " Percentage of Duplicate Rows: **" + str(
+float(duplicate_recs[duplicate_recs["metric"] == "duplicate_pct"].value.values * 100.0)) + " %" + "**"
+df_list.append([dp.Text("### " + str(remove_u_score(i))),
 dp.Group(dp.Text(rows_count), dp.Text(unique_rows_count), dp.Text(duplicate_rows),
-dp.Text(duplicate_pct), rows=4), dp.Text(&#34;#&#34;), dp.Text(&#34;#&#34;)])
-elif i == &#34;outlier_detection&#34;:
-df_list.append([dp.Text(&#34;### &#34; + str(remove_u_score(i))),
-dp.DataTable(pd.read_csv(ends_with(master_path) + str(i) + &#34;.csv&#34;).round(3)),
-&#34;outlier_charts_placeholder&#34;])
+dp.Text(duplicate_pct), rows=4), dp.Text("#"), dp.Text("#")])
+elif i == "outlier_detection":
+df_list.append([dp.Text("### " + str(remove_u_score(i))),
+dp.DataTable(pd.read_csv(ends_with(master_path) + str(i) + ".csv").round(3)),
+"outlier_charts_placeholder"])
 else:
-df_list.append([dp.Text(&#34;### &#34; + str(remove_u_score(i))),
-dp.DataTable(pd.read_csv(ends_with(master_path) + str(i) + &#34;.csv&#34;).round(3)),
-dp.Text(&#34;#&#34;), dp.Text(&#34;#&#34;)])
-elif tab_name == &#34;association_evaluator&#34;:
+df_list.append([dp.Text("### " + str(remove_u_score(i))),
+dp.DataTable(pd.read_csv(ends_with(master_path) + str(i) + ".csv").round(3)),
+dp.Text("#"), dp.Text("#")])
+elif tab_name == "association_evaluator":
 for j in avl_recs_tab:
-if j == &#34;correlation_matrix&#34;:
-df_list_ = pd.read_csv(ends_with(master_path) + str(j) + &#34;.csv&#34;).round(3)
-feats_order = list(df_list_[&#34;attribute&#34;].values)
+if j == "correlation_matrix":
+df_list_ = pd.read_csv(ends_with(master_path) + str(j) + ".csv").round(3)
+feats_order = list(df_list_["attribute"].values)
 df_list_ = df_list_.round(3)
 fig = px.imshow(df_list_[feats_order], y=feats_order, color_continuous_scale=global_theme,
-aspect=&#34;auto&#34;)
+aspect="auto")
 fig.layout.plot_bgcolor = global_plot_bg_color
 fig.layout.paper_bgcolor = global_paper_bg_color
 #
-fig.update_layout(title_text=str(&#34;Correlation Plot &#34;))
+fig.update_layout(title_text=str("Correlation Plot "))
 df_plot_list.append(
-dp.Group(dp.Text(&#34;##&#34;), dp.DataTable(df_list_[[&#34;attribute&#34;] + feats_order]), dp.Plot(fig),
+dp.Group(dp.Text("##"), dp.DataTable(df_list_[["attribute"] + feats_order]), dp.Plot(fig),
 rows=3, label=remove_u_score(j)))
-elif j == &#34;variable_clustering&#34;:
-df_list_ = pd.read_csv(ends_with(master_path) + str(j) + &#34;.csv&#34;).round(3).sort_values(
-by=[&#39;Cluster&#39;], ascending=True)
-fig = px.sunburst(df_list_, path=[&#39;Cluster&#39;, &#39;Attribute&#39;], values=&#39;RS_Ratio&#39;,
+elif j == "variable_clustering":
+df_list_ = pd.read_csv(ends_with(master_path) + str(j) + ".csv").round(3).sort_values(
+by=['Cluster'], ascending=True)
+fig = px.sunburst(df_list_, path=['Cluster', 'Attribute'], values='RS_Ratio',
 color_discrete_sequence=global_theme)
 #
-fig.update_layout(title_text=str(&#34;Distribution of homogenous variable across Clusters&#34;))
+fig.update_layout(title_text=str("Distribution of homogenous variable across Clusters"))
 fig.layout.plot_bgcolor = global_plot_bg_color
 fig.layout.paper_bgcolor = global_paper_bg_color
 #
-fig.update_layout(title_text=str(&#34;Variable Clustering Plot &#34;))
+fig.update_layout(title_text=str("Variable Clustering Plot "))
 fig.layout.autosize = True
 df_plot_list.append(
-dp.Group(dp.Text(&#34;##&#34;), dp.DataTable(df_list_), dp.Plot(fig), rows=3, label=remove_u_score(j)))
+dp.Group(dp.Text("##"), dp.DataTable(df_list_), dp.Plot(fig), rows=3, label=remove_u_score(j)))
 else:
 try:
-df_list_ = pd.read_csv(ends_with(master_path) + str(j) + &#34;.csv&#34;).round(3)
-col_nm = [x for x in list(df_list_.columns) if &#34;attribute&#34; not in x]
+df_list_ = pd.read_csv(ends_with(master_path) + str(j) + ".csv").round(3)
+col_nm = [x for x in list(df_list_.columns) if "attribute" not in x]
 df_list_ = df_list_.sort_values(col_nm[0], ascending=True)
-fig = px.bar(df_list_, x=col_nm[0], y=&#39;attribute&#39;, orientation=&#39;h&#39;,
+fig = px.bar(df_list_, x=col_nm[0], y='attribute', orientation='h',
 color_discrete_sequence=global_theme)
 fig.layout.plot_bgcolor = global_plot_bg_color
 fig.layout.paper_bgcolor = global_paper_bg_color
 #
-fig.update_layout(title_text=str(&#34;Representation of &#34; + str(remove_u_score(j))))
+fig.update_layout(title_text=str("Representation of " + str(remove_u_score(j))))
 fig.layout.autosize = True
 df_plot_list.append(
-dp.Group(dp.Text(&#34;##&#34;), dp.DataTable(df_list_), dp.Plot(fig), label=remove_u_score(j),
+dp.Group(dp.Text("##"), dp.DataTable(df_list_), dp.Plot(fig), label=remove_u_score(j),
 rows=3))
 except:
 pass
 if len(avl_recs_tab) == 1:
-df_plot_list.append(dp.Group(dp.DataTable(pd.DataFrame(columns=[&#39; &#39;], index=range(1)), label=&#34; &#34;),
-dp.Plot(blank_chart, label=&#34; &#34;), label=&#34; &#34;))
+df_plot_list.append(dp.Group(dp.DataTable(pd.DataFrame(columns=[' '], index=range(1)), label=" "),
+dp.Plot(blank_chart, label=" "), label=" "))
 else:
 pass
 return df_plot_list
 else:
-df_list.append(dp.DataTable(pd.read_csv(ends_with(master_path) + str(i) + &#34;.csv&#34;).round(3),
+df_list.append(dp.DataTable(pd.read_csv(ends_with(master_path) + str(i) + ".csv").round(3),
 label=remove_u_score(avl_recs_tab[index])))
-if tab_name == &#34;quality_checker&#34; and len(avl_recs_tab) == 1:
-return df_list[0], [dp.Text(&#34;#&#34;), dp.Plot(blank_chart)]
-elif tab_name == &#34;stats_generator&#34; and len(avl_recs_tab) == 1:
-return [df_list[0], dp.DataTable(pd.DataFrame(columns=[&#39; &#39;], index=range(1)), label=&#34; &#34;)]
+if tab_name == "quality_checker" and len(avl_recs_tab) == 1:
+return df_list[0], [dp.Text("#"), dp.Plot(blank_chart)]
+elif tab_name == "stats_generator" and len(avl_recs_tab) == 1:
+return [df_list[0], dp.DataTable(pd.DataFrame(columns=[' '], index=range(1)), label=" ")]
 else:
 return df_list
 def drift_stability_ind(missing_recs_drift, drift_tab, missing_recs_stability, stability_tab):
-&#34;&#34;&#34;missing_recs_drift: Missing files from the drift tab
-drift_tab: &#34;drift_statistics&#34;
+"""missing_recs_drift: Missing files from the drift tab
+drift_tab: "drift_statistics"
 missing_recs_stability: Missing files from the stability tab
-stability_tab:&#34;stabilityIndex_computation, stabilityIndex_metrics&#34;
+stability_tab:"stabilityIndex_computation, stabilityIndex_metrics"
 Args:
 missing_recs_drift:
 drift_tab:
 missing_recs_stability:
 stability_tab:
 Returns:
-&#34;&#34;&#34;
+"""
 if len(missing_recs_drift) == len(drift_tab):
 drift_ind = 0
 else:
 drift_ind = 1
 if len(missing_recs_stability) == len(stability_tab):
 stability_ind = 0
-elif (&#34;stabilityIndex_metrics&#34; in missing_recs_stability) and (
-&#34;stabilityIndex_computation&#34; not in missing_recs_stability):
+elif ("stabilityIndex_metrics" in missing_recs_stability) and (
+"stabilityIndex_computation" not in missing_recs_stability):
 stability_ind = 0.5
 else:
 stability_ind = 1
 return drift_ind, stability_ind
 def chart_gen_list(master_path, chart_type, type_col=None):
-&#34;&#34;&#34;
+"""
 Args:
 master_path: Path containing all the charts same as the other files from data analyzed output
 chart_type: Files containing only the specific chart names for the specific chart category
 type_col: None. Default value is kept as None
 Returns:
-&#34;&#34;&#34;
+"""
 plot_list = []
 for i in chart_type:
-col_name = i[i.find(&#34;_&#34;) + 1:]
-if type_col == &#34;numerical&#34;:
-if col_name in numcols_name.replace(&#34; &#34;, &#34;&#34;).split(&#34;,&#34;):
+col_name = i[i.find("_") + 1:]
+if type_col == "numerical":
+if col_name in numcols_name.replace(" ", "").split(","):
 plot_list.append(dp.Plot(go.Figure(json.load(open(ends_with(master_path) + i))), label=col_name))
 else:
 pass
-elif type_col == &#34;categorical&#34;:
-if col_name in catcols_name.replace(&#34; &#34;, &#34;&#34;).split(&#34;,&#34;):
+elif type_col == "categorical":
+if col_name in catcols_name.replace(" ", "").split(","):
 plot_list.append(dp.Plot(go.Figure(json.load(open(ends_with(master_path) + i))), label=col_name))
 else:
 pass
@@ -253,7 +253,7 @@ else:
 plot_list.append(dp.Plot(go.Figure(json.load(open(ends_with(master_path) + i))), label=col_name))
 return plot_list
 def executive_summary_gen(master_path, label_col, ds_ind, id_col, iv_threshold, corr_threshold, print_report=False):
-&#34;&#34;&#34;
+"""
 Args:
 master_path: Path containing the input files.
 label_col: Label column.
@@ -263,386 +263,386 @@ iv_threshold: IV threshold beyond which attributes can be called as significant.
 corr_threshold: Correlation threshold beyond which attributes can be categorized under correlated.
 print_report: Printing option flexibility. Default value is kept as False.
 Returns:
-&#34;&#34;&#34;
+"""
 try:
-obj_dtls = json.load(open(ends_with(master_path) + &#34;freqDist_&#34; + str(label_col)))
+obj_dtls = json.load(open(ends_with(master_path) + "freqDist_" + str(label_col)))
 text_val = list(list(obj_dtls.values())[0][0].items())[8][1]
 x_val = list(list(obj_dtls.values())[0][0].items())[11][1]
 y_val = list(list(obj_dtls.values())[0][0].items())[13][1]
-label_fig_ = go.Figure(data=[go.Pie(labels=x_val, values=y_val, textinfo=&#39;label+percent&#39;,
-insidetextorientation=&#39;radial&#39;, pull=[0, 0.1], marker_colors=global_theme)])
-label_fig_.update_traces(textposition=&#39;inside&#39;, textinfo=&#39;percent+label&#39;)
-label_fig_.update_layout(legend=dict(orientation=&#34;h&#34;, x=0.5, yanchor=&#34;bottom&#34;, xanchor=&#34;center&#34;))
+label_fig_ = go.Figure(data=[go.Pie(labels=x_val, values=y_val, textinfo='label+percent',
+insidetextorientation='radial', pull=[0, 0.1], marker_colors=global_theme)])
+label_fig_.update_traces(textposition='inside', textinfo='percent+label')
+label_fig_.update_layout(legend=dict(orientation="h", x=0.5, yanchor="bottom", xanchor="center"))
 label_fig_.layout.plot_bgcolor = global_plot_bg_color
 label_fig_.layout.paper_bgcolor = global_paper_bg_color
 except:
 label_fig_ = None
-a1 = &#34;The dataset contains
-**&#34; + str(f&#34;{rows_count:,d}&#34;) + &#34;** records and **&#34; + str(
-numcols_count + catcols_count) + &#34;** attributes (**&#34; + str(numcols_count) + &#34;** numerical + **&#34; + str(
-catcols_count) + &#34;** categorical).&#34;
+a1 = "The dataset contains
+**" + str(f"{rows_count:,d}") + "** records and **" + str(
+numcols_count + catcols_count) + "** attributes (**" + str(numcols_count) + "** numerical + **" + str(
+catcols_count) + "** categorical)."
 if label_col is None:
-a2 = dp.Group(dp.Text(&#34;- There is **no** target variable in the dataset&#34;), dp.Text(&#34;- Data Diagnosis:&#34;), rows=2)
+a2 = dp.Group(dp.Text("- There is **no** target variable in the dataset"), dp.Text("- Data Diagnosis:"), rows=2)
 else:
 if label_fig_ is None:
-a2 = dp.Group(dp.Text(&#34;- Target variable is **&#34; + str(label_col) + &#34;** &#34;), dp.Text(&#34;- Data Diagnosis:&#34;),
+a2 = dp.Group(dp.Text("- Target variable is **" + str(label_col) + "** "), dp.Text("- Data Diagnosis:"),
 rows=2)
 else:
-a2 = dp.Group(dp.Text(&#34;- Target variable is **&#34; + str(label_col) + &#34;** &#34;), dp.Plot(label_fig_),
-dp.Text(&#34;- Data Diagnosis:&#34;), rows=3)
+a2 = dp.Group(dp.Text("- Target variable is **" + str(label_col) + "** "), dp.Plot(label_fig_),
+dp.Text("- Data Diagnosis:"), rows=3)
 try:
-x1 = list(pd.read_csv(ends_with(master_path) + &#34;measures_of_dispersion.csv&#34;).query(&#34;`cov`&gt;1&#34;).attribute.values)
-if len(x1) &gt; 0:
-x1_1 = [&#34;High Variance&#34;, x1]
+x1 = list(pd.read_csv(ends_with(master_path) + "measures_of_dispersion.csv").query("`cov`>1").attribute.values)
+if len(x1) > 0:
+x1_1 = ["High Variance", x1]
 else:
-x1_1 = [&#34;High Variance&#34;, None]
+x1_1 = ["High Variance", None]
 except:
-x1_1 = [&#34;High Variance&#34;, None]
+x1_1 = ["High Variance", None]
 try:
-x2 = list(pd.read_csv(ends_with(master_path) + &#34;measures_of_shape.csv&#34;).query(&#34;`skewness`&gt;0&#34;).attribute.values)
-if len(x2) &gt; 0:
-x2_1 = [&#34;Positive Skewness&#34;, x2]
+x2 = list(pd.read_csv(ends_with(master_path) + "measures_of_shape.csv").query("`skewness`>0").attribute.values)
+if len(x2) > 0:
+x2_1 = ["Positive Skewness", x2]
 else:
-x2_1 = [&#34;Positive Skewness&#34;, None]
+x2_1 = ["Positive Skewness", None]
 except:
-x2_1 = [&#34;Positive Skewness&#34;, None]
+x2_1 = ["Positive Skewness", None]
 try:
-x3 = list(pd.read_csv(ends_with(master_path) + &#34;measures_of_shape.csv&#34;).query(&#34;`skewness`&lt;0&#34;).attribute.values)
-if len(x3) &gt; 0:
-x3_1 = [&#34;Negative Skewness&#34;, x3]
+x3 = list(pd.read_csv(ends_with(master_path) + "measures_of_shape.csv").query("`skewness`<0").attribute.values)
+if len(x3) > 0:
+x3_1 = ["Negative Skewness", x3]
 else:
-x3_1 = [&#34;Negative Skewness&#34;, None]
+x3_1 = ["Negative Skewness", None]
 except:
-x3_1 = [&#34;Negative Skewness&#34;, None]
+x3_1 = ["Negative Skewness", None]
 try:
-x4 = list(pd.read_csv(ends_with(master_path) + &#34;measures_of_shape.csv&#34;).query(&#34;`kurtosis`&gt;0&#34;).attribute.values)
-if len(x4) &gt; 0:
-x4_1 = [&#34;High Kurtosis&#34;, x4]
+x4 = list(pd.read_csv(ends_with(master_path) + "measures_of_shape.csv").query("`kurtosis`>0").attribute.values)
+if len(x4) > 0:
+x4_1 = ["High Kurtosis", x4]
 else:
-x4_1 = [&#34;High Kurtosis&#34;, None]
+x4_1 = ["High Kurtosis", None]
 except:
-x4_1 = [&#34;High Kurtosis&#34;, None]
+x4_1 = ["High Kurtosis", None]
 try:
-x5 = list(pd.read_csv(ends_with(master_path) + &#34;measures_of_shape.csv&#34;).query(&#34;`kurtosis`&lt;0&#34;).attribute.values)
-if len(x5) &gt; 0:
-x5_1 = [&#34;Low Kurtosis&#34;, x5]
+x5 = list(pd.read_csv(ends_with(master_path) + "measures_of_shape.csv").query("`kurtosis`<0").attribute.values)
+if len(x5) > 0:
+x5_1 = ["Low Kurtosis", x5]
 else:
-x5_1 = [&#34;Low Kurtosis&#34;, None]
+x5_1 = ["Low Kurtosis", None]
 except:
-x5_1 = [&#34;Low Kurtosis&#34;, None]
+x5_1 = ["Low Kurtosis", None]
 try:
 x6 = list(
-pd.read_csv(ends_with(master_path) + &#34;measures_of_counts.csv&#34;).query(&#34;`fill_pct`&lt;0.7&#34;).attribute.values)
-if len(x6) &gt; 0:
-x6_1 = [&#34;Low Fill Rates&#34;, x6]
+pd.read_csv(ends_with(master_path) + "measures_of_counts.csv").query("`fill_pct`<0.7").attribute.values)
+if len(x6) > 0:
+x6_1 = ["Low Fill Rates", x6]
 else:
-x6_1 = [&#34;Low Fill Rates&#34;, None]
+x6_1 = ["Low Fill Rates", None]
 except:
-x6_1 = [&#34;Low Fill Rates&#34;, None]
+x6_1 = ["Low Fill Rates", None]
 try:
-biasedness_df = pd.read_csv(ends_with(master_path) + &#34;biasedness_detection.csv&#34;)
-if &#34;treated&#34; in biasedness_df:
-x7 = list(df.query(&#34;`treated`&gt;0&#34;).attribute.values)
+biasedness_df = pd.read_csv(ends_with(master_path) + "biasedness_detection.csv")
+if "treated" in biasedness_df:
+x7 = list(df.query("`treated`>0").attribute.values)
 else:
-x7 = list(df.query(&#34;`flagged`&gt;0&#34;).attribute.values)
-if len(x7) &gt; 0:
-x7_1 = [&#34;High Biasedness&#34;, x7]
+x7 = list(df.query("`flagged`>0").attribute.values)
+if len(x7) > 0:
+x7_1 = ["High Biasedness", x7]
 else:
-x7_1 = [&#34;High Biasedness&#34;, None]
+x7_1 = ["High Biasedness", None]
 except:
-x7_1 = [&#34;High Biasedness&#34;, None]
+x7_1 = ["High Biasedness", None]
 try:
-x8 = list(pd.read_csv(ends_with(master_path) + &#34;outlier_detection.csv&#34;).attribute.values)
-if len(x8) &gt; 0:
-x8_1 = [&#34;Outliers&#34;, x8]
+x8 = list(pd.read_csv(ends_with(master_path) + "outlier_detection.csv").attribute.values)
+if len(x8) > 0:
+x8_1 = ["Outliers", x8]
 else:
-x8_1 = [&#34;Outliers&#34;, None]
+x8_1 = ["Outliers", None]
 except:
-x8_1 = [&#34;Outliers&#34;, None]
+x8_1 = ["Outliers", None]
 try:
-corr_matrx = pd.read_csv(ends_with(master_path) + &#34;correlation_matrix.csv&#34;)
+corr_matrx = pd.read_csv(ends_with(master_path) + "correlation_matrix.csv")
 corr_matrx = corr_matrx[list(corr_matrx.attribute.values)]
 corr_matrx = corr_matrx.where(np.triu(np.ones(corr_matrx.shape), k=1).astype(np.bool))
-to_drop = [column for column in corr_matrx.columns if any(corr_matrx[column] &gt; corr_threshold)]
-if len(to_drop) &gt; 0:
-x9_1 = [&#34;High Correlation&#34;, to_drop]
+to_drop = [column for column in corr_matrx.columns if any(corr_matrx[column] > corr_threshold)]
+if len(to_drop) > 0:
+x9_1 = ["High Correlation", to_drop]
 else:
-x9_1 = [&#34;High Correlation&#34;, None]
+x9_1 = ["High Correlation", None]
 except:
-x9_1 = [&#34;High Correlation&#34;, None]
+x9_1 = ["High Correlation", None]
 try:
-x10 = list(pd.read_csv(ends_with(master_path) + &#34;IV_calculation.csv&#34;).query(
-&#34;`iv`&gt;&#34; + str(iv_threshold)).attribute.values)
-if len(x10) &gt; 0:
-x10_1 = [&#34;Significant Attributes&#34;, x10]
+x10 = list(pd.read_csv(ends_with(master_path) + "IV_calculation.csv").query(
+"`iv`>" + str(iv_threshold)).attribute.values)
+if len(x10) > 0:
+x10_1 = ["Significant Attributes", x10]
 else:
-x10_1[&#34;Significant Attributes&#34;, None]
+x10_1["Significant Attributes", None]
 except:
-x10_1 = [&#34;Significant Attributes&#34;, None]
+x10_1 = ["Significant Attributes", None]
 blank_list_df = []
 for i in [x1_1, x2_1, x3_1, x4_1, x5_1, x6_1, x7_1, x8_1, x9_1, x10_1]:
 try:
 for j in i[1]:
 blank_list_df.append([i[0], j])
 except:
-blank_list_df.append([i[0], &#39;NA&#39;])
+blank_list_df.append([i[0], 'NA'])
 list_n = []
-x1 = pd.DataFrame(blank_list_df, columns=[&#34;Metric&#34;, &#34;Attribute&#34;])
-x1[&#39;Value&#39;] = &#39;✔&#39;
-all_cols = (catcols_name.replace(&#34; &#34;, &#34;&#34;) + &#34;,&#34; + numcols_name.replace(&#34; &#34;, &#34;&#34;)).split(&#34;,&#34;)
+x1 = pd.DataFrame(blank_list_df, columns=["Metric", "Attribute"])
+x1['Value'] = '✔'
+all_cols = (catcols_name.replace(" ", "") + "," + numcols_name.replace(" ", "")).split(",")
 remainder_cols = list(set(all_cols) - set(x1.Attribute.values))
 total_metrics = set(list(x1.Metric.values))
 for i in remainder_cols:
 for j in total_metrics:
 list_n.append([j, i])
-x2 = pd.DataFrame(list_n, columns=[&#34;Metric&#34;, &#34;Attribute&#34;])
-x2[&#34;Value&#34;] = &#39;✘&#39;
+x2 = pd.DataFrame(list_n, columns=["Metric", "Attribute"])
+x2["Value"] = '✘'
 x = x1.append(x2, ignore_index=True)
-x = x.drop_duplicates().pivot(index=&#39;Attribute&#39;, columns=&#39;Metric&#39;, values=&#39;Value&#39;).fillna(&#39;✘&#39;).reset_index()[
-[&#34;Attribute&#34;, &#34;Outliers&#34;, &#34;Significant Attributes&#34;, &#34;Positive Skewness&#34;, &#34;Negative Skewness&#34;, &#34;High Variance&#34;,
-&#34;High Correlation&#34;, &#34;High Kurtosis&#34;, &#34;Low Kurtosis&#34;]]
-x = x[x.Attribute.values != &#34;NA&#34;]
-if ds_ind[0] == 1 and ds_ind[1] &gt;= 0.5:
-a5 = &#34;Data Health based on Drift Metrics &amp; Stability Index : &#34;
-report = dp.Group(dp.Text(&#34;# &#34;), \
-dp.Text(&#34;**Key Report Highlights**&#34;), \
-dp.Text(&#34;- &#34; + a1), a2, dp.DataTable(x), dp.Text(&#34;- &#34; + a5), \
-dp.Group(dp.BigNumber(heading=&#34;# Drifted Attributes&#34;,
-value=str(str(drifted_feats) + &#34; out of &#34; + str(len_feats))), \
-dp.BigNumber(heading=&#34;% Drifted Attributes&#34;,
-value=str(np.round((100 * drifted_feats / len_feats), 2)) + &#34;%&#34;), \
-dp.BigNumber(heading=&#34;# Unstable Attributes&#34;,
-value=str(len(unstable_attr)) + &#34; out of &#34; + str(
-len(total_unstable_attr)), change=&#34;numerical&#34;,
+x = x.drop_duplicates().pivot(index='Attribute', columns='Metric', values='Value').fillna('✘').reset_index()[
+["Attribute", "Outliers", "Significant Attributes", "Positive Skewness", "Negative Skewness", "High Variance",
+"High Correlation", "High Kurtosis", "Low Kurtosis"]]
+x = x[x.Attribute.values != "NA"]
+if ds_ind[0] == 1 and ds_ind[1] >= 0.5:
+a5 = "Data Health based on Drift Metrics & Stability Index : "
+report = dp.Group(dp.Text("# "), \
+dp.Text("**Key Report Highlights**"), \
+dp.Text("- " + a1), a2, dp.DataTable(x), dp.Text("- " + a5), \
+dp.Group(dp.BigNumber(heading="# Drifted Attributes",
+value=str(str(drifted_feats) + " out of " + str(len_feats))), \
+dp.BigNumber(heading="% Drifted Attributes",
+value=str(np.round((100 * drifted_feats / len_feats), 2)) + "%"), \
+dp.BigNumber(heading="# Unstable Attributes",
+value=str(len(unstable_attr)) + " out of " + str(
+len(total_unstable_attr)), change="numerical",
 is_upward_change=True), \
-dp.BigNumber(heading=&#34;% Unstable Attributes&#34;, value=str(
-np.round(100 * len(unstable_attr) / len(total_unstable_attr), 2)) + &#34;%&#34;),
+dp.BigNumber(heading="% Unstable Attributes", value=str(
+np.round(100 * len(unstable_attr) / len(total_unstable_attr), 2)) + "%"),
 columns=4), \
-dp.Text(&#34;# &#34;), \
-dp.Text(&#34;# &#34;), label=&#34;Executive Summary&#34;)
-if ds_ind[0] == 0 and ds_ind[1] &gt;= 0.5:
-a5 = &#34;Data Health based on Stability Index : &#34;
-report = dp.Group(dp.Text(&#34;# &#34;), \
-dp.Text(&#34;**Key Report Highlights**&#34;), \
-dp.Text(&#34;# &#34;), dp.Text(&#34;- &#34; + a1), a2, dp.DataTable(x), dp.Text(&#34;- &#34; + a5), \
-dp.Group(dp.BigNumber(heading=&#34;# Unstable Attributes&#34;,
-value=str(len(unstable_attr)) + &#34; out of &#34; + str(
-len(total_unstable_attr)), change=&#34;numerical&#34;,
+dp.Text("# "), \
+dp.Text("# "), label="Executive Summary")
+if ds_ind[0] == 0 and ds_ind[1] >= 0.5:
+a5 = "Data Health based on Stability Index : "
+report = dp.Group(dp.Text("# "), \
+dp.Text("**Key Report Highlights**"), \
+dp.Text("# "), dp.Text("- " + a1), a2, dp.DataTable(x), dp.Text("- " + a5), \
+dp.Group(dp.BigNumber(heading="# Unstable Attributes",
+value=str(len(unstable_attr)) + " out of " + str(
+len(total_unstable_attr)), change="numerical",
 is_upward_change=True), \
-dp.BigNumber(heading=&#34;% Unstable Attributes&#34;, value=str(
-np.round(100 * len(unstable_attr) / len(total_unstable_attr), 2)) + &#34;%&#34;),
+dp.BigNumber(heading="% Unstable Attributes", value=str(
+np.round(100 * len(unstable_attr) / len(total_unstable_attr), 2)) + "%"),
 columns=2), \
-dp.Text(&#34;# &#34;), \
-dp.Text(&#34;# &#34;), label=&#34;Executive Summary&#34;)
+dp.Text("# "), \
+dp.Text("# "), label="Executive Summary")
 if ds_ind[0] == 1 and ds_ind[1] == 0:
-a5 = &#34;Data Health based on Drift Metrics : &#34;
-report = dp.Group(dp.Text(&#34;# &#34;), \
-dp.Text(&#34;**Key Report Highlights**&#34;), \
-dp.Text(&#34;# &#34;), dp.Text(&#34;- &#34; + a1), a2, dp.DataTable(x), dp.Text(&#34;- &#34; + a5), \
-dp.Group(dp.BigNumber(heading=&#34;# Drifted Attributes&#34;,
-value=str(str(drifted_feats) + &#34; out of &#34; + str(len_feats))), \
-dp.BigNumber(heading=&#34;% Drifted Attributes&#34;,
-value=str(np.round((100 * drifted_feats / len_feats), 2)) + &#34;%&#34;),
+a5 = "Data Health based on Drift Metrics : "
+report = dp.Group(dp.Text("# "), \
+dp.Text("**Key Report Highlights**"), \
+dp.Text("# "), dp.Text("- " + a1), a2, dp.DataTable(x), dp.Text("- " + a5), \
+dp.Group(dp.BigNumber(heading="# Drifted Attributes",
+value=str(str(drifted_feats) + " out of " + str(len_feats))), \
+dp.BigNumber(heading="% Drifted Attributes",
+value=str(np.round((100 * drifted_feats / len_feats), 2)) + "%"),
 columns=2), \
-dp.Text(&#34;# &#34;), \
-dp.Text(&#34;# &#34;), label=&#34;Executive Summary&#34;)
+dp.Text("# "), \
+dp.Text("# "), label="Executive Summary")
 if ds_ind[0] == 0 and ds_ind[1] == 0:
-report = dp.Group(dp.Text(&#34;# &#34;), \
-dp.Text(&#34;**Key Report Highlights**&#34;), \
-dp.Text(&#34;# &#34;), dp.Text(&#34;- &#34; + a1), a2, dp.DataTable(x), dp.Text(&#34;# &#34;),
-label=&#34;Executive Summary&#34;)
+report = dp.Group(dp.Text("# "), \
+dp.Text("**Key Report Highlights**"), \
+dp.Text("# "), dp.Text("- " + a1), a2, dp.DataTable(x), dp.Text("# "),
+label="Executive Summary")
 if print_report:
 dp.Report(default_template[0], default_template[1], report).save(
-ends_with(master_path) + &#34;executive_summary.html&#34;, open=True)
+ends_with(master_path) + "executive_summary.html", open=True)
 return report
 def wiki_generator(master_path, dataDict_path=None, metricDict_path=None, print_report=False):
-&#34;&#34;&#34;
+"""
 Args:
 master_path: Path containing the input files.
 dataDict_path: Data dictionary path. Default value is kept as None.
 metricDict_path: Metric dictionary path. Default value is kept as None.
 print_report: Printing option flexibility. Default value is kept as False.
 Returns:
-&#34;&#34;&#34;
+"""
 try:
-datatype_df = pd.read_csv(ends_with(master_path) + &#34;data_type.csv&#34;)
+datatype_df = pd.read_csv(ends_with(master_path) + "data_type.csv")
 except:
-datatype_df = pd.DataFrame(columns=[&#39;attribute&#39;, &#39;data_type&#39;], index=range(1))
+datatype_df = pd.DataFrame(columns=['attribute', 'data_type'], index=range(1))
 try:
-data_dict = pd.read_csv(dataDict_path).merge(datatype_df, how=&#34;outer&#34;, on=&#34;attribute&#34;)
+data_dict = pd.read_csv(dataDict_path).merge(datatype_df, how="outer", on="attribute")
 except:
 data_dict = datatype_df
 try:
 metric_dict = pd.read_csv(metricDict_path)
 except:
-metric_dict = pd.DataFrame(columns=[&#39;Section Category&#39;, &#39;Section Name&#39;, &#39;Metric Name&#39;, &#39;Metric Definitions&#39;],
+metric_dict = pd.DataFrame(columns=['Section Category', 'Section Name', 'Metric Name', 'Metric Definitions'],
 index=range(1))
-report = dp.Group(dp.Text(&#34;# &#34;), \
+report = dp.Group(dp.Text("# "), \
 dp.Text(
-&#34;*A quick reference to the attributes from the dataset (Data Dictionary) and the metrics computed in the report (Metric Dictionary).*&#34;), \
-dp.Text(&#34;# &#34;), \
-dp.Text(&#34;# &#34;), \
+"*A quick reference to the attributes from the dataset (Data Dictionary) and the metrics computed in the report (Metric Dictionary).*"), \
+dp.Text("# "), \
+dp.Text("# "), \
 dp.Select(blocks= \
-[dp.Group(dp.Group(dp.Text(&#34;## &#34;), dp.DataTable(data_dict)),
-label=&#34;Data Dictionary&#34;), \
-dp.Group(dp.Text(&#34;##&#34;), dp.DataTable(metric_dict), label=&#34;Metric Dictionary&#34;)], \
-type=dp.SelectType.TABS), dp.Text(&#34;# &#34;), dp.Text(&#34;# &#34;), dp.Text(&#34;# &#34;), dp.Text(&#34;# &#34;),
-label=&#34;Wiki&#34;)
+[dp.Group(dp.Group(dp.Text("## "), dp.DataTable(data_dict)),
+label="Data Dictionary"), \
+dp.Group(dp.Text("##"), dp.DataTable(metric_dict), label="Metric Dictionary")], \
+type=dp.SelectType.TABS), dp.Text("# "), dp.Text("# "), dp.Text("# "), dp.Text("# "),
+label="Wiki")
 if print_report:
 dp.Report(default_template[0], default_template[1], report).save(
-ends_with(master_path) + &#34;wiki_generator.html&#34;, open=True)
+ends_with(master_path) + "wiki_generator.html", open=True)
 return report
 def descriptive_statistics(master_path, SG_tabs, avl_recs_SG, missing_recs_SG, all_charts_num_1_, all_charts_cat_1_,
 print_report=False):
-&#34;&#34;&#34;
+"""
 Args:
 master_path: Path containing the input files.
-SG_tabs: measures_of_counts&#39;,&#39;measures_of_centralTendency&#39;,&#39;measures_of_cardinality&#39;,&#39;measures_of_percentiles&#39;,&#39;measures_of_dispersion&#39;,&#39;measures_of_shape&#39;,&#39;global_summary&#39;
+SG_tabs: measures_of_counts','measures_of_centralTendency','measures_of_cardinality','measures_of_percentiles','measures_of_dispersion','measures_of_shape','global_summary'
 avl_recs_SG: Available files from the SG_tabs (Stats Generator tabs)
 missing_recs_SG: Missing files from the SG_tabs (Stats Generator tabs)
 all_charts_num_1_: Numerical charts (histogram) all collated in a list format supported as per datapane objects
 all_charts_cat_1_: Categorical charts (barplot) all collated in a list format supported as per datapane objects
 print_report: Printing option flexibility. Default value is kept as False.
 Returns:
-&#34;&#34;&#34;
-if &#34;global_summary&#34; in avl_recs_SG:
+"""
+if "global_summary" in avl_recs_SG:
 cnt = 0
 else:
 cnt = 1
 if len(missing_recs_SG) + cnt == len(SG_tabs):
-return &#34;null_report&#34;
+return "null_report"
 else:
-if &#34;global_summary&#34; in avl_recs_SG:
+if "global_summary" in avl_recs_SG:
 l1 = dp.Group(
-dp.Text(&#34;# &#34;), \
-dp.Text(&#34;*This section summarizes the dataset with key statistical metrics and distribution plots.*&#34;), \
-dp.Text(&#34;# &#34;), \
-dp.Text(&#34;# &#34;), \
-dp.Text(&#34;### Global Summary&#34;), \
-dp.Group(dp.Text(&#34; Total Number of Records: **&#34; + f&#39;{rows_count:,}&#39; + &#34;**&#34;),
-dp.Text(&#34; Total Number of Attributes: **&#34; + str(columns_count) + &#34;**&#34;),
-dp.Text(&#34; Number of Numerical Attributes : **&#34; + str(numcols_count) + &#34;**&#34;),
-dp.Text(&#34; Numerical Attributes Name : **&#34; + str(numcols_name) + &#34;**&#34;),
-dp.Text(&#34; Number of Categorical Attributes : **&#34; + str(catcols_count) + &#34;**&#34;),
-dp.Text(&#34; Categorical Attributes Name : **&#34; + str(catcols_name) + &#34;**&#34;), rows=6), rows=8)
+dp.Text("# "), \
+dp.Text("*This section summarizes the dataset with key statistical metrics and distribution plots.*"), \
+dp.Text("# "), \
+dp.Text("# "), \
+dp.Text("### Global Summary"), \
+dp.Group(dp.Text(" Total Number of Records: **" + f'{rows_count:,}' + "**"),
+dp.Text(" Total Number of Attributes: **" + str(columns_count) + "**"),
+dp.Text(" Number of Numerical Attributes : **" + str(numcols_count) + "**"),
+dp.Text(" Numerical Attributes Name : **" + str(numcols_name) + "**"),
+dp.Text(" Number of Categorical Attributes : **" + str(catcols_count) + "**"),
+dp.Text(" Categorical Attributes Name : **" + str(catcols_name) + "**"), rows=6), rows=8)
 else:
-l1 = dp.Text(&#34;# &#34;)
-if len(data_analyzer_output(master_path, avl_recs_SG, &#34;stats_generator&#34;)) &gt; 0:
-l2 = dp.Text(&#34;### Statistics by Metric Type&#34;)
-l3 = dp.Group(dp.Select(blocks=data_analyzer_output(master_path, avl_recs_SG, &#34;stats_generator&#34;),
-type=dp.SelectType.TABS), dp.Text(&#34;# &#34;))
+l1 = dp.Text("# ")
+if len(data_analyzer_output(master_path, avl_recs_SG, "stats_generator")) > 0:
+l2 = dp.Text("### Statistics by Metric Type")
+l3 = dp.Group(dp.Select(blocks=data_analyzer_output(master_path, avl_recs_SG, "stats_generator"),
+type=dp.SelectType.TABS), dp.Text("# "))
 else:
-l2 = dp.Text(&#34;# &#34;)
-l3 = dp.Text(&#34;# &#34;)
+l2 = dp.Text("# ")
+l3 = dp.Text("# ")
 if len(all_charts_num_1_) == 0 and len(all_charts_cat_1_) == 0:
 l4 = 1
-elif len(all_charts_num_1_) == 0 and len(all_charts_cat_1_) &gt; 0:
-l4 = dp.Text(&#34;# &#34;), dp.Text(&#34;### Attribute Visualization&#34;), \
-dp.Select(blocks=all_charts_cat_1_, type=dp.SelectType.DROPDOWN), dp.Text(&#34;# &#34;), dp.Text(&#34;# &#34;)
-elif len(all_charts_num_1_) &gt; 0 and len(all_charts_cat_1_) == 0:
-l4 = dp.Text(&#34;# &#34;), dp.Text(&#34;### Attribute Visualization&#34;), \
-dp.Select(blocks=all_charts_num_1_, type=dp.SelectType.DROPDOWN), dp.Text(&#34;# &#34;), dp.Text(&#34;# &#34;)
+elif len(all_charts_num_1_) == 0 and len(all_charts_cat_1_) > 0:
+l4 = dp.Text("# "), dp.Text("### Attribute Visualization"), \
+dp.Select(blocks=all_charts_cat_1_, type=dp.SelectType.DROPDOWN), dp.Text("# "), dp.Text("# ")
+elif len(all_charts_num_1_) > 0 and len(all_charts_cat_1_) == 0:
+l4 = dp.Text("# "), dp.Text("### Attribute Visualization"), \
+dp.Select(blocks=all_charts_num_1_, type=dp.SelectType.DROPDOWN), dp.Text("# "), dp.Text("# ")
 else:
-l4 = dp.Text(&#34;# &#34;), dp.Text(&#34;### Attribute Visualization&#34;), \
+l4 = dp.Text("# "), dp.Text("### Attribute Visualization"), \
 dp.Group(dp.Select(blocks= \
 [dp.Group(dp.Select(blocks=all_charts_num_1_, type=dp.SelectType.DROPDOWN),
-label=&#34;Numerical&#34;), \
+label="Numerical"), \
 dp.Group(dp.Select(blocks=all_charts_cat_1_, type=dp.SelectType.DROPDOWN),
-label=&#34;Categorical&#34;)], \
-type=dp.SelectType.TABS)), dp.Text(&#34;# &#34;), dp.Text(&#34;# &#34;)
+label="Categorical")], \
+type=dp.SelectType.TABS)), dp.Text("# "), dp.Text("# ")
 if l4 == 1:
-report = dp.Group(l1, dp.Text(&#34;# &#34;), l2, l3, dp.Text(&#34;# &#34;), dp.Text(&#34;# &#34;), label=&#34;Descriptive Statistics&#34;)
+report = dp.Group(l1, dp.Text("# "), l2, l3, dp.Text("# "), dp.Text("# "), label="Descriptive Statistics")
 else:
-report = dp.Group(l1, dp.Text(&#34;# &#34;), l2, l3, *l4, dp.Text(&#34;# &#34;), dp.Text(&#34;# &#34;), label=&#34;Descriptive Statistics&#34;)
+report = dp.Group(l1, dp.Text("# "), l2, l3, *l4, dp.Text("# "), dp.Text("# "), label="Descriptive Statistics")
 if print_report:
 dp.Report(default_template[0], default_template[1], report).save(
-ends_with(master_path) + &#34;descriptive_statistics.html&#34;, open=True)
+ends_with(master_path) + "descriptive_statistics.html", open=True)
 return report
 def quality_check(master_path, QC_tabs, avl_recs_QC, missing_recs_QC, all_charts_num_3_, print_report=False):
-&#34;&#34;&#34;
+"""
 Args:
 master_path: Path containing the input files.
-QC_tabs: nullColumns_detection&#39;,&#39;IDness_detection&#39;,&#39;biasedness_detection&#39;,&#39;invalidEntries_detection&#39;,&#39;duplicate_detection&#39;,&#39;nullRows_detection&#39;,&#39;outlier_detection&#39;
+QC_tabs: nullColumns_detection','IDness_detection','biasedness_detection','invalidEntries_detection','duplicate_detection','nullRows_detection','outlier_detection'
 avl_recs_QC: Available files from the QC_tabs (Quality Checker tabs)
 missing_recs_QC: Missing files from the QC_tabs (Quality Checker tabs)
 all_charts_num_3_: Numerical charts (outlier charts) all collated in a list format supported as per datapane objects
 print_report: Printing option flexibility. Default value is kept as False.
 Returns:
-&#34;&#34;&#34;
+"""
 c_ = []
 r_ = []
 if len(missing_recs_QC) == len(QC_tabs):
-return &#34;null_report&#34;
+return "null_report"
 else:
-row_wise = [&#34;duplicate_detection&#34;, &#34;nullRows_detection&#34;]
-col_wise = [&#39;nullColumns_detection&#39;, &#39;IDness_detection&#39;, &#39;biasedness_detection&#39;, &#39;invalidEntries_detection&#39;,
-&#39;outlier_detection&#39;]
+row_wise = ["duplicate_detection", "nullRows_detection"]
+col_wise = ['nullColumns_detection', 'IDness_detection', 'biasedness_detection', 'invalidEntries_detection',
+'outlier_detection']
 row_wise_ = [p for p in row_wise if p in avl_recs_QC]
 col_wise_ = [p for p in col_wise if p in avl_recs_QC]
 len_row_wise = len([p for p in row_wise if p in avl_recs_QC])
 len_col_wise = len([p for p in col_wise if p in avl_recs_QC])
 if len_row_wise == 0:
-c = data_analyzer_output(master_path, col_wise_, &#34;quality_checker&#34;)
+c = data_analyzer_output(master_path, col_wise_, "quality_checker")
 for i in c:
 for j in i:
-if j == &#39;outlier_charts_placeholder&#39; and len(all_charts_num_3_) &gt; 1:
+if j == 'outlier_charts_placeholder' and len(all_charts_num_3_) > 1:
 c_.append(dp.Select(blocks=all_charts_num_3_, type=dp.SelectType.DROPDOWN))
-elif j == &#39;outlier_charts_placeholder&#39; and len(all_charts_num_3_) == 0:
+elif j == 'outlier_charts_placeholder' and len(all_charts_num_3_) == 0:
 c_.append(dp.Plot(blank_chart))
 else:
 c_.append(j)
-report = dp.Group(dp.Text(&#34;# &#34;), \
+report = dp.Group(dp.Text("# "), \
 dp.Text(
-&#34;*This section identifies the data quality issues at both row and column level.*&#34;), \
-dp.Text(&#34;# &#34;), \
-dp.Text(&#34;# &#34;), \
-dp.Group(*c_), dp.Text(&#34;# &#34;), dp.Text(&#34;# &#34;), rows=8, label=&#34;Quality Check&#34;)
+"*This section identifies the data quality issues at both row and column level.*"), \
+dp.Text("# "), \
+dp.Text("# "), \
+dp.Group(*c_), dp.Text("# "), dp.Text("# "), rows=8, label="Quality Check")
 elif len_col_wise == 0:
-r = data_analyzer_output(master_path, row_wise_, &#34;quality_checker&#34;)
+r = data_analyzer_output(master_path, row_wise_, "quality_checker")
 for i in r:
 for j in i:
 r_.append(j)
-report = dp.Group(dp.Text(&#34;# &#34;), \
+report = dp.Group(dp.Text("# "), \
 dp.Text(
-&#34;*This section identifies the data quality issues at both row and column level.*&#34;), \
-dp.Text(&#34;# &#34;), \
-dp.Text(&#34;# &#34;), \
-dp.Group(*r_), dp.Text(&#34;# &#34;), dp.Text(&#34;# &#34;), rows=8, label=&#34;Quality Check&#34;)
+"*This section identifies the data quality issues at both row and column level.*"), \
+dp.Text("# "), \
+dp.Text("# "), \
+dp.Group(*r_), dp.Text("# "), dp.Text("# "), rows=8, label="Quality Check")
 else:
-c = data_analyzer_output(master_path, col_wise_, &#34;quality_checker&#34;)
+c = data_analyzer_output(master_path, col_wise_, "quality_checker")
 for i in c:
 for j in i:
-if j == &#39;outlier_charts_placeholder&#39; and len(all_charts_num_3_) &gt; 1:
+if j == 'outlier_charts_placeholder' and len(all_charts_num_3_) > 1:
 c_.append(dp.Select(blocks=all_charts_num_3_, type=dp.SelectType.DROPDOWN))
-elif j == &#39;outlier_charts_placeholder&#39; and len(all_charts_num_3_) == 0:
+elif j == 'outlier_charts_placeholder' and len(all_charts_num_3_) == 0:
 c_.append(dp.Plot(blank_chart))
 else:
 c_.append(j)
-r = data_analyzer_output(master_path, row_wise_, &#34;quality_checker&#34;)
+r = data_analyzer_output(master_path, row_wise_, "quality_checker")
 for i in r:
 for j in i:
 r_.append(j)
 report = dp.Group(
-dp.Text(&#34;# &#34;), \
-dp.Text(&#34;*This section identifies the data quality issues at both row and column level.*&#34;), \
-dp.Text(&#34;# &#34;), \
-dp.Text(&#34;# &#34;), \
+dp.Text("# "), \
+dp.Text("*This section identifies the data quality issues at both row and column level.*"), \
+dp.Text("# "), \
+dp.Text("# "), \
 dp.Select(blocks=[
-dp.Group(dp.Text(&#34;# &#34;), dp.Group(*c_), rows=2, label=&#34;Column Level&#34;), \
-dp.Group(dp.Text(&#34;# &#34;), dp.Group(*r_), rows=2, label=&#34;Row Level&#34;)], \
+dp.Group(dp.Text("# "), dp.Group(*c_), rows=2, label="Column Level"), \
+dp.Group(dp.Text("# "), dp.Group(*r_), rows=2, label="Row Level")], \
 type=dp.SelectType.TABS), \
-dp.Text(&#34;# &#34;), dp.Text(&#34;# &#34;), \
-label=&#34;Quality Check&#34;)
+dp.Text("# "), dp.Text("# "), \
+label="Quality Check")
 if print_report:
 dp.Report(default_template[0], default_template[1], report).save(
-ends_with(master_path) + &#34;quality_check.html&#34;, open=True)
+ends_with(master_path) + "quality_check.html", open=True)
 return report
 def attribute_associations(master_path, AE_tabs, avl_recs_AE, missing_recs_AE, label_col, all_charts_num_2_,
 all_charts_cat_2_, print_report=False):
-&#34;&#34;&#34;
+"""
 Args:
 master_path: Path containing the input files.
-AE_tabs: correlation_matrix&#39;,&#39;IV_calculation&#39;,&#39;IG_calculation&#39;,&#39;variable_clustering&#39;
+AE_tabs: correlation_matrix','IV_calculation','IG_calculation','variable_clustering'
 avl_recs_AE: Available files from the AE_tabs (Association Evaluator tabs)
 missing_recs_AE: Missing files from the AE_tabs (Association Evaluator tabs)
 label_col: label column
@@ -650,63 +650,63 @@ all_charts_num_2_: Numerical charts (histogram) all collated in a list format su
 all_charts_cat_2_: Categorical charts (barplot) all collated in a list format supported as per datapane objects
 print_report: Printing option flexibility. Default value is kept as False.
 Returns:
-&#34;&#34;&#34;
+"""
 if (len(missing_recs_AE) == len(AE_tabs)) and ((len(all_charts_num_2_) + len(all_charts_cat_2_)) == 0):
-return &#34;null_report&#34;
+return "null_report"
 else:
 if len(all_charts_num_2_) == 0 and len(all_charts_cat_2_) == 0:
-l = dp.Text(&#34;##&#34;)
+l = dp.Text("##")
 else:
-if len(all_charts_num_2_) &gt; 0 and len(all_charts_cat_2_) == 0:
-l = dp.Group(dp.Text(&#34;### Attribute to Target Association&#34;), dp.Text(
-&#34;*Bivariate Distribution considering the event captured across different attribute splits (or categories)*&#34;), \
-dp.Select(blocks=all_charts_num_2_, type=dp.SelectType.DROPDOWN), label=&#34;Numerical&#34;)
-elif len(all_charts_num_2_) == 0 and len(all_charts_cat_2_) &gt; 0:
-l = dp.Group(dp.Text(&#34;### Attribute to Target Association&#34;), dp.Text(
-&#34;*Bivariate Distribution considering the event captured across different attribute splits (or categories)*&#34;), \
-dp.Select(blocks=all_charts_cat_2_, type=dp.SelectType.DROPDOWN), label=&#34;Categorical&#34;)
+if len(all_charts_num_2_) > 0 and len(all_charts_cat_2_) == 0:
+l = dp.Group(dp.Text("### Attribute to Target Association"), dp.Text(
+"*Bivariate Distribution considering the event captured across different attribute splits (or categories)*"), \
+dp.Select(blocks=all_charts_num_2_, type=dp.SelectType.DROPDOWN), label="Numerical")
+elif len(all_charts_num_2_) == 0 and len(all_charts_cat_2_) > 0:
+l = dp.Group(dp.Text("### Attribute to Target Association"), dp.Text(
+"*Bivariate Distribution considering the event captured across different attribute splits (or categories)*"), \
+dp.Select(blocks=all_charts_cat_2_, type=dp.SelectType.DROPDOWN), label="Categorical")
 else:
-l = dp.Group(dp.Text(&#34;### Attribute to Target Association&#34;),
+l = dp.Group(dp.Text("### Attribute to Target Association"),
 dp.Select(blocks=[
 dp.Group(dp.Select(blocks=all_charts_num_2_, type=dp.SelectType.DROPDOWN),
-label=&#34;Numerical&#34;),
+label="Numerical"),
 dp.Group(dp.Select(blocks=all_charts_cat_2_, type=dp.SelectType.DROPDOWN),
-label=&#34;Categorical&#34;)], type=dp.SelectType.TABS),
+label="Categorical")], type=dp.SelectType.TABS),
 dp.Text(
-&#34;*Event Rate is defined as % of event label (i.e. label 1) in a bin or a categorical value of an attribute.*&#34;),
-dp.Text(&#34;# &#34;))
+"*Event Rate is defined as % of event label (i.e. label 1) in a bin or a categorical value of an attribute.*"),
+dp.Text("# "))
 if len(missing_recs_AE) == len(AE_tabs):
 report = dp.Group(
-dp.Text(&#34;# &#34;), \
+dp.Text("# "), \
 dp.Text(
-&#34;*This section analyzes the interaction between different attributes and/or the relationship between an attribute &amp; the binary target variable.*&#34;), \
-dp.Text(&#34;## &#34;), \
+"*This section analyzes the interaction between different attributes and/or the relationship between an attribute & the binary target variable.*"), \
+dp.Text("## "), \
 l, \
-dp.Text(&#34;## &#34;), \
-dp.Text(&#34;## &#34;), \
-label=&#34;Attribute Associations&#34;)
+dp.Text("## "), \
+dp.Text("## "), \
+label="Attribute Associations")
 else:
 report = dp.Group(
-dp.Text(&#34;# &#34;), \
+dp.Text("# "), \
 dp.Text(
-&#34;*This section analyzes the interaction between different attributes and/or the relationship between an attribute &amp; the binary target variable.*&#34;), \
-dp.Text(&#34;# &#34;), \
-dp.Text(&#34;# &#34;), \
-dp.Text(&#34;### Association Matrix &amp; Plot&#34;), \
-dp.Select(blocks=data_analyzer_output(master_path, avl_recs_AE, tab_name=&#34;association_evaluator&#34;),
+"*This section analyzes the interaction between different attributes and/or the relationship between an attribute & the binary target variable.*"), \
+dp.Text("# "), \
+dp.Text("# "), \
+dp.Text("### Association Matrix & Plot"), \
+dp.Select(blocks=data_analyzer_output(master_path, avl_recs_AE, tab_name="association_evaluator"),
 type=dp.SelectType.DROPDOWN), \
-dp.Text(&#34;### &#34;), \
-dp.Text(&#34;## &#34;), \
+dp.Text("### "), \
+dp.Text("## "), \
 l, \
-dp.Text(&#34;## &#34;), \
-dp.Text(&#34;## &#34;), \
-label=&#34;Attribute Associations&#34;)
+dp.Text("## "), \
+dp.Text("## "), \
+label="Attribute Associations")
 if print_report:
 dp.Report(default_template[0], default_template[1], report).save(
-ends_with(master_path) + &#34;attribute_associations.html&#34;, open=True)
+ends_with(master_path) + "attribute_associations.html", open=True)
 return report
 def data_drift_stability(master_path, ds_ind, id_col, drift_threshold_model, all_drift_charts_, print_report=False):
-&#34;&#34;&#34;
+"""
 Args:
 master_path: Path containing the input files.
 ds_ind: Drift stability indicator in list form.
@@ -715,33 +715,33 @@ drift_threshold_model: threshold which the user is specifying for tagging an att
 all_drift_charts_: Charts (histogram/barplot) all collated in a list format supported as per datapane objects
 print_report: Printing option flexibility. Default value is kept as False.
 Returns:
-&#34;&#34;&#34;
+"""
 line_chart_list = []
-if ds_ind[0] &gt; 0:
+if ds_ind[0] > 0:
 fig_metric_drift = go.Figure()
 fig_metric_drift.add_trace(go.Scatter(x=list(drift_df[drift_df.flagged.values == 1][metric_drift[0]].values),
 y=list(drift_df[drift_df.flagged.values == 1].attribute.values),
 marker=dict(color=global_theme[1], size=14),
-mode=&#34;markers&#34;,
+mode="markers",
 name=metric_drift[0]))
 fig_metric_drift.add_trace(go.Scatter(x=list(drift_df[drift_df.flagged.values == 1][metric_drift[1]].values),
 y=list(drift_df[drift_df.flagged.values == 1].attribute.values),
 marker=dict(color=global_theme[3], size=14),
-mode=&#34;markers&#34;,
+mode="markers",
 name=metric_drift[1]))
 fig_metric_drift.add_trace(go.Scatter(x=list(drift_df[drift_df.flagged.values == 1][metric_drift[2]].values),
 y=list(drift_df[drift_df.flagged.values == 1].attribute.values),
 marker=dict(color=global_theme[5], size=14),
-mode=&#34;markers&#34;,
+mode="markers",
 name=metric_drift[2]))
 fig_metric_drift.add_trace(go.Scatter(x=list(drift_df[drift_df.flagged.values == 1][metric_drift[3]].values),
 y=list(drift_df[drift_df.flagged.values == 1].attribute.values),
 marker=dict(color=global_theme[7], size=14),
-mode=&#34;markers&#34;,
+mode="markers",
 name=metric_drift[3]))
 fig_metric_drift.add_vrect(x0=0, x1=drift_threshold_model, fillcolor=global_theme[7], opacity=0.1,
-layer=&#34;below&#34;, line_width=1),
-fig_metric_drift.update_layout(legend=dict(orientation=&#34;h&#34;, x=0.5, yanchor=&#34;top&#34;, xanchor=&#34;center&#34;))
+layer="below", line_width=1),
+fig_metric_drift.update_layout(legend=dict(orientation="h", x=0.5, yanchor="top", xanchor="center"))
 fig_metric_drift.layout.plot_bgcolor = global_plot_bg_color
 fig_metric_drift.layout.paper_bgcolor = global_paper_bg_color
 fig_metric_drift.update_xaxes(showline=True, linewidth=2, gridcolor=px.colors.sequential.Greys[1])
@@ -749,258 +749,258 @@ fig_metric_drift.update_yaxes(showline=True, linewidth=2, gridcolor=px.colors.se
 #
 Drift Chart - 2
 fig_gauge_drift = go.Figure(go.Indicator(
-domain={&#39;x&#39;: [0, 1], &#39;y&#39;: [0, 1]},
+domain={'x': [0, 1], 'y': [0, 1]},
 value=drifted_feats,
-mode=&#34;gauge+number&#34;,
-title={&#39;text&#39;: &#34;&#34;},
-gauge={&#39;axis&#39;: {&#39;range&#39;: [None, len_feats]},
-&#39;bar&#39;: {&#39;color&#39;: px.colors.sequential.Reds[7]},
-&#39;steps&#39;: [
-{&#39;range&#39;: [0, drifted_feats], &#39;color&#39;: px.colors.sequential.Reds[8]}, \
-{&#39;range&#39;: [drifted_feats, len_feats], &#39;color&#39;: px.colors.sequential.Greens[8]}], \
-&#39;threshold&#39;: {&#39;line&#39;: {&#39;color&#39;: &#39;black&#39;, &#39;width&#39;: 3}, &#39;thickness&#39;: 1, &#39;value&#39;: len_feats}}))
-fig_gauge_drift.update_layout(font={&#39;color&#39;: &#34;black&#34;, &#39;family&#39;: &#34;Arial&#34;})
+mode="gauge+number",
+title={'text': ""},
+gauge={'axis': {'range': [None, len_feats]},
+'bar': {'color': px.colors.sequential.Reds[7]},
+'steps': [
+{'range': [0, drifted_feats], 'color': px.colors.sequential.Reds[8]}, \
+{'range': [drifted_feats, len_feats], 'color': px.colors.sequential.Greens[8]}], \
+'threshold': {'line': {'color': 'black', 'width': 3}, 'thickness': 1, 'value': len_feats}}))
+fig_gauge_drift.update_layout(font={'color': "black", 'family': "Arial"})
 def drift_text_gen(drifted_feats, len_feats):
-&#34;&#34;&#34;
+"""
 Args:
 drifted_feats: count of attributes drifted
 len_feats: count of attributes passed for analysis
 Returns:
-&#34;&#34;&#34;
+"""
 if drifted_feats == 0:
-text = &#34;*Drift barometer does not indicate any drift in the underlying data. Please refer to the metric values as displayed in the above table &amp; comparison plot for better understanding*&#34;
+text = "*Drift barometer does not indicate any drift in the underlying data. Please refer to the metric values as displayed in the above table & comparison plot for better understanding*"
 elif drifted_feats == 1:
-text = &#34;*Drift barometer indicates that &#34; + str(drifted_feats) + &#34; out of &#34; + str(
-len_feats) + &#34; (&#34; + str(np.round((100 * drifted_feats / len_feats),
-2)) + &#34;%) attributes has been drifted from its source behaviour.*&#34;
-elif drifted_feats &gt; 1:
-text = &#34;*Drift barometer indicates that &#34; + str(drifted_feats) + &#34; out of &#34; + str(
-len_feats) + &#34; (&#34; + str(np.round((100 * drifted_feats / len_feats),
-2)) + &#34;%) attributes have been drifted from its source behaviour.*&#34;
+text = "*Drift barometer indicates that " + str(drifted_feats) + " out of " + str(
+len_feats) + " (" + str(np.round((100 * drifted_feats / len_feats),
+2)) + "%) attributes has been drifted from its source behaviour.*"
+elif drifted_feats > 1:
+text = "*Drift barometer indicates that " + str(drifted_feats) + " out of " + str(
+len_feats) + " (" + str(np.round((100 * drifted_feats / len_feats),
+2)) + "%) attributes have been drifted from its source behaviour.*"
 else:
-text = &#34;&#34;
+text = ""
 return text
 else:
 pass
 if ds_ind[0] == 0 and ds_ind[1] == 0:
-return &#34;null_report&#34;
-elif ds_ind[0] == 0 and ds_ind[1] &gt; 0.5:
+return "null_report"
+elif ds_ind[0] == 0 and ds_ind[1] > 0.5:
 for i in total_unstable_attr:
 line_chart_list.append(line_chart_gen_stability(df1=df_stability, df2=df_si_, col=i))
-report = dp.Group(dp.Text(&#34;# &#34;), \
+report = dp.Group(dp.Text("# "), \
 dp.Text(
-&#34;*This section examines the dataset stability wrt the baseline dataset (via computing drift statistics) and/or wrt the historical datasets (via computing stability index).*&#34;), \
-dp.Text(&#34;# &#34;), \
-dp.Text(&#34;# &#34;), \
-dp.Text(&#34;### Data Stability Analysis&#34;), \
+"*This section examines the dataset stability wrt the baseline dataset (via computing drift statistics) and/or wrt the historical datasets (via computing stability index).*"), \
+dp.Text("# "), \
+dp.Text("# "), \
+dp.Text("### Data Stability Analysis"), \
 dp.DataTable(df_si), \
 dp.Select(blocks=line_chart_list, type=dp.SelectType.DROPDOWN), \
-dp.Group(dp.Text(&#34;**Stability Index Interpretation:**&#34;), dp.Plot(plot_index_stability),
+dp.Group(dp.Text("**Stability Index Interpretation:**"), dp.Plot(plot_index_stability),
 rows=2), \
-label=&#34;Drift &amp; Stability&#34;)
+label="Drift & Stability")
 elif ds_ind[0] == 1 and ds_ind[1] == 0:
-if len(all_drift_charts_) &gt; 0:
+if len(all_drift_charts_) > 0:
 report = dp.Group(
-dp.Text(&#34;# &#34;), \
+dp.Text("# "), \
 dp.Text(
-&#34;*This section examines the dataset stability wrt the baseline dataset (via computing drift statistics) and/or wrt the historical datasets (via computing stability index).*&#34;), \
-dp.Text(&#34;# &#34;), \
-dp.Text(&#34;# &#34;), \
-dp.Text(&#34;### Data Drift Analysis&#34;), \
+"*This section examines the dataset stability wrt the baseline dataset (via computing drift statistics) and/or wrt the historical datasets (via computing stability index).*"), \
+dp.Text("# "), \
+dp.Text("# "), \
+dp.Text("### Data Drift Analysis"), \
 dp.DataTable(drift_df), \
 dp.Text(
-&#34;*An attribute is flagged as drifted if any drift metric is found to be above the threshold of &#34; + str(
-drift_threshold_model) + &#34;.*&#34;), \
-dp.Text(&#34;##&#34;), \
+"*An attribute is flagged as drifted if any drift metric is found to be above the threshold of " + str(
+drift_threshold_model) + ".*"), \
+dp.Text("##"), \
 dp.Select(blocks=all_drift_charts_, type=dp.SelectType.DROPDOWN), \
 dp.Text(
-&#34;*Source &amp; Target datasets were compared to see the % deviation at decile level for numerical attributes and at individual category level for categorical attributes*&#34;), \
-dp.Text(&#34;###
-&#34;), \
-dp.Text(&#34;###
-&#34;), \
-dp.Text(&#34;### Data Health&#34;), \
+"*Source & Target datasets were compared to see the % deviation at decile level for numerical attributes and at individual category level for categorical attributes*"), \
+dp.Text("###
+"), \
+dp.Text("###
+"), \
+dp.Text("### Data Health"), \
 dp.Group(dp.Plot(fig_metric_drift), dp.Plot(fig_gauge_drift), columns=2), \
-dp.Group(dp.Text(&#34;*Representation of attributes across different computed Drift Metrics*&#34;),
+dp.Group(dp.Text("*Representation of attributes across different computed Drift Metrics*"),
 dp.Text(drift_text_gen(drifted_feats, len_feats)), columns=2), \
-label=&#34;Drift &amp; Stability&#34;)
+label="Drift & Stability")
 else:
 report = dp.Group(
-dp.Text(&#34;# &#34;), \
+dp.Text("# "), \
 dp.Text(
-&#34;*This section examines the dataset stability wrt the baseline dataset (via computing drift statistics) and/or wrt the historical datasets (via computing stability index).*&#34;), \
-dp.Text(&#34;# &#34;), \
-dp.Text(&#34;# &#34;), \
-dp.Text(&#34;### Data Drift Analysis&#34;), \
+"*This section examines the dataset stability wrt the baseline dataset (via computing drift statistics) and/or wrt the historical datasets (via computing stability index).*"), \
+dp.Text("# "), \
+dp.Text("# "), \
+dp.Text("### Data Drift Analysis"), \
 dp.DataTable(drift_df), \
 dp.Text(
-&#34;*An attribute is flagged as drifted if any drift metric is found to be above the threshold of &#34; + str(
-drift_threshold_model) + &#34;.*&#34;), \
-dp.Text(&#34;##&#34;), \
-dp.Text(&#34;###
-&#34;), \
-dp.Text(&#34;### Data Health&#34;), \
+"*An attribute is flagged as drifted if any drift metric is found to be above the threshold of " + str(
+drift_threshold_model) + ".*"), \
+dp.Text("##"), \
+dp.Text("###
+"), \
+dp.Text("### Data Health"), \
 dp.Group(dp.Plot(fig_metric_drift), dp.Plot(fig_gauge_drift), columns=2), \
-dp.Group(dp.Text(&#34;*Representation of attributes across different computed Drift Metrics*&#34;),
+dp.Group(dp.Text("*Representation of attributes across different computed Drift Metrics*"),
 dp.Text(drift_text_gen(drifted_feats, len_feats)), columns=2), \
-label=&#34;Drift &amp; Stability&#34;)
-elif ds_ind[0] == 1 and ds_ind[1] &gt;= 0.5:
+label="Drift & Stability")
+elif ds_ind[0] == 1 and ds_ind[1] >= 0.5:
 for i in total_unstable_attr:
 line_chart_list.append(line_chart_gen_stability(df1=df_stability, df2=df_si_, col=i))
-if len(all_drift_charts_) &gt; 0:
+if len(all_drift_charts_) > 0:
 report = dp.Group(
-dp.Text(&#34;# &#34;), \
+dp.Text("# "), \
 dp.Text(
-&#34;*This section examines the dataset stability wrt the baseline dataset (via computing drift statistics) and/or wrt the historical datasets (via computing stability index).*&#34;), \
-dp.Text(&#34;# &#34;), \
-dp.Text(&#34;# &#34;), \
-dp.Text(&#34;### Data Drift Analysis&#34;), \
+"*This section examines the dataset stability wrt the baseline dataset (via computing drift statistics) and/or wrt the historical datasets (via computing stability index).*"), \
+dp.Text("# "), \
+dp.Text("# "), \
+dp.Text("### Data Drift Analysis"), \
 dp.DataTable(drift_df), \
 dp.Text(
-&#34;*An attribute is flagged as drifted if any drift metric is found to be above the threshold of &#34; + str(
-drift_threshold_model) + &#34;.*&#34;), \
-dp.Text(&#34;##&#34;), \
+"*An attribute is flagged as drifted if any drift metric is found to be above the threshold of " + str(
+drift_threshold_model) + ".*"), \
+dp.Text("##"), \
 dp.Select(blocks=all_drift_charts_, type=dp.SelectType.DROPDOWN), \
 dp.Text(
-&#34;*Source &amp; Target datasets were compared to see the % deviation at decile level for numerical attributes and at individual category level for categorical attributes*&#34;), \
-dp.Text(&#34;###
-&#34;), \
-dp.Text(&#34;###
-&#34;), \
-dp.Text(&#34;### Data Health&#34;), \
+"*Source & Target datasets were compared to see the % deviation at decile level for numerical attributes and at individual category level for categorical attributes*"), \
+dp.Text("###
+"), \
+dp.Text("###
+"), \
+dp.Text("### Data Health"), \
 dp.Group(dp.Plot(fig_metric_drift), dp.Plot(fig_gauge_drift), columns=2), \
-dp.Group(dp.Text(&#34;*Representation of attributes across different computed Drift Metrics*&#34;),
+dp.Group(dp.Text("*Representation of attributes across different computed Drift Metrics*"),
 dp.Text(drift_text_gen(drifted_feats, len_feats)), columns=2), \
-dp.Text(&#34;## &#34;), \
-dp.Text(&#34;## &#34;), \
-dp.Text(&#34;### Data Stability Analysis&#34;), \
+dp.Text("## "), \
+dp.Text("## "), \
+dp.Text("### Data Stability Analysis"), \
 dp.DataTable(df_si), \
 dp.Select(blocks=line_chart_list, type=dp.SelectType.DROPDOWN), \
-dp.Group(dp.Text(&#34;**Stability Index Interpretation:**&#34;), dp.Plot(plot_index_stability), rows=2), \
-label=&#34;Drift &amp; Stability&#34;)
+dp.Group(dp.Text("**Stability Index Interpretation:**"), dp.Plot(plot_index_stability), rows=2), \
+label="Drift & Stability")
 else:
 report = dp.Group(
-dp.Text(&#34;# &#34;), \
+dp.Text("# "), \
 dp.Text(
-&#34;*This section examines the dataset stability wrt the baseline dataset (via computing drift statistics) and/or wrt the historical datasets (via computing stability index).*&#34;), \
-dp.Text(&#34;# &#34;), \
-dp.Text(&#34;# &#34;), \
-dp.Text(&#34;### Data Drift Analysis&#34;), \
+"*This section examines the dataset stability wrt the baseline dataset (via computing drift statistics) and/or wrt the historical datasets (via computing stability index).*"), \
+dp.Text("# "), \
+dp.Text("# "), \
+dp.Text("### Data Drift Analysis"), \
 dp.DataTable(drift_df), \
 dp.Text(
-&#34;*An attribute is flagged as drifted if any drift metric is found to be above the threshold of &#34; + str(
-drift_threshold_model) + &#34;.*&#34;), \
-dp.Text(&#34;##&#34;), \
-dp.Text(&#34;### Data Health&#34;), \
+"*An attribute is flagged as drifted if any drift metric is found to be above the threshold of " + str(
+drift_threshold_model) + ".*"), \
+dp.Text("##"), \
+dp.Text("### Data Health"), \
 dp.Group(dp.Plot(fig_metric_drift), dp.Plot(fig_gauge_drift), columns=2), \
-dp.Group(dp.Text(&#34;*Representation of attributes across different computed Drift Metrics*&#34;),
+dp.Group(dp.Text("*Representation of attributes across different computed Drift Metrics*"),
 dp.Text(drift_text_gen(drifted_feats, len_feats)), columns=2), \
-dp.Text(&#34;## &#34;), \
-dp.Text(&#34;## &#34;), \
-dp.Text(&#34;### Data Stability Analysis&#34;), \
+dp.Text("## "), \
+dp.Text("## "), \
+dp.Text("### Data Stability Analysis"), \
 dp.DataTable(df_si), \
 dp.Select(blocks=line_chart_list, type=dp.SelectType.DROPDOWN), \
-dp.Group(dp.Text(&#34;**Stability Index Interpretation:**&#34;), dp.Plot(plot_index_stability), rows=2), \
-label=&#34;Drift &amp; Stability&#34;)
-elif ds_ind[0] == 0 and ds_ind[1] &gt;= 0.5:
+dp.Group(dp.Text("**Stability Index Interpretation:**"), dp.Plot(plot_index_stability), rows=2), \
+label="Drift & Stability")
+elif ds_ind[0] == 0 and ds_ind[1] >= 0.5:
 for i in total_unstable_attr:
 line_chart_list.append(line_chart_gen_stability(df1=df_stability, df2=df_si_, col=i))
 report = dp.Group(
-dp.Text(&#34;# &#34;), \
+dp.Text("# "), \
 dp.Text(
-&#34;*This section examines the dataset stability wrt the baseline dataset (via computing drift statistics) and/or wrt the historical datasets (via computing stability index).*&#34;), \
-dp.Text(&#34;# &#34;), \
-dp.Text(&#34;# &#34;), \
-dp.Text(&#34;### Data Stability Analysis&#34;), \
+"*This section examines the dataset stability wrt the baseline dataset (via computing drift statistics) and/or wrt the historical datasets (via computing stability index).*"), \
+dp.Text("# "), \
+dp.Text("# "), \
+dp.Text("### Data Stability Analysis"), \
 dp.DataTable(df_si), \
 dp.Select(blocks=line_chart_list, type=dp.SelectType.DROPDOWN), \
-dp.Group(dp.Text(&#34;**Stability Index Interpretation:**&#34;), dp.Plot(plot_index_stability), rows=2), \
-label=&#34;Drift &amp; Stability&#34;)
+dp.Group(dp.Text("**Stability Index Interpretation:**"), dp.Plot(plot_index_stability), rows=2), \
+label="Drift & Stability")
 else:
 for i in total_unstable_attr:
 line_chart_list.append(line_chart_gen_stability(df1=df_stability, df2=df_si_, col=i))
-if len(all_drift_charts_) &gt; 0:
+if len(all_drift_charts_) > 0:
 report = dp.Group(
-dp.Text(&#34;# &#34;), \
+dp.Text("# "), \
 dp.Text(
-&#34;*This section examines the dataset stability wrt the baseline dataset (via computing drift statistics) and/or wrt the historical datasets (via computing stability index).*&#34;), \
-dp.Text(&#34;# &#34;), \
-dp.Text(&#34;# &#34;), \
-dp.Text(&#34;### Data Drift Analysis&#34;), \
+"*This section examines the dataset stability wrt the baseline dataset (via computing drift statistics) and/or wrt the historical datasets (via computing stability index).*"), \
+dp.Text("# "), \
+dp.Text("# "), \
+dp.Text("### Data Drift Analysis"), \
 dp.DataTable(drift_df), \
 dp.Text(
-&#34;*An attribute is flagged as drifted if any drift metric is found to be above the threshold of &#34; + str(
-drift_threshold_model) + &#34;.*&#34;), \
-dp.Text(&#34;##&#34;), \
+"*An attribute is flagged as drifted if any drift metric is found to be above the threshold of " + str(
+drift_threshold_model) + ".*"), \
+dp.Text("##"), \
 dp.Select(blocks=all_drift_charts_, type=dp.SelectType.DROPDOWN), \
 dp.Text(
-&#34;*Source &amp; Target datasets were compared to see the % deviation at decile level for numerical attributes and at individual category level for categorical attributes*&#34;), \
-dp.Text(&#34;###
-&#34;), \
-dp.Text(&#34;###
-&#34;), \
-dp.Text(&#34;### Data Health&#34;), \
+"*Source & Target datasets were compared to see the % deviation at decile level for numerical attributes and at individual category level for categorical attributes*"), \
+dp.Text("###
+"), \
+dp.Text("###
+"), \
+dp.Text("### Data Health"), \
 dp.Group(dp.Plot(fig_metric_drift), dp.Plot(fig_gauge_drift), columns=2), \
-dp.Group(dp.Text(&#34;*Representation of attributes across different computed Drift Metrics*&#34;),
+dp.Group(dp.Text("*Representation of attributes across different computed Drift Metrics*"),
 dp.Text(drift_text_gen(drifted_feats, len_feats)), columns=2), \
-dp.Text(&#34;## &#34;), \
-dp.Text(&#34;## &#34;), \
-dp.Text(&#34;### Data Stability Analysis&#34;), \
+dp.Text("## "), \
+dp.Text("## "), \
+dp.Text("### Data Stability Analysis"), \
 dp.DataTable(df_si), \
 dp.Select(blocks=line_chart_list, type=dp.SelectType.DROPDOWN), \
-dp.Group(dp.Text(&#34;**Stability Index Interpretation:**&#34;), dp.Plot(plot_index_stability), rows=2), \
-label=&#34;Drift &amp; Stability&#34;)
+dp.Group(dp.Text("**Stability Index Interpretation:**"), dp.Plot(plot_index_stability), rows=2), \
+label="Drift & Stability")
 else:
 report = dp.Group(
-dp.Text(&#34;# &#34;), \
+dp.Text("# "), \
 dp.Text(
-&#34;*This section examines the dataset stability wrt the baseline dataset (via computing drift statistics) and/or wrt the historical datasets (via computing stability index).*&#34;), \
-dp.Text(&#34;# &#34;), \
-dp.Text(&#34;# &#34;), \
-dp.Text(&#34;### Data Drift Analysis&#34;), \
+"*This section examines the dataset stability wrt the baseline dataset (via computing drift statistics) and/or wrt the historical datasets (via computing stability index).*"), \
+dp.Text("# "), \
+dp.Text("# "), \
+dp.Text("### Data Drift Analysis"), \
 dp.DataTable(drift_df), \
 dp.Text(
-&#34;*An attribute is flagged as drifted if any drift metric is found to be above the threshold of &#34; + str(
-drift_threshold_model) + &#34;.*&#34;), \
-dp.Text(&#34;##&#34;), \
-dp.Text(&#34;### Data Health&#34;), \
+"*An attribute is flagged as drifted if any drift metric is found to be above the threshold of " + str(
+drift_threshold_model) + ".*"), \
+dp.Text("##"), \
+dp.Text("### Data Health"), \
 dp.Group(dp.Plot(fig_metric_drift), dp.Plot(fig_gauge_drift), columns=2), \
-dp.Group(dp.Text(&#34;*Representation of attributes across different computed Drift Metrics*&#34;),
+dp.Group(dp.Text("*Representation of attributes across different computed Drift Metrics*"),
 dp.Text(drift_text_gen(drifted_feats, len_feats)), columns=2), \
-dp.Text(&#34;## &#34;), \
-dp.Text(&#34;## &#34;), \
-dp.Text(&#34;### Data Stability Analysis&#34;), \
+dp.Text("## "), \
+dp.Text("## "), \
+dp.Text("### Data Stability Analysis"), \
 dp.DataTable(df_si), \
 dp.Select(blocks=line_chart_list, type=dp.SelectType.DROPDOWN), \
-dp.Group(dp.Text(&#34;**Stability Index Interpretation:**&#34;), dp.Plot(plot_index_stability), rows=2), \
-label=&#34;Drift &amp; Stability&#34;)
+dp.Group(dp.Text("**Stability Index Interpretation:**"), dp.Plot(plot_index_stability), rows=2), \
+label="Drift & Stability")
 if print_report:
 dp.Report(default_template[0], default_template[1], report).save(
-ends_with(master_path) + &#34;data_drift_stability.html&#34;, open=True)
+ends_with(master_path) + "data_drift_stability.html", open=True)
 return report
-def anovos_report(master_path, id_col=&#39;&#39;, label_col=&#39;&#39;, corr_threshold=0.4, iv_threshold=0.02,
-drift_threshold_model=0.1, dataDict_path=&#34;.&#34;,
-metricDict_path=&#34;.&#34;, run_type=&#34;local&#34;, final_report_path=&#34;.&#34;):
-&#34;&#34;&#34;
+def anovos_report(master_path, id_col='', label_col='', corr_threshold=0.4, iv_threshold=0.02,
+drift_threshold_model=0.1, dataDict_path=".",
+metricDict_path=".", run_type="local", final_report_path="."):
+"""
 Args:
 master_path: Path containing the input files.
-id_col: ID column (Default value = &#39;&#39;)
-label_col: label column (Default value = &#39;&#39;)
+id_col: ID column (Default value = '')
+label_col: label column (Default value = '')
 corr_threshold: Correlation threshold beyond which attributes can be categorized under correlated. (Default value = 0.4)
 iv_threshold: IV threshold beyond which attributes can be called as significant. (Default value = 0.02)
 drift_threshold_model: threshold which the user is specifying for tagging an attribute to be drifted or not (Default value = 0.1)
 dataDict_path: Data dictionary path. Default value is kept as None.
 metricDict_path: Metric dictionary path. Default value is kept as None.
 run_type: local or emr option. Default is kept as local
-final_report_path: Path where the report will be saved. (Default value = &#34;.&#34;)
+final_report_path: Path where the report will be saved. (Default value = ".")
 Returns:
-&#34;&#34;&#34;
-if run_type == &#39;emr&#39;:
-bash_cmd = &#34;aws s3 cp --recursive &#34; + ends_with(master_path) + &#34; &#34; + ends_with(&#34;report_stats&#34;)
-master_path = &#34;report_stats&#34;
-output = subprocess.check_output([&#39;bash&#39;, &#39;-c&#39;, bash_cmd])
-if &#34;global_summary.csv&#34; not in os.listdir(master_path):
-print(&#34;Minimum supporting data is unavailable, hence the Report could not be generated.&#34;)
+"""
+if run_type == 'emr':
+bash_cmd = "aws s3 cp --recursive " + ends_with(master_path) + " " + ends_with("report_stats")
+master_path = "report_stats"
+output = subprocess.check_output(['bash', '-c', bash_cmd])
+if "global_summary.csv" not in os.listdir(master_path):
+print("Minimum supporting data is unavailable, hence the Report could not be generated.")
 return None
 global global_summary_df
 global numcols_name
@@ -1024,23 +1024,23 @@ global df_stability
 global n_df_stability
 global stability_interpretation_table
 global plot_index_stability
-SG_tabs = [&#39;measures_of_counts&#39;, &#39;measures_of_centralTendency&#39;, &#39;measures_of_cardinality&#39;,
-&#39;measures_of_percentiles&#39;, &#39;measures_of_dispersion&#39;, &#39;measures_of_shape&#39;, &#39;global_summary&#39;]
-QC_tabs = [&#39;nullColumns_detection&#39;, &#39;IDness_detection&#39;, &#39;biasedness_detection&#39;, &#39;invalidEntries_detection&#39;,
-&#39;duplicate_detection&#39;, &#39;nullRows_detection&#39;, &#39;outlier_detection&#39;]
-AE_tabs = [&#39;correlation_matrix&#39;, &#39;IV_calculation&#39;, &#39;IG_calculation&#39;, &#39;variable_clustering&#39;]
-drift_tab = [&#39;drift_statistics&#39;]
-stability_tab = [&#39;stabilityIndex_computation&#39;, &#39;stabilityIndex_metrics&#39;]
+SG_tabs = ['measures_of_counts', 'measures_of_centralTendency', 'measures_of_cardinality',
+'measures_of_percentiles', 'measures_of_dispersion', 'measures_of_shape', 'global_summary']
+QC_tabs = ['nullColumns_detection', 'IDness_detection', 'biasedness_detection', 'invalidEntries_detection',
+'duplicate_detection', 'nullRows_detection', 'outlier_detection']
+AE_tabs = ['correlation_matrix', 'IV_calculation', 'IG_calculation', 'variable_clustering']
+drift_tab = ['drift_statistics']
+stability_tab = ['stabilityIndex_computation', 'stabilityIndex_metrics']
 avl_SG, avl_QC, avl_AE = [], [], []
 stability_interpretation_table = pd.DataFrame(
-[[&#39;0-1&#39;, &#39;Very Unstable&#39;], [&#39;1-2&#39;, &#39;Unstable&#39;], [&#39;2-3&#39;, &#39;Marginally Stable&#39;], [&#39;3-3.5&#39;, &#34;Stable&#34;],
-[&#39;3.5-4&#39;, &#39;Very Stable&#39;]], columns=[&#39;StabilityIndex&#39;, &#39;StabilityOrder&#39;])
+[['0-1', 'Very Unstable'], ['1-2', 'Unstable'], ['2-3', 'Marginally Stable'], ['3-3.5', "Stable"],
+['3.5-4', 'Very Stable']], columns=['StabilityIndex', 'StabilityOrder'])
 plot_index_stability = go.Figure(data=[go.Table(
 header=dict(values=list(stability_interpretation_table.columns), fill_color=px.colors.sequential.Greys[2],
-align=&#39;center&#39;, font=dict(size=12)),
+align='center', font=dict(size=12)),
 cells=dict(
 values=[stability_interpretation_table.StabilityIndex, stability_interpretation_table.StabilityOrder],
-line_color=px.colors.sequential.Greys[2], fill_color=&#39;white&#39;, align=&#39;center&#39;, height=25),
+line_color=px.colors.sequential.Greys[2], fill_color='white', align='center', height=25),
 columnwidth=[2, 10])])
 plot_index_stability.update_layout(margin=dict(l=20, r=700, t=20, b=20))
 blank_chart = go.Figure()
@@ -1049,50 +1049,50 @@ blank_chart.layout.plot_bgcolor = global_plot_bg_color
 blank_chart.layout.paper_bgcolor = global_paper_bg_color
 blank_chart.update_xaxes(visible=False)
 blank_chart.update_yaxes(visible=False)
-global_summary_df = pd.read_csv(ends_with(master_path) + &#34;global_summary.csv&#34;)
-rows_count = int(global_summary_df[global_summary_df.metric.values == &#34;rows_count&#34;].value.values[0])
-catcols_count = int(global_summary_df[global_summary_df.metric.values == &#34;catcols_count&#34;].value.values[0])
-numcols_count = int(global_summary_df[global_summary_df.metric.values == &#34;numcols_count&#34;].value.values[0])
-columns_count = int(global_summary_df[global_summary_df.metric.values == &#34;columns_count&#34;].value.values[0])
-if catcols_count &gt; 0:
-catcols_name = &#34;,&#34;.join(list(global_summary_df[global_summary_df.metric.values == &#34;catcols_name&#34;].value.values))
+global_summary_df = pd.read_csv(ends_with(master_path) + "global_summary.csv")
+rows_count = int(global_summary_df[global_summary_df.metric.values == "rows_count"].value.values[0])
+catcols_count = int(global_summary_df[global_summary_df.metric.values == "catcols_count"].value.values[0])
+numcols_count = int(global_summary_df[global_summary_df.metric.values == "numcols_count"].value.values[0])
+columns_count = int(global_summary_df[global_summary_df.metric.values == "columns_count"].value.values[0])
+if catcols_count > 0:
+catcols_name = ",".join(list(global_summary_df[global_summary_df.metric.values == "catcols_name"].value.values))
 else:
-catcols_name = &#34;&#34;
-if numcols_count &gt; 0:
-numcols_name = &#34;,&#34;.join(list(global_summary_df[global_summary_df.metric.values == &#34;numcols_name&#34;].value.values))
+catcols_name = ""
+if numcols_count > 0:
+numcols_name = ",".join(list(global_summary_df[global_summary_df.metric.values == "numcols_name"].value.values))
 else:
-numcols_name = &#34;&#34;
+numcols_name = ""
 all_files = os.listdir(master_path)
-eventDist_charts = [x for x in all_files if &#34;eventDist&#34; in x]
-stats_files = [x for x in all_files if &#34;.csv&#34; in x]
-freq_charts = [x for x in all_files if &#34;freqDist&#34; in x]
-outlier_charts = [x for x in all_files if &#34;outlier&#34; in x]
-drift_charts = [x for x in all_files if &#34;drift&#34; in x and &#34;.csv&#34; not in x]
-all_charts_num_1_ = chart_gen_list(master_path, chart_type=freq_charts, type_col=&#34;numerical&#34;)
-all_charts_num_2_ = chart_gen_list(master_path, chart_type=eventDist_charts, type_col=&#34;numerical&#34;)
-all_charts_num_3_ = chart_gen_list(master_path, chart_type=outlier_charts, type_col=&#34;numerical&#34;)
-all_charts_cat_1_ = chart_gen_list(master_path, chart_type=freq_charts, type_col=&#34;categorical&#34;)
-all_charts_cat_2_ = chart_gen_list(master_path, chart_type=eventDist_charts, type_col=&#34;categorical&#34;)
+eventDist_charts = [x for x in all_files if "eventDist" in x]
+stats_files = [x for x in all_files if ".csv" in x]
+freq_charts = [x for x in all_files if "freqDist" in x]
+outlier_charts = [x for x in all_files if "outlier" in x]
+drift_charts = [x for x in all_files if "drift" in x and ".csv" not in x]
+all_charts_num_1_ = chart_gen_list(master_path, chart_type=freq_charts, type_col="numerical")
+all_charts_num_2_ = chart_gen_list(master_path, chart_type=eventDist_charts, type_col="numerical")
+all_charts_num_3_ = chart_gen_list(master_path, chart_type=outlier_charts, type_col="numerical")
+all_charts_cat_1_ = chart_gen_list(master_path, chart_type=freq_charts, type_col="categorical")
+all_charts_cat_2_ = chart_gen_list(master_path, chart_type=eventDist_charts, type_col="categorical")
 all_drift_charts_ = chart_gen_list(master_path, chart_type=drift_charts)
 for x in [all_charts_num_1_, all_charts_num_2_, all_charts_num_3_, all_charts_cat_1_, all_charts_cat_2_,
 all_drift_charts_]:
 if len(x) == 1:
-x.append(dp.Plot(blank_chart, label=&#34; &#34;))
+x.append(dp.Plot(blank_chart, label=" "))
 else:
 x
 mapping_tab_list = []
 for i in stats_files:
-if i.split(&#34;.csv&#34;)[0] in SG_tabs:
-mapping_tab_list.append([i.split(&#34;.csv&#34;)[0], &#34;Descriptive Statistics&#34;])
-elif i.split(&#34;.csv&#34;)[0] in QC_tabs:
-mapping_tab_list.append([i.split(&#34;.csv&#34;)[0], &#34;Quality Check&#34;])
-elif i.split(&#34;.csv&#34;)[0] in AE_tabs:
-mapping_tab_list.append([i.split(&#34;.csv&#34;)[0], &#34;Attribute Associations&#34;])
-elif i.split(&#34;.csv&#34;)[0] in drift_tab or i.split(&#34;.csv&#34;)[0] in stability_tab:
-mapping_tab_list.append([i.split(&#34;.csv&#34;)[0], &#34;Data Drift &amp; Data Stability&#34;])
+if i.split(".csv")[0] in SG_tabs:
+mapping_tab_list.append([i.split(".csv")[0], "Descriptive Statistics"])
+elif i.split(".csv")[0] in QC_tabs:
+mapping_tab_list.append([i.split(".csv")[0], "Quality Check"])
+elif i.split(".csv")[0] in AE_tabs:
+mapping_tab_list.append([i.split(".csv")[0], "Attribute Associations"])
+elif i.split(".csv")[0] in drift_tab or i.split(".csv")[0] in stability_tab:
+mapping_tab_list.append([i.split(".csv")[0], "Data Drift & Data Stability"])
 else:
-mapping_tab_list.append([i.split(&#34;.csv&#34;)[0], &#34;null&#34;])
-xx = pd.DataFrame(mapping_tab_list, columns=[&#34;file_name&#34;, &#34;tab_name&#34;])
+mapping_tab_list.append([i.split(".csv")[0], "null"])
+xx = pd.DataFrame(mapping_tab_list, columns=["file_name", "tab_name"])
 xx_avl = list(set(xx.file_name.values))
 for i in SG_tabs:
 if i in xx_avl:
@@ -1106,35 +1106,35 @@ avl_AE.append(k)
 missing_SG = list(set(SG_tabs) - set(avl_SG))
 missing_QC = list(set(QC_tabs) - set(avl_QC))
 missing_AE = list(set(AE_tabs) - set(avl_AE))
-missing_drift = list(set(drift_tab) - set(xx[xx.tab_name.values == &#34;Data Drift &amp; Data Stability&#34;].file_name.values))
+missing_drift = list(set(drift_tab) - set(xx[xx.tab_name.values == "Data Drift & Data Stability"].file_name.values))
 missing_stability = list(
-set(stability_tab) - set(xx[xx.tab_name.values == &#34;Data Drift &amp; Data Stability&#34;].file_name.values))
+set(stability_tab) - set(xx[xx.tab_name.values == "Data Drift & Data Stability"].file_name.values))
 ds_ind = drift_stability_ind(missing_drift, drift_tab, missing_stability, stability_tab)
-if ds_ind[0] &gt; 0:
-drift_df = pd.read_csv(ends_with(master_path) + &#34;drift_statistics.csv&#34;).sort_values(by=[&#39;flagged&#39;],
+if ds_ind[0] > 0:
+drift_df = pd.read_csv(ends_with(master_path) + "drift_statistics.csv").sort_values(by=['flagged'],
 ascending=False)
-metric_drift = list(drift_df.drop([&#34;attribute&#34;, &#34;flagged&#34;], 1).columns)
+metric_drift = list(drift_df.drop(["attribute", "flagged"], 1).columns)
 drift_df = drift_df[drift_df.attribute.values != id_col]
 len_feats = drift_df.shape[0]
 drift_df_stats = drift_df[drift_df.flagged.values == 1] \
-.melt(id_vars=&#34;attribute&#34;, value_vars=metric_drift) \
-.sort_values(by=[&#39;variable&#39;, &#39;value&#39;], ascending=False)
+.melt(id_vars="attribute", value_vars=metric_drift) \
+.sort_values(by=['variable', 'value'], ascending=False)
 drifted_feats = drift_df[drift_df.flagged.values == 1].shape[0]
-if ds_ind[1] &gt; 0.5:
-df_stability = pd.read_csv(ends_with(master_path) + &#34;stabilityIndex_metrics.csv&#34;)
-df_stability[&#39;idx&#39;] = df_stability[&#39;idx&#39;].astype(str).apply(lambda x: &#39;df&#39; + x)
-n_df_stability = str(df_stability[&#34;idx&#34;].nunique())
-df_si_ = pd.read_csv(ends_with(master_path) + &#34;stabilityIndex_computation.csv&#34;)
-df_si = df_si_[[&#34;attribute&#34;, &#34;stability_index&#34;, &#34;mean_si&#34;, &#34;stddev_si&#34;, &#34;kurtosis_si&#34;, &#34;flagged&#34;]]
+if ds_ind[1] > 0.5:
+df_stability = pd.read_csv(ends_with(master_path) + "stabilityIndex_metrics.csv")
+df_stability['idx'] = df_stability['idx'].astype(str).apply(lambda x: 'df' + x)
+n_df_stability = str(df_stability["idx"].nunique())
+df_si_ = pd.read_csv(ends_with(master_path) + "stabilityIndex_computation.csv")
+df_si = df_si_[["attribute", "stability_index", "mean_si", "stddev_si", "kurtosis_si", "flagged"]]
 unstable_attr = list(df_si_[df_si_.flagged.values == 1].attribute.values)
 total_unstable_attr = list(df_si_.attribute.values)
 elif ds_ind[1] == 0.5:
-df_si_ = pd.read_csv(ends_with(master_path) + &#34;stabilityIndex_computation.csv&#34;)
-df_si = df_si_[[&#34;attribute&#34;, &#34;stability_index&#34;, &#34;mean_si&#34;, &#34;stddev_si&#34;, &#34;kurtosis_si&#34;, &#34;flagged&#34;]]
+df_si_ = pd.read_csv(ends_with(master_path) + "stabilityIndex_computation.csv")
+df_si = df_si_[["attribute", "stability_index", "mean_si", "stddev_si", "kurtosis_si", "flagged"]]
 unstable_attr = list(df_si_[df_si_.flagged.values == 1].attribute.values)
 total_unstable_attr = list(df_si_.attribute.values)
 df_stability = pd.DataFrame()
-n_df_stability = &#34;the&#34;
+n_df_stability = "the"
 else:
 pass
 tab1 = executive_summary_gen(master_path, label_col, ds_ind, id_col, iv_threshold, corr_threshold)
@@ -1146,21 +1146,21 @@ all_charts_cat_2_)
 tab6 = data_drift_stability(master_path, ds_ind, id_col, drift_threshold_model, all_drift_charts_)
 final_tabs_list = []
 for i in [tab1, tab2, tab3, tab4, tab5, tab6]:
-if i == &#34;null_report&#34;:
+if i == "null_report":
 pass
 else:
 final_tabs_list.append(i)
-if run_type == &#34;local&#34;:
+if run_type == "local":
 final_report = dp.Report(default_template[0], default_template[1], \
 dp.Select(blocks=final_tabs_list, type=dp.SelectType.TABS)) \
-.save(ends_with(final_report_path) + &#34;ml_anovos_report.html&#34;, open=True)
+.save(ends_with(final_report_path) + "ml_anovos_report.html", open=True)
 else:
 final_report = dp.Report(default_template[0], default_template[1], \
 dp.Select(blocks=final_tabs_list, type=dp.SelectType.TABS)) \
-.save(&#34;ml_anovos_report.html&#34;, open=True)
-bash_cmd = &#34;aws s3 cp ml_anovos_report.html &#34; + ends_with(final_report_path)
-output = subprocess.check_output([&#39;bash&#39;, &#39;-c&#39;, bash_cmd])
-print(&#34;Report generated successfully at the specified location&#34;)
+.save("ml_anovos_report.html", open=True)
+bash_cmd = "aws s3 cp ml_anovos_report.html " + ends_with(final_report_path)
+output = subprocess.check_output(['bash', '-c', bash_cmd])
+print("Report generated successfully at the specified location")
 ```
 </details>
 ## Functions
@@ -1198,29 +1198,29 @@ print(&#34;Report generated successfully at the specified location&#34;)
 <span>Expand source code</span>
 </summary>
 ```python
-def anovos_report(master_path, id_col=&#39;&#39;, label_col=&#39;&#39;, corr_threshold=0.4, iv_threshold=0.02,
-drift_threshold_model=0.1, dataDict_path=&#34;.&#34;,
-metricDict_path=&#34;.&#34;, run_type=&#34;local&#34;, final_report_path=&#34;.&#34;):
-&#34;&#34;&#34;
+def anovos_report(master_path, id_col='', label_col='', corr_threshold=0.4, iv_threshold=0.02,
+drift_threshold_model=0.1, dataDict_path=".",
+metricDict_path=".", run_type="local", final_report_path="."):
+"""
 Args:
 master_path: Path containing the input files.
-id_col: ID column (Default value = &#39;&#39;)
-label_col: label column (Default value = &#39;&#39;)
+id_col: ID column (Default value = '')
+label_col: label column (Default value = '')
 corr_threshold: Correlation threshold beyond which attributes can be categorized under correlated. (Default value = 0.4)
 iv_threshold: IV threshold beyond which attributes can be called as significant. (Default value = 0.02)
 drift_threshold_model: threshold which the user is specifying for tagging an attribute to be drifted or not (Default value = 0.1)
 dataDict_path: Data dictionary path. Default value is kept as None.
 metricDict_path: Metric dictionary path. Default value is kept as None.
 run_type: local or emr option. Default is kept as local
-final_report_path: Path where the report will be saved. (Default value = &#34;.&#34;)
+final_report_path: Path where the report will be saved. (Default value = ".")
 Returns:
-&#34;&#34;&#34;
-if run_type == &#39;emr&#39;:
-bash_cmd = &#34;aws s3 cp --recursive &#34; + ends_with(master_path) + &#34; &#34; + ends_with(&#34;report_stats&#34;)
-master_path = &#34;report_stats&#34;
-output = subprocess.check_output([&#39;bash&#39;, &#39;-c&#39;, bash_cmd])
-if &#34;global_summary.csv&#34; not in os.listdir(master_path):
-print(&#34;Minimum supporting data is unavailable, hence the Report could not be generated.&#34;)
+"""
+if run_type == 'emr':
+bash_cmd = "aws s3 cp --recursive " + ends_with(master_path) + " " + ends_with("report_stats")
+master_path = "report_stats"
+output = subprocess.check_output(['bash', '-c', bash_cmd])
+if "global_summary.csv" not in os.listdir(master_path):
+print("Minimum supporting data is unavailable, hence the Report could not be generated.")
 return None
 global global_summary_df
 global numcols_name
@@ -1244,23 +1244,23 @@ global df_stability
 global n_df_stability
 global stability_interpretation_table
 global plot_index_stability
-SG_tabs = [&#39;measures_of_counts&#39;, &#39;measures_of_centralTendency&#39;, &#39;measures_of_cardinality&#39;,
-&#39;measures_of_percentiles&#39;, &#39;measures_of_dispersion&#39;, &#39;measures_of_shape&#39;, &#39;global_summary&#39;]
-QC_tabs = [&#39;nullColumns_detection&#39;, &#39;IDness_detection&#39;, &#39;biasedness_detection&#39;, &#39;invalidEntries_detection&#39;,
-&#39;duplicate_detection&#39;, &#39;nullRows_detection&#39;, &#39;outlier_detection&#39;]
-AE_tabs = [&#39;correlation_matrix&#39;, &#39;IV_calculation&#39;, &#39;IG_calculation&#39;, &#39;variable_clustering&#39;]
-drift_tab = [&#39;drift_statistics&#39;]
-stability_tab = [&#39;stabilityIndex_computation&#39;, &#39;stabilityIndex_metrics&#39;]
+SG_tabs = ['measures_of_counts', 'measures_of_centralTendency', 'measures_of_cardinality',
+'measures_of_percentiles', 'measures_of_dispersion', 'measures_of_shape', 'global_summary']
+QC_tabs = ['nullColumns_detection', 'IDness_detection', 'biasedness_detection', 'invalidEntries_detection',
+'duplicate_detection', 'nullRows_detection', 'outlier_detection']
+AE_tabs = ['correlation_matrix', 'IV_calculation', 'IG_calculation', 'variable_clustering']
+drift_tab = ['drift_statistics']
+stability_tab = ['stabilityIndex_computation', 'stabilityIndex_metrics']
 avl_SG, avl_QC, avl_AE = [], [], []
 stability_interpretation_table = pd.DataFrame(
-[[&#39;0-1&#39;, &#39;Very Unstable&#39;], [&#39;1-2&#39;, &#39;Unstable&#39;], [&#39;2-3&#39;, &#39;Marginally Stable&#39;], [&#39;3-3.5&#39;, &#34;Stable&#34;],
-[&#39;3.5-4&#39;, &#39;Very Stable&#39;]], columns=[&#39;StabilityIndex&#39;, &#39;StabilityOrder&#39;])
+[['0-1', 'Very Unstable'], ['1-2', 'Unstable'], ['2-3', 'Marginally Stable'], ['3-3.5', "Stable"],
+['3.5-4', 'Very Stable']], columns=['StabilityIndex', 'StabilityOrder'])
 plot_index_stability = go.Figure(data=[go.Table(
 header=dict(values=list(stability_interpretation_table.columns), fill_color=px.colors.sequential.Greys[2],
-align=&#39;center&#39;, font=dict(size=12)),
+align='center', font=dict(size=12)),
 cells=dict(
 values=[stability_interpretation_table.StabilityIndex, stability_interpretation_table.StabilityOrder],
-line_color=px.colors.sequential.Greys[2], fill_color=&#39;white&#39;, align=&#39;center&#39;, height=25),
+line_color=px.colors.sequential.Greys[2], fill_color='white', align='center', height=25),
 columnwidth=[2, 10])])
 plot_index_stability.update_layout(margin=dict(l=20, r=700, t=20, b=20))
 blank_chart = go.Figure()
@@ -1269,50 +1269,50 @@ blank_chart.layout.plot_bgcolor = global_plot_bg_color
 blank_chart.layout.paper_bgcolor = global_paper_bg_color
 blank_chart.update_xaxes(visible=False)
 blank_chart.update_yaxes(visible=False)
-global_summary_df = pd.read_csv(ends_with(master_path) + &#34;global_summary.csv&#34;)
-rows_count = int(global_summary_df[global_summary_df.metric.values == &#34;rows_count&#34;].value.values[0])
-catcols_count = int(global_summary_df[global_summary_df.metric.values == &#34;catcols_count&#34;].value.values[0])
-numcols_count = int(global_summary_df[global_summary_df.metric.values == &#34;numcols_count&#34;].value.values[0])
-columns_count = int(global_summary_df[global_summary_df.metric.values == &#34;columns_count&#34;].value.values[0])
-if catcols_count &gt; 0:
-catcols_name = &#34;,&#34;.join(list(global_summary_df[global_summary_df.metric.values == &#34;catcols_name&#34;].value.values))
+global_summary_df = pd.read_csv(ends_with(master_path) + "global_summary.csv")
+rows_count = int(global_summary_df[global_summary_df.metric.values == "rows_count"].value.values[0])
+catcols_count = int(global_summary_df[global_summary_df.metric.values == "catcols_count"].value.values[0])
+numcols_count = int(global_summary_df[global_summary_df.metric.values == "numcols_count"].value.values[0])
+columns_count = int(global_summary_df[global_summary_df.metric.values == "columns_count"].value.values[0])
+if catcols_count > 0:
+catcols_name = ",".join(list(global_summary_df[global_summary_df.metric.values == "catcols_name"].value.values))
 else:
-catcols_name = &#34;&#34;
-if numcols_count &gt; 0:
-numcols_name = &#34;,&#34;.join(list(global_summary_df[global_summary_df.metric.values == &#34;numcols_name&#34;].value.values))
+catcols_name = ""
+if numcols_count > 0:
+numcols_name = ",".join(list(global_summary_df[global_summary_df.metric.values == "numcols_name"].value.values))
 else:
-numcols_name = &#34;&#34;
+numcols_name = ""
 all_files = os.listdir(master_path)
-eventDist_charts = [x for x in all_files if &#34;eventDist&#34; in x]
-stats_files = [x for x in all_files if &#34;.csv&#34; in x]
-freq_charts = [x for x in all_files if &#34;freqDist&#34; in x]
-outlier_charts = [x for x in all_files if &#34;outlier&#34; in x]
-drift_charts = [x for x in all_files if &#34;drift&#34; in x and &#34;.csv&#34; not in x]
-all_charts_num_1_ = chart_gen_list(master_path, chart_type=freq_charts, type_col=&#34;numerical&#34;)
-all_charts_num_2_ = chart_gen_list(master_path, chart_type=eventDist_charts, type_col=&#34;numerical&#34;)
-all_charts_num_3_ = chart_gen_list(master_path, chart_type=outlier_charts, type_col=&#34;numerical&#34;)
-all_charts_cat_1_ = chart_gen_list(master_path, chart_type=freq_charts, type_col=&#34;categorical&#34;)
-all_charts_cat_2_ = chart_gen_list(master_path, chart_type=eventDist_charts, type_col=&#34;categorical&#34;)
+eventDist_charts = [x for x in all_files if "eventDist" in x]
+stats_files = [x for x in all_files if ".csv" in x]
+freq_charts = [x for x in all_files if "freqDist" in x]
+outlier_charts = [x for x in all_files if "outlier" in x]
+drift_charts = [x for x in all_files if "drift" in x and ".csv" not in x]
+all_charts_num_1_ = chart_gen_list(master_path, chart_type=freq_charts, type_col="numerical")
+all_charts_num_2_ = chart_gen_list(master_path, chart_type=eventDist_charts, type_col="numerical")
+all_charts_num_3_ = chart_gen_list(master_path, chart_type=outlier_charts, type_col="numerical")
+all_charts_cat_1_ = chart_gen_list(master_path, chart_type=freq_charts, type_col="categorical")
+all_charts_cat_2_ = chart_gen_list(master_path, chart_type=eventDist_charts, type_col="categorical")
 all_drift_charts_ = chart_gen_list(master_path, chart_type=drift_charts)
 for x in [all_charts_num_1_, all_charts_num_2_, all_charts_num_3_, all_charts_cat_1_, all_charts_cat_2_,
 all_drift_charts_]:
 if len(x) == 1:
-x.append(dp.Plot(blank_chart, label=&#34; &#34;))
+x.append(dp.Plot(blank_chart, label=" "))
 else:
 x
 mapping_tab_list = []
 for i in stats_files:
-if i.split(&#34;.csv&#34;)[0] in SG_tabs:
-mapping_tab_list.append([i.split(&#34;.csv&#34;)[0], &#34;Descriptive Statistics&#34;])
-elif i.split(&#34;.csv&#34;)[0] in QC_tabs:
-mapping_tab_list.append([i.split(&#34;.csv&#34;)[0], &#34;Quality Check&#34;])
-elif i.split(&#34;.csv&#34;)[0] in AE_tabs:
-mapping_tab_list.append([i.split(&#34;.csv&#34;)[0], &#34;Attribute Associations&#34;])
-elif i.split(&#34;.csv&#34;)[0] in drift_tab or i.split(&#34;.csv&#34;)[0] in stability_tab:
-mapping_tab_list.append([i.split(&#34;.csv&#34;)[0], &#34;Data Drift &amp; Data Stability&#34;])
+if i.split(".csv")[0] in SG_tabs:
+mapping_tab_list.append([i.split(".csv")[0], "Descriptive Statistics"])
+elif i.split(".csv")[0] in QC_tabs:
+mapping_tab_list.append([i.split(".csv")[0], "Quality Check"])
+elif i.split(".csv")[0] in AE_tabs:
+mapping_tab_list.append([i.split(".csv")[0], "Attribute Associations"])
+elif i.split(".csv")[0] in drift_tab or i.split(".csv")[0] in stability_tab:
+mapping_tab_list.append([i.split(".csv")[0], "Data Drift & Data Stability"])
 else:
-mapping_tab_list.append([i.split(&#34;.csv&#34;)[0], &#34;null&#34;])
-xx = pd.DataFrame(mapping_tab_list, columns=[&#34;file_name&#34;, &#34;tab_name&#34;])
+mapping_tab_list.append([i.split(".csv")[0], "null"])
+xx = pd.DataFrame(mapping_tab_list, columns=["file_name", "tab_name"])
 xx_avl = list(set(xx.file_name.values))
 for i in SG_tabs:
 if i in xx_avl:
@@ -1326,35 +1326,35 @@ avl_AE.append(k)
 missing_SG = list(set(SG_tabs) - set(avl_SG))
 missing_QC = list(set(QC_tabs) - set(avl_QC))
 missing_AE = list(set(AE_tabs) - set(avl_AE))
-missing_drift = list(set(drift_tab) - set(xx[xx.tab_name.values == &#34;Data Drift &amp; Data Stability&#34;].file_name.values))
+missing_drift = list(set(drift_tab) - set(xx[xx.tab_name.values == "Data Drift & Data Stability"].file_name.values))
 missing_stability = list(
-set(stability_tab) - set(xx[xx.tab_name.values == &#34;Data Drift &amp; Data Stability&#34;].file_name.values))
+set(stability_tab) - set(xx[xx.tab_name.values == "Data Drift & Data Stability"].file_name.values))
 ds_ind = drift_stability_ind(missing_drift, drift_tab, missing_stability, stability_tab)
-if ds_ind[0] &gt; 0:
-drift_df = pd.read_csv(ends_with(master_path) + &#34;drift_statistics.csv&#34;).sort_values(by=[&#39;flagged&#39;],
+if ds_ind[0] > 0:
+drift_df = pd.read_csv(ends_with(master_path) + "drift_statistics.csv").sort_values(by=['flagged'],
 ascending=False)
-metric_drift = list(drift_df.drop([&#34;attribute&#34;, &#34;flagged&#34;], 1).columns)
+metric_drift = list(drift_df.drop(["attribute", "flagged"], 1).columns)
 drift_df = drift_df[drift_df.attribute.values != id_col]
 len_feats = drift_df.shape[0]
 drift_df_stats = drift_df[drift_df.flagged.values == 1] \
-.melt(id_vars=&#34;attribute&#34;, value_vars=metric_drift) \
-.sort_values(by=[&#39;variable&#39;, &#39;value&#39;], ascending=False)
+.melt(id_vars="attribute", value_vars=metric_drift) \
+.sort_values(by=['variable', 'value'], ascending=False)
 drifted_feats = drift_df[drift_df.flagged.values == 1].shape[0]
-if ds_ind[1] &gt; 0.5:
-df_stability = pd.read_csv(ends_with(master_path) + &#34;stabilityIndex_metrics.csv&#34;)
-df_stability[&#39;idx&#39;] = df_stability[&#39;idx&#39;].astype(str).apply(lambda x: &#39;df&#39; + x)
-n_df_stability = str(df_stability[&#34;idx&#34;].nunique())
-df_si_ = pd.read_csv(ends_with(master_path) + &#34;stabilityIndex_computation.csv&#34;)
-df_si = df_si_[[&#34;attribute&#34;, &#34;stability_index&#34;, &#34;mean_si&#34;, &#34;stddev_si&#34;, &#34;kurtosis_si&#34;, &#34;flagged&#34;]]
+if ds_ind[1] > 0.5:
+df_stability = pd.read_csv(ends_with(master_path) + "stabilityIndex_metrics.csv")
+df_stability['idx'] = df_stability['idx'].astype(str).apply(lambda x: 'df' + x)
+n_df_stability = str(df_stability["idx"].nunique())
+df_si_ = pd.read_csv(ends_with(master_path) + "stabilityIndex_computation.csv")
+df_si = df_si_[["attribute", "stability_index", "mean_si", "stddev_si", "kurtosis_si", "flagged"]]
 unstable_attr = list(df_si_[df_si_.flagged.values == 1].attribute.values)
 total_unstable_attr = list(df_si_.attribute.values)
 elif ds_ind[1] == 0.5:
-df_si_ = pd.read_csv(ends_with(master_path) + &#34;stabilityIndex_computation.csv&#34;)
-df_si = df_si_[[&#34;attribute&#34;, &#34;stability_index&#34;, &#34;mean_si&#34;, &#34;stddev_si&#34;, &#34;kurtosis_si&#34;, &#34;flagged&#34;]]
+df_si_ = pd.read_csv(ends_with(master_path) + "stabilityIndex_computation.csv")
+df_si = df_si_[["attribute", "stability_index", "mean_si", "stddev_si", "kurtosis_si", "flagged"]]
 unstable_attr = list(df_si_[df_si_.flagged.values == 1].attribute.values)
 total_unstable_attr = list(df_si_.attribute.values)
 df_stability = pd.DataFrame()
-n_df_stability = &#34;the&#34;
+n_df_stability = "the"
 else:
 pass
 tab1 = executive_summary_gen(master_path, label_col, ds_ind, id_col, iv_threshold, corr_threshold)
@@ -1366,21 +1366,21 @@ all_charts_cat_2_)
 tab6 = data_drift_stability(master_path, ds_ind, id_col, drift_threshold_model, all_drift_charts_)
 final_tabs_list = []
 for i in [tab1, tab2, tab3, tab4, tab5, tab6]:
-if i == &#34;null_report&#34;:
+if i == "null_report":
 pass
 else:
 final_tabs_list.append(i)
-if run_type == &#34;local&#34;:
+if run_type == "local":
 final_report = dp.Report(default_template[0], default_template[1], \
 dp.Select(blocks=final_tabs_list, type=dp.SelectType.TABS)) \
-.save(ends_with(final_report_path) + &#34;ml_anovos_report.html&#34;, open=True)
+.save(ends_with(final_report_path) + "ml_anovos_report.html", open=True)
 else:
 final_report = dp.Report(default_template[0], default_template[1], \
 dp.Select(blocks=final_tabs_list, type=dp.SelectType.TABS)) \
-.save(&#34;ml_anovos_report.html&#34;, open=True)
-bash_cmd = &#34;aws s3 cp ml_anovos_report.html &#34; + ends_with(final_report_path)
-output = subprocess.check_output([&#39;bash&#39;, &#39;-c&#39;, bash_cmd])
-print(&#34;Report generated successfully at the specified location&#34;)
+.save("ml_anovos_report.html", open=True)
+bash_cmd = "aws s3 cp ml_anovos_report.html " + ends_with(final_report_path)
+output = subprocess.check_output(['bash', '-c', bash_cmd])
+print("Report generated successfully at the specified location")
 ```
 </details>
 </dd>
@@ -1415,10 +1415,10 @@ print(&#34;Report generated successfully at the specified location&#34;)
 ```python
 def attribute_associations(master_path, AE_tabs, avl_recs_AE, missing_recs_AE, label_col, all_charts_num_2_,
 all_charts_cat_2_, print_report=False):
-&#34;&#34;&#34;
+"""
 Args:
 master_path: Path containing the input files.
-AE_tabs: correlation_matrix&#39;,&#39;IV_calculation&#39;,&#39;IG_calculation&#39;,&#39;variable_clustering&#39;
+AE_tabs: correlation_matrix','IV_calculation','IG_calculation','variable_clustering'
 avl_recs_AE: Available files from the AE_tabs (Association Evaluator tabs)
 missing_recs_AE: Missing files from the AE_tabs (Association Evaluator tabs)
 label_col: label column
@@ -1426,60 +1426,60 @@ all_charts_num_2_: Numerical charts (histogram) all collated in a list format su
 all_charts_cat_2_: Categorical charts (barplot) all collated in a list format supported as per datapane objects
 print_report: Printing option flexibility. Default value is kept as False.
 Returns:
-&#34;&#34;&#34;
+"""
 if (len(missing_recs_AE) == len(AE_tabs)) and ((len(all_charts_num_2_) + len(all_charts_cat_2_)) == 0):
-return &#34;null_report&#34;
+return "null_report"
 else:
 if len(all_charts_num_2_) == 0 and len(all_charts_cat_2_) == 0:
-l = dp.Text(&#34;##&#34;)
+l = dp.Text("##")
 else:
-if len(all_charts_num_2_) &gt; 0 and len(all_charts_cat_2_) == 0:
-l = dp.Group(dp.Text(&#34;### Attribute to Target Association&#34;), dp.Text(
-&#34;*Bivariate Distribution considering the event captured across different attribute splits (or categories)*&#34;), \
-dp.Select(blocks=all_charts_num_2_, type=dp.SelectType.DROPDOWN), label=&#34;Numerical&#34;)
-elif len(all_charts_num_2_) == 0 and len(all_charts_cat_2_) &gt; 0:
-l = dp.Group(dp.Text(&#34;### Attribute to Target Association&#34;), dp.Text(
-&#34;*Bivariate Distribution considering the event captured across different attribute splits (or categories)*&#34;), \
-dp.Select(blocks=all_charts_cat_2_, type=dp.SelectType.DROPDOWN), label=&#34;Categorical&#34;)
+if len(all_charts_num_2_) > 0 and len(all_charts_cat_2_) == 0:
+l = dp.Group(dp.Text("### Attribute to Target Association"), dp.Text(
+"*Bivariate Distribution considering the event captured across different attribute splits (or categories)*"), \
+dp.Select(blocks=all_charts_num_2_, type=dp.SelectType.DROPDOWN), label="Numerical")
+elif len(all_charts_num_2_) == 0 and len(all_charts_cat_2_) > 0:
+l = dp.Group(dp.Text("### Attribute to Target Association"), dp.Text(
+"*Bivariate Distribution considering the event captured across different attribute splits (or categories)*"), \
+dp.Select(blocks=all_charts_cat_2_, type=dp.SelectType.DROPDOWN), label="Categorical")
 else:
-l = dp.Group(dp.Text(&#34;### Attribute to Target Association&#34;),
+l = dp.Group(dp.Text("### Attribute to Target Association"),
 dp.Select(blocks=[
 dp.Group(dp.Select(blocks=all_charts_num_2_, type=dp.SelectType.DROPDOWN),
-label=&#34;Numerical&#34;),
+label="Numerical"),
 dp.Group(dp.Select(blocks=all_charts_cat_2_, type=dp.SelectType.DROPDOWN),
-label=&#34;Categorical&#34;)], type=dp.SelectType.TABS),
+label="Categorical")], type=dp.SelectType.TABS),
 dp.Text(
-&#34;*Event Rate is defined as % of event label (i.e. label 1) in a bin or a categorical value of an attribute.*&#34;),
-dp.Text(&#34;# &#34;))
+"*Event Rate is defined as % of event label (i.e. label 1) in a bin or a categorical value of an attribute.*"),
+dp.Text("# "))
 if len(missing_recs_AE) == len(AE_tabs):
 report = dp.Group(
-dp.Text(&#34;# &#34;), \
+dp.Text("# "), \
 dp.Text(
-&#34;*This section analyzes the interaction between different attributes and/or the relationship between an attribute &amp; the binary target variable.*&#34;), \
-dp.Text(&#34;## &#34;), \
+"*This section analyzes the interaction between different attributes and/or the relationship between an attribute & the binary target variable.*"), \
+dp.Text("## "), \
 l, \
-dp.Text(&#34;## &#34;), \
-dp.Text(&#34;## &#34;), \
-label=&#34;Attribute Associations&#34;)
+dp.Text("## "), \
+dp.Text("## "), \
+label="Attribute Associations")
 else:
 report = dp.Group(
-dp.Text(&#34;# &#34;), \
+dp.Text("# "), \
 dp.Text(
-&#34;*This section analyzes the interaction between different attributes and/or the relationship between an attribute &amp; the binary target variable.*&#34;), \
-dp.Text(&#34;# &#34;), \
-dp.Text(&#34;# &#34;), \
-dp.Text(&#34;### Association Matrix &amp; Plot&#34;), \
-dp.Select(blocks=data_analyzer_output(master_path, avl_recs_AE, tab_name=&#34;association_evaluator&#34;),
+"*This section analyzes the interaction between different attributes and/or the relationship between an attribute & the binary target variable.*"), \
+dp.Text("# "), \
+dp.Text("# "), \
+dp.Text("### Association Matrix & Plot"), \
+dp.Select(blocks=data_analyzer_output(master_path, avl_recs_AE, tab_name="association_evaluator"),
 type=dp.SelectType.DROPDOWN), \
-dp.Text(&#34;### &#34;), \
-dp.Text(&#34;## &#34;), \
+dp.Text("### "), \
+dp.Text("## "), \
 l, \
-dp.Text(&#34;## &#34;), \
-dp.Text(&#34;## &#34;), \
-label=&#34;Attribute Associations&#34;)
+dp.Text("## "), \
+dp.Text("## "), \
+label="Attribute Associations")
 if print_report:
 dp.Report(default_template[0], default_template[1], report).save(
-ends_with(master_path) + &#34;attribute_associations.html&#34;, open=True)
+ends_with(master_path) + "attribute_associations.html", open=True)
 return report
 ```
 </details>
@@ -1504,23 +1504,23 @@ return report
 </summary>
 ```python
 def chart_gen_list(master_path, chart_type, type_col=None):
-&#34;&#34;&#34;
+"""
 Args:
 master_path: Path containing all the charts same as the other files from data analyzed output
 chart_type: Files containing only the specific chart names for the specific chart category
 type_col: None. Default value is kept as None
 Returns:
-&#34;&#34;&#34;
+"""
 plot_list = []
 for i in chart_type:
-col_name = i[i.find(&#34;_&#34;) + 1:]
-if type_col == &#34;numerical&#34;:
-if col_name in numcols_name.replace(&#34; &#34;, &#34;&#34;).split(&#34;,&#34;):
+col_name = i[i.find("_") + 1:]
+if type_col == "numerical":
+if col_name in numcols_name.replace(" ", "").split(","):
 plot_list.append(dp.Plot(go.Figure(json.load(open(ends_with(master_path) + i))), label=col_name))
 else:
 pass
-elif type_col == &#34;categorical&#34;:
-if col_name in catcols_name.replace(&#34; &#34;, &#34;&#34;).split(&#34;,&#34;):
+elif type_col == "categorical":
+if col_name in catcols_name.replace(" ", "").split(","):
 plot_list.append(dp.Plot(go.Figure(json.load(open(ends_with(master_path) + i))), label=col_name))
 else:
 pass
@@ -1550,104 +1550,104 @@ return plot_list
 </summary>
 ```python
 def data_analyzer_output(master_path, avl_recs_tab, tab_name):
-&#34;&#34;&#34;
+"""
 Args:
 master_path: Path containing all the output from analyzed data
 avl_recs_tab: Available file names from the analysis tab
 tab_name: Analysis tab from association_evaluator / quality_checker / stats_generator
 Returns:
-&#34;&#34;&#34;
+"""
 df_list = []
 txt_list = []
 plot_list = []
 df_plot_list = []
-avl_recs_tab = [x for x in avl_recs_tab if &#34;global_summary&#34; not in x]
+avl_recs_tab = [x for x in avl_recs_tab if "global_summary" not in x]
 for index, i in enumerate(avl_recs_tab):
-data = pd.read_csv(ends_with(master_path) + str(i) + &#34;.csv&#34;)
+data = pd.read_csv(ends_with(master_path) + str(i) + ".csv")
 if len(data.index) == 0:
 continue
-if tab_name == &#34;quality_checker&#34;:
-if i == &#34;duplicate_detection&#34;:
-duplicate_recs = pd.read_csv(ends_with(master_path) + str(i) + &#34;.csv&#34;).round(3)
-unique_rows_count = &#34; No. Of Unique Rows: **&#34; + str(
-format(int(duplicate_recs[duplicate_recs[&#34;metric&#34;] == &#34;unique_rows_count&#34;].value.values),
-&#34;,&#34;)) + &#34;**&#34;
-rows_count = &#34; No. of Rows: **&#34; + str(
-format(int(duplicate_recs[duplicate_recs[&#34;metric&#34;] == &#34;rows_count&#34;].value.values), &#34;,&#34;)) + &#34;**&#34;
-duplicate_rows = &#34; No. of Duplicate Rows: **&#34; + str(
-format(int(duplicate_recs[duplicate_recs[&#34;metric&#34;] == &#34;duplicate_rows&#34;].value.values), &#34;,&#34;)) + &#34;**&#34;
-duplicate_pct = &#34; Percentage of Duplicate Rows: **&#34; + str(
-float(duplicate_recs[duplicate_recs[&#34;metric&#34;] == &#34;duplicate_pct&#34;].value.values * 100.0)) + &#34; %&#34; + &#34;**&#34;
-df_list.append([dp.Text(&#34;### &#34; + str(remove_u_score(i))),
+if tab_name == "quality_checker":
+if i == "duplicate_detection":
+duplicate_recs = pd.read_csv(ends_with(master_path) + str(i) + ".csv").round(3)
+unique_rows_count = " No. Of Unique Rows: **" + str(
+format(int(duplicate_recs[duplicate_recs["metric"] == "unique_rows_count"].value.values),
+",")) + "**"
+rows_count = " No. of Rows: **" + str(
+format(int(duplicate_recs[duplicate_recs["metric"] == "rows_count"].value.values), ",")) + "**"
+duplicate_rows = " No. of Duplicate Rows: **" + str(
+format(int(duplicate_recs[duplicate_recs["metric"] == "duplicate_rows"].value.values), ",")) + "**"
+duplicate_pct = " Percentage of Duplicate Rows: **" + str(
+float(duplicate_recs[duplicate_recs["metric"] == "duplicate_pct"].value.values * 100.0)) + " %" + "**"
+df_list.append([dp.Text("### " + str(remove_u_score(i))),
 dp.Group(dp.Text(rows_count), dp.Text(unique_rows_count), dp.Text(duplicate_rows),
-dp.Text(duplicate_pct), rows=4), dp.Text(&#34;#&#34;), dp.Text(&#34;#&#34;)])
-elif i == &#34;outlier_detection&#34;:
-df_list.append([dp.Text(&#34;### &#34; + str(remove_u_score(i))),
-dp.DataTable(pd.read_csv(ends_with(master_path) + str(i) + &#34;.csv&#34;).round(3)),
-&#34;outlier_charts_placeholder&#34;])
+dp.Text(duplicate_pct), rows=4), dp.Text("#"), dp.Text("#")])
+elif i == "outlier_detection":
+df_list.append([dp.Text("### " + str(remove_u_score(i))),
+dp.DataTable(pd.read_csv(ends_with(master_path) + str(i) + ".csv").round(3)),
+"outlier_charts_placeholder"])
 else:
-df_list.append([dp.Text(&#34;### &#34; + str(remove_u_score(i))),
-dp.DataTable(pd.read_csv(ends_with(master_path) + str(i) + &#34;.csv&#34;).round(3)),
-dp.Text(&#34;#&#34;), dp.Text(&#34;#&#34;)])
-elif tab_name == &#34;association_evaluator&#34;:
+df_list.append([dp.Text("### " + str(remove_u_score(i))),
+dp.DataTable(pd.read_csv(ends_with(master_path) + str(i) + ".csv").round(3)),
+dp.Text("#"), dp.Text("#")])
+elif tab_name == "association_evaluator":
 for j in avl_recs_tab:
-if j == &#34;correlation_matrix&#34;:
-df_list_ = pd.read_csv(ends_with(master_path) + str(j) + &#34;.csv&#34;).round(3)
-feats_order = list(df_list_[&#34;attribute&#34;].values)
+if j == "correlation_matrix":
+df_list_ = pd.read_csv(ends_with(master_path) + str(j) + ".csv").round(3)
+feats_order = list(df_list_["attribute"].values)
 df_list_ = df_list_.round(3)
 fig = px.imshow(df_list_[feats_order], y=feats_order, color_continuous_scale=global_theme,
-aspect=&#34;auto&#34;)
+aspect="auto")
 fig.layout.plot_bgcolor = global_plot_bg_color
 fig.layout.paper_bgcolor = global_paper_bg_color
 #
-fig.update_layout(title_text=str(&#34;Correlation Plot &#34;))
+fig.update_layout(title_text=str("Correlation Plot "))
 df_plot_list.append(
-dp.Group(dp.Text(&#34;##&#34;), dp.DataTable(df_list_[[&#34;attribute&#34;] + feats_order]), dp.Plot(fig),
+dp.Group(dp.Text("##"), dp.DataTable(df_list_[["attribute"] + feats_order]), dp.Plot(fig),
 rows=3, label=remove_u_score(j)))
-elif j == &#34;variable_clustering&#34;:
-df_list_ = pd.read_csv(ends_with(master_path) + str(j) + &#34;.csv&#34;).round(3).sort_values(
-by=[&#39;Cluster&#39;], ascending=True)
-fig = px.sunburst(df_list_, path=[&#39;Cluster&#39;, &#39;Attribute&#39;], values=&#39;RS_Ratio&#39;,
+elif j == "variable_clustering":
+df_list_ = pd.read_csv(ends_with(master_path) + str(j) + ".csv").round(3).sort_values(
+by=['Cluster'], ascending=True)
+fig = px.sunburst(df_list_, path=['Cluster', 'Attribute'], values='RS_Ratio',
 color_discrete_sequence=global_theme)
 #
-fig.update_layout(title_text=str(&#34;Distribution of homogenous variable across Clusters&#34;))
+fig.update_layout(title_text=str("Distribution of homogenous variable across Clusters"))
 fig.layout.plot_bgcolor = global_plot_bg_color
 fig.layout.paper_bgcolor = global_paper_bg_color
 #
-fig.update_layout(title_text=str(&#34;Variable Clustering Plot &#34;))
+fig.update_layout(title_text=str("Variable Clustering Plot "))
 fig.layout.autosize = True
 df_plot_list.append(
-dp.Group(dp.Text(&#34;##&#34;), dp.DataTable(df_list_), dp.Plot(fig), rows=3, label=remove_u_score(j)))
+dp.Group(dp.Text("##"), dp.DataTable(df_list_), dp.Plot(fig), rows=3, label=remove_u_score(j)))
 else:
 try:
-df_list_ = pd.read_csv(ends_with(master_path) + str(j) + &#34;.csv&#34;).round(3)
-col_nm = [x for x in list(df_list_.columns) if &#34;attribute&#34; not in x]
+df_list_ = pd.read_csv(ends_with(master_path) + str(j) + ".csv").round(3)
+col_nm = [x for x in list(df_list_.columns) if "attribute" not in x]
 df_list_ = df_list_.sort_values(col_nm[0], ascending=True)
-fig = px.bar(df_list_, x=col_nm[0], y=&#39;attribute&#39;, orientation=&#39;h&#39;,
+fig = px.bar(df_list_, x=col_nm[0], y='attribute', orientation='h',
 color_discrete_sequence=global_theme)
 fig.layout.plot_bgcolor = global_plot_bg_color
 fig.layout.paper_bgcolor = global_paper_bg_color
 #
-fig.update_layout(title_text=str(&#34;Representation of &#34; + str(remove_u_score(j))))
+fig.update_layout(title_text=str("Representation of " + str(remove_u_score(j))))
 fig.layout.autosize = True
 df_plot_list.append(
-dp.Group(dp.Text(&#34;##&#34;), dp.DataTable(df_list_), dp.Plot(fig), label=remove_u_score(j),
+dp.Group(dp.Text("##"), dp.DataTable(df_list_), dp.Plot(fig), label=remove_u_score(j),
 rows=3))
 except:
 pass
 if len(avl_recs_tab) == 1:
-df_plot_list.append(dp.Group(dp.DataTable(pd.DataFrame(columns=[&#39; &#39;], index=range(1)), label=&#34; &#34;),
-dp.Plot(blank_chart, label=&#34; &#34;), label=&#34; &#34;))
+df_plot_list.append(dp.Group(dp.DataTable(pd.DataFrame(columns=[' '], index=range(1)), label=" "),
+dp.Plot(blank_chart, label=" "), label=" "))
 else:
 pass
 return df_plot_list
 else:
-df_list.append(dp.DataTable(pd.read_csv(ends_with(master_path) + str(i) + &#34;.csv&#34;).round(3),
+df_list.append(dp.DataTable(pd.read_csv(ends_with(master_path) + str(i) + ".csv").round(3),
 label=remove_u_score(avl_recs_tab[index])))
-if tab_name == &#34;quality_checker&#34; and len(avl_recs_tab) == 1:
-return df_list[0], [dp.Text(&#34;#&#34;), dp.Plot(blank_chart)]
-elif tab_name == &#34;stats_generator&#34; and len(avl_recs_tab) == 1:
-return [df_list[0], dp.DataTable(pd.DataFrame(columns=[&#39; &#39;], index=range(1)), label=&#34; &#34;)]
+if tab_name == "quality_checker" and len(avl_recs_tab) == 1:
+return df_list[0], [dp.Text("#"), dp.Plot(blank_chart)]
+elif tab_name == "stats_generator" and len(avl_recs_tab) == 1:
+return [df_list[0], dp.DataTable(pd.DataFrame(columns=[' '], index=range(1)), label=" ")]
 else:
 return df_list
 ```
@@ -1679,7 +1679,7 @@ return df_list
 </summary>
 ```python
 def data_drift_stability(master_path, ds_ind, id_col, drift_threshold_model, all_drift_charts_, print_report=False):
-&#34;&#34;&#34;
+"""
 Args:
 master_path: Path containing the input files.
 ds_ind: Drift stability indicator in list form.
@@ -1688,33 +1688,33 @@ drift_threshold_model: threshold which the user is specifying for tagging an att
 all_drift_charts_: Charts (histogram/barplot) all collated in a list format supported as per datapane objects
 print_report: Printing option flexibility. Default value is kept as False.
 Returns:
-&#34;&#34;&#34;
+"""
 line_chart_list = []
-if ds_ind[0] &gt; 0:
+if ds_ind[0] > 0:
 fig_metric_drift = go.Figure()
 fig_metric_drift.add_trace(go.Scatter(x=list(drift_df[drift_df.flagged.values == 1][metric_drift[0]].values),
 y=list(drift_df[drift_df.flagged.values == 1].attribute.values),
 marker=dict(color=global_theme[1], size=14),
-mode=&#34;markers&#34;,
+mode="markers",
 name=metric_drift[0]))
 fig_metric_drift.add_trace(go.Scatter(x=list(drift_df[drift_df.flagged.values == 1][metric_drift[1]].values),
 y=list(drift_df[drift_df.flagged.values == 1].attribute.values),
 marker=dict(color=global_theme[3], size=14),
-mode=&#34;markers&#34;,
+mode="markers",
 name=metric_drift[1]))
 fig_metric_drift.add_trace(go.Scatter(x=list(drift_df[drift_df.flagged.values == 1][metric_drift[2]].values),
 y=list(drift_df[drift_df.flagged.values == 1].attribute.values),
 marker=dict(color=global_theme[5], size=14),
-mode=&#34;markers&#34;,
+mode="markers",
 name=metric_drift[2]))
 fig_metric_drift.add_trace(go.Scatter(x=list(drift_df[drift_df.flagged.values == 1][metric_drift[3]].values),
 y=list(drift_df[drift_df.flagged.values == 1].attribute.values),
 marker=dict(color=global_theme[7], size=14),
-mode=&#34;markers&#34;,
+mode="markers",
 name=metric_drift[3]))
 fig_metric_drift.add_vrect(x0=0, x1=drift_threshold_model, fillcolor=global_theme[7], opacity=0.1,
-layer=&#34;below&#34;, line_width=1),
-fig_metric_drift.update_layout(legend=dict(orientation=&#34;h&#34;, x=0.5, yanchor=&#34;top&#34;, xanchor=&#34;center&#34;))
+layer="below", line_width=1),
+fig_metric_drift.update_layout(legend=dict(orientation="h", x=0.5, yanchor="top", xanchor="center"))
 fig_metric_drift.layout.plot_bgcolor = global_plot_bg_color
 fig_metric_drift.layout.paper_bgcolor = global_paper_bg_color
 fig_metric_drift.update_xaxes(showline=True, linewidth=2, gridcolor=px.colors.sequential.Greys[1])
@@ -1722,234 +1722,234 @@ fig_metric_drift.update_yaxes(showline=True, linewidth=2, gridcolor=px.colors.se
 #
 Drift Chart - 2
 fig_gauge_drift = go.Figure(go.Indicator(
-domain={&#39;x&#39;: [0, 1], &#39;y&#39;: [0, 1]},
+domain={'x': [0, 1], 'y': [0, 1]},
 value=drifted_feats,
-mode=&#34;gauge+number&#34;,
-title={&#39;text&#39;: &#34;&#34;},
-gauge={&#39;axis&#39;: {&#39;range&#39;: [None, len_feats]},
-&#39;bar&#39;: {&#39;color&#39;: px.colors.sequential.Reds[7]},
-&#39;steps&#39;: [
-{&#39;range&#39;: [0, drifted_feats], &#39;color&#39;: px.colors.sequential.Reds[8]}, \
-{&#39;range&#39;: [drifted_feats, len_feats], &#39;color&#39;: px.colors.sequential.Greens[8]}], \
-&#39;threshold&#39;: {&#39;line&#39;: {&#39;color&#39;: &#39;black&#39;, &#39;width&#39;: 3}, &#39;thickness&#39;: 1, &#39;value&#39;: len_feats}}))
-fig_gauge_drift.update_layout(font={&#39;color&#39;: &#34;black&#34;, &#39;family&#39;: &#34;Arial&#34;})
+mode="gauge+number",
+title={'text': ""},
+gauge={'axis': {'range': [None, len_feats]},
+'bar': {'color': px.colors.sequential.Reds[7]},
+'steps': [
+{'range': [0, drifted_feats], 'color': px.colors.sequential.Reds[8]}, \
+{'range': [drifted_feats, len_feats], 'color': px.colors.sequential.Greens[8]}], \
+'threshold': {'line': {'color': 'black', 'width': 3}, 'thickness': 1, 'value': len_feats}}))
+fig_gauge_drift.update_layout(font={'color': "black", 'family': "Arial"})
 def drift_text_gen(drifted_feats, len_feats):
-&#34;&#34;&#34;
+"""
 Args:
 drifted_feats: count of attributes drifted
 len_feats: count of attributes passed for analysis
 Returns:
-&#34;&#34;&#34;
+"""
 if drifted_feats == 0:
-text = &#34;*Drift barometer does not indicate any drift in the underlying data. Please refer to the metric values as displayed in the above table &amp; comparison plot for better understanding*&#34;
+text = "*Drift barometer does not indicate any drift in the underlying data. Please refer to the metric values as displayed in the above table & comparison plot for better understanding*"
 elif drifted_feats == 1:
-text = &#34;*Drift barometer indicates that &#34; + str(drifted_feats) + &#34; out of &#34; + str(
-len_feats) + &#34; (&#34; + str(np.round((100 * drifted_feats / len_feats),
-2)) + &#34;%) attributes has been drifted from its source behaviour.*&#34;
-elif drifted_feats &gt; 1:
-text = &#34;*Drift barometer indicates that &#34; + str(drifted_feats) + &#34; out of &#34; + str(
-len_feats) + &#34; (&#34; + str(np.round((100 * drifted_feats / len_feats),
-2)) + &#34;%) attributes have been drifted from its source behaviour.*&#34;
+text = "*Drift barometer indicates that " + str(drifted_feats) + " out of " + str(
+len_feats) + " (" + str(np.round((100 * drifted_feats / len_feats),
+2)) + "%) attributes has been drifted from its source behaviour.*"
+elif drifted_feats > 1:
+text = "*Drift barometer indicates that " + str(drifted_feats) + " out of " + str(
+len_feats) + " (" + str(np.round((100 * drifted_feats / len_feats),
+2)) + "%) attributes have been drifted from its source behaviour.*"
 else:
-text = &#34;&#34;
+text = ""
 return text
 else:
 pass
 if ds_ind[0] == 0 and ds_ind[1] == 0:
-return &#34;null_report&#34;
-elif ds_ind[0] == 0 and ds_ind[1] &gt; 0.5:
+return "null_report"
+elif ds_ind[0] == 0 and ds_ind[1] > 0.5:
 for i in total_unstable_attr:
 line_chart_list.append(line_chart_gen_stability(df1=df_stability, df2=df_si_, col=i))
-report = dp.Group(dp.Text(&#34;# &#34;), \
+report = dp.Group(dp.Text("# "), \
 dp.Text(
-&#34;*This section examines the dataset stability wrt the baseline dataset (via computing drift statistics) and/or wrt the historical datasets (via computing stability index).*&#34;), \
-dp.Text(&#34;# &#34;), \
-dp.Text(&#34;# &#34;), \
-dp.Text(&#34;### Data Stability Analysis&#34;), \
+"*This section examines the dataset stability wrt the baseline dataset (via computing drift statistics) and/or wrt the historical datasets (via computing stability index).*"), \
+dp.Text("# "), \
+dp.Text("# "), \
+dp.Text("### Data Stability Analysis"), \
 dp.DataTable(df_si), \
 dp.Select(blocks=line_chart_list, type=dp.SelectType.DROPDOWN), \
-dp.Group(dp.Text(&#34;**Stability Index Interpretation:**&#34;), dp.Plot(plot_index_stability),
+dp.Group(dp.Text("**Stability Index Interpretation:**"), dp.Plot(plot_index_stability),
 rows=2), \
-label=&#34;Drift &amp; Stability&#34;)
+label="Drift & Stability")
 elif ds_ind[0] == 1 and ds_ind[1] == 0:
-if len(all_drift_charts_) &gt; 0:
+if len(all_drift_charts_) > 0:
 report = dp.Group(
-dp.Text(&#34;# &#34;), \
+dp.Text("# "), \
 dp.Text(
-&#34;*This section examines the dataset stability wrt the baseline dataset (via computing drift statistics) and/or wrt the historical datasets (via computing stability index).*&#34;), \
-dp.Text(&#34;# &#34;), \
-dp.Text(&#34;# &#34;), \
-dp.Text(&#34;### Data Drift Analysis&#34;), \
+"*This section examines the dataset stability wrt the baseline dataset (via computing drift statistics) and/or wrt the historical datasets (via computing stability index).*"), \
+dp.Text("# "), \
+dp.Text("# "), \
+dp.Text("### Data Drift Analysis"), \
 dp.DataTable(drift_df), \
 dp.Text(
-&#34;*An attribute is flagged as drifted if any drift metric is found to be above the threshold of &#34; + str(
-drift_threshold_model) + &#34;.*&#34;), \
-dp.Text(&#34;##&#34;), \
+"*An attribute is flagged as drifted if any drift metric is found to be above the threshold of " + str(
+drift_threshold_model) + ".*"), \
+dp.Text("##"), \
 dp.Select(blocks=all_drift_charts_, type=dp.SelectType.DROPDOWN), \
 dp.Text(
-&#34;*Source &amp; Target datasets were compared to see the % deviation at decile level for numerical attributes and at individual category level for categorical attributes*&#34;), \
-dp.Text(&#34;###
-&#34;), \
-dp.Text(&#34;###
-&#34;), \
-dp.Text(&#34;### Data Health&#34;), \
+"*Source & Target datasets were compared to see the % deviation at decile level for numerical attributes and at individual category level for categorical attributes*"), \
+dp.Text("###
+"), \
+dp.Text("###
+"), \
+dp.Text("### Data Health"), \
 dp.Group(dp.Plot(fig_metric_drift), dp.Plot(fig_gauge_drift), columns=2), \
-dp.Group(dp.Text(&#34;*Representation of attributes across different computed Drift Metrics*&#34;),
+dp.Group(dp.Text("*Representation of attributes across different computed Drift Metrics*"),
 dp.Text(drift_text_gen(drifted_feats, len_feats)), columns=2), \
-label=&#34;Drift &amp; Stability&#34;)
+label="Drift & Stability")
 else:
 report = dp.Group(
-dp.Text(&#34;# &#34;), \
+dp.Text("# "), \
 dp.Text(
-&#34;*This section examines the dataset stability wrt the baseline dataset (via computing drift statistics) and/or wrt the historical datasets (via computing stability index).*&#34;), \
-dp.Text(&#34;# &#34;), \
-dp.Text(&#34;# &#34;), \
-dp.Text(&#34;### Data Drift Analysis&#34;), \
+"*This section examines the dataset stability wrt the baseline dataset (via computing drift statistics) and/or wrt the historical datasets (via computing stability index).*"), \
+dp.Text("# "), \
+dp.Text("# "), \
+dp.Text("### Data Drift Analysis"), \
 dp.DataTable(drift_df), \
 dp.Text(
-&#34;*An attribute is flagged as drifted if any drift metric is found to be above the threshold of &#34; + str(
-drift_threshold_model) + &#34;.*&#34;), \
-dp.Text(&#34;##&#34;), \
-dp.Text(&#34;###
-&#34;), \
-dp.Text(&#34;### Data Health&#34;), \
+"*An attribute is flagged as drifted if any drift metric is found to be above the threshold of " + str(
+drift_threshold_model) + ".*"), \
+dp.Text("##"), \
+dp.Text("###
+"), \
+dp.Text("### Data Health"), \
 dp.Group(dp.Plot(fig_metric_drift), dp.Plot(fig_gauge_drift), columns=2), \
-dp.Group(dp.Text(&#34;*Representation of attributes across different computed Drift Metrics*&#34;),
+dp.Group(dp.Text("*Representation of attributes across different computed Drift Metrics*"),
 dp.Text(drift_text_gen(drifted_feats, len_feats)), columns=2), \
-label=&#34;Drift &amp; Stability&#34;)
-elif ds_ind[0] == 1 and ds_ind[1] &gt;= 0.5:
+label="Drift & Stability")
+elif ds_ind[0] == 1 and ds_ind[1] >= 0.5:
 for i in total_unstable_attr:
 line_chart_list.append(line_chart_gen_stability(df1=df_stability, df2=df_si_, col=i))
-if len(all_drift_charts_) &gt; 0:
+if len(all_drift_charts_) > 0:
 report = dp.Group(
-dp.Text(&#34;# &#34;), \
+dp.Text("# "), \
 dp.Text(
-&#34;*This section examines the dataset stability wrt the baseline dataset (via computing drift statistics) and/or wrt the historical datasets (via computing stability index).*&#34;), \
-dp.Text(&#34;# &#34;), \
-dp.Text(&#34;# &#34;), \
-dp.Text(&#34;### Data Drift Analysis&#34;), \
+"*This section examines the dataset stability wrt the baseline dataset (via computing drift statistics) and/or wrt the historical datasets (via computing stability index).*"), \
+dp.Text("# "), \
+dp.Text("# "), \
+dp.Text("### Data Drift Analysis"), \
 dp.DataTable(drift_df), \
 dp.Text(
-&#34;*An attribute is flagged as drifted if any drift metric is found to be above the threshold of &#34; + str(
-drift_threshold_model) + &#34;.*&#34;), \
-dp.Text(&#34;##&#34;), \
+"*An attribute is flagged as drifted if any drift metric is found to be above the threshold of " + str(
+drift_threshold_model) + ".*"), \
+dp.Text("##"), \
 dp.Select(blocks=all_drift_charts_, type=dp.SelectType.DROPDOWN), \
 dp.Text(
-&#34;*Source &amp; Target datasets were compared to see the % deviation at decile level for numerical attributes and at individual category level for categorical attributes*&#34;), \
-dp.Text(&#34;###
-&#34;), \
-dp.Text(&#34;###
-&#34;), \
-dp.Text(&#34;### Data Health&#34;), \
+"*Source & Target datasets were compared to see the % deviation at decile level for numerical attributes and at individual category level for categorical attributes*"), \
+dp.Text("###
+"), \
+dp.Text("###
+"), \
+dp.Text("### Data Health"), \
 dp.Group(dp.Plot(fig_metric_drift), dp.Plot(fig_gauge_drift), columns=2), \
-dp.Group(dp.Text(&#34;*Representation of attributes across different computed Drift Metrics*&#34;),
+dp.Group(dp.Text("*Representation of attributes across different computed Drift Metrics*"),
 dp.Text(drift_text_gen(drifted_feats, len_feats)), columns=2), \
-dp.Text(&#34;## &#34;), \
-dp.Text(&#34;## &#34;), \
-dp.Text(&#34;### Data Stability Analysis&#34;), \
+dp.Text("## "), \
+dp.Text("## "), \
+dp.Text("### Data Stability Analysis"), \
 dp.DataTable(df_si), \
 dp.Select(blocks=line_chart_list, type=dp.SelectType.DROPDOWN), \
-dp.Group(dp.Text(&#34;**Stability Index Interpretation:**&#34;), dp.Plot(plot_index_stability), rows=2), \
-label=&#34;Drift &amp; Stability&#34;)
+dp.Group(dp.Text("**Stability Index Interpretation:**"), dp.Plot(plot_index_stability), rows=2), \
+label="Drift & Stability")
 else:
 report = dp.Group(
-dp.Text(&#34;# &#34;), \
+dp.Text("# "), \
 dp.Text(
-&#34;*This section examines the dataset stability wrt the baseline dataset (via computing drift statistics) and/or wrt the historical datasets (via computing stability index).*&#34;), \
-dp.Text(&#34;# &#34;), \
-dp.Text(&#34;# &#34;), \
-dp.Text(&#34;### Data Drift Analysis&#34;), \
+"*This section examines the dataset stability wrt the baseline dataset (via computing drift statistics) and/or wrt the historical datasets (via computing stability index).*"), \
+dp.Text("# "), \
+dp.Text("# "), \
+dp.Text("### Data Drift Analysis"), \
 dp.DataTable(drift_df), \
 dp.Text(
-&#34;*An attribute is flagged as drifted if any drift metric is found to be above the threshold of &#34; + str(
-drift_threshold_model) + &#34;.*&#34;), \
-dp.Text(&#34;##&#34;), \
-dp.Text(&#34;### Data Health&#34;), \
+"*An attribute is flagged as drifted if any drift metric is found to be above the threshold of " + str(
+drift_threshold_model) + ".*"), \
+dp.Text("##"), \
+dp.Text("### Data Health"), \
 dp.Group(dp.Plot(fig_metric_drift), dp.Plot(fig_gauge_drift), columns=2), \
-dp.Group(dp.Text(&#34;*Representation of attributes across different computed Drift Metrics*&#34;),
+dp.Group(dp.Text("*Representation of attributes across different computed Drift Metrics*"),
 dp.Text(drift_text_gen(drifted_feats, len_feats)), columns=2), \
-dp.Text(&#34;## &#34;), \
-dp.Text(&#34;## &#34;), \
-dp.Text(&#34;### Data Stability Analysis&#34;), \
+dp.Text("## "), \
+dp.Text("## "), \
+dp.Text("### Data Stability Analysis"), \
 dp.DataTable(df_si), \
 dp.Select(blocks=line_chart_list, type=dp.SelectType.DROPDOWN), \
-dp.Group(dp.Text(&#34;**Stability Index Interpretation:**&#34;), dp.Plot(plot_index_stability), rows=2), \
-label=&#34;Drift &amp; Stability&#34;)
-elif ds_ind[0] == 0 and ds_ind[1] &gt;= 0.5:
+dp.Group(dp.Text("**Stability Index Interpretation:**"), dp.Plot(plot_index_stability), rows=2), \
+label="Drift & Stability")
+elif ds_ind[0] == 0 and ds_ind[1] >= 0.5:
 for i in total_unstable_attr:
 line_chart_list.append(line_chart_gen_stability(df1=df_stability, df2=df_si_, col=i))
 report = dp.Group(
-dp.Text(&#34;# &#34;), \
+dp.Text("# "), \
 dp.Text(
-&#34;*This section examines the dataset stability wrt the baseline dataset (via computing drift statistics) and/or wrt the historical datasets (via computing stability index).*&#34;), \
-dp.Text(&#34;# &#34;), \
-dp.Text(&#34;# &#34;), \
-dp.Text(&#34;### Data Stability Analysis&#34;), \
+"*This section examines the dataset stability wrt the baseline dataset (via computing drift statistics) and/or wrt the historical datasets (via computing stability index).*"), \
+dp.Text("# "), \
+dp.Text("# "), \
+dp.Text("### Data Stability Analysis"), \
 dp.DataTable(df_si), \
 dp.Select(blocks=line_chart_list, type=dp.SelectType.DROPDOWN), \
-dp.Group(dp.Text(&#34;**Stability Index Interpretation:**&#34;), dp.Plot(plot_index_stability), rows=2), \
-label=&#34;Drift &amp; Stability&#34;)
+dp.Group(dp.Text("**Stability Index Interpretation:**"), dp.Plot(plot_index_stability), rows=2), \
+label="Drift & Stability")
 else:
 for i in total_unstable_attr:
 line_chart_list.append(line_chart_gen_stability(df1=df_stability, df2=df_si_, col=i))
-if len(all_drift_charts_) &gt; 0:
+if len(all_drift_charts_) > 0:
 report = dp.Group(
-dp.Text(&#34;# &#34;), \
+dp.Text("# "), \
 dp.Text(
-&#34;*This section examines the dataset stability wrt the baseline dataset (via computing drift statistics) and/or wrt the historical datasets (via computing stability index).*&#34;), \
-dp.Text(&#34;# &#34;), \
-dp.Text(&#34;# &#34;), \
-dp.Text(&#34;### Data Drift Analysis&#34;), \
+"*This section examines the dataset stability wrt the baseline dataset (via computing drift statistics) and/or wrt the historical datasets (via computing stability index).*"), \
+dp.Text("# "), \
+dp.Text("# "), \
+dp.Text("### Data Drift Analysis"), \
 dp.DataTable(drift_df), \
 dp.Text(
-&#34;*An attribute is flagged as drifted if any drift metric is found to be above the threshold of &#34; + str(
-drift_threshold_model) + &#34;.*&#34;), \
-dp.Text(&#34;##&#34;), \
+"*An attribute is flagged as drifted if any drift metric is found to be above the threshold of " + str(
+drift_threshold_model) + ".*"), \
+dp.Text("##"), \
 dp.Select(blocks=all_drift_charts_, type=dp.SelectType.DROPDOWN), \
 dp.Text(
-&#34;*Source &amp; Target datasets were compared to see the % deviation at decile level for numerical attributes and at individual category level for categorical attributes*&#34;), \
-dp.Text(&#34;###
-&#34;), \
-dp.Text(&#34;###
-&#34;), \
-dp.Text(&#34;### Data Health&#34;), \
+"*Source & Target datasets were compared to see the % deviation at decile level for numerical attributes and at individual category level for categorical attributes*"), \
+dp.Text("###
+"), \
+dp.Text("###
+"), \
+dp.Text("### Data Health"), \
 dp.Group(dp.Plot(fig_metric_drift), dp.Plot(fig_gauge_drift), columns=2), \
-dp.Group(dp.Text(&#34;*Representation of attributes across different computed Drift Metrics*&#34;),
+dp.Group(dp.Text("*Representation of attributes across different computed Drift Metrics*"),
 dp.Text(drift_text_gen(drifted_feats, len_feats)), columns=2), \
-dp.Text(&#34;## &#34;), \
-dp.Text(&#34;## &#34;), \
-dp.Text(&#34;### Data Stability Analysis&#34;), \
+dp.Text("## "), \
+dp.Text("## "), \
+dp.Text("### Data Stability Analysis"), \
 dp.DataTable(df_si), \
 dp.Select(blocks=line_chart_list, type=dp.SelectType.DROPDOWN), \
-dp.Group(dp.Text(&#34;**Stability Index Interpretation:**&#34;), dp.Plot(plot_index_stability), rows=2), \
-label=&#34;Drift &amp; Stability&#34;)
+dp.Group(dp.Text("**Stability Index Interpretation:**"), dp.Plot(plot_index_stability), rows=2), \
+label="Drift & Stability")
 else:
 report = dp.Group(
-dp.Text(&#34;# &#34;), \
+dp.Text("# "), \
 dp.Text(
-&#34;*This section examines the dataset stability wrt the baseline dataset (via computing drift statistics) and/or wrt the historical datasets (via computing stability index).*&#34;), \
-dp.Text(&#34;# &#34;), \
-dp.Text(&#34;# &#34;), \
-dp.Text(&#34;### Data Drift Analysis&#34;), \
+"*This section examines the dataset stability wrt the baseline dataset (via computing drift statistics) and/or wrt the historical datasets (via computing stability index).*"), \
+dp.Text("# "), \
+dp.Text("# "), \
+dp.Text("### Data Drift Analysis"), \
 dp.DataTable(drift_df), \
 dp.Text(
-&#34;*An attribute is flagged as drifted if any drift metric is found to be above the threshold of &#34; + str(
-drift_threshold_model) + &#34;.*&#34;), \
-dp.Text(&#34;##&#34;), \
-dp.Text(&#34;### Data Health&#34;), \
+"*An attribute is flagged as drifted if any drift metric is found to be above the threshold of " + str(
+drift_threshold_model) + ".*"), \
+dp.Text("##"), \
+dp.Text("### Data Health"), \
 dp.Group(dp.Plot(fig_metric_drift), dp.Plot(fig_gauge_drift), columns=2), \
-dp.Group(dp.Text(&#34;*Representation of attributes across different computed Drift Metrics*&#34;),
+dp.Group(dp.Text("*Representation of attributes across different computed Drift Metrics*"),
 dp.Text(drift_text_gen(drifted_feats, len_feats)), columns=2), \
-dp.Text(&#34;## &#34;), \
-dp.Text(&#34;## &#34;), \
-dp.Text(&#34;### Data Stability Analysis&#34;), \
+dp.Text("## "), \
+dp.Text("## "), \
+dp.Text("### Data Stability Analysis"), \
 dp.DataTable(df_si), \
 dp.Select(blocks=line_chart_list, type=dp.SelectType.DROPDOWN), \
-dp.Group(dp.Text(&#34;**Stability Index Interpretation:**&#34;), dp.Plot(plot_index_stability), rows=2), \
-label=&#34;Drift &amp; Stability&#34;)
+dp.Group(dp.Text("**Stability Index Interpretation:**"), dp.Plot(plot_index_stability), rows=2), \
+label="Drift & Stability")
 if print_report:
 dp.Report(default_template[0], default_template[1], report).save(
-ends_with(master_path) + &#34;data_drift_stability.html&#34;, open=True)
+ends_with(master_path) + "data_drift_stability.html", open=True)
 return report
 ```
 </details>
@@ -1983,69 +1983,69 @@ return report
 ```python
 def descriptive_statistics(master_path, SG_tabs, avl_recs_SG, missing_recs_SG, all_charts_num_1_, all_charts_cat_1_,
 print_report=False):
-&#34;&#34;&#34;
+"""
 Args:
 master_path: Path containing the input files.
-SG_tabs: measures_of_counts&#39;,&#39;measures_of_centralTendency&#39;,&#39;measures_of_cardinality&#39;,&#39;measures_of_percentiles&#39;,&#39;measures_of_dispersion&#39;,&#39;measures_of_shape&#39;,&#39;global_summary&#39;
+SG_tabs: measures_of_counts','measures_of_centralTendency','measures_of_cardinality','measures_of_percentiles','measures_of_dispersion','measures_of_shape','global_summary'
 avl_recs_SG: Available files from the SG_tabs (Stats Generator tabs)
 missing_recs_SG: Missing files from the SG_tabs (Stats Generator tabs)
 all_charts_num_1_: Numerical charts (histogram) all collated in a list format supported as per datapane objects
 all_charts_cat_1_: Categorical charts (barplot) all collated in a list format supported as per datapane objects
 print_report: Printing option flexibility. Default value is kept as False.
 Returns:
-&#34;&#34;&#34;
-if &#34;global_summary&#34; in avl_recs_SG:
+"""
+if "global_summary" in avl_recs_SG:
 cnt = 0
 else:
 cnt = 1
 if len(missing_recs_SG) + cnt == len(SG_tabs):
-return &#34;null_report&#34;
+return "null_report"
 else:
-if &#34;global_summary&#34; in avl_recs_SG:
+if "global_summary" in avl_recs_SG:
 l1 = dp.Group(
-dp.Text(&#34;# &#34;), \
-dp.Text(&#34;*This section summarizes the dataset with key statistical metrics and distribution plots.*&#34;), \
-dp.Text(&#34;# &#34;), \
-dp.Text(&#34;# &#34;), \
-dp.Text(&#34;### Global Summary&#34;), \
-dp.Group(dp.Text(&#34; Total Number of Records: **&#34; + f&#39;{rows_count:,}&#39; + &#34;**&#34;),
-dp.Text(&#34; Total Number of Attributes: **&#34; + str(columns_count) + &#34;**&#34;),
-dp.Text(&#34; Number of Numerical Attributes : **&#34; + str(numcols_count) + &#34;**&#34;),
-dp.Text(&#34; Numerical Attributes Name : **&#34; + str(numcols_name) + &#34;**&#34;),
-dp.Text(&#34; Number of Categorical Attributes : **&#34; + str(catcols_count) + &#34;**&#34;),
-dp.Text(&#34; Categorical Attributes Name : **&#34; + str(catcols_name) + &#34;**&#34;), rows=6), rows=8)
+dp.Text("# "), \
+dp.Text("*This section summarizes the dataset with key statistical metrics and distribution plots.*"), \
+dp.Text("# "), \
+dp.Text("# "), \
+dp.Text("### Global Summary"), \
+dp.Group(dp.Text(" Total Number of Records: **" + f'{rows_count:,}' + "**"),
+dp.Text(" Total Number of Attributes: **" + str(columns_count) + "**"),
+dp.Text(" Number of Numerical Attributes : **" + str(numcols_count) + "**"),
+dp.Text(" Numerical Attributes Name : **" + str(numcols_name) + "**"),
+dp.Text(" Number of Categorical Attributes : **" + str(catcols_count) + "**"),
+dp.Text(" Categorical Attributes Name : **" + str(catcols_name) + "**"), rows=6), rows=8)
 else:
-l1 = dp.Text(&#34;# &#34;)
-if len(data_analyzer_output(master_path, avl_recs_SG, &#34;stats_generator&#34;)) &gt; 0:
-l2 = dp.Text(&#34;### Statistics by Metric Type&#34;)
-l3 = dp.Group(dp.Select(blocks=data_analyzer_output(master_path, avl_recs_SG, &#34;stats_generator&#34;),
-type=dp.SelectType.TABS), dp.Text(&#34;# &#34;))
+l1 = dp.Text("# ")
+if len(data_analyzer_output(master_path, avl_recs_SG, "stats_generator")) > 0:
+l2 = dp.Text("### Statistics by Metric Type")
+l3 = dp.Group(dp.Select(blocks=data_analyzer_output(master_path, avl_recs_SG, "stats_generator"),
+type=dp.SelectType.TABS), dp.Text("# "))
 else:
-l2 = dp.Text(&#34;# &#34;)
-l3 = dp.Text(&#34;# &#34;)
+l2 = dp.Text("# ")
+l3 = dp.Text("# ")
 if len(all_charts_num_1_) == 0 and len(all_charts_cat_1_) == 0:
 l4 = 1
-elif len(all_charts_num_1_) == 0 and len(all_charts_cat_1_) &gt; 0:
-l4 = dp.Text(&#34;# &#34;), dp.Text(&#34;### Attribute Visualization&#34;), \
-dp.Select(blocks=all_charts_cat_1_, type=dp.SelectType.DROPDOWN), dp.Text(&#34;# &#34;), dp.Text(&#34;# &#34;)
-elif len(all_charts_num_1_) &gt; 0 and len(all_charts_cat_1_) == 0:
-l4 = dp.Text(&#34;# &#34;), dp.Text(&#34;### Attribute Visualization&#34;), \
-dp.Select(blocks=all_charts_num_1_, type=dp.SelectType.DROPDOWN), dp.Text(&#34;# &#34;), dp.Text(&#34;# &#34;)
+elif len(all_charts_num_1_) == 0 and len(all_charts_cat_1_) > 0:
+l4 = dp.Text("# "), dp.Text("### Attribute Visualization"), \
+dp.Select(blocks=all_charts_cat_1_, type=dp.SelectType.DROPDOWN), dp.Text("# "), dp.Text("# ")
+elif len(all_charts_num_1_) > 0 and len(all_charts_cat_1_) == 0:
+l4 = dp.Text("# "), dp.Text("### Attribute Visualization"), \
+dp.Select(blocks=all_charts_num_1_, type=dp.SelectType.DROPDOWN), dp.Text("# "), dp.Text("# ")
 else:
-l4 = dp.Text(&#34;# &#34;), dp.Text(&#34;### Attribute Visualization&#34;), \
+l4 = dp.Text("# "), dp.Text("### Attribute Visualization"), \
 dp.Group(dp.Select(blocks= \
 [dp.Group(dp.Select(blocks=all_charts_num_1_, type=dp.SelectType.DROPDOWN),
-label=&#34;Numerical&#34;), \
+label="Numerical"), \
 dp.Group(dp.Select(blocks=all_charts_cat_1_, type=dp.SelectType.DROPDOWN),
-label=&#34;Categorical&#34;)], \
-type=dp.SelectType.TABS)), dp.Text(&#34;# &#34;), dp.Text(&#34;# &#34;)
+label="Categorical")], \
+type=dp.SelectType.TABS)), dp.Text("# "), dp.Text("# ")
 if l4 == 1:
-report = dp.Group(l1, dp.Text(&#34;# &#34;), l2, l3, dp.Text(&#34;# &#34;), dp.Text(&#34;# &#34;), label=&#34;Descriptive Statistics&#34;)
+report = dp.Group(l1, dp.Text("# "), l2, l3, dp.Text("# "), dp.Text("# "), label="Descriptive Statistics")
 else:
-report = dp.Group(l1, dp.Text(&#34;# &#34;), l2, l3, *l4, dp.Text(&#34;# &#34;), dp.Text(&#34;# &#34;), label=&#34;Descriptive Statistics&#34;)
+report = dp.Group(l1, dp.Text("# "), l2, l3, *l4, dp.Text("# "), dp.Text("# "), label="Descriptive Statistics")
 if print_report:
 dp.Report(default_template[0], default_template[1], report).save(
-ends_with(master_path) + &#34;descriptive_statistics.html&#34;, open=True)
+ends_with(master_path) + "descriptive_statistics.html", open=True)
 return report
 ```
 </details>
@@ -2076,25 +2076,25 @@ stability_tab:"stabilityIndex_computation, stabilityIndex_metrics"</p>
 </summary>
 ```python
 def drift_stability_ind(missing_recs_drift, drift_tab, missing_recs_stability, stability_tab):
-&#34;&#34;&#34;missing_recs_drift: Missing files from the drift tab
-drift_tab: &#34;drift_statistics&#34;
+"""missing_recs_drift: Missing files from the drift tab
+drift_tab: "drift_statistics"
 missing_recs_stability: Missing files from the stability tab
-stability_tab:&#34;stabilityIndex_computation, stabilityIndex_metrics&#34;
+stability_tab:"stabilityIndex_computation, stabilityIndex_metrics"
 Args:
 missing_recs_drift:
 drift_tab:
 missing_recs_stability:
 stability_tab:
 Returns:
-&#34;&#34;&#34;
+"""
 if len(missing_recs_drift) == len(drift_tab):
 drift_ind = 0
 else:
 drift_ind = 1
 if len(missing_recs_stability) == len(stability_tab):
 stability_ind = 0
-elif (&#34;stabilityIndex_metrics&#34; in missing_recs_stability) and (
-&#34;stabilityIndex_computation&#34; not in missing_recs_stability):
+elif ("stabilityIndex_metrics" in missing_recs_stability) and (
+"stabilityIndex_computation" not in missing_recs_stability):
 stability_ind = 0.5
 else:
 stability_ind = 1
@@ -2130,7 +2130,7 @@ return drift_ind, stability_ind
 </summary>
 ```python
 def executive_summary_gen(master_path, label_col, ds_ind, id_col, iv_threshold, corr_threshold, print_report=False):
-&#34;&#34;&#34;
+"""
 Args:
 master_path: Path containing the input files.
 label_col: Label column.
@@ -2140,197 +2140,197 @@ iv_threshold: IV threshold beyond which attributes can be called as significant.
 corr_threshold: Correlation threshold beyond which attributes can be categorized under correlated.
 print_report: Printing option flexibility. Default value is kept as False.
 Returns:
-&#34;&#34;&#34;
+"""
 try:
-obj_dtls = json.load(open(ends_with(master_path) + &#34;freqDist_&#34; + str(label_col)))
+obj_dtls = json.load(open(ends_with(master_path) + "freqDist_" + str(label_col)))
 text_val = list(list(obj_dtls.values())[0][0].items())[8][1]
 x_val = list(list(obj_dtls.values())[0][0].items())[11][1]
 y_val = list(list(obj_dtls.values())[0][0].items())[13][1]
-label_fig_ = go.Figure(data=[go.Pie(labels=x_val, values=y_val, textinfo=&#39;label+percent&#39;,
-insidetextorientation=&#39;radial&#39;, pull=[0, 0.1], marker_colors=global_theme)])
-label_fig_.update_traces(textposition=&#39;inside&#39;, textinfo=&#39;percent+label&#39;)
-label_fig_.update_layout(legend=dict(orientation=&#34;h&#34;, x=0.5, yanchor=&#34;bottom&#34;, xanchor=&#34;center&#34;))
+label_fig_ = go.Figure(data=[go.Pie(labels=x_val, values=y_val, textinfo='label+percent',
+insidetextorientation='radial', pull=[0, 0.1], marker_colors=global_theme)])
+label_fig_.update_traces(textposition='inside', textinfo='percent+label')
+label_fig_.update_layout(legend=dict(orientation="h", x=0.5, yanchor="bottom", xanchor="center"))
 label_fig_.layout.plot_bgcolor = global_plot_bg_color
 label_fig_.layout.paper_bgcolor = global_paper_bg_color
 except:
 label_fig_ = None
-a1 = &#34;The dataset contains
-**&#34; + str(f&#34;{rows_count:,d}&#34;) + &#34;** records and **&#34; + str(
-numcols_count + catcols_count) + &#34;** attributes (**&#34; + str(numcols_count) + &#34;** numerical + **&#34; + str(
-catcols_count) + &#34;** categorical).&#34;
+a1 = "The dataset contains
+**" + str(f"{rows_count:,d}") + "** records and **" + str(
+numcols_count + catcols_count) + "** attributes (**" + str(numcols_count) + "** numerical + **" + str(
+catcols_count) + "** categorical)."
 if label_col is None:
-a2 = dp.Group(dp.Text(&#34;- There is **no** target variable in the dataset&#34;), dp.Text(&#34;- Data Diagnosis:&#34;), rows=2)
+a2 = dp.Group(dp.Text("- There is **no** target variable in the dataset"), dp.Text("- Data Diagnosis:"), rows=2)
 else:
 if label_fig_ is None:
-a2 = dp.Group(dp.Text(&#34;- Target variable is **&#34; + str(label_col) + &#34;** &#34;), dp.Text(&#34;- Data Diagnosis:&#34;),
+a2 = dp.Group(dp.Text("- Target variable is **" + str(label_col) + "** "), dp.Text("- Data Diagnosis:"),
 rows=2)
 else:
-a2 = dp.Group(dp.Text(&#34;- Target variable is **&#34; + str(label_col) + &#34;** &#34;), dp.Plot(label_fig_),
-dp.Text(&#34;- Data Diagnosis:&#34;), rows=3)
+a2 = dp.Group(dp.Text("- Target variable is **" + str(label_col) + "** "), dp.Plot(label_fig_),
+dp.Text("- Data Diagnosis:"), rows=3)
 try:
-x1 = list(pd.read_csv(ends_with(master_path) + &#34;measures_of_dispersion.csv&#34;).query(&#34;`cov`&gt;1&#34;).attribute.values)
-if len(x1) &gt; 0:
-x1_1 = [&#34;High Variance&#34;, x1]
+x1 = list(pd.read_csv(ends_with(master_path) + "measures_of_dispersion.csv").query("`cov`>1").attribute.values)
+if len(x1) > 0:
+x1_1 = ["High Variance", x1]
 else:
-x1_1 = [&#34;High Variance&#34;, None]
+x1_1 = ["High Variance", None]
 except:
-x1_1 = [&#34;High Variance&#34;, None]
+x1_1 = ["High Variance", None]
 try:
-x2 = list(pd.read_csv(ends_with(master_path) + &#34;measures_of_shape.csv&#34;).query(&#34;`skewness`&gt;0&#34;).attribute.values)
-if len(x2) &gt; 0:
-x2_1 = [&#34;Positive Skewness&#34;, x2]
+x2 = list(pd.read_csv(ends_with(master_path) + "measures_of_shape.csv").query("`skewness`>0").attribute.values)
+if len(x2) > 0:
+x2_1 = ["Positive Skewness", x2]
 else:
-x2_1 = [&#34;Positive Skewness&#34;, None]
+x2_1 = ["Positive Skewness", None]
 except:
-x2_1 = [&#34;Positive Skewness&#34;, None]
+x2_1 = ["Positive Skewness", None]
 try:
-x3 = list(pd.read_csv(ends_with(master_path) + &#34;measures_of_shape.csv&#34;).query(&#34;`skewness`&lt;0&#34;).attribute.values)
-if len(x3) &gt; 0:
-x3_1 = [&#34;Negative Skewness&#34;, x3]
+x3 = list(pd.read_csv(ends_with(master_path) + "measures_of_shape.csv").query("`skewness`<0").attribute.values)
+if len(x3) > 0:
+x3_1 = ["Negative Skewness", x3]
 else:
-x3_1 = [&#34;Negative Skewness&#34;, None]
+x3_1 = ["Negative Skewness", None]
 except:
-x3_1 = [&#34;Negative Skewness&#34;, None]
+x3_1 = ["Negative Skewness", None]
 try:
-x4 = list(pd.read_csv(ends_with(master_path) + &#34;measures_of_shape.csv&#34;).query(&#34;`kurtosis`&gt;0&#34;).attribute.values)
-if len(x4) &gt; 0:
-x4_1 = [&#34;High Kurtosis&#34;, x4]
+x4 = list(pd.read_csv(ends_with(master_path) + "measures_of_shape.csv").query("`kurtosis`>0").attribute.values)
+if len(x4) > 0:
+x4_1 = ["High Kurtosis", x4]
 else:
-x4_1 = [&#34;High Kurtosis&#34;, None]
+x4_1 = ["High Kurtosis", None]
 except:
-x4_1 = [&#34;High Kurtosis&#34;, None]
+x4_1 = ["High Kurtosis", None]
 try:
-x5 = list(pd.read_csv(ends_with(master_path) + &#34;measures_of_shape.csv&#34;).query(&#34;`kurtosis`&lt;0&#34;).attribute.values)
-if len(x5) &gt; 0:
-x5_1 = [&#34;Low Kurtosis&#34;, x5]
+x5 = list(pd.read_csv(ends_with(master_path) + "measures_of_shape.csv").query("`kurtosis`<0").attribute.values)
+if len(x5) > 0:
+x5_1 = ["Low Kurtosis", x5]
 else:
-x5_1 = [&#34;Low Kurtosis&#34;, None]
+x5_1 = ["Low Kurtosis", None]
 except:
-x5_1 = [&#34;Low Kurtosis&#34;, None]
+x5_1 = ["Low Kurtosis", None]
 try:
 x6 = list(
-pd.read_csv(ends_with(master_path) + &#34;measures_of_counts.csv&#34;).query(&#34;`fill_pct`&lt;0.7&#34;).attribute.values)
-if len(x6) &gt; 0:
-x6_1 = [&#34;Low Fill Rates&#34;, x6]
+pd.read_csv(ends_with(master_path) + "measures_of_counts.csv").query("`fill_pct`<0.7").attribute.values)
+if len(x6) > 0:
+x6_1 = ["Low Fill Rates", x6]
 else:
-x6_1 = [&#34;Low Fill Rates&#34;, None]
+x6_1 = ["Low Fill Rates", None]
 except:
-x6_1 = [&#34;Low Fill Rates&#34;, None]
+x6_1 = ["Low Fill Rates", None]
 try:
-biasedness_df = pd.read_csv(ends_with(master_path) + &#34;biasedness_detection.csv&#34;)
-if &#34;treated&#34; in biasedness_df:
-x7 = list(df.query(&#34;`treated`&gt;0&#34;).attribute.values)
+biasedness_df = pd.read_csv(ends_with(master_path) + "biasedness_detection.csv")
+if "treated" in biasedness_df:
+x7 = list(df.query("`treated`>0").attribute.values)
 else:
-x7 = list(df.query(&#34;`flagged`&gt;0&#34;).attribute.values)
-if len(x7) &gt; 0:
-x7_1 = [&#34;High Biasedness&#34;, x7]
+x7 = list(df.query("`flagged`>0").attribute.values)
+if len(x7) > 0:
+x7_1 = ["High Biasedness", x7]
 else:
-x7_1 = [&#34;High Biasedness&#34;, None]
+x7_1 = ["High Biasedness", None]
 except:
-x7_1 = [&#34;High Biasedness&#34;, None]
+x7_1 = ["High Biasedness", None]
 try:
-x8 = list(pd.read_csv(ends_with(master_path) + &#34;outlier_detection.csv&#34;).attribute.values)
-if len(x8) &gt; 0:
-x8_1 = [&#34;Outliers&#34;, x8]
+x8 = list(pd.read_csv(ends_with(master_path) + "outlier_detection.csv").attribute.values)
+if len(x8) > 0:
+x8_1 = ["Outliers", x8]
 else:
-x8_1 = [&#34;Outliers&#34;, None]
+x8_1 = ["Outliers", None]
 except:
-x8_1 = [&#34;Outliers&#34;, None]
+x8_1 = ["Outliers", None]
 try:
-corr_matrx = pd.read_csv(ends_with(master_path) + &#34;correlation_matrix.csv&#34;)
+corr_matrx = pd.read_csv(ends_with(master_path) + "correlation_matrix.csv")
 corr_matrx = corr_matrx[list(corr_matrx.attribute.values)]
 corr_matrx = corr_matrx.where(np.triu(np.ones(corr_matrx.shape), k=1).astype(np.bool))
-to_drop = [column for column in corr_matrx.columns if any(corr_matrx[column] &gt; corr_threshold)]
-if len(to_drop) &gt; 0:
-x9_1 = [&#34;High Correlation&#34;, to_drop]
+to_drop = [column for column in corr_matrx.columns if any(corr_matrx[column] > corr_threshold)]
+if len(to_drop) > 0:
+x9_1 = ["High Correlation", to_drop]
 else:
-x9_1 = [&#34;High Correlation&#34;, None]
+x9_1 = ["High Correlation", None]
 except:
-x9_1 = [&#34;High Correlation&#34;, None]
+x9_1 = ["High Correlation", None]
 try:
-x10 = list(pd.read_csv(ends_with(master_path) + &#34;IV_calculation.csv&#34;).query(
-&#34;`iv`&gt;&#34; + str(iv_threshold)).attribute.values)
-if len(x10) &gt; 0:
-x10_1 = [&#34;Significant Attributes&#34;, x10]
+x10 = list(pd.read_csv(ends_with(master_path) + "IV_calculation.csv").query(
+"`iv`>" + str(iv_threshold)).attribute.values)
+if len(x10) > 0:
+x10_1 = ["Significant Attributes", x10]
 else:
-x10_1[&#34;Significant Attributes&#34;, None]
+x10_1["Significant Attributes", None]
 except:
-x10_1 = [&#34;Significant Attributes&#34;, None]
+x10_1 = ["Significant Attributes", None]
 blank_list_df = []
 for i in [x1_1, x2_1, x3_1, x4_1, x5_1, x6_1, x7_1, x8_1, x9_1, x10_1]:
 try:
 for j in i[1]:
 blank_list_df.append([i[0], j])
 except:
-blank_list_df.append([i[0], &#39;NA&#39;])
+blank_list_df.append([i[0], 'NA'])
 list_n = []
-x1 = pd.DataFrame(blank_list_df, columns=[&#34;Metric&#34;, &#34;Attribute&#34;])
-x1[&#39;Value&#39;] = &#39;✔&#39;
-all_cols = (catcols_name.replace(&#34; &#34;, &#34;&#34;) + &#34;,&#34; + numcols_name.replace(&#34; &#34;, &#34;&#34;)).split(&#34;,&#34;)
+x1 = pd.DataFrame(blank_list_df, columns=["Metric", "Attribute"])
+x1['Value'] = '✔'
+all_cols = (catcols_name.replace(" ", "") + "," + numcols_name.replace(" ", "")).split(",")
 remainder_cols = list(set(all_cols) - set(x1.Attribute.values))
 total_metrics = set(list(x1.Metric.values))
 for i in remainder_cols:
 for j in total_metrics:
 list_n.append([j, i])
-x2 = pd.DataFrame(list_n, columns=[&#34;Metric&#34;, &#34;Attribute&#34;])
-x2[&#34;Value&#34;] = &#39;✘&#39;
+x2 = pd.DataFrame(list_n, columns=["Metric", "Attribute"])
+x2["Value"] = '✘'
 x = x1.append(x2, ignore_index=True)
-x = x.drop_duplicates().pivot(index=&#39;Attribute&#39;, columns=&#39;Metric&#39;, values=&#39;Value&#39;).fillna(&#39;✘&#39;).reset_index()[
-[&#34;Attribute&#34;, &#34;Outliers&#34;, &#34;Significant Attributes&#34;, &#34;Positive Skewness&#34;, &#34;Negative Skewness&#34;, &#34;High Variance&#34;,
-&#34;High Correlation&#34;, &#34;High Kurtosis&#34;, &#34;Low Kurtosis&#34;]]
-x = x[x.Attribute.values != &#34;NA&#34;]
-if ds_ind[0] == 1 and ds_ind[1] &gt;= 0.5:
-a5 = &#34;Data Health based on Drift Metrics &amp; Stability Index : &#34;
-report = dp.Group(dp.Text(&#34;# &#34;), \
-dp.Text(&#34;**Key Report Highlights**&#34;), \
-dp.Text(&#34;- &#34; + a1), a2, dp.DataTable(x), dp.Text(&#34;- &#34; + a5), \
-dp.Group(dp.BigNumber(heading=&#34;# Drifted Attributes&#34;,
-value=str(str(drifted_feats) + &#34; out of &#34; + str(len_feats))), \
-dp.BigNumber(heading=&#34;% Drifted Attributes&#34;,
-value=str(np.round((100 * drifted_feats / len_feats), 2)) + &#34;%&#34;), \
-dp.BigNumber(heading=&#34;# Unstable Attributes&#34;,
-value=str(len(unstable_attr)) + &#34; out of &#34; + str(
-len(total_unstable_attr)), change=&#34;numerical&#34;,
+x = x.drop_duplicates().pivot(index='Attribute', columns='Metric', values='Value').fillna('✘').reset_index()[
+["Attribute", "Outliers", "Significant Attributes", "Positive Skewness", "Negative Skewness", "High Variance",
+"High Correlation", "High Kurtosis", "Low Kurtosis"]]
+x = x[x.Attribute.values != "NA"]
+if ds_ind[0] == 1 and ds_ind[1] >= 0.5:
+a5 = "Data Health based on Drift Metrics & Stability Index : "
+report = dp.Group(dp.Text("# "), \
+dp.Text("**Key Report Highlights**"), \
+dp.Text("- " + a1), a2, dp.DataTable(x), dp.Text("- " + a5), \
+dp.Group(dp.BigNumber(heading="# Drifted Attributes",
+value=str(str(drifted_feats) + " out of " + str(len_feats))), \
+dp.BigNumber(heading="% Drifted Attributes",
+value=str(np.round((100 * drifted_feats / len_feats), 2)) + "%"), \
+dp.BigNumber(heading="# Unstable Attributes",
+value=str(len(unstable_attr)) + " out of " + str(
+len(total_unstable_attr)), change="numerical",
 is_upward_change=True), \
-dp.BigNumber(heading=&#34;% Unstable Attributes&#34;, value=str(
-np.round(100 * len(unstable_attr) / len(total_unstable_attr), 2)) + &#34;%&#34;),
+dp.BigNumber(heading="% Unstable Attributes", value=str(
+np.round(100 * len(unstable_attr) / len(total_unstable_attr), 2)) + "%"),
 columns=4), \
-dp.Text(&#34;# &#34;), \
-dp.Text(&#34;# &#34;), label=&#34;Executive Summary&#34;)
-if ds_ind[0] == 0 and ds_ind[1] &gt;= 0.5:
-a5 = &#34;Data Health based on Stability Index : &#34;
-report = dp.Group(dp.Text(&#34;# &#34;), \
-dp.Text(&#34;**Key Report Highlights**&#34;), \
-dp.Text(&#34;# &#34;), dp.Text(&#34;- &#34; + a1), a2, dp.DataTable(x), dp.Text(&#34;- &#34; + a5), \
-dp.Group(dp.BigNumber(heading=&#34;# Unstable Attributes&#34;,
-value=str(len(unstable_attr)) + &#34; out of &#34; + str(
-len(total_unstable_attr)), change=&#34;numerical&#34;,
+dp.Text("# "), \
+dp.Text("# "), label="Executive Summary")
+if ds_ind[0] == 0 and ds_ind[1] >= 0.5:
+a5 = "Data Health based on Stability Index : "
+report = dp.Group(dp.Text("# "), \
+dp.Text("**Key Report Highlights**"), \
+dp.Text("# "), dp.Text("- " + a1), a2, dp.DataTable(x), dp.Text("- " + a5), \
+dp.Group(dp.BigNumber(heading="# Unstable Attributes",
+value=str(len(unstable_attr)) + " out of " + str(
+len(total_unstable_attr)), change="numerical",
 is_upward_change=True), \
-dp.BigNumber(heading=&#34;% Unstable Attributes&#34;, value=str(
-np.round(100 * len(unstable_attr) / len(total_unstable_attr), 2)) + &#34;%&#34;),
+dp.BigNumber(heading="% Unstable Attributes", value=str(
+np.round(100 * len(unstable_attr) / len(total_unstable_attr), 2)) + "%"),
 columns=2), \
-dp.Text(&#34;# &#34;), \
-dp.Text(&#34;# &#34;), label=&#34;Executive Summary&#34;)
+dp.Text("# "), \
+dp.Text("# "), label="Executive Summary")
 if ds_ind[0] == 1 and ds_ind[1] == 0:
-a5 = &#34;Data Health based on Drift Metrics : &#34;
-report = dp.Group(dp.Text(&#34;# &#34;), \
-dp.Text(&#34;**Key Report Highlights**&#34;), \
-dp.Text(&#34;# &#34;), dp.Text(&#34;- &#34; + a1), a2, dp.DataTable(x), dp.Text(&#34;- &#34; + a5), \
-dp.Group(dp.BigNumber(heading=&#34;# Drifted Attributes&#34;,
-value=str(str(drifted_feats) + &#34; out of &#34; + str(len_feats))), \
-dp.BigNumber(heading=&#34;% Drifted Attributes&#34;,
-value=str(np.round((100 * drifted_feats / len_feats), 2)) + &#34;%&#34;),
+a5 = "Data Health based on Drift Metrics : "
+report = dp.Group(dp.Text("# "), \
+dp.Text("**Key Report Highlights**"), \
+dp.Text("# "), dp.Text("- " + a1), a2, dp.DataTable(x), dp.Text("- " + a5), \
+dp.Group(dp.BigNumber(heading="# Drifted Attributes",
+value=str(str(drifted_feats) + " out of " + str(len_feats))), \
+dp.BigNumber(heading="% Drifted Attributes",
+value=str(np.round((100 * drifted_feats / len_feats), 2)) + "%"),
 columns=2), \
-dp.Text(&#34;# &#34;), \
-dp.Text(&#34;# &#34;), label=&#34;Executive Summary&#34;)
+dp.Text("# "), \
+dp.Text("# "), label="Executive Summary")
 if ds_ind[0] == 0 and ds_ind[1] == 0:
-report = dp.Group(dp.Text(&#34;# &#34;), \
-dp.Text(&#34;**Key Report Highlights**&#34;), \
-dp.Text(&#34;# &#34;), dp.Text(&#34;- &#34; + a1), a2, dp.DataTable(x), dp.Text(&#34;# &#34;),
-label=&#34;Executive Summary&#34;)
+report = dp.Group(dp.Text("# "), \
+dp.Text("**Key Report Highlights**"), \
+dp.Text("# "), dp.Text("- " + a1), a2, dp.DataTable(x), dp.Text("# "),
+label="Executive Summary")
 if print_report:
 dp.Report(default_template[0], default_template[1], report).save(
-ends_with(master_path) + &#34;executive_summary.html&#34;, open=True)
+ends_with(master_path) + "executive_summary.html", open=True)
 return report
 ```
 </details>
@@ -2355,74 +2355,74 @@ return report
 </summary>
 ```python
 def line_chart_gen_stability(df1, df2, col):
-&#34;&#34;&#34;
+"""
 Args:
 df1: Analysis dataframe pertaining to summarized stability metrics
 df2: Analysis dataframe pertaining to historical data
 col: Analysis column
 Returns:
-&#34;&#34;&#34;
+"""
 def val_cat(val):
-&#34;&#34;&#34;
+"""
 Args:
 val:
 Returns:
-&#34;&#34;&#34;
-if val &gt;= 3.5:
-return &#34;Very Stable&#34;
-elif val &gt;= 3 and val &lt; 3.5:
-return &#34;Stable&#34;
-elif val &gt;= 2 and val &lt; 3:
-return &#34;Marginally Stable&#34;
-elif val &gt;= 1 and val &lt; 2:
-return &#34;Unstable&#34;
-elif val &gt;= 0 and val &lt; 1:
-return &#34;Very Unstable&#34;
+"""
+if val >= 3.5:
+return "Very Stable"
+elif val >= 3 and val < 3.5:
+return "Stable"
+elif val >= 2 and val < 3:
+return "Marginally Stable"
+elif val >= 1 and val < 2:
+return "Unstable"
+elif val >= 0 and val < 1:
+return "Very Unstable"
 else:
-return &#34;Out of Range&#34;
-val_si = list(df2[df2[&#34;attribute&#34;] == col].stability_index.values)[0]
+return "Out of Range"
+val_si = list(df2[df2["attribute"] == col].stability_index.values)[0]
 f1 = go.Figure()
 f1.add_trace(go.Indicator(
-mode=&#34;gauge+number&#34;,
+mode="gauge+number",
 value=val_si,
 gauge={
-&#39;axis&#39;: {&#39;range&#39;: [None, 4], &#39;tickwidth&#39;: 1, &#39;tickcolor&#39;: &#34;black&#34;},
-&#39;bgcolor&#39;: &#34;white&#34;,
-&#39;steps&#39;: [
-{&#39;range&#39;: [0, 1], &#39;color&#39;: px.colors.sequential.Reds[7]},
-{&#39;range&#39;: [1, 2], &#39;color&#39;: px.colors.sequential.Reds[6]},
-{&#39;range&#39;: [2, 3], &#39;color&#39;: px.colors.sequential.Oranges[4]},
-{&#39;range&#39;: [3, 3.5], &#39;color&#39;: px.colors.sequential.BuGn[7]},
-{&#39;range&#39;: [3.5, 4], &#39;color&#39;: px.colors.sequential.BuGn[8]}],
-&#39;threshold&#39;: {
-&#39;line&#39;: {&#39;color&#39;: &#34;black&#34;, &#39;width&#39;: 3},
-&#39;thickness&#39;: 1,
-&#39;value&#39;: val_si},
-&#39;bar&#39;: {&#39;color&#39;: global_plot_bg_color}},
-title={&#39;text&#39;: &#34;Order of Stability: &#34; + val_cat(val_si)}))
-f1.update_layout(height=400, font={&#39;color&#39;: &#34;black&#34;, &#39;family&#39;: &#34;Arial&#34;})
-f5 = &#34;Stability Index for &#34; + str(col.upper())
-if len(df1.columns) &gt; 0:
-df1 = df1[df1[&#34;attribute&#34;] == col]
-f2 = px.line(df1, x=&#39;idx&#39;, y=&#39;mean&#39;, markers=True,
-title=&#39;CV of Mean is &#39; + str(list(df2[df2[&#34;attribute&#34;] == col].mean_cv.values)[0]))
+'axis': {'range': [None, 4], 'tickwidth': 1, 'tickcolor': "black"},
+'bgcolor': "white",
+'steps': [
+{'range': [0, 1], 'color': px.colors.sequential.Reds[7]},
+{'range': [1, 2], 'color': px.colors.sequential.Reds[6]},
+{'range': [2, 3], 'color': px.colors.sequential.Oranges[4]},
+{'range': [3, 3.5], 'color': px.colors.sequential.BuGn[7]},
+{'range': [3.5, 4], 'color': px.colors.sequential.BuGn[8]}],
+'threshold': {
+'line': {'color': "black", 'width': 3},
+'thickness': 1,
+'value': val_si},
+'bar': {'color': global_plot_bg_color}},
+title={'text': "Order of Stability: " + val_cat(val_si)}))
+f1.update_layout(height=400, font={'color': "black", 'family': "Arial"})
+f5 = "Stability Index for " + str(col.upper())
+if len(df1.columns) > 0:
+df1 = df1[df1["attribute"] == col]
+f2 = px.line(df1, x='idx', y='mean', markers=True,
+title='CV of Mean is ' + str(list(df2[df2["attribute"] == col].mean_cv.values)[0]))
 f2.update_traces(line_color=global_theme[2], marker=dict(size=14))
 f2.layout.plot_bgcolor = global_plot_bg_color
 f2.layout.paper_bgcolor = global_paper_bg_color
-f3 = px.line(df1, x=&#39;idx&#39;, y=&#39;stddev&#39;, markers=True,
-title=&#39;CV of Stddev is &#39; + str(list(df2[df2[&#34;attribute&#34;] == col].stddev_cv.values)[0]))
+f3 = px.line(df1, x='idx', y='stddev', markers=True,
+title='CV of Stddev is ' + str(list(df2[df2["attribute"] == col].stddev_cv.values)[0]))
 f3.update_traces(line_color=global_theme[6], marker=dict(size=14))
 f3.layout.plot_bgcolor = global_plot_bg_color
 f3.layout.paper_bgcolor = global_paper_bg_color
-f4 = px.line(df1, x=&#39;idx&#39;, y=&#39;kurtosis&#39;, markers=True,
-title=&#39;CV of Kurtosis is &#39; + str(list(df2[df2[&#34;attribute&#34;] == col].kurtosis_cv.values)[0]))
+f4 = px.line(df1, x='idx', y='kurtosis', markers=True,
+title='CV of Kurtosis is ' + str(list(df2[df2["attribute"] == col].kurtosis_cv.values)[0]))
 f4.update_traces(line_color=global_theme[4], marker=dict(size=14))
 f4.layout.plot_bgcolor = global_plot_bg_color
 f4.layout.paper_bgcolor = global_paper_bg_color
-return dp.Group(dp.Text(&#34;#&#34;), dp.Text(f5), dp.Plot(f1),
+return dp.Group(dp.Text("#"), dp.Text(f5), dp.Plot(f1),
 dp.Group(dp.Plot(f2), dp.Plot(f3), dp.Plot(f4), columns=3), rows=4, label=col)
 else:
-return dp.Group(dp.Text(&#34;#&#34;), dp.Text(f5), dp.Plot(f1), rows=3, label=col)
+return dp.Group(dp.Text("#"), dp.Text(f5), dp.Plot(f1), rows=3, label=col)
 ```
 </details>
 </dd>
@@ -2452,83 +2452,83 @@ return dp.Group(dp.Text(&#34;#&#34;), dp.Text(f5), dp.Plot(f1), rows=3, label=co
 </summary>
 ```python
 def quality_check(master_path, QC_tabs, avl_recs_QC, missing_recs_QC, all_charts_num_3_, print_report=False):
-&#34;&#34;&#34;
+"""
 Args:
 master_path: Path containing the input files.
-QC_tabs: nullColumns_detection&#39;,&#39;IDness_detection&#39;,&#39;biasedness_detection&#39;,&#39;invalidEntries_detection&#39;,&#39;duplicate_detection&#39;,&#39;nullRows_detection&#39;,&#39;outlier_detection&#39;
+QC_tabs: nullColumns_detection','IDness_detection','biasedness_detection','invalidEntries_detection','duplicate_detection','nullRows_detection','outlier_detection'
 avl_recs_QC: Available files from the QC_tabs (Quality Checker tabs)
 missing_recs_QC: Missing files from the QC_tabs (Quality Checker tabs)
 all_charts_num_3_: Numerical charts (outlier charts) all collated in a list format supported as per datapane objects
 print_report: Printing option flexibility. Default value is kept as False.
 Returns:
-&#34;&#34;&#34;
+"""
 c_ = []
 r_ = []
 if len(missing_recs_QC) == len(QC_tabs):
-return &#34;null_report&#34;
+return "null_report"
 else:
-row_wise = [&#34;duplicate_detection&#34;, &#34;nullRows_detection&#34;]
-col_wise = [&#39;nullColumns_detection&#39;, &#39;IDness_detection&#39;, &#39;biasedness_detection&#39;, &#39;invalidEntries_detection&#39;,
-&#39;outlier_detection&#39;]
+row_wise = ["duplicate_detection", "nullRows_detection"]
+col_wise = ['nullColumns_detection', 'IDness_detection', 'biasedness_detection', 'invalidEntries_detection',
+'outlier_detection']
 row_wise_ = [p for p in row_wise if p in avl_recs_QC]
 col_wise_ = [p for p in col_wise if p in avl_recs_QC]
 len_row_wise = len([p for p in row_wise if p in avl_recs_QC])
 len_col_wise = len([p for p in col_wise if p in avl_recs_QC])
 if len_row_wise == 0:
-c = data_analyzer_output(master_path, col_wise_, &#34;quality_checker&#34;)
+c = data_analyzer_output(master_path, col_wise_, "quality_checker")
 for i in c:
 for j in i:
-if j == &#39;outlier_charts_placeholder&#39; and len(all_charts_num_3_) &gt; 1:
+if j == 'outlier_charts_placeholder' and len(all_charts_num_3_) > 1:
 c_.append(dp.Select(blocks=all_charts_num_3_, type=dp.SelectType.DROPDOWN))
-elif j == &#39;outlier_charts_placeholder&#39; and len(all_charts_num_3_) == 0:
+elif j == 'outlier_charts_placeholder' and len(all_charts_num_3_) == 0:
 c_.append(dp.Plot(blank_chart))
 else:
 c_.append(j)
-report = dp.Group(dp.Text(&#34;# &#34;), \
+report = dp.Group(dp.Text("# "), \
 dp.Text(
-&#34;*This section identifies the data quality issues at both row and column level.*&#34;), \
-dp.Text(&#34;# &#34;), \
-dp.Text(&#34;# &#34;), \
-dp.Group(*c_), dp.Text(&#34;# &#34;), dp.Text(&#34;# &#34;), rows=8, label=&#34;Quality Check&#34;)
+"*This section identifies the data quality issues at both row and column level.*"), \
+dp.Text("# "), \
+dp.Text("# "), \
+dp.Group(*c_), dp.Text("# "), dp.Text("# "), rows=8, label="Quality Check")
 elif len_col_wise == 0:
-r = data_analyzer_output(master_path, row_wise_, &#34;quality_checker&#34;)
+r = data_analyzer_output(master_path, row_wise_, "quality_checker")
 for i in r:
 for j in i:
 r_.append(j)
-report = dp.Group(dp.Text(&#34;# &#34;), \
+report = dp.Group(dp.Text("# "), \
 dp.Text(
-&#34;*This section identifies the data quality issues at both row and column level.*&#34;), \
-dp.Text(&#34;# &#34;), \
-dp.Text(&#34;# &#34;), \
-dp.Group(*r_), dp.Text(&#34;# &#34;), dp.Text(&#34;# &#34;), rows=8, label=&#34;Quality Check&#34;)
+"*This section identifies the data quality issues at both row and column level.*"), \
+dp.Text("# "), \
+dp.Text("# "), \
+dp.Group(*r_), dp.Text("# "), dp.Text("# "), rows=8, label="Quality Check")
 else:
-c = data_analyzer_output(master_path, col_wise_, &#34;quality_checker&#34;)
+c = data_analyzer_output(master_path, col_wise_, "quality_checker")
 for i in c:
 for j in i:
-if j == &#39;outlier_charts_placeholder&#39; and len(all_charts_num_3_) &gt; 1:
+if j == 'outlier_charts_placeholder' and len(all_charts_num_3_) > 1:
 c_.append(dp.Select(blocks=all_charts_num_3_, type=dp.SelectType.DROPDOWN))
-elif j == &#39;outlier_charts_placeholder&#39; and len(all_charts_num_3_) == 0:
+elif j == 'outlier_charts_placeholder' and len(all_charts_num_3_) == 0:
 c_.append(dp.Plot(blank_chart))
 else:
 c_.append(j)
-r = data_analyzer_output(master_path, row_wise_, &#34;quality_checker&#34;)
+r = data_analyzer_output(master_path, row_wise_, "quality_checker")
 for i in r:
 for j in i:
 r_.append(j)
 report = dp.Group(
-dp.Text(&#34;# &#34;), \
-dp.Text(&#34;*This section identifies the data quality issues at both row and column level.*&#34;), \
-dp.Text(&#34;# &#34;), \
-dp.Text(&#34;# &#34;), \
+dp.Text("# "), \
+dp.Text("*This section identifies the data quality issues at both row and column level.*"), \
+dp.Text("# "), \
+dp.Text("# "), \
 dp.Select(blocks=[
-dp.Group(dp.Text(&#34;# &#34;), dp.Group(*c_), rows=2, label=&#34;Column Level&#34;), \
-dp.Group(dp.Text(&#34;# &#34;), dp.Group(*r_), rows=2, label=&#34;Row Level&#34;)], \
+dp.Group(dp.Text("# "), dp.Group(*c_), rows=2, label="Column Level"), \
+dp.Group(dp.Text("# "), dp.Group(*r_), rows=2, label="Row Level")], \
 type=dp.SelectType.TABS), \
-dp.Text(&#34;# &#34;), dp.Text(&#34;# &#34;), \
-label=&#34;Quality Check&#34;)
+dp.Text("# "), dp.Text("# "), \
+label="Quality Check")
 if print_report:
 dp.Report(default_template[0], default_template[1], report).save(
-ends_with(master_path) + &#34;quality_check.html&#34;, open=True)
+ends_with(master_path) + "quality_check.html", open=True)
 return report
 ```
 </details>
@@ -2549,19 +2549,19 @@ return report
 </summary>
 ```python
 def remove_u_score(col):
-&#34;&#34;&#34;
+"""
 Args:
-col: Analysis column containing &#34;_&#34; present gets replaced along with upper case conversion
+col: Analysis column containing "_" present gets replaced along with upper case conversion
 Returns:
-&#34;&#34;&#34;
-col_ = col.split(&#34;_&#34;)
+"""
+col_ = col.split("_")
 bl = []
 for i in col_:
-if i == &#34;nullColumns&#34; or i == &#34;nullRows&#34;:
-bl.append(&#34;Null&#34;)
+if i == "nullColumns" or i == "nullRows":
+bl.append("Null")
 else:
 bl.append(i[0].upper() + i[1:])
-return &#34; &#34;.join(bl)
+return " ".join(bl)
 ```
 </details>
 </dd>
@@ -2587,41 +2587,41 @@ return &#34; &#34;.join(bl)
 </summary>
 ```python
 def wiki_generator(master_path, dataDict_path=None, metricDict_path=None, print_report=False):
-&#34;&#34;&#34;
+"""
 Args:
 master_path: Path containing the input files.
 dataDict_path: Data dictionary path. Default value is kept as None.
 metricDict_path: Metric dictionary path. Default value is kept as None.
 print_report: Printing option flexibility. Default value is kept as False.
 Returns:
-&#34;&#34;&#34;
+"""
 try:
-datatype_df = pd.read_csv(ends_with(master_path) + &#34;data_type.csv&#34;)
+datatype_df = pd.read_csv(ends_with(master_path) + "data_type.csv")
 except:
-datatype_df = pd.DataFrame(columns=[&#39;attribute&#39;, &#39;data_type&#39;], index=range(1))
+datatype_df = pd.DataFrame(columns=['attribute', 'data_type'], index=range(1))
 try:
-data_dict = pd.read_csv(dataDict_path).merge(datatype_df, how=&#34;outer&#34;, on=&#34;attribute&#34;)
+data_dict = pd.read_csv(dataDict_path).merge(datatype_df, how="outer", on="attribute")
 except:
 data_dict = datatype_df
 try:
 metric_dict = pd.read_csv(metricDict_path)
 except:
-metric_dict = pd.DataFrame(columns=[&#39;Section Category&#39;, &#39;Section Name&#39;, &#39;Metric Name&#39;, &#39;Metric Definitions&#39;],
+metric_dict = pd.DataFrame(columns=['Section Category', 'Section Name', 'Metric Name', 'Metric Definitions'],
 index=range(1))
-report = dp.Group(dp.Text(&#34;# &#34;), \
+report = dp.Group(dp.Text("# "), \
 dp.Text(
-&#34;*A quick reference to the attributes from the dataset (Data Dictionary) and the metrics computed in the report (Metric Dictionary).*&#34;), \
-dp.Text(&#34;# &#34;), \
-dp.Text(&#34;# &#34;), \
+"*A quick reference to the attributes from the dataset (Data Dictionary) and the metrics computed in the report (Metric Dictionary).*"), \
+dp.Text("# "), \
+dp.Text("# "), \
 dp.Select(blocks= \
-[dp.Group(dp.Group(dp.Text(&#34;## &#34;), dp.DataTable(data_dict)),
-label=&#34;Data Dictionary&#34;), \
-dp.Group(dp.Text(&#34;##&#34;), dp.DataTable(metric_dict), label=&#34;Metric Dictionary&#34;)], \
-type=dp.SelectType.TABS), dp.Text(&#34;# &#34;), dp.Text(&#34;# &#34;), dp.Text(&#34;# &#34;), dp.Text(&#34;# &#34;),
-label=&#34;Wiki&#34;)
+[dp.Group(dp.Group(dp.Text("## "), dp.DataTable(data_dict)),
+label="Data Dictionary"), \
+dp.Group(dp.Text("##"), dp.DataTable(metric_dict), label="Metric Dictionary")], \
+type=dp.SelectType.TABS), dp.Text("# "), dp.Text("# "), dp.Text("# "), dp.Text("# "),
+label="Wiki")
 if print_report:
 dp.Report(default_template[0], default_template[1], report).save(
-ends_with(master_path) + &#34;wiki_generator.html&#34;, open=True)
+ends_with(master_path) + "wiki_generator.html", open=True)
 return report
 ```
 </details>
