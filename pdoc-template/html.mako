@@ -31,11 +31,12 @@
               <a href="${git_link}" class="git-link">Browse git</a>
             %endif
         </summary>
-
+## the source code needs to be wrapped in <pre>, otherwise all indentation is stripped by pdoc while minifying the html
+<pre>
 ```python
-        ${d.source}
+${d.source}
 ```
-
+</pre>
       </details>
     % elif git_link:
       <div class="git-link-div"><a href="${git_link}" class="git-link">Browse git</a></div>
