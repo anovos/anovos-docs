@@ -33,7 +33,7 @@
         </summary>
 
 ```python
-        ${d.source | h}
+        ${d.source}
 ```
 
       </details>
