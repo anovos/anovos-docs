@@ -109,9 +109,7 @@
     <dd>${show_desc(f)}</dd>
   </%def>
 
-    # ${'Namespace' if module.is_namespace else  \
-                          'Package' if module.is_package and not module.supermodule else \
-                          'Module'} <code>${module.name.split('.')[-1]}</code>
+    # <code>${module.name.split('.')[-1]}</code>
 
     ${module.docstring | to_html}
     ${show_source(module)}
