@@ -38,11 +38,14 @@ as well as the `output_path` for the report.
 anovos_basic_report:
   basic_report: True
   report_args:
-    id_col: 
-    label_col: 
-    event_label: 
-    output_path: 
+    id_col:                     # index column (unique row identifier)
+    label_col:                  # the column that contains the labels (required for supervised learning, leave blank otherwise)
+    event_label:                # the event label
+    output_path:                # path to store the report output
 ```
+
+_💡 To learn more about these and configuration parameters, see the documentation for the
+[`anovos_basic_report`](../../api/data_report/basic_report_generation.md#anovos_basic_report) function._
 
 ### Full Report
 
@@ -56,7 +59,7 @@ These are displayed along with eye-catching visualizations that make it easy to 
 The full report is configured through two blocks in the configuration file: `report_preprocessing` and  `report_generation`.
 
 The `report_preprocessing` includes a mandatory `master_path` setting which specifies the location
-the data generated for the report is stored as it is computed by the different modules.
+the data generated for the report is stored as it is computed by the different modules of _Anovos_.
 
 The `charts_to_objects` sub-block specifies the parameters passed to the different preprocessing and analysis functions. 
 
@@ -71,16 +74,21 @@ report_preprocessing:
     bin_method:                 # method used for binning (either "equal_frequency" or "equal_range")
     bin_size:                   # the number of bins
     drift_detector: True        # whether to analyze for data drift
-    source_path:
+    source_path:                # path of the source data
 ```
+_💡 To learn more about these and additional configuration parameters, see the documentation for the
+[`charts_to_objects`](../../api/data_report/report_preprocessing.md#charts_to_objects) function._
 
-The `report_generation` block, we have the need for `master_path` which is the same as specified above.
+In the `report_generation` block, you need set the `master_path` to the same value as specified above.
+Further, we again need to set `id_col` and `label_col`.
 
-The user is also needed to specify `id_col`, `label_col`.
-Alongside some benchmarking thresholds like `corr_threshold`, `iv_threshold` & `drift_threshold_model` are needed for highlighting various association analysis checks.
+The various thresholds like `corr_threshold`, `iv_threshold`, and `drift_threshold_model` define which values
+are highlighted during the association analysis checks.
 
-Some of the file locations are needed to be specified by the user such as `dataDict_path` & `metricDict_path` basis which some of the reporting sections are updated. 
-Finally, the user can specify the `final_report_path` where the report would be saved.
+Some of the file locations are needed to be specified by the user such as `dataDict_path` & `metricDict_path` 
+basis which some of the reporting sections are updated. 
+
+Finally, the user can specify the `final_report_path` where the report is saved.
 
 ```yaml
 report_generation:
@@ -94,11 +102,14 @@ report_generation:
   metricDict_path:
   final_report_path:
 ```
+_💡 To learn more about these and additional configuration parameters, see the documentation for the
+[`anovos_report`](../../api/data_report/report_generation.md#anovos_report) function._
 
-For an example, see [the `configs.yaml` for the Anovos demo run](https://github.com/anovos/anovos/blob/main/config/configs.yaml).
+_💡 For an example, see
+[the `configs.yaml` for the Anovos demo run](https://github.com/anovos/anovos/blob/main/config/configs.yaml)._
 
 To control if and how the raw data that is included in the report is saved,
-you can add `write_`-blocks to your configuration file:
+you can optionally add `write_`-blocks to your configuration file:
 
 ```yaml
 write_intermediate:
