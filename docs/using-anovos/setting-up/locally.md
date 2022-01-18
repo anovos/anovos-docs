@@ -2,7 +2,7 @@
 
 ## 💿 Software Prerequisites
 
-_Anovos_ requires Spark (2.4.x), Python (3.7.x), and Java (8) to be set up:
+The current Alpha release of _Anovos_ requires Spark (2.4.x), Python (3.7.x), and Java (8) to be set up:
 
 - [Spark 2.4.8](https://spark.apache.org/docs/2.4.8/ )
 - [Python 3.7](https://www.python.org/downloads/release/python-378/)
@@ -12,6 +12,9 @@ The following tutorials can be helpful in setting up Apache Spark:
 
 - [Installing Apache Spark on Mac OSX](https://kevinvecmanis.io/python/pyspark/install/2019/05/31/Installing-Apache-Spark.html)
 - [Installing Apache Spark and using PySpark on Windows](https://towardsdatascience.com/installing-apache-pyspark-on-windows-10-f5f0c506bea1)
+
+💡 _The current development version of Anovos that is [available through GitHub](https://github.com/anovos/anovos) offers experimental
+support for Spark 3.1.x and 3.2.x (with Java 11 and Python 3.9.x)_
 
 ## Installing Anovos
 

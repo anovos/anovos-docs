@@ -91,6 +91,8 @@ The Beta release will also have another capability named as Feature Stability es
         - Supply chain
 - **Feature Stability**
     - This will be an extension of the attribute stability capabilities of the Alpha release
+- **Spark support**
+    - Compatibility with Spark versions 2.4.x, 3.1.x, and 3.2.x 
 - **Runtime Environment support**
     - Microsoft Azure 
 ### Version 1.0
