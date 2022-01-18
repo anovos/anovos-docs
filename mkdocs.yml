@@ -1,12 +1,17 @@
-site_name: Anovos Docs
+site_name: Anovos Documentation
 site_url: https://docs.anovos.ai
 site_description: Stable Features yield Resilient Models. Documentation for the Feature Engineering Library Anovos.
 site_author: Anovos Developers, Mobilewalla
 
 repo_url: https://github.com/anovos/anovos-docs
+repo_name: anovos/anovos-docs
 edit_uri: edit/main/docs
+
+use_directory_urls: false
+
 plugins:
   - search
+  - include_dir_to_nav
 markdown_extensions:
   - fenced_code
   - pymdownx.highlight:
@@ -26,15 +31,10 @@ theme:
       toggle:
         icon: material/lightbulb-outline
         name: Switch to dark mode
-        primary: deep purple
     - scheme: slate
       toggle:
         icon: material/lightbulb
         name: Switch to light mode
-extra_css:
-  - stylesheets/extra.css
-extra_javascript:
-  - javascript/shortcuts.js
 
 nav:
   - Home: index.md
@@ -60,13 +60,7 @@ nav:
       - Code of Conduct: community/code-of-conduct.md
   - License: license.md
   - API Docs:
-      - Overview: docs/anovos-modules-overview/overview/index.md
-      - Data Ingest: docs/anovos-modules-overview/data-ingest/index.md
-      - Data Analyzer: docs/anovos-modules-overview/data-analyzer/index.md
-      - Quality Checker: docs/anovos-modules-overview/quality-checker/index.md
-      - Association Evaluator: docs/anovos-modules-overview/association-evaluator/index.md
-      - Data Drift and Stability Index: docs/anovos-modules-overview/data_drift_and_stability_index/index.md
-      - Data Transformers: docs/anovos-modules-overview/data_transformer/index.md
+      - api
 
 extra:
   social:
@@ -80,3 +74,6 @@ extra:
   analytics:
     provider: google
     property: UA-52258647-20
+
+  lib_repo_url: https://github.com/anovos/anovos
+  lib_repo_name: anovos/anovos

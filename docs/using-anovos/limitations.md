@@ -16,21 +16,21 @@ in the future.
   loaded into a DataFrame (except for CSV files).
 
 ## 🏎 Performance 
-- Computing the [mode](../docs/anovos-modules-overview/data-analyzer/index.md#measures_of_centraltendency) and/or 
+- Computing the [mode](../api/data_analyzer/stats_generator.md#measures_of_centraltendency) and/or 
   distinct value counts are the most expensive operations in _Anovos_.  
   We aim to further optimize them in the upcoming releases.
 
-- Calculating a [correlation matrix](../docs/anovos-modules-overview/association-evaluator/index.md#correlation_matrix)
+- Calculating a [correlation matrix](../api/data_analyzer/association_evaluator.md#correlation_matrix)
   may result in memory issues if very high cardinality categorical features are involved – a limitation that was
   propagated from the underlying `phik` library. Therefore, we recommend dropping these columns if not necessary.
 
-- The [invalid entries detection](../docs/anovos-modules-overview/quality-checker/index.md#invalidentries_detection)
+- The [invalid entries detection](../api/data_analyzer/quality_checker.md#invalidentries_detection)
   currently only looks for selected suspicious patterns. We aim to add more flexibility to this function with user
   provided patterns, i.e., regex support.
   Also, this function may yield false positives. Hence, be cautious when using the inbuilt treatment option.
 
 ## 🔩 Other
-- The [stability index](../docs/anovos-modules-overview/data_drift_and_stability_index/index.md#stabilityindex_computation)
+- The [stability index](../api/data_drift/drift_detector.md#stabilityindex_computation)
   can currently only be calculated for numerical columns.
 
 - The exception and error handling is at times inconsistent. Please don't hesitate to
