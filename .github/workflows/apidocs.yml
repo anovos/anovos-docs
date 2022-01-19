@@ -37,24 +37,18 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Install Docs Python requirements
+      - name: Install Python requirements for API docs generation
         run: |
           pip install pdoc3 pyment
 
       - name: Generate API docs
         run: |
           cd anovos/src/main
-          ls
           pyment -o google -w anovos
-          ls ../../../pdoc-template
           pdoc --output-dir=./api --template-dir=../../../pdoc-template --html anovos
-          ls ./api
           mv ./api/anovos/* ./api/
-          ls ./api
           rmdir ./api/anovos
-          ls ./api
           find . -name '*.html' -exec sh -c 'mv "$0" "${0%.html}.md"' {} \;
-          ls ./api
 
       - name: Merge API docs into docs
         run: |
