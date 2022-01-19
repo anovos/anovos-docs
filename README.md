@@ -38,3 +38,7 @@ All images for the site are stored in the `docs/assets`. Upload your images in t
 
 Once your changes have been committed and pushed to the repo, create a detailed pull request for review. A maintainer from the repo will review the changes and merge your PR. The Anovos Docs repo has a GitHub Action that automatically deploys the updates to the website.
 
+
+## Updating the API documentation
+
+The [API documentation](https://docs.anovos.ai/api/) is automatically generated. There is a [GitHub Action workflow](https://github.com/anovos/anovos-docs/actions/workflows/apidocs.yml) that can be triggered to run manually. It fetches the current version of the library, generates the API docs and opens a PR that can be reviewed and merged just as any other contribution to the docs. 
