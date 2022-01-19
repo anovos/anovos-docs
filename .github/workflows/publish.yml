@@ -13,9 +13,10 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Deploy docs
-        uses: mhausenblas/mkdocs-deploy-gh-pages@master
+        uses: mhausenblas/mkdocs-deploy-gh-pages@1.24
 
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CONFIG_FILE: mkdocs.yml
           CUSTOM_DOMAIN: docs.anovos.ai
+          REQUIREMENTS: requirements.txt
