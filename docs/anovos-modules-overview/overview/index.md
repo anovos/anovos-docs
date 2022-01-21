@@ -24,4 +24,4 @@ The key modules included in the alpha release are:
     This module is a visualization component of Anovos. All the analysis on the key modules is visualized via an HTML report to get a well-rounded understanding of the ingested dataset. The report contains an executive summary, wiki for data dictionary & metric dictionary, a tab corresponding to key modules demonstrating the output.
 
 Note: Upcoming Modules - Feature Wiki, Feature store, Auto ML, ML Flow Integration 
-            
+
