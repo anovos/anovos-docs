@@ -1,6 +1,6 @@
 ## Module ANOVOS.stats_generator 	 
 
-This module generates all the descriptive statistics related to the ingested data. Descriptive statistics are broken down into different metric types, and each function corresponds to one metric type.
+This module generates all the descriptive statistics related to the ingested data. Descriptive statistics are split into different metric types, and each function corresponds to one metric type.
 - global_summary
 - measures_of_counts
 - measures_of_centralTendency
