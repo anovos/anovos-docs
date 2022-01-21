@@ -16,7 +16,7 @@ The key modules included in the alpha release are:
     c. *Association Evaluator*: 
     This submodule focuses on understanding the interaction between different attributes (correlation, variable clustering) and/or the relationship between an attribute & the binary target variable (Information Gain, Information Value). 
 
-3. **Data Drift**: 
+3. **Data Drift & Data Stability Computation**: 
     In an ML context, data drift is the change in the distribution of the baseline dataset that trained the model (source distribution) and the ingested data (target distribution) that makes the prediction. Data drift is one of the primary causes of poor performance of ML models over time. This module ensures the stability of the ingested dataset over time by analyzing it with the baseline dataset (via computing drift statistics) and/or with historically ingested datasets (via computing stability index – currently supports only numerical features), if available. Identifying the data drift at an early stage enables data scientists to be proactive and fix the root cause.
 4. **Data Transformer**:
     In the alpha release, the data transformer module only includes some basic pre-processing functions like binning, encoding, to name a few. These functions were required to support computations of the above key modules.  A more exhaustive set of transformations can be expected in future releases.
@@ -24,4 +24,4 @@ The key modules included in the alpha release are:
     This module is a visualization component of Anovos. All the analysis on the key modules is visualized via an HTML report to get a well-rounded understanding of the ingested dataset. The report contains an executive summary, wiki for data dictionary & metric dictionary, a tab corresponding to key modules demonstrating the output.
 
 Note: Upcoming Modules - Feature Wiki, Feature store, Auto ML, ML Flow Integration 
-            
+
