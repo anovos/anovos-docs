@@ -21,7 +21,7 @@ In the second step, 4 choices of statistical metrics are provided to measure the
 They are calculated as below:
 For two discrete probability distributions *P=(p_1,…,p_k)* and *Q=(q_1,…,q_k),*
 
-![https://anovos.github.io/anovos-docs/assets/drift_stats_formulae.png](https://anovos.github.io/anovos-docs/assets/drift_stats_formulae.png)
+![https://raw.githubusercontent.com/anovos/anovos-docs/folder_restructuring_adhoc/docs/assets/drift_stats_formulae.png](https://raw.githubusercontent.com/anovos/anovos-docs/folder_restructuring_adhoc/docs/assets/drift_stats_formulae.png)
 
 A threshold can be set to flag out drifted attributes. If multiple statistical metrics have been calculated, an attribute will be marked as drifted if any of its statistical metric is larger than the threshold.
 
