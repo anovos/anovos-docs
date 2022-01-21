@@ -21,10 +21,7 @@ In the second step, 4 choices of statistical metrics are provided to measure the
 They are calculated as below:
 For two discrete probability distributions *P=(p_1,…,p_k)* and *Q=(q_1,…,q_k),*
 
-- PSI(P,Q)= ∑_(i=1)^k▒(〖(p〗_i-q_i)*log⁡(p_i/q_i ))^2 , 
-- 	JSD(P,Q)=(KL_divergence(p,(p+q)/2)+ KL_divergence(q,(p+q)/2))/2, where KL_divergence(P,Q)=∑_(i=1)^k▒(p_i*log⁡(p_i/q_i )) ,
-- HD(P,Q) =  1/√2  √(∑_(i=1)^k▒(√(p_i )-√(q_i ))^2 )  
-- KS(P,Q)=〖sup 〗_i  (〖|F〗_P (i)-F_Q (i)|) ,
+![https://anovos.github.io/anovos-docs/assets/drift_stats_formulae.png](https://anovos.github.io/anovos-docs/assets/drift_stats_formulae.png)
 
 A threshold can be set to flag out drifted attributes. If multiple statistical metrics have been calculated, an attribute will be marked as drifted if any of its statistical metric is larger than the threshold.
 
