@@ -40,7 +40,7 @@ anovos_basic_report:
   report_args:
     id_col:                     # index column (unique row identifier)
     label_col:                  # the column that contains the labels (required for supervised learning, leave blank otherwise)
-    event_label:                # the event label
+    event_label:                # the event label (positive case in binary classification)
     output_path:                # path to store the report output
 ```
 
@@ -70,7 +70,7 @@ report_preprocessing:
     list_of_cols: all           # the columns to include in the report
     drop_cols:                  # the columns to drop
     label_col:                  # the label column
-    event_label:                # the event label
+    event_label:                # the event label (positive case in binary classification)
     bin_method:                 # method used for binning (either "equal_frequency" or "equal_range")
     bin_size:                   # the number of bins
     drift_detector: True        # whether to analyze for data drift
