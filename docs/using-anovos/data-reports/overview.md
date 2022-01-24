@@ -85,8 +85,11 @@ Further, we again need to set `id_col` and `label_col`.
 The various thresholds like `corr_threshold`, `iv_threshold`, and `drift_threshold_model` define which values
 are highlighted during the association analysis checks.
 
-Some of the file locations are needed to be specified by the user such as `dataDict_path` & `metricDict_path` 
-basis which some of the reporting sections are updated. 
+You also need to specify the paths to the data and metric dictionaries using `dataDict_path` and `metricDict_path`, respectively.
+For examples, see the example
+[data_dictionary.csv](https://raw.githubusercontent.com/anovos/anovos/main/examples/data/income_dataset/data_dictionary.csv)
+and the main
+[metric_dictionary.csv](https://raw.githubusercontent.com/anovos/anovos/main/data/metric_dictionary.csv).
 
 Finally, the user can specify the `final_report_path` where the report is saved.
 
