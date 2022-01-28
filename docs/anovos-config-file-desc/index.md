@@ -1,4 +1,4 @@
-***[Anovos: Configs.yaml]{.ul}***
+***Anovos: Configs.yaml***
 
 In anovos we have used YAML language to make configuration file. In
 configuration file we have specified various keys, subkeys and its
