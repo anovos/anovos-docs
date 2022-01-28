@@ -1,4 +1,4 @@
-Anovos on Azure Databricks
+**Anovos on Azure Databricks**
 
 **Step1: Installing/Downloading Anovos**
 
@@ -90,7 +90,7 @@ dbfs cp -r source_folder_path destination_folder_path
 eg. dbfs cp -r /home/user1/Desktop/dummy_folder
 dbfs:/Filestore/tables/dummy_folder
 
-**Step3: Creating jobs for running anovos by initiating cluster **
+**Step3: Creating jobs for running anovos by initiating cluster**
   - **Task Details**
 
 <!-- end list -->
@@ -99,11 +99,8 @@ dbfs:/Filestore/tables/dummy_folder
 
 2.  **Type –** Python, location of main.py script file in DBFS
 
-3.  **Cluster: **
-**Cluster Configurations**
-
-![Graphical user interface, text, application Description automatically
-generated](media/image3.png)
+3.  **Cluster: -**
+  **Cluster Configurations -**
 
 i.  **Cluster mode –** Standard
 
@@ -127,9 +124,9 @@ v.  **Driver Types -** General purpose (14GB Memory, 4 cores)
 4.  **Parameters –** [ DBFS path to config.yaml , global_run_type]
 
 Eg. - ["/dbfs/FileStore/tables/configs_income_azure.yaml
-","databricks"]
+", "databricks"]
 
-5.  **Dependent libraries- **
+5.  **Dependent libraries -**
 
 i.  Add wheel file (.whl file) by uploading from local environment
     (dist/.whl file)
