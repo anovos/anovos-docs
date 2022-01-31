@@ -67,6 +67,9 @@ Copy the following files to DBFS directly from UI or from CLI commands:
 
 **Steps to copy files to DBFS using UI**
 
+![https://raw.githubusercontent.com/anovos/anovos-docs/azure_databricks_docs/docs/assets/azure_databricks_images/image1.png]
+  (https://raw.githubusercontent.com/anovos/anovos-docs/azure_databricks_docs/docs/assets/azure_databricks_images/image1.png)
+
 1.  Launch any workspace and go to data menu on databricks. After
     clicking data menu, options to upload file will appear and then by
     clicking ‘drop files to upload, or click to browse’, users will be
@@ -93,6 +96,9 @@ dbfs:/Filestore/tables/dummy_folder
 **Step3: Creating jobs for running anovos by initiating cluster**
   - **Task Details**
 
+  ![https://raw.githubusercontent.com/anovos/anovos-docs/azure_databricks_docs/docs/assets/azure_databricks_images/image2.png]
+  (https://raw.githubusercontent.com/anovos/anovos-docs/azure_databricks_docs/docs/assets/azure_databricks_images/image2.png)
+
 <!-- end list -->
 
 1.  **Task Name –** Give any task name relevant to your project
@@ -101,6 +107,9 @@ dbfs:/Filestore/tables/dummy_folder
 
 3.  **Cluster: -**
   **Cluster Configurations -**
+
+  ![https://raw.githubusercontent.com/anovos/anovos-docs/azure_databricks_docs/docs/assets/azure_databricks_images/image3.png]
+  (https://raw.githubusercontent.com/anovos/anovos-docs/azure_databricks_docs/docs/assets/azure_databricks_images/image3.png)
 
 i.  **Cluster mode –** Standard
 
@@ -128,6 +137,9 @@ Eg. - ["/dbfs/FileStore/tables/configs_income_azure.yaml
 
 5.  **Dependent libraries -**
 
+![https://raw.githubusercontent.com/anovos/anovos-docs/azure_databricks_docs/docs/assets/azure_databricks_images/image4.png]
+  (https://raw.githubusercontent.com/anovos/anovos-docs/azure_databricks_docs/docs/assets/azure_databricks_images/image4.png)
+
 i.  Add wheel file (.whl file) by uploading from local environment
     (dist/.whl file)
 
@@ -147,6 +159,9 @@ ii.  Add jars by uploading from local environment (jars/.jar file)
 
 After setting all these required steps in task, click create and jobs
 will be created successfully.
+
+![https://raw.githubusercontent.com/anovos/anovos-docs/azure_databricks_docs/docs/assets/azure_databricks_images/image5.png]
+  (https://raw.githubusercontent.com/anovos/anovos-docs/azure_databricks_docs/docs/assets/azure_databricks_images/image5.png)
 
 For running these jobs, click on run now and then jobs will be triggered
 automatically.
