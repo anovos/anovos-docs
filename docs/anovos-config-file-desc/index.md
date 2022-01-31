@@ -14,14 +14,19 @@ modules. Let's see each of the keys and its values in detail:
             running with AWS cloud services)
 
         ii. file_type: file format of the input data. Currently, we
-            support CSV, Parquet or Avro. Avro data source requires an
+            support CSV, Parquet or Avro. 
+            Note: Avro data source requires an
             external package to run, which can be configured with
             spark-submit options (--packages
             org.apache.spark:spark-avro_2.11:2.4.0).
 
         iii. file_configs (optional): Rest of the valid configuration
-             can be passed through this key e.g., repartition, mode,
-             compression, header, delimiter etc.
+            can be passed through this key e.g., delimiter, inferSchema, header. 
+            Examples
+                delimiter: ","
+                header: True
+                inferSchema: True
+
 
     b.  delete_column: (list format or string of col names separated by
         |). It specifies the columns required to be deleted from the
@@ -74,21 +79,24 @@ modules. Let's see each of the keys and its values in detail:
 
             2.  file_type: (CSV, Parquet or Avro). file format of the
                 input data. Currently, we support CSV, Parquet or Avro.
-                Avro data source requires an external package to run,
+                Note: Avro data source requires an external package to run,
                 which can be configured with spark-submit options
                 (--packages org.apache.spark:spark-avro_2.11:2.4.0).
 
             3.  file_configs (optional): Rest of the valid configuration
-                can be passed through this key e.g., repartition, mode,
-                compression, header, delimiter etc.
+                can be passed through this key e.g., delimiter, InferSchema, header.
+                Examples
+                    delimiter: ","
+                    header: True
+                    inferSchema: True
 
         ii. delete_column: (list format or string of col names separated
             by |). It specifies the columns required to be deleted from
             the other input dataframe.
 
         iii. select_column: (list format or string of col names
-             separated by |). It specifies the columns required to be
-             selected from the other input dataframe.
+            separated by |). It specifies the columns required to be
+            selected from the other input dataframe.
 
         iv. rename_column
 
@@ -136,16 +144,19 @@ modules. Let's see each of the keys and its values in detail:
                 other input data (joining dataset).
 
             3.  file_configs (optional): Rest of the valid configuration
-                can be passed through this key e.g., repartition, mode,
-                compression, header, delimiter etc.
+                can be passed through this key e.g., delimiter, InferSchema, header.
+                Examples
+                    delimiter: ","
+                    header: True
+                    inferSchema: True
 
         ii. delete_column: (list format or string of col names separated
             by |). It specifies the columns required to be deleted from
             the other input dataframe.
 
         iii. select_column: (list format or string of col names
-             separated by |). It specifies the columns required to be
-             selected from the other input dataframe.
+            separated by |). It specifies the columns required to be
+            selected from the other input dataframe.
 
         iv. rename_column
 
@@ -234,7 +245,7 @@ modules. Let's see each of the keys and its values in detail:
             dropped from list_of_cols before duplicate detection
 
         iii. treatment: It takes Boolean type input -- True or False. If
-             true, duplicate rows are removed from the input dataset.
+            true, duplicate rows are removed from the input dataset.
 
     b.  nullRows_detection
 
@@ -247,9 +258,9 @@ modules. Let's see each of the keys and its values in detail:
             dropped from list_of_cols before null rows detection
 
         iii. treatment: This takes Boolean type input -- True or False.
-             If true, rows with high null columns (defined by
-             treatment_threshold argument) are removed from the input
-             dataset.
+            If true, rows with high null columns (defined by
+            treatment_threshold argument) are removed from the input
+            dataset.
 
         iv. treatment_threshold: It takes a value between 0 to 1 with
             default 0.8, which means 80% of columns are allowed to be
@@ -340,13 +351,13 @@ modules. Let's see each of the keys and its values in detail:
         vi. Treatment_method: null_replacement, row_removal, value_replacement
 
         vii. Pre_existing_model: It takes Boolean type input -- True or False.
-             True if the file with upper/lower permissible values exists
-             already, False Otherwise.
+            True if the file with upper/lower permissible values exists
+            already, False Otherwise.
 
         viii. Model_path: If pre_existing_model is True, this is path for
-              pre-saved model file. If pre_existing_model is False, this field
-              can be used for saving the model file. Default NA means there is
-              neither pre-saved model file nor there is a need to save one.
+            pre-saved model file. If pre_existing_model is False, this field
+            can be used for saving the model file. Default NA means there is
+            neither pre-saved model file nor there is a need to save one.
 
         ix. Output_mode: replace or append. "replace" option replaces original
             columns with treated column, whereas "append" option append treated
@@ -374,7 +385,7 @@ modules. Let's see each of the keys and its values in detail:
         iv. treatment_method: MMM, row_removal or column_removal
 
         v.  treatment_configs: It takes input in dictionary format with keys
-            -- 'treatment_threshold' for column_removal treatment, or all
+            'treatment_threshold' for column_removal treatment, or all
             arguments corresponding to imputation_MMM function.
 
 7.  **association_evaluator**
@@ -494,8 +505,11 @@ modules. Let's see each of the keys and its values in detail:
 
                 c.  file_configs (optional): Rest of the valid
                     configuration can be passed through this key e.g.,
-                    repartition, mode, compression, header, delimiter
-                    etc.
+                    delimiter, InferSchema, header.
+                    Examples
+                        delimiter: ","
+                        header: True
+                        inferSchema: True
 
             2.  delete_column: It specifies the columns required to be
                 deleted from the source dataframe. Alternatively,
@@ -552,7 +566,7 @@ modules. Let's see each of the keys and its values in detail:
                 kurtosis>. idx is index number of historical datasets
                 assigned in chronological order
 
-            3.  appended_metric_path:  path for saving input dataframes
+            3.  appended_metric_path: path for saving input dataframes
                 metrics after appending to the historical datasets'
                 metrics.
 
@@ -571,8 +585,11 @@ modules. Let's see each of the keys and its values in detail:
 
                 c.  file_configs (optional): Rest of the valid
                     configuration can be passed through this key e.g.,
-                    repartition, mode, compression, header, delimiter
-                    etc.
+                    delimiter, InferSchema, header.
+                    Examples
+                        delimiter: ","
+                        header: True
+                        inferSchema: True
 
         iii. dataset2: same configuration as dataset1
 
@@ -601,12 +618,12 @@ modules. Let's see each of the keys and its values in detail:
             types)
 
         vii. drift_detector: It takes Boolean type input -- True or
-             False. It indicates whether the drift component is already
-             analyzed or not. By default it is kept as False.
+            False. It indicates whether the drift component is already
+            analyzed or not. By default it is kept as False.
 
         viii. source_path: The source data path which is needed for
-              drift analysis. If it's not computed / out of scope, the
-              default value of "NA" is considered.
+            drift analysis. If it's not computed / out of scope, the
+            default value of "NA" is considered.
 
 10. **report_generation**
 
@@ -632,24 +649,24 @@ modules. Let's see each of the keys and its values in detail:
   |0.3 to 0.5        |      Strong predictive Power|
   |>0.5              |    Suspicious Predictive Power|
 
-e.  drift_threshold_model: The threshold beyond which the attribute can
-    be flagged as 1 or drifted as measured across different drift
-    metrices specified by the user. It takes value between 0 to 1.
+    e.  drift_threshold_model: The threshold beyond which the attribute can
+        be flagged as 1 or drifted as measured across different drift
+        metrices specified by the user. It takes value between 0 to 1.
 
-f.  dataDict_path: The path containing the exact name, definition
-    mapping of the attributes. This is eventually used to populate at
-    the report for easy referencing
+    f.  dataDict_path: The path containing the exact name, definition
+        mapping of the attributes. This is eventually used to populate at
+        the report for easy referencing
 
-g.  metricDict_path: Path of metric dictionary
+    g.  metricDict_path: Path of metric dictionary
 
-h.  final_report_path: Path where final report is saved. File path can
-    be a local path or s3 path (when running with AWS cloud services)
+    h.  final_report_path: Path where final report is saved. File path can
+        be a local path or s3 path (when running with AWS cloud services)
 
 11. **write_intermediate**
 
     a.  file_path: Path where intermediate datasets (after selecting,
         dropping, renaming, and recasting of columns) for quality
-        checker operations, join dataset and concatenate dataset are
+        checker operations, join dataset and concatenate dataset will be
         saved
 
     b.  file_type: (CSV, Parquet or Avro). file format of intermediate
@@ -658,24 +675,39 @@ h.  final_report_path: Path where final report is saved. File path can
     c.  file_configs (optional): Rest of the valid configuration can be
         passed through this key e.g., repartition, mode, compression,
         header, delimiter etc.
+        Examples
+            mode: overwrite
+            header: True
+            delimiter: ","
+            inferSchema: True
 
 12. **write_main**
 
-    a.  file_path: Path where final cleaned input dataset is saved
+    a.  file_path: Path where final cleaned input dataset will be saved
 
     b.  file_type: (CSV, Parquet or Avro). file format of final dataset
 
     c.  file_configs (optional): Rest of the valid configuration can be
         passed through this key e.g., repartition, mode, compression,
         header, delimiter etc.
+        Examples
+            mode: overwrite
+            header: True
+            delimiter: ","
+            inferSchema: True
 
 13. **write_stats**
 
     a.  file_path: Path where all tables/stats of anovos modules (data
-        drift & data analyzer) are saved
+        drift & data analyzer) will be saved
 
     b.  file_type: (CSV, Parquet or Avro). file format of final dataset
 
     c.  file_configs (optional): Rest of the valid configuration can be
         passed through this key e.g., repartition, mode, compression,
-        header, delimiter etc.
+        header, delimiter, inferSchema etc.
+        Examples
+            mode: overwrite
+            header: True
+            delimiter: ","
+            inferSchema: True
