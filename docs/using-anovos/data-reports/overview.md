@@ -139,4 +139,6 @@ write_stats:
 
 ## 🦄 Generating data reports through individual modules
 
-*Here the user can pick up the relevant functions specific to the reporting module and execute*
+You can also use the `data_report` module directly in your Python code.
+
+For an example, see [this notebook](https://github.com/anovos/anovos/blob/main/examples/notebooks/data_report.ipynb).
