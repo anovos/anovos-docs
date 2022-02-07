@@ -12,7 +12,7 @@ open source library for every data scientists’ use.
 ![https://anovos.github.io/anovos-docs/assets/roadmap.png](https://anovos.github.io/anovos-docs/assets/roadmap.png)
 
 ## 🛣 The Roadmap
-We plan to bring fully functional _Anovos_ over the course of three major releases: Alpha, Beta, and versio 1.0.
+We plan to bring fully functional _Anovos_ over the course of three major releases: Alpha, Beta, and version 1.0.
 
 ### Alpha Release
 
