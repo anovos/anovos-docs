@@ -5,14 +5,13 @@ pyspark environment**
 
 i)  Installing Java using command:
 
-> !apt-get install openjdk-8-jdk-headless -qq > /dev/null
+    !apt-get install openjdk-8-jdk-headless -qq > /dev/null
 
 ii)  Installing spark using command:
 
-> !wget -q <https://archive.apache.org/dist/spark/spark-2.4.7/spark-2.4.7-bin-hadoop2.7.tgz>
-> 
-> Note: Used java8 and spark 2.4.7 version (change the version as per
-> compatibility if needed)
+    !wget -q <https://archive.apache.org/dist/spark/spark-2.4.7/spark-2.4.7-bin-hadoop2.7.tgz>
+
+**Note**: Used java8 and spark 2.4.7 version (change the version as per compatibility if needed)
 
 iii)  Unzip the spark file to the current folder using command:
     
@@ -23,9 +22,9 @@ iv)  Setting java and spark folder to our system path environment using
     
     Import os
     
-    os.environ\["JAVA\_HOME"\] = "/usr/lib/jvm/java-8-openjdk-amd64"
+    os.environ["JAVA_HOME"] = "/usr/lib/jvm/java-8-openjdk-amd64"
     
-    os.environ\["SPARK\_HOME"\] = "/content/spark-2.4.7-bin-hadoop2.7"
+    os.environ["SPARK_HOME"] = "/content/spark-2.4.7-bin-hadoop2.7"
 
 v)  Installing findspark using command:
     
@@ -39,19 +38,19 @@ vi)  Installing pyspark using command:
 
 Clone the Anovos Repository on google colab notebook using command:
 
-!git clone <https://github.com/anovos/anovos.git>
+    !git clone <https://github.com/anovos/anovos.git>
 
 After cloning, go to the newly created anovos directory and execute the
 following command in notebook itself to clean and build the latest
 modules:
 
-cd anovos
+    cd anovos
 
-!make clean build
+    !make clean build
 
-Then**,** Install the anovos related dependencies using command:
+Further install the anovos related dependencies using command:
 
-!pip install -r requirements.txt
+    !pip install -r requirements.txt
 
 **Note**: Anovos directory is present under Files/content/ in notebook
 
@@ -76,14 +75,14 @@ and update the following
 Once everything is configured, you can start your workflow run using the
 aforementioned script using command:
 
-cd dist
+    cd dist
 
-!nohup ./spark-submit.sh > run.txt &
+    !nohup ./spark-submit.sh > run.txt &
 
 While the job is running, you can check the logs written to stdout using
 command:
 
-!tail -f run.txt
+    !tail -f run.txt
 
 Once the run completes, the reports and all the intermediate outputs are
 saved at the required path.
