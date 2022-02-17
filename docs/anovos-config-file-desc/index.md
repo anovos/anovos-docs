@@ -28,7 +28,7 @@ modules. Let's see each of the keys and its values in detail:
                 header: True
                 inferSchema: True
 
-    Attaching some link to get more information about file configuration while reading dataset: [read csv files](https://sparkbyexamples.com/pyspark/pyspark-read-csv-file-into-dataframe/), [read parquet files](https://sparkbyexamples.com/pyspark/pyspark-read-and-write-parquet-file/), [read json files](https://sparkbyexamples.com/pyspark/pyspark-read-json-file-into-dataframe/), [read avro files](https://sparkbyexamples.com/spark/read-write-avro-file-spark-dataframe/)
+    Attaching some links to get more information about file configuration while reading dataset: [read csv files](https://sparkbyexamples.com/pyspark/pyspark-read-csv-file-into-dataframe/), [read parquet files](https://sparkbyexamples.com/pyspark/pyspark-read-and-write-parquet-file/), [read json files](https://sparkbyexamples.com/pyspark/pyspark-read-json-file-into-dataframe/), [read avro files](https://sparkbyexamples.com/spark/read-write-avro-file-spark-dataframe/)
 
     b.  delete_column: (list format or string of col names separated by
         |). It specifies the columns required to be deleted from the
@@ -194,7 +194,7 @@ modules. Let's see each of the keys and its values in detail:
 
     d.  dataset2: same configuration as dataset1
 
-Attaching the doc of data ingest to understand more about above operations(read, delete, select, join, concatenate, etc): [Data Ingest](https://github.com/anovos/anovos-docs/blob/main/docs/anovos-modules-overview/data-ingest/index.md)
+Attaching the documentation link of data ingest module to understand more about above operations(read, delete, select, join, concatenate, etc): [Data Ingest](https://github.com/anovos/anovos-docs/blob/main/docs/anovos-modules-overview/data-ingest/index.md)
 
 4.  **anovos_basic_report**
 
@@ -209,7 +209,7 @@ Attaching the doc of data ingest to understand more about above operations(read,
         outlier_detection), attribute association (correlation_matrix,
         IV_calculation, IG_calculation, variable_clustering).
 
-    Attaching the docs of all modules to get better idea what these modules actually do and thier output: [Data Analyzer](https://github.com/anovos/anovos-docs/blob/main/docs/anovos-modules-overview/data-analyzer/index.md), [Quality Checker](https://github.com/anovos/anovos-docs/blob/main/docs/anovos-modules-overview/quality-checker/index.md), [Association Evaluator](https://github.com/anovos/anovos-docs/blob/main/docs/anovos-modules-overview/association-evaluator/index.md) 
+    Attaching the documentation link of modules to get better idea what these modules actually do and thier output: [Data Analyzer](https://github.com/anovos/anovos-docs/blob/main/docs/anovos-modules-overview/data-analyzer/index.md), [Quality Checker](https://github.com/anovos/anovos-docs/blob/main/docs/anovos-modules-overview/quality-checker/index.md), [Association Evaluator](https://github.com/anovos/anovos-docs/blob/main/docs/anovos-modules-overview/association-evaluator/index.md) 
 
     b.  Report_args
 
@@ -716,7 +716,7 @@ Attaching the doc of data ingest to understand more about above operations(read,
     c.  file_configs (optional): Rest of the valid configuration can be
         passed through this key e.g., repartition, mode, compression,
         header, delimiter etc.
-        
+
         Examples
             mode: overwrite
             header: True
@@ -766,4 +766,4 @@ Attaching the doc of data ingest to understand more about above operations(read,
             delimiter: ","
             inferSchema: True
 
-Attaching some link to get more information about configuration: [write csv files](https://sparkbyexamples.com/pyspark/pyspark-read-csv-file-into-dataframe/), [write parquet files](https://sparkbyexamples.com/pyspark/pyspark-read-and-write-parquet-file/), [write json files](https://sparkbyexamples.com/pyspark/pyspark-read-json-file-into-dataframe/), [write avro files](https://sparkbyexamples.com/spark/read-write-avro-file-spark-dataframe/)
+Attaching some links to get more information about file configuration while writing dataset: [write csv files](https://sparkbyexamples.com/pyspark/pyspark-read-csv-file-into-dataframe/), [write parquet files](https://sparkbyexamples.com/pyspark/pyspark-read-and-write-parquet-file/), [write json files](https://sparkbyexamples.com/pyspark/pyspark-read-json-file-into-dataframe/), [write avro files](https://sparkbyexamples.com/spark/read-write-avro-file-spark-dataframe/)
