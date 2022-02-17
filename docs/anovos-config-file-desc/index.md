@@ -668,13 +668,13 @@ Attaching the doc of data ingest to understand more about above operations(read,
         found to be significant in terms of model. It takes value
         between 0 to 1.
 
-        |**Information Value**|   **Variable Predictiveness**|
-        |--- | ---|
-        |Less than 0.02    |      Not useful for prediction|
-        |0.02 to 0.1       |     Weak predictive Power|
-        |0.1 to 0.3        |      Medium predictive Power|
-        |0.3 to 0.5        |      Strong predictive Power|
-        |>0.5              |    Suspicious Predictive Power|
+    |**Information Value**|   **Variable Predictiveness**|
+    |--- | ---|
+    |Less than 0.02    |      Not useful for prediction|
+    |0.02 to 0.1       |     Weak predictive Power|
+    |0.1 to 0.3        |      Medium predictive Power|
+    |0.3 to 0.5        |      Strong predictive Power|
+    |>0.5              |    Suspicious Predictive Power|
 
     e.  drift_threshold_model: The threshold beyond which the attribute can
         be flagged as 1 or drifted as measured across different drift
