@@ -10,18 +10,26 @@ modules. Let's see each of the keys and its values in detail:
     a.  read_dataset
 
         i.  file_path: file (or directory) path where the input data is
-            saved. File path can be a local path or s3 path (when
-            running with AWS cloud services)
+            saved. File path can be a local path, s3 path (when running with AWS cloud services), 
+            google colab path (when running with open source platform: Google Colab),
+            azure dbfs or azure blob storage (when running with Azure databricks).
+            For azure dbfs path should be like "dbfs:/directory_name" and 
+            For azure blob storage path should be like "dbfs:/mnt/directory_name".
 
         ii. file_type: file format of the input data. Currently, we
-            support CSV, Parquet or Avro. 
-            Note: Avro data source requires an
+            support CSV, Parquet or Avro. Note: Avro data source requires an
             external package to run, which can be configured with
-            spark-submit options (--packages
-            org.apache.spark:spark-avro_2.11:2.4.0).
+            spark-submit options (--packages org.apache.spark:spark-avro_2.11:2.4.0).
 
         iii. file_configs (optional): Rest of the valid configuration
-            can be passed through this key e.g., delimiter, inferSchema, header. 
+            can be passed through this key e.g., delimiter, inferSchema, header.
+
+            Attaching some link to get more information about file configuration while reading dataset.
+            [read csv files](https://sparkbyexamples.com/pyspark/pyspark-read-csv-file-into-dataframe/)
+            [read parquet files](https://sparkbyexamples.com/pyspark/pyspark-read-and-write-parquet-file/)
+            [read json files](https://sparkbyexamples.com/pyspark/pyspark-read-json-file-into-dataframe/)
+            [read avro files](https://sparkbyexamples.com/spark/read-write-avro-file-spark-dataframe/)
+
             Examples
                 delimiter: ","
                 header: True
@@ -74,8 +82,12 @@ modules. Let's see each of the keys and its values in detail:
 
         i.  read_dataset
 
-            1.  file_path: file (or directory) path where the other
-                input data that is saved.
+            1.  file_path: file (or directory) path where the other input data is saved. 
+                File path can be a local path, s3 path (when running with AWS cloud services),
+                google colab path (when running with open source platform: Google Colab),
+                azure dbfs or azure blob storage (when running with Azure databricks).
+                Note: For azure dbfs path should be like "dbfs:/directory_name" and 
+                For azure blob storage path should be like "dbfs:/mnt/directory_name".
 
             2.  file_type: (CSV, Parquet or Avro). file format of the
                 input data. Currently, we support CSV, Parquet or Avro.
@@ -85,6 +97,13 @@ modules. Let's see each of the keys and its values in detail:
 
             3.  file_configs (optional): Rest of the valid configuration
                 can be passed through this key e.g., delimiter, InferSchema, header.
+
+                Attaching some link to get more information about configuration.
+                [read csv files](https://sparkbyexamples.com/pyspark/pyspark-read-csv-file-into-dataframe/)
+                [read parquet files](https://sparkbyexamples.com/pyspark/pyspark-read-and-write-parquet-file/)
+                [read json files](https://sparkbyexamples.com/pyspark/pyspark-read-json-file-into-dataframe/)
+                [read avro files](https://sparkbyexamples.com/spark/read-write-avro-file-spark-dataframe/)
+
                 Examples
                     delimiter: ","
                     header: True
@@ -139,12 +158,24 @@ modules. Let's see each of the keys and its values in detail:
 
             1.  file_path: file (or directory) path where the other
                 input data that need to be joined is saved.
+                File path can be a local path, s3 path (when running with AWS cloud services),
+                google colab path (when running with open source platform: Google Colab),
+                azure dbfs or azure blob storage (when running with Azure databricks).
+                Note: For azure dbfs path should be like "dbfs:/directory_name" and 
+                For azure blob storage path should be like "dbfs:/mnt/directory_name".
 
             2.  file_type: (CSV, Parquet or Avro). file format of the
                 other input data (joining dataset).
 
             3.  file_configs (optional): Rest of the valid configuration
                 can be passed through this key e.g., delimiter, InferSchema, header.
+                Attaching some link to get more information about configuration.
+
+                [read csv files](https://sparkbyexamples.com/pyspark/pyspark-read-csv-file-into-dataframe/)
+                [read parquet files](https://sparkbyexamples.com/pyspark/pyspark-read-and-write-parquet-file/)
+                [read json files](https://sparkbyexamples.com/pyspark/pyspark-read-json-file-into-dataframe/)
+                [read avro files](https://sparkbyexamples.com/spark/read-write-avro-file-spark-dataframe/)
+
                 Examples
                     delimiter: ","
                     header: True
@@ -183,10 +214,12 @@ modules. Let's see each of the keys and its values in detail:
 
     d.  dataset2: same configuration as dataset1
 
+Attaching the doc of data ingest to understand more about above operations(read, delete, select, join, concatenate, etc):[Data Ingest](https://github.com/anovos/anovos-docs/blob/main/docs/anovos-modules-overview/data-ingest/index.md)
+
 4.  **anovos_basic_report**
 
     a.  Basic_report: This takes Boolean type input -- True or False. If
-        True, basic report is generated which have descriptive
+        True, basic report is generated after completion of data analyzer, association evaluator and quality checker modules which have descriptive
         statistics(global_summary, measures_of_count,
         measures_of_centralTendency, measures_of_cardinality,
         measures_of_dispersion, measures_of_percentiles,
@@ -195,6 +228,11 @@ modules. Let's see each of the keys and its values in detail:
         biasedness_detection, invalidEntries_detection,
         outlier_detection), attribute association (correlation_matrix,
         IV_calculation, IG_calculation, variable_clustering).
+
+        Attaching the docs of all modules to get better idea what these modules actually do and thier output.
+        [Data Analyzer](https://github.com/anovos/anovos-docs/blob/main/docs/anovos-modules-overview/data-analyzer/index.md)
+        [Quality Checker](https://github.com/anovos/anovos-docs/blob/main/docs/anovos-modules-overview/quality-checker/index.md)
+        [Association Evaluator](https://github.com/anovos/anovos-docs/blob/main/docs/anovos-modules-overview/association-evaluator/index.md) 
 
     b.  Report_args
 
@@ -497,8 +535,12 @@ modules. Let's see each of the keys and its values in detail:
 
             1.  read_dataset
 
-                a.  file_path: file (or directory) path where the source
-                    data is saved.
+                a.  file_path: file (or directory) path where the source data is saved.
+                    File path can be a local path, s3 path (when running with AWS cloud services),
+                    google colab path (when running with open source platform: Google Colab),
+                    azure dbfs or azure blob storage (when running with Azure databricks).
+                    Note: For azure dbfs path should be like "dbfs:/directory_name" and 
+                    For azure blob storage path should be like "dbfs:/mnt/directory_name".
 
                 b.  file_type: (CSV, Parquet or Avro). file format of
                     the source dataset.
@@ -506,6 +548,13 @@ modules. Let's see each of the keys and its values in detail:
                 c.  file_configs (optional): Rest of the valid
                     configuration can be passed through this key e.g.,
                     delimiter, InferSchema, header.
+                    Attaching some link to get more information about configuration.
+
+                    [read csv files](https://sparkbyexamples.com/pyspark/pyspark-read-csv-file-into-dataframe/)
+                    [read parquet files](https://sparkbyexamples.com/pyspark/pyspark-read-and-write-parquet-file/)
+                    [read json files](https://sparkbyexamples.com/pyspark/pyspark-read-json-file-into-dataframe/)
+                    [read avro files](https://sparkbyexamples.com/spark/read-write-avro-file-spark-dataframe/)
+
                     Examples
                         delimiter: ","
                         header: True
@@ -577,8 +626,12 @@ modules. Let's see each of the keys and its values in detail:
 
             1.  read_dataset
 
-                a.  file_path: file (or directory) path where the
-                    historical dataset is saved.
+                a.  file_path: file (or directory) path where the historical dataset is saved.
+                    File path can be a local path, s3 path (when running with AWS cloud services),
+                    google colab path (when running with open source platform: Google Colab),
+                    azure dbfs or azure blob storage (when running with Azure databricks).
+                    Note: For azure dbfs path should be like "dbfs:/directory_name" and 
+                    For azure blob storage path should be like "dbfs:/mnt/directory_name".
 
                 b.  file_type: (CSV, Parquet or Avro). file format of
                     the historical dataset.
@@ -586,6 +639,13 @@ modules. Let's see each of the keys and its values in detail:
                 c.  file_configs (optional): Rest of the valid
                     configuration can be passed through this key e.g.,
                     delimiter, InferSchema, header.
+
+                    Attaching some link to get more information about configuration.
+                    [read csv files](https://sparkbyexamples.com/pyspark/pyspark-read-csv-file-into-dataframe/)
+                    [read parquet files](https://sparkbyexamples.com/pyspark/pyspark-read-and-write-parquet-file/)
+                    [read json files](https://sparkbyexamples.com/pyspark/pyspark-read-json-file-into-dataframe/)
+                    [read avro files](https://sparkbyexamples.com/spark/read-write-avro-file-spark-dataframe/)
+
                     Examples
                         delimiter: ","
                         header: True
@@ -628,7 +688,10 @@ modules. Let's see each of the keys and its values in detail:
 10. **report_generation**
 
     a.  master_path: The path which contains the data of intermediate
-        output in terms of json chart objects, csv file (pandas df)
+        output in terms of json chart objects, csv file (pandas df).
+        Note: In case of azure databricks, azure dbfs path should be like "/dbfs/directory_name" and 
+        For azure blob storage path should be like "/dbfs/mnt/directory_name" 
+        beacause in report generation all the operations happen in python not pysaprk.
 
     b.  id_col: The ID column is accepted to ensure & restrict
         unnecessary analysis to be performed on the same lable_col: Name
@@ -641,13 +704,13 @@ modules. Let's see each of the keys and its values in detail:
         found to be significant in terms of model. It takes value
         between 0 to 1.
 
-  **Information Value**|   **Variable Predictiveness**|
-  |--- | ---|
-  |Less than 0.02    |      Not useful for prediction|
-  |0.02 to 0.1       |     Weak predictive Power|
-  |0.1 to 0.3        |      Medium predictive Power|
-  |0.3 to 0.5        |      Strong predictive Power|
-  |>0.5              |    Suspicious Predictive Power|
+        **Information Value**|   **Variable Predictiveness**|
+        |--- | ---|
+        |Less than 0.02    |      Not useful for prediction|
+        |0.02 to 0.1       |     Weak predictive Power|
+        |0.1 to 0.3        |      Medium predictive Power|
+        |0.3 to 0.5        |      Strong predictive Power|
+        |>0.5              |    Suspicious Predictive Power|
 
     e.  drift_threshold_model: The threshold beyond which the attribute can
         be flagged as 1 or drifted as measured across different drift
@@ -655,19 +718,33 @@ modules. Let's see each of the keys and its values in detail:
 
     f.  dataDict_path: The path containing the exact name, definition
         mapping of the attributes. This is eventually used to populate at
-        the report for easy referencing
+        the report for easy referencing. Note: In case of azure databricks, 
+        azure dbfs path should be like "/dbfs/directory_name" and 
+        For azure blob storage path should be like "/dbfs/mnt/directory_name" 
+        beacause in report generation all the operations happen in python not pysaprk.
 
-    g.  metricDict_path: Path of metric dictionary
+    g.  metricDict_path: Path of metric dictionary.
+        Note: In case of azure databricks, azure dbfs path should be like "/dbfs/directory_name" and 
+        For azure blob storage path should be like "/dbfs/mnt/directory_name" 
+        beacause in report generation all the operations happen in python not pysaprk.
 
     h.  final_report_path: Path where final report is saved. File path can
-        be a local path or s3 path (when running with AWS cloud services)
+        be a local path or s3 path (when running with AWS cloud services),
+        azure dbfs or azure blob storage (when running with Azure databricks).
+        Note: azure dbfs path should be like "/dbfs/directory_name" and 
+        For azure blob storage path should be like "/dbfs/mnt/directory_name" 
+        beacause in report generation all the operations happen in python not pysaprk.
 
 11. **write_intermediate**
 
     a.  file_path: Path where intermediate datasets (after selecting,
         dropping, renaming, and recasting of columns) for quality
         checker operations, join dataset and concatenate dataset will be
-        saved
+        saved. File path can be a local path, s3 path (when running with AWS cloud services),
+        google colab path (when running with open source platform: Google Colab),
+        azure dbfs or azure blob storage (when running with Azure databricks).
+        Note: For azure dbfs path should be like "dbfs:/directory_name" and 
+        For azure blob storage path should be like "dbfs:/mnt/directory_name".
 
     b.  file_type: (CSV, Parquet or Avro). file format of intermediate
         dataset
@@ -675,6 +752,11 @@ modules. Let's see each of the keys and its values in detail:
     c.  file_configs (optional): Rest of the valid configuration can be
         passed through this key e.g., repartition, mode, compression,
         header, delimiter etc.
+        Attaching some link to get more information about configuration.
+        [write csv files](https://sparkbyexamples.com/pyspark/pyspark-read-csv-file-into-dataframe/)
+        [write parquet files](https://sparkbyexamples.com/pyspark/pyspark-read-and-write-parquet-file/)
+        [write json files](https://sparkbyexamples.com/pyspark/pyspark-read-json-file-into-dataframe/)
+        [write avro files](https://sparkbyexamples.com/spark/read-write-avro-file-spark-dataframe/)
         Examples
             mode: overwrite
             header: True
@@ -683,13 +765,23 @@ modules. Let's see each of the keys and its values in detail:
 
 12. **write_main**
 
-    a.  file_path: Path where final cleaned input dataset will be saved
+    a.  file_path: Path where final cleaned input dataset will be saved.
+                   File path can be a local path, s3 path (when running with AWS cloud services),
+                   google colab path (when running with open source platform: Google Colab),
+                   azure dbfs or azure blob storage (when running with Azure databricks).
+                   Note: For azure dbfs path should be like "dbfs:/directory_name" and 
+                   For azure blob storage path should be like "dbfs:/mnt/directory_name".
 
     b.  file_type: (CSV, Parquet or Avro). file format of final dataset
 
     c.  file_configs (optional): Rest of the valid configuration can be
         passed through this key e.g., repartition, mode, compression,
         header, delimiter etc.
+        Attaching some link to get more information about configuration.
+        [write csv files](https://sparkbyexamples.com/pyspark/pyspark-read-csv-file-into-dataframe/)
+        [write parquet files](https://sparkbyexamples.com/pyspark/pyspark-read-and-write-parquet-file/)
+        [write json files](https://sparkbyexamples.com/pyspark/pyspark-read-json-file-into-dataframe/)
+        [write avro files](https://sparkbyexamples.com/spark/read-write-avro-file-spark-dataframe/)
         Examples
             mode: overwrite
             header: True
@@ -699,13 +791,23 @@ modules. Let's see each of the keys and its values in detail:
 13. **write_stats**
 
     a.  file_path: Path where all tables/stats of anovos modules (data
-        drift & data analyzer) will be saved
+        drift & data analyzer) will be saved.
+        File path can be a local path, s3 path (when running with AWS cloud services),
+        google colab path (when running with open source platform: Google Colab),
+        azure dbfs or azure blob storage (when running with Azure databricks).
+        Note: For azure dbfs path should be like "dbfs:/directory_name" and 
+        For azure blob storage path should be like "dbfs:/mnt/directory_name".
 
     b.  file_type: (CSV, Parquet or Avro). file format of final dataset
 
     c.  file_configs (optional): Rest of the valid configuration can be
         passed through this key e.g., repartition, mode, compression,
         header, delimiter, inferSchema etc.
+        Attaching some link to get more information about configuration.
+        [write csv files](https://sparkbyexamples.com/pyspark/pyspark-read-csv-file-into-dataframe/)
+        [write parquet files](https://sparkbyexamples.com/pyspark/pyspark-read-and-write-parquet-file/)
+        [write json files](https://sparkbyexamples.com/pyspark/pyspark-read-json-file-into-dataframe/)
+        [write avro files](https://sparkbyexamples.com/spark/read-write-avro-file-spark-dataframe/)
         Examples
             mode: overwrite
             header: True
