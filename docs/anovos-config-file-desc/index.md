@@ -14,7 +14,7 @@ modules. Let's see each of the keys and its values in detail:
             google colab path (when running with open source platform: Google Colab),
             azure dbfs or azure blob storage (when running with Azure databricks).
             For azure dbfs path should be like "dbfs:/directory_name" and 
-            For azure blob storage path should be like "dbfs:/mnt/directory_name".
+            for azure blob storage path should be like "dbfs:/mnt/directory_name".
 
         ii. file_type: file format of the input data. Currently, we
             support CSV, Parquet or Avro. Note: Avro data source requires an
@@ -81,7 +81,7 @@ modules. Let's see each of the keys and its values in detail:
                 google colab path (when running with open source platform: Google Colab),
                 azure dbfs or azure blob storage (when running with Azure databricks).
                 Note: For azure dbfs path should be like "dbfs:/directory_name" and 
-                For azure blob storage path should be like "dbfs:/mnt/directory_name".
+                for azure blob storage path should be like "dbfs:/mnt/directory_name".
 
             2.  file_type: (CSV, Parquet or Avro). file format of the
                 input data. Currently, we support CSV, Parquet or Avro.
@@ -149,7 +149,7 @@ modules. Let's see each of the keys and its values in detail:
                 google colab path (when running with open source platform: Google Colab),
                 azure dbfs or azure blob storage (when running with Azure databricks).
                 Note: For azure dbfs path should be like "dbfs:/directory_name" and 
-                For azure blob storage path should be like "dbfs:/mnt/directory_name".
+                for azure blob storage path should be like "dbfs:/mnt/directory_name".
 
             2.  file_type: (CSV, Parquet or Avro). file format of the
                 other input data (joining dataset).
@@ -517,7 +517,7 @@ Attaching the doc of data ingest to understand more about above operations(read,
                     google colab path (when running with open source platform: Google Colab),
                     azure dbfs or azure blob storage (when running with Azure databricks).
                     Note: For azure dbfs path should be like "dbfs:/directory_name" and 
-                    For azure blob storage path should be like "dbfs:/mnt/directory_name".
+                    for azure blob storage path should be like "dbfs:/mnt/directory_name".
 
                 b.  file_type: (CSV, Parquet or Avro). file format of
                     the source dataset.
@@ -601,7 +601,7 @@ Attaching the doc of data ingest to understand more about above operations(read,
                     google colab path (when running with open source platform: Google Colab),
                     azure dbfs or azure blob storage (when running with Azure databricks).
                     Note: For azure dbfs path should be like "dbfs:/directory_name" and 
-                    For azure blob storage path should be like "dbfs:/mnt/directory_name".
+                    for azure blob storage path should be like "dbfs:/mnt/directory_name".
 
                 b.  file_type: (CSV, Parquet or Avro). file format of
                     the historical dataset.
@@ -654,7 +654,7 @@ Attaching the doc of data ingest to understand more about above operations(read,
     a.  master_path: The path which contains the data of intermediate
         output in terms of json chart objects, csv file (pandas df).
         Note: In case of azure databricks, azure dbfs path should be like "/dbfs/directory_name" and 
-        For azure blob storage path should be like "/dbfs/mnt/directory_name" 
+        for azure blob storage path should be like "/dbfs/mnt/directory_name" 
         beacause in report generation all the operations happen in python.
 
     b.  id_col: The ID column is accepted to ensure & restrict
@@ -692,7 +692,7 @@ Attaching the doc of data ingest to understand more about above operations(read,
         For azure blob storage path should be like "/dbfs/mnt/directory_name" 
         beacause in report generation all the operations happen in python.
 
-    h.  final_report_path: Path where final report is saved. File path can
+    h.  final_report_path: Path where final report will be saved. File path can
         be a local path or s3 path (when running with AWS cloud services),
         azure dbfs or azure blob storage (when running with Azure databricks).
         Note: azure dbfs path should be like "/dbfs/directory_name" and 
@@ -708,7 +708,7 @@ Attaching the doc of data ingest to understand more about above operations(read,
         google colab path (when running with open source platform: Google Colab),
         azure dbfs or azure blob storage (when running with Azure databricks).
         Note: For azure dbfs path should be like "dbfs:/directory_name" and 
-        For azure blob storage path should be like "dbfs:/mnt/directory_name".
+        for azure blob storage path should be like "dbfs:/mnt/directory_name".
 
     b.  file_type: (CSV, Parquet or Avro). file format of intermediate
         dataset
@@ -716,6 +716,7 @@ Attaching the doc of data ingest to understand more about above operations(read,
     c.  file_configs (optional): Rest of the valid configuration can be
         passed through this key e.g., repartition, mode, compression,
         header, delimiter etc.
+        
         Examples
             mode: overwrite
             header: True
@@ -729,13 +730,14 @@ Attaching the doc of data ingest to understand more about above operations(read,
                    google colab path (when running with open source platform: Google Colab),
                    azure dbfs or azure blob storage (when running with Azure databricks).
                    Note: For azure dbfs path should be like "dbfs:/directory_name" and 
-                   For azure blob storage path should be like "dbfs:/mnt/directory_name".
+                   for azure blob storage path should be like "dbfs:/mnt/directory_name".
 
     b.  file_type: (CSV, Parquet or Avro). file format of final dataset
 
     c.  file_configs (optional): Rest of the valid configuration can be
         passed through this key e.g., repartition, mode, compression,
         header, delimiter etc.
+
         Examples
             mode: overwrite
             header: True
@@ -750,13 +752,14 @@ Attaching the doc of data ingest to understand more about above operations(read,
         google colab path (when running with open source platform: Google Colab),
         azure dbfs or azure blob storage (when running with Azure databricks).
         Note: For azure dbfs path should be like "dbfs:/directory_name" and 
-        For azure blob storage path should be like "dbfs:/mnt/directory_name".
+        for azure blob storage path should be like "dbfs:/mnt/directory_name".
 
     b.  file_type: (CSV, Parquet or Avro). file format of final dataset
 
     c.  file_configs (optional): Rest of the valid configuration can be
         passed through this key e.g., repartition, mode, compression,
         header, delimiter, inferSchema etc.
+
         Examples
             mode: overwrite
             header: True
