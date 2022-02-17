@@ -655,7 +655,7 @@ Attaching the doc of data ingest to understand more about above operations(read,
         output in terms of json chart objects, csv file (pandas df).
         Note: In case of azure databricks, azure dbfs path should be like "/dbfs/directory_name" and 
         For azure blob storage path should be like "/dbfs/mnt/directory_name" 
-        beacause in report generation all the operations happen in python not pysaprk.
+        beacause in report generation all the operations happen in python.
 
     b.  id_col: The ID column is accepted to ensure & restrict
         unnecessary analysis to be performed on the same lable_col: Name
@@ -685,19 +685,19 @@ Attaching the doc of data ingest to understand more about above operations(read,
         the report for easy referencing. Note: In case of azure databricks, 
         azure dbfs path should be like "/dbfs/directory_name" and 
         For azure blob storage path should be like "/dbfs/mnt/directory_name" 
-        beacause in report generation all the operations happen in python not pysaprk.
+        beacause in report generation all the operations happen in python.
 
     g.  metricDict_path: Path of metric dictionary.
         Note: In case of azure databricks, azure dbfs path should be like "/dbfs/directory_name" and 
         For azure blob storage path should be like "/dbfs/mnt/directory_name" 
-        beacause in report generation all the operations happen in python not pysaprk.
+        beacause in report generation all the operations happen in python.
 
     h.  final_report_path: Path where final report is saved. File path can
         be a local path or s3 path (when running with AWS cloud services),
         azure dbfs or azure blob storage (when running with Azure databricks).
         Note: azure dbfs path should be like "/dbfs/directory_name" and 
         For azure blob storage path should be like "/dbfs/mnt/directory_name" 
-        beacause in report generation all the operations happen in python not pysaprk.
+        beacause in report generation all the operations happen in python.
 
 11. **write_intermediate**
 
