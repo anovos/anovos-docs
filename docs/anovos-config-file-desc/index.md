@@ -194,7 +194,7 @@ modules. Let's see each of the keys and its values in detail:
 
     d.  dataset2: same configuration as dataset1
 
-    Attaching the doc of data ingest to understand more about above operations(read, delete, select, join, concatenate, etc): [Data Ingest](https://github.com/anovos/anovos-docs/blob/main/docs/anovos-modules-overview/data-ingest/index.md)
+Attaching the doc of data ingest to understand more about above operations(read, delete, select, join, concatenate, etc): [Data Ingest](https://github.com/anovos/anovos-docs/blob/main/docs/anovos-modules-overview/data-ingest/index.md)
 
 4.  **anovos_basic_report**
 
@@ -763,4 +763,4 @@ modules. Let's see each of the keys and its values in detail:
             delimiter: ","
             inferSchema: True
 
-    Attaching some link to get more information about configuration: [write csv files](https://sparkbyexamples.com/pyspark/pyspark-read-csv-file-into-dataframe/), [write parquet files](https://sparkbyexamples.com/pyspark/pyspark-read-and-write-parquet-file/), [write json files](https://sparkbyexamples.com/pyspark/pyspark-read-json-file-into-dataframe/), [write avro files](https://sparkbyexamples.com/spark/read-write-avro-file-spark-dataframe/)
+Attaching some link to get more information about configuration: [write csv files](https://sparkbyexamples.com/pyspark/pyspark-read-csv-file-into-dataframe/), [write parquet files](https://sparkbyexamples.com/pyspark/pyspark-read-and-write-parquet-file/), [write json files](https://sparkbyexamples.com/pyspark/pyspark-read-json-file-into-dataframe/), [write avro files](https://sparkbyexamples.com/spark/read-write-avro-file-spark-dataframe/)
