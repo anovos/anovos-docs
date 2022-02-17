@@ -3,7 +3,9 @@
 In anovos we have used YAML language to make configuration file. In
 configuration file we have specified various keys, subkeys and its
 values which contains arguments required while running any anovos
-modules. Let's see each of the keys and its values in detail:
+modules. We need configuration file while writing high quality code to make the module more flexible 
+so that we don't need to change the code everytime with change any argument/parameter value. 
+Let's see each of the keys and its values in detail:
 
 1.  **input_dataset**
 
@@ -209,7 +211,7 @@ Attaching the documentation link of data ingest module to understand more about 
         outlier_detection), attribute association (correlation_matrix,
         IV_calculation, IG_calculation, variable_clustering).
 
-    Attaching the documentation link of modules to get better idea what these modules actually do and thier output: [Data Analyzer](https://github.com/anovos/anovos-docs/blob/main/docs/anovos-modules-overview/data-analyzer/index.md), [Quality Checker](https://github.com/anovos/anovos-docs/blob/main/docs/anovos-modules-overview/quality-checker/index.md), [Association Evaluator](https://github.com/anovos/anovos-docs/blob/main/docs/anovos-modules-overview/association-evaluator/index.md) 
+    Attaching the documentation link of modules to get better idea what these modules actually do and thier output: [Data Analyzer](https://github.com/anovos/anovos-docs/blob/main/docs/anovos-modules-overview/data-analyzer/index.md), [Quality Checker](https://github.com/anovos/anovos-docs/blob/main/docs/anovos-modules-overview/quality-checker/index.md), [Association Evaluator](https://github.com/anovos/anovos-docs/blob/main/docs/anovos-modules-overview/association-evaluator/index.md), [Data Drift and Stability Index](https://github.com/anovos/anovos-docs/blob/main/docs/anovos-modules-overview/data_drift_and_stability_index/index.md) 
 
     b.  Report_args
 
