@@ -1,6 +1,6 @@
 ## Module ANOVOS.transformers	
 
-In this release, data transformer module supports selected pre-processing functions such as binning, encoding, scaling, imputation, to name a few, which were required for statistics generation and quality checks. List of functions included in this modules are:
+In the latest release of Anovos (V0.2), data transformer module supports selected pre-processing functions such as binning, encoding, scaling, imputation, to name a few, which were required for statistics generation and quality checks. List of functions supported through this modules are:
 
 - attribute_binning
 - monotonic_binning
@@ -20,7 +20,7 @@ In this release, data transformer module supports selected pre-processing functi
 - outlier_categories
 - expression_parser
 
-Columns which are subjected to these analysis can be controlled by right combination of arguments - list_of_cols and drop_cols. Most functions have following common arguments:
+Columns which are subjected to these analysis can be controlled by right combination of arguments - list_of_cols and drop_cols. Most of the functions have following common arguments:
 
 - *idf*: Input dataframe
 - *list_of_cols*: This argument, in a list format, is used to specify the columns which are subjected to the analysis in the input dataframe. Alternatively, instead of list, columns can be specified in a single text format where different column names are separated by pipe delimiter “|”. The user can also use “all” as an input to this argument to consider all valid columns. This is super useful instead of specifying all column names manually.
@@ -55,7 +55,7 @@ w = 1 / no. of bins
 
 ### monotonic_binning
 
-This function constitutes supervised way of binning the numerical attribute into discrete (integer or categorical values) attribute. Instead of pre-defined fixed number of bins, number of bins are computed dynamically ensuring the monotonic nature of bins i.e. % event should increase or decrease with the bin. Monotonic nature of bins is evaluated by looking at spearman rank correlation, which should be either +1 or -1, between the bin index and % event. In case, the monotonic nature is not attained, user defined fixed number of bins are used for the binning.
+This function constitutes supervised way of binning the numerical attribute into discrete (integer or categorical values) attribute. Instead of pre-defined fixed number of bins, number of bins are dynamically computed to ensure the monotonic nature of bins i.e. % event should increase or decrease with the bin. Monotonic nature of bins is evaluated by looking at spearman rank correlation, which should be either +1 or -1, between the bin index and % event. In case, the monotonic nature is not attained, user defined fixed number of bins are used for the binning.
 
 - *idf*
 - *list_of_cols:* If 'all' is passed for this argument, then only numerical attributes are selected.
@@ -71,7 +71,7 @@ This function constitutes supervised way of binning the numerical attribute into
 
 This is unsupervised method of converting a categorical attribute into numerical attribute(s). This is among the most important transformations required for any modelling exercise, as most of the machine learning algorithms cannot process categorical values. It covers two popular encoding techniques – label encoding & one-hot encoding.
 
-In label encoding, each categorical value is assigned a unique integer based on alphabetical or frequency ordering (both ascending & descending options are available – can be selected by index_order argument). One of the pitfalls of using this technique is that the model may learn some spurious relationship, which doesn't exist or make logical sense in the real world. In one-hot encoding, every unique value in the attribute will be added as a feature in a form of dummy/binary attribute. However, using this method on high cardinality attributes can further aggravate the dimensionality issue.
+In label encoding, each categorical value is assigned a unique integer based on alphabetical or frequency ordering (both ascending & descending options are available – can be selected by index_order argument). One of the pitfalls of using this technique is that the model may learn some spurious relationship, which doesn't exist or might not make any logical sense in the real world settings. In one-hot encoding, every unique value in the attribute will be added as a feature in a form of dummy/binary attribute. However, using this method on high cardinality attributes can further aggravate the dimensionality issue.
 
 - *idf*
 - *list_of_cols:* If 'all' is passed for this argument, then only categorical attributes are selected.
