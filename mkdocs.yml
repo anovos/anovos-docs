@@ -46,6 +46,7 @@ nav:
           - On AWS: using-anovos/setting-up/on_aws.md
           - Spark cluster: using-anovos/setting-up/spark_cluster.md
       - Workflow: using-anovos/workflow.md
+      - Configuration: using-anovos/config_file.md
       - Data Reports:
           - Overview: using-anovos/data-reports/overview.md
           - Intermediate Report: using-anovos/data-reports/intermediate_report.md

@@ -1,4 +1,4 @@
-***Anovos: Configs.yaml***
+# Configuring Workloads
 
 In anovos we have used YAML language to make configuration file. In
 configuration file we have specified various keys, subkeys and its
