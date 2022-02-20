@@ -1,69 +1,118 @@
 # Configuring Workloads
 
-In anovos we have used YAML language to make configuration file. In
-configuration file we have specified various keys, subkeys and its
-values which contains arguments required while running any anovos
-modules. We need configuration file while writing high quality code to make the module more flexible 
-so that we don't need to change the code everytime with change any argument/parameter value. 
-Let's see each of the keys and its values in detail:
+_Anovos_ workloads can be described by a YAML configuration file.
 
-1.  **input_dataset**
+Such a configuration file defines:
 
-    a.  read_dataset
+- the input dataset(s)
+- the analyses and transformations to be performed on the data
+- the output files and dataset(s)
+- the reports to be generated
 
-        i.  file_path: file (or directory) path where the input data is
-            saved. File path can be a local path, s3 path (when running with AWS cloud services), 
-            google colab path (when running with open source platform: Google Colab),
-            azure dbfs or azure blob storage (when running with Azure databricks).
-            For azure dbfs path should be like "dbfs:/directory_name" and 
-            for azure blob storage path should be like "dbfs:/mnt/directory_name".
+Defining workloads this way allows users to make full use of _Anovos_ capabilities
+while maintaining an easy-to-grasp overview.
+Since each configuration file fully describes one workload, these files can be 
+shared, versioned, and run across different compute environments.
 
-        ii. file_type: file format of the input data. Currently, we
-            support CSV, Parquet or Avro. Note: Avro data source requires an
-            external package to run, which can be configured with
-            spark-submit options (--packages org.apache.spark:spark-avro_2.11:2.4.0).
+In the following, we'll describe in detail each of the sections in an _Anovos_ 
+configuration file.
+If you'd rather see a full example right away, have a look at 
+[this example](https://github.com/anovos/anovos/blob/main/config/configs.yaml).
 
-        iii. file_configs (optional): Rest of the valid configuration
-            can be passed through this key e.g., delimiter, inferSchema, header.
-            Examples
-                delimiter: ","
-                header: True
-                inferSchema: True
+## `input_dataset`
 
-    Attaching some links to get more information about file configuration while reading dataset: [read csv files](https://sparkbyexamples.com/pyspark/pyspark-read-csv-file-into-dataframe/), [read parquet files](https://sparkbyexamples.com/pyspark/pyspark-read-and-write-parquet-file/), [read json files](https://sparkbyexamples.com/pyspark/pyspark-read-json-file-into-dataframe/), [read avro files](https://sparkbyexamples.com/spark/read-write-avro-file-spark-dataframe/)
+This configuration block describes how the input dataset is loaded and prepared.
+Each _Anovos_ configuration file must contain exactly one `input_dataset` block.
 
-    b.  delete_column: (list format or string of col names separated by
-        |). It specifies the columns required to be deleted from the
-        input dataframe.
+Note that the subsequent operations are performed in the order given here:
+First, columns are deleted, then selected, then renamed, and then recast.
 
-    c.  select_column: (list format or string of col names separated by
-        |). It specifies the columns required to be selected from the
-        input dataframe.
+### `read_dataset`
 
-    d.  rename_column
+- `file_path`: The file (or directory) path to read the input dataset from.
+   It can be a local path, an [S3 path](https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-bucket-intro.html)
+  (when running on AWS), a path to a file resource on Google Colab (see
+   [this tutorial](https://neptune.ai/blog/google-colab-dealing-with-files)for
+   an overview), or a path on the [Databricks File System](https://docs.microsoft.com/de-de/azure/databricks/data/databricks-file-system)
+   (when running on Azure).
 
-        i.  list_of_cols: (list format or string of col names separated
-            by |). It is used to specify the list of columns required
-            to be renamed in the input dataframe.
+- `file_type`: The file format of the input data. Currently, _Anovos_ supports
+   CSV (`csv`), Parquet (`parquet`), and Avro (`avro`).
+   (Please note that if you're using Avro data sources, you need to add the external
+   package `org.apache.spark:spark-avro` when submitting the Spark job.)
 
-        ii. list_of_newcols: It is used to specify the new column name,
-            i.e., the first element in list_of_cols will be the original
-            column name, and the corresponding first column in
-            list_of_newcols will be the new column name.
+- `file_configs` (optional): Options to pass to the respective Spark file reader,
+   e.g., delimiters, schemas, headers. In the case of a CSV file, this might look
+   like:
+   ```yaml
+   file_configs:
+     delimiter: ","
+     header: True
+     inferSchema: True
+   ```
+   For more information on available configuration options, see the following external
+   documentation:
+   
+     - [Read CSV files](https://sparkbyexamples.com/pyspark/pyspark-read-csv-file-into-dataframe/)
+     - [Read Parquet files](https://sparkbyexamples.com/pyspark/pyspark-read-and-write-parquet-file/)
+     - [Read Avro files](https://sparkbyexamples.com/spark/read-write-avro-file-spark-dataframe/)
+  
+### `delete_column`
 
-    e.  recast_column:
+List of column names (list of strings or string of column names separated by `|`)
+to be deleted from the loaded input data.
 
-        i.  list_of_cols: (list format or string of col names separated
-            by |). It is used to specify the columns required to be
-            recast in the input dataframe.
+_Example:_
+```yaml
+delete_column: ['unnecessary', 'obsolete', 'outdated']
+```
 
-        ii. list_of_dtypes: It is used to specify the datatype, i.e.,
-            the first element in list_of_cols will column name, and the
-            corresponding element in list_of_dtypes will be new datatype
-            such as float, integer, string, double, decimal, etc. (case
-            insensitive).
+### `select_column`
 
-2.  **concatenate_dataset**
+List of column names (list of strings or string of column names separated by `|`)
+to be selected for further processing.
+
+_Example:_
+```yaml
+select_column: ['feature1', 'feature2', 'feature3', 'label']
+```
+
+### `rename_column`
+
+- `list_of_cols`: List of the names of columns (list of strings or string of column names separated by `|`)
+  to be renamed.
+
+- `list_of_newcols`: The new column names. The first element in `list_of_cols` will be renamed
+  to the first name in `list_of_newcols` and so on.
+
+_Example:_
+```yaml
+rename_column:
+  list_of_cols: ['very_long_column_name', 'price']
+  list_of_newcols: ['short_name', 'label']
+```
+
+This will rename the column `very_long_column_name` to `short_name` and the column `price` to `label`.
+
+### `recast_column`
+
+- `list_of_cols`: List of the names of columns (list of strings or string of column names separated by `|`)
+  to be cast to a different type.
+
+- `list_of_dtypes`: The new datatypes. The first element in `list_of_cols` will be recast
+  to the first type in `list_of_dtypes` and so on. See
+  [the Spark documentation](https://spark.apache.org/docs/latest/sql-ref-datatypes.html)
+  for a list of valid datatypes.
+  Note that this field is case-insensitive.
+
+_Example:_
+```yaml
+recast_column:
+  list_of_cols: ['price', 'quantity']
+  list_of_dtypes: ['double', 'int']
+```
+
+## `concatenate_dataset`
 
     a.  method: index or name. This needs to be entered as a keyword
         argument. The "index" method involves concatenating the
@@ -131,7 +180,7 @@ Let's see each of the keys and its values in detail:
 
     c.  dataset2: same as dataset1
 
-3.  **join_dataset**
+## `join_dataset`
 
     a.  Join_cols: Key column(s) to join all dataframes together. In
         case of multiple columns to join, they can be passed in a list
@@ -198,7 +247,7 @@ Let's see each of the keys and its values in detail:
 
 Attaching the documentation link of data ingest module to understand more about above operations(read, delete, select, join, concatenate, etc): [Data Ingest](https://github.com/anovos/anovos-docs/blob/main/docs/anovos-modules-overview/data-ingest/index.md)
 
-4.  **anovos_basic_report**
+## `anovos_basic_report`
 
     a.  Basic_report: This takes Boolean type input -- True or False. If
         True, basic report is generated after completion of data analyzer, association evaluator and quality checker modules which have descriptive
@@ -226,7 +275,7 @@ Attaching the documentation link of data ingest module to understand more about 
             be a local path or s3 path (when running with AWS cloud
             services)
 
-5.  **stats_generator**
+## `stats_generator`
 
     a.  Metric: list of different metrics used to generate descriptive
         statistics [global_summary, measures_of_count,
@@ -249,7 +298,7 @@ Attaching the documentation link of data ingest module to understand more about 
             with the "all" value of list_of_cols, when we need to
             consider all columns except a few handful of them.
 
-6.  **quality_checker**
+## `quality_checker`
 
     a.  duplicate_detection
 
@@ -405,7 +454,7 @@ Attaching the documentation link of data ingest module to understand more about 
             'treatment_threshold' for column_removal treatment, or all
             arguments corresponding to imputation_MMM function.
 
-7.  **association_evaluator**
+## `association_evaluator`
 
     a.  correlation_matrix
 
@@ -476,7 +525,7 @@ Attaching the documentation link of data ingest module to understand more about 
             |). It is used to specify the columns that need to be
             dropped from list_of_cols before variable clustering.
 
-8.  **drift_detector**
+# `drift_detector`
 
     a.  drift_statistics
 
@@ -619,7 +668,7 @@ Attaching the documentation link of data ingest module to understand more about 
 
         iii. dataset2: same configuration as dataset1
 
-9.  **report_preprocessing**
+## `report_preprocessing`
 
     a.  master_path: Path where all modules output is saved
 
@@ -651,7 +700,7 @@ Attaching the documentation link of data ingest module to understand more about 
             drift analysis. If it's not computed / out of scope, the
             default value of "NA" is considered.
 
-10. **report_generation**
+## `report_generation`
 
     a.  master_path: The path which contains the data of intermediate
         output in terms of json chart objects, csv file (pandas df).
@@ -701,7 +750,7 @@ Attaching the documentation link of data ingest module to understand more about 
         For azure blob storage path should be like "/dbfs/mnt/directory_name" 
         beacause in report generation all the operations happen in python.
 
-11. **write_intermediate**
+## `write_intermediate`
 
     a.  file_path: Path where intermediate datasets (after selecting,
         dropping, renaming, and recasting of columns) for quality
@@ -725,7 +774,7 @@ Attaching the documentation link of data ingest module to understand more about 
             delimiter: ","
             inferSchema: True
 
-12. **write_main**
+## `write_main`
 
     a.  file_path: Path where final cleaned input dataset will be saved.
                    File path can be a local path, s3 path (when running with AWS cloud services),
@@ -746,7 +795,7 @@ Attaching the documentation link of data ingest module to understand more about 
             delimiter: ","
             inferSchema: True
 
-13. **write_stats**
+## `write_stats`
 
     a.  file_path: Path where all tables/stats of anovos modules (data
         drift & data analyzer) will be saved.
