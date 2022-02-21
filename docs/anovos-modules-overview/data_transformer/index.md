@@ -1,6 +1,6 @@
 ## Module ANOVOS.transformers	
 
-In the latest release of Anovos (V0.2), data transformer module supports selected pre-processing functions such as binning, encoding, scaling, imputation, to name a few, which were required for statistics generation and quality checks. List of functions supported through this modules are:
+In the latest release of Anovos (V0.2), data transformer module supports selected pre-processing & transformation functions, such as binning, encoding, scaling, imputation, to name a few, which are required for statistics generation and quality checks. Functions supported through this modules are listed below:
 
 - attribute_binning
 - monotonic_binning
