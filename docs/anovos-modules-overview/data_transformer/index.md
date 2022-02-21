@@ -93,7 +93,7 @@ For example, there are 3 distinct values in a categorical attribute X: X1, X2 an
 - 10 positive events and 40 negative events with X==X2;
 - 20 positive events and 20 negative events with X==X3.
 
-Thus, value X1 is mapped to 15/(15+5) = 0.75, value X2 is mapped to 10/(10+40) = 0.2 and value X3 is mapped to 20/(20+20) = 0.5. This mapping will be applied to all values in attribute X. This encoding method can avoiding creating too many dummy variables which may cause dimensionality issue and it also works with categorical attributes without an order or rank.
+Thus, value X1 is mapped to 15/(15+5) = 0.75, value X2 is mapped to 10/(10+40) = 0.2 and value X3 is mapped to 20/(20+20) = 0.5. This mapping will be applied to all values in attribute X. This encoding method can be helpful in avoiding creating too many dummy variables which may cause dimensionality issue and it also works with categorical attributes without an order or rank.
 
 - *spark*: Spark Session
 - *idf*
@@ -107,7 +107,7 @@ Thus, value X1 is mapped to 15/(15+5) = 0.75, value X2 is mapped to 10/(10+40) =
 - *print_impact*
 
 ### z_standardization
-standardization is commonly used in data pre-processing process. z_standardization standardizes the selected attributes of an input dataframe by normalizing each attribute to have standard deviation of 1 and mean of 0. For each attribute, the standard deviation (s) and mean (u) are calculated and a sample x will be standardized into (x-u)/s. If the standard deviation of an attribute is 0, it will be excluded in standardization and a warning will be shown. None values will be kept as None in the output dataframe.
+Standardization is commonly used in data pre-processing process. z_standardization standardizes the selected attributes of an input dataframe by normalizing each attribute to have standard deviation of 1 and mean of 0. For each attribute, the standard deviation (s) and mean (u) are calculated and a sample x will be standardized into (x-u)/s. If the standard deviation of an attribute is 0, it will be excluded in standardization and a warning will be shown. None values will be kept as None in the output dataframe.
 
 - *spark*: Spark Session
 - *idf*
@@ -161,17 +161,17 @@ This function handles missing value related issues by substituting null values b
 
 ### imputation_sklearn
 
-imputation_sklearn trains a sklearn imputer to handle missing values in numerical columns. It learns how to impute the missing value of a sample using the rest of the samples. Two methods are supported: “KNN” and “regression”. 
+The function "imputation_sklearn" trains a sklearn imputer to handle missing values in numerical columns. It learns how to impute the missing value of a sample using the rest of the samples. Two methods are supported via this function: “KNN” and “regression”. 
 
 “KNN” option trains a sklearn.impute.KNNImputer which is based on k-Nearest Neighbors algorithm. The missing values of a sample are imputed using the mean of its 5 nearest neighbors in the training set. “regression” option trains a sklearn.impute.IterativeImputer which models attribute to impute as a function of rest of the attributes and imputes using the estimation. Imputation is performed in an iterative way from attributes with fewest number of missing values to most. All the hyperparameters used in the above mentioned imputers are their default values.
 
-However, sklearn imputers are not scalable, which might be slow if the size of the input dataframe is large. Thus, an input sample_size (the default value is 500,000) can be set to control the number of samples to be used to train the imputer. If the total number of samples exceeds sample_size, the rest of the samples will be imputed using the trained imputer in a scalable manner. 
+However, sklearn imputers are not scalable, which might be slow if the size of the input dataframe is large. Thus, an input sample_size (the default value is 500,000) can be set to control the number of samples to be used to train the imputer. If the total number of samples exceeds sample_size, the rest of the samples will be imputed using the trained imputer in a scalable manner. This is one of the way to demonstrate how Anovos has been designed as a scalable feature engineering library.
 
 - *spark*: Spark Session
 - *idf*
 - *list_of_cols*: "all" can be passed to include all numerical columns. "missing" can be used to only include numerical columns with any missing value.
 - *drop_cols*
-- *method_type*: "KNN", "regression". "KNN" option trains a sklearn.impute.KNNImputer. "regression" option trains a sklearn.impute.IterativeImputer.
+- *method_type*: "KNN" or "regression". "KNN" option trains a sklearn.impute.KNNImputer. "regression" option trains a sklearn.impute.IterativeImputer.
 - *sample_size*: Maximum rows for training the sklearn imputer  
 - *pre_existing_model*: Boolean argument - True or False. True if imputation model exists already, False otherwise.
 - *model_path*: If pre_existing_model is True, this argument is path for referring the pre-saved model. If pre_existing_model is False, this argument can be used for saving the model. Default "NA" means there is neither pre-existing model nor there is a need to save one.
