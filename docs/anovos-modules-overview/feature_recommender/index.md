@@ -22,7 +22,7 @@ Our solution consists of 3 main steps:
 - Compute similarity scores of each input attribute name & description across both corpuses (Anovos Feature Corpus & User Data Dictionary)
 - Sort the results and get the matches for each input feature based on their scores
 
-See belwo the solution workflow for further understanding of our solution.
+See below for the solution workflow of FER for further understanding of our solution.
 
 // Solution Details Diagram 
 
@@ -36,19 +36,19 @@ Feature explorer helps list down the potential features from our corpus based on
 
 Argument: None
 
-This function lists down all the Industries that are supported in Feature Recommender package.
+This function lists down all the Industries that are supported in Feature Recommender module.
 
 ### list\_all\_usecase
 
 Argument: None
 
-This function lists down all the Use cases that are supported in Feature Recommender Package
+This function lists down all the Use cases that are supported in Feature Recommender module
 
 ### list\_all\_pair
 
 Argument: None
 
-This function lists down all the Industry/Use case pairs that are supported in Feature Recommender Package
+This function lists down all the Industry/Use case pairs that are supported in Feature Recommender module
 
 ### list\_usecase\_by\_industry
 
