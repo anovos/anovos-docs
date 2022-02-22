@@ -1,24 +1,24 @@
-## **Module: Anovos.feature\_recommender**
+## **Module: Anovos.feature explorer & feature recommender**
 
-Features have always been a crucial part in solving any Data Science related problems. They are the most important factors, deciding whether the Machine Learning projects are successful or not. However, coming up with good features is not a simple task. It is usually very difficult and requires very expert knowledge in both domains and Data Science technical aspects. In fact, 80% of Data Scientists&#39; time are being spent on data wrangling and Feature Engineering tasks, and only 20% is for fine-tuning the model and testing out. Starting from scratch, this is a cold-start problem for any Data Scientist to figure out what features would be used to help them in creating their models.
+Feature engineering has always played a crucial role in solving any Machine learning (ML) related problems. Features/Predictors decide whether the Machine Learning projects are successful or not. However, coming up with good & intuitive features is not an easy task. Identifying list of potential features to build is a very hard to come up and requires both expertise in domain knowledge and technical aspects of Machine learning. In fact, 80% of Data Scientists&#39; time are being spent on data wrangling and Feature Engineering tasks, and only 20% is for fine-tuning the model and testing out. Building features from scratch is a cold-start problem for any Data Scientists to figure out what features would be used to help them in creating their models.
 
-There are many tools to help Data Scientist to narrow down the features, but they are either not scalable, or very comprehensive to understand and operate. Here, within ANOVOS Beta Release, we launch an open-source tool, Feature Explorer and Recommender module, in order to help the Machine Learning community with these Feature Engineering problems.
+There are many tools to help Data Scientist to narrow down the features, but they are either not scalable, or very comprehensive to understand and operate. Here, within ANOVOS V0.2, we launch an open-source tool, Feature Explorer and Recommender (FER) module, in order to help the Machine Learning community with these cold start Feature Engineering problems. 
 
-With Feature Explorer and Recommender module, we address 2 main statements:
+With Feature Explorer and Recommender module, we mainly address two problems:
 
-- Create a platform for Data Scientists to explore available features based on their interest of Industries and Use cases
-- Recommend better features for Data Scientists to address cold-start problems
+- Create a platform for Data Scientists to explore available/already used features based on their interest of Industries/Domain and Use cases
+- Recommend better features for Data Scientists to address cold-start problems (based on the data they have in hand)
 
-Feature Explorer and Recommender utilizes Semantic Matching method for Language Modeling and Nature Language Processing (NLP). Semanticmatching techniques aim to determine the similarity between words, lines, and sentences through multiple metrics.
+Feature Explorer and Recommender utilizes Semantic similarity based Language Modeling in Nature Language Processing (NLP). Semantic matching techniques aims to determine the similarity between words, lines, and sentences through multiple metrics.
 
-In this module, we use all-mpnet-base-v2([https://huggingface.co/sentence-transformers/all-mpnet-base-v2](https://huggingface.co/sentence-transformers/all-mpnet-base-v2)) for our semantic model. This model is built upon Microsoft Mpnet-base base model, Masked and Permuted Pre-training for Language Understanding. Its performance triumphs BERT, XLNet, RoBERTa for language modeling and text recognition:
+In this module, we use [all-mpnet-base-v2](https://huggingface.co/sentence-transformers/all-mpnet-base-v2) for our semantic model. This model is built based upon Microsoft [Mpnet](https://arxiv.org/abs/2004.09297) base model, masked and permuted pre-training for language understanding. Its performance triumphs BERT, XLNet, RoBERTa for language modeling and text recognition. The importance features of this model are,
 
 - Trained on more than 1 billion training pairs, including around 300 millions research paper citation pairs
 - Fine-tuned using cosine similarity from sentence pairs, then apply cross entropy loss by comparing true pairs
 
 Our solution consists of 3 main steps:
 
-- Using the pretrained model, convert texture data into tensors (Text Embedding Technique)
+- Using the pretrained model, convert texual data into tensors (Text Embedding Technique)
 - Compute similarity scores of each input feature across both corpuses
 - Sort the results and get the matches for each input feature based on their scores
 
