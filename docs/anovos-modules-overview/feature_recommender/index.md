@@ -19,10 +19,18 @@ In this module, we use [all-mpnet-base-v2](https://huggingface.co/sentence-trans
 Our solution consists of 3 main steps:
 
 - Using the pretrained model, convert texual data into tensors (Text Embedding Technique)
-- Compute similarity scores of each input feature across both corpuses
+- Compute similarity scores of each input attribute name & description across both corpuses (Anovos Feature Corpus & User Data Dictionary)
 - Sort the results and get the matches for each input feature based on their scores
 
+See belwo the solution workflow for further understanding of our solution.
+
+// Solution Details Diagram 
+
+As mentioned earlier, our solution design consists of 2 sub-modules in it, namely Feature Explorer & Feature Recommender. Below we detail the list of functions supported under each module.
+
 ### *Feature Explorer:*
+
+Feature explorer helps list down the potential features from our corpus based on user defined industry or/and use case.
 
 ### list\_all\_industry
 
@@ -120,6 +128,8 @@ The output is returned in the form of a DataFrame. Columns are:
 - Source: Source of the suggested Feature
 
 ### *Feature Recommender:*
+
+Feature recommender recommends features based on ingested data dictionary by the user. 
 
 ### feature\_recommendation
 
