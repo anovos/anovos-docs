@@ -48,6 +48,7 @@ nav:
     - Quality Checker: anovos-modules-overview/quality-checker/index.md
     - Association Evaluator: anovos-modules-overview/association-evaluator/index.md
     - Data Drift & Stability Index: anovos-modules-overview/data_drift_and_stability_index/index.md
+    - Feature Explorer and Recommender: anovos-modules-overview/feature_recommender/index.md
   - Using Anovos:
       - Setting up:
           - Locally: using-anovos/setting-up/locally.md
