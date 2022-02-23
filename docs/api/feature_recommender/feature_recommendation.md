@@ -670,8 +670,8 @@ def sankey_visualization(df, industry_included=False, usecase_included=False):
 </details>
 ## Functions
 <dl>
-<dt id="anovos.feature_recommender.feature_recommendation.feature_recommendation"><code class="name flex">
-<span>def <span class="ident">feature_recommendation</span></span>(<span>df, name_column=None, desc_column=None, suggested_industry='all', suggested_usecase='all', semantic=True, top_n=2, threshold=0.3)</span>
+<dt id="anovos.feature_recommender.feature_recommendation.feature_recommendation"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">feature_recommendation</span></span>(<span class="n">df, name_column=None, desc_column=None, suggested_industry='all', suggested_usecase='all', semantic=True, top_n=2, threshold=0.3)</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
@@ -993,8 +993,8 @@ def feature_recommendation(
 </pre>
 </details>
 </dd>
-<dt id="anovos.feature_recommender.feature_recommendation.find_attr_by_relevance"><code class="name flex">
-<span>def <span class="ident">find_attr_by_relevance</span></span>(<span>df, building_corpus, name_column=None, desc_column=None, threshold=0.3)</span>
+<dt id="anovos.feature_recommender.feature_recommendation.find_attr_by_relevance"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">find_attr_by_relevance</span></span>(<span class="n">df, building_corpus, name_column=None, desc_column=None, threshold=0.3)</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
@@ -1189,8 +1189,8 @@ def find_attr_by_relevance(
 </pre>
 </details>
 </dd>
-<dt id="anovos.feature_recommender.feature_recommendation.sankey_visualization"><code class="name flex">
-<span>def <span class="ident">sankey_visualization</span></span>(<span>df, industry_included=False, usecase_included=False)</span>
+<dt id="anovos.feature_recommender.feature_recommendation.sankey_visualization"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">sankey_visualization</span></span>(<span class="n">df, industry_included=False, usecase_included=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>

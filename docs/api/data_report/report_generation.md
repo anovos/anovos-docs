@@ -2433,8 +2433,8 @@ def anovos_report(
 </details>
 ## Functions
 <dl>
-<dt id="anovos.data_report.report_generation.anovos_report"><code class="name flex">
-<span>def <span class="ident">anovos_report</span></span>(<span>master_path, id_col='', label_col='', corr_threshold=0.4, iv_threshold=0.02, drift_threshold_model=0.1, dataDict_path='.', metricDict_path='.', run_type='local', final_report_path='.')</span>
+<dt id="anovos.data_report.report_generation.anovos_report"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">anovos_report</span></span>(<span class="n">master_path, id_col='', label_col='', corr_threshold=0.4, iv_threshold=0.02, drift_threshold_model=0.1, dataDict_path='.', metricDict_path='.', run_type='local', final_report_path='.')</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
@@ -2856,8 +2856,8 @@ def anovos_report(
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_report.report_generation.attribute_associations"><code class="name flex">
-<span>def <span class="ident">attribute_associations</span></span>(<span>master_path, AE_tabs, avl_recs_AE, missing_recs_AE, label_col, all_charts_num_2_, all_charts_cat_2_, print_report=False)</span>
+<dt id="anovos.data_report.report_generation.attribute_associations"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">attribute_associations</span></span>(<span class="n">master_path, AE_tabs, avl_recs_AE, missing_recs_AE, label_col, all_charts_num_2_, all_charts_cat_2_, print_report=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
@@ -3044,8 +3044,8 @@ def attribute_associations(
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_report.report_generation.chart_gen_list"><code class="name flex">
-<span>def <span class="ident">chart_gen_list</span></span>(<span>master_path, chart_type, type_col=None)</span>
+<dt id="anovos.data_report.report_generation.chart_gen_list"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">chart_gen_list</span></span>(<span class="n">master_path, chart_type, type_col=None)</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
@@ -3118,8 +3118,8 @@ def chart_gen_list(master_path, chart_type, type_col=None):
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_report.report_generation.data_analyzer_output"><code class="name flex">
-<span>def <span class="ident">data_analyzer_output</span></span>(<span>master_path, avl_recs_tab, tab_name)</span>
+<dt id="anovos.data_report.report_generation.data_analyzer_output"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">data_analyzer_output</span></span>(<span class="n">master_path, avl_recs_tab, tab_name)</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
@@ -3373,8 +3373,8 @@ def data_analyzer_output(master_path, avl_recs_tab, tab_name):
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_report.report_generation.data_drift_stability"><code class="name flex">
-<span>def <span class="ident">data_drift_stability</span></span>(<span>master_path, ds_ind, id_col, drift_threshold_model, all_drift_charts_, print_report=False)</span>
+<dt id="anovos.data_report.report_generation.data_drift_stability"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">data_drift_stability</span></span>(<span class="n">master_path, ds_ind, id_col, drift_threshold_model, all_drift_charts_, print_report=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
@@ -3927,8 +3927,8 @@ def data_drift_stability(
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_report.report_generation.descriptive_statistics"><code class="name flex">
-<span>def <span class="ident">descriptive_statistics</span></span>(<span>master_path, SG_tabs, avl_recs_SG, missing_recs_SG, all_charts_num_1_, all_charts_cat_1_, print_report=False)</span>
+<dt id="anovos.data_report.report_generation.descriptive_statistics"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">descriptive_statistics</span></span>(<span class="n">master_path, SG_tabs, avl_recs_SG, missing_recs_SG, all_charts_num_1_, all_charts_cat_1_, print_report=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
@@ -4136,8 +4136,8 @@ def descriptive_statistics(
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_report.report_generation.drift_stability_ind"><code class="name flex">
-<span>def <span class="ident">drift_stability_ind</span></span>(<span>missing_recs_drift, drift_tab, missing_recs_stability, stability_tab)</span>
+<dt id="anovos.data_report.report_generation.drift_stability_ind"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">drift_stability_ind</span></span>(<span class="n">missing_recs_drift, drift_tab, missing_recs_stability, stability_tab)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>missing_recs_drift: Missing files from the drift tab
@@ -4206,8 +4206,8 @@ def drift_stability_ind(
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_report.report_generation.executive_summary_gen"><code class="name flex">
-<span>def <span class="ident">executive_summary_gen</span></span>(<span>master_path, label_col, ds_ind, id_col, iv_threshold, corr_threshold, print_report=False)</span>
+<dt id="anovos.data_report.report_generation.executive_summary_gen"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">executive_summary_gen</span></span>(<span class="n">master_path, label_col, ds_ind, id_col, iv_threshold, corr_threshold, print_report=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
@@ -4649,8 +4649,8 @@ def executive_summary_gen(
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_report.report_generation.line_chart_gen_stability"><code class="name flex">
-<span>def <span class="ident">line_chart_gen_stability</span></span>(<span>df1, df2, col)</span>
+<dt id="anovos.data_report.report_generation.line_chart_gen_stability"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">line_chart_gen_stability</span></span>(<span class="n">df1, df2, col)</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
@@ -4796,8 +4796,8 @@ def line_chart_gen_stability(df1, df2, col):
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_report.report_generation.quality_check"><code class="name flex">
-<span>def <span class="ident">quality_check</span></span>(<span>master_path, QC_tabs, avl_recs_QC, missing_recs_QC, all_charts_num_3_, print_report=False)</span>
+<dt id="anovos.data_report.report_generation.quality_check"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">quality_check</span></span>(<span class="n">master_path, QC_tabs, avl_recs_QC, missing_recs_QC, all_charts_num_3_, print_report=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
@@ -4989,8 +4989,8 @@ def quality_check(
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_report.report_generation.remove_u_score"><code class="name flex">
-<span>def <span class="ident">remove_u_score</span></span>(<span>col)</span>
+<dt id="anovos.data_report.report_generation.remove_u_score"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">remove_u_score</span></span>(<span class="n">col)</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
@@ -5031,8 +5031,8 @@ def remove_u_score(col):
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_report.report_generation.wiki_generator"><code class="name flex">
-<span>def <span class="ident">wiki_generator</span></span>(<span>master_path, dataDict_path=None, metricDict_path=None, print_report=False)</span>
+<dt id="anovos.data_report.report_generation.wiki_generator"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">wiki_generator</span></span>(<span class="n">master_path, dataDict_path=None, metricDict_path=None, print_report=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>

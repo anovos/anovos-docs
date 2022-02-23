@@ -623,8 +623,8 @@ def IG_calculation(
 </details>
 ## Functions
 <dl>
-<dt id="anovos.data_analyzer.association_evaluator.IG_calculation"><code class="name flex">
-<span>def <span class="ident">IG_calculation</span></span>(<span>spark, idf, list_of_cols='all', drop_cols=[], label_col='label', event_label=1, encoding_configs={'bin_method': 'equal_frequency', 'bin_size': 10, 'monotonicity_check': 0}, print_impact=False)</span>
+<dt id="anovos.data_analyzer.association_evaluator.IG_calculation"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">IG_calculation</span></span>(<span class="n">spark, idf, list_of_cols='all', drop_cols=[], label_col='label', event_label=1, encoding_configs={'bin_method': 'equal_frequency', 'bin_size': 10, 'monotonicity_check': 0}, print_impact=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Information Gain (IG) is another powerful technique for feature selection analysis. Information gain is
@@ -844,8 +844,8 @@ def IG_calculation(
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_analyzer.association_evaluator.IV_calculation"><code class="name flex">
-<span>def <span class="ident">IV_calculation</span></span>(<span>spark, idf, list_of_cols='all', drop_cols=[], label_col='label', event_label=1, encoding_configs={'bin_method': 'equal_frequency', 'bin_size': 10, 'monotonicity_check': 0}, print_impact=False)</span>
+<dt id="anovos.data_analyzer.association_evaluator.IV_calculation"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">IV_calculation</span></span>(<span class="n">spark, idf, list_of_cols='all', drop_cols=[], label_col='label', event_label=1, encoding_configs={'bin_method': 'equal_frequency', 'bin_size': 10, 'monotonicity_check': 0}, print_impact=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Information Value (IV) is simple and powerful technique to conduct attribute relevance analysis. It measures
@@ -1069,8 +1069,8 @@ def IV_calculation(
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_analyzer.association_evaluator.correlation_matrix"><code class="name flex">
-<span>def <span class="ident">correlation_matrix</span></span>(<span>spark, idf, list_of_cols='all', drop_cols=[], stats_unique={}, print_impact=False)</span>
+<dt id="anovos.data_analyzer.association_evaluator.correlation_matrix"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">correlation_matrix</span></span>(<span class="n">spark, idf, list_of_cols='all', drop_cols=[], stats_unique={}, print_impact=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>This function calculates correlation coefficient statistical, which measures the strength of the relationship
@@ -1231,8 +1231,8 @@ def correlation_matrix(
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_analyzer.association_evaluator.variable_clustering"><code class="name flex">
-<span>def <span class="ident">variable_clustering</span></span>(<span>spark, idf, list_of_cols='all', drop_cols=[], sample_size=100000, stats_unique={}, stats_mode={}, print_impact=False)</span>
+<dt id="anovos.data_analyzer.association_evaluator.variable_clustering"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">variable_clustering</span></span>(<span class="n">spark, idf, list_of_cols='all', drop_cols=[], sample_size=100000, stats_unique={}, stats_mode={}, print_impact=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Variable Clustering groups attributes that are as correlated as possible among themselves within a cluster and

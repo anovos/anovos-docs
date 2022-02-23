@@ -277,8 +277,8 @@ def list_feature_by_pair(industry, usecase, num_of_feat=100, semantic=True):
 </details>
 ## Functions
 <dl>
-<dt id="anovos.feature_recommender.feature_exploration.list_all_industry"><code class="name flex">
-<span>def <span class="ident">list_all_industry</span></span>(<span>)</span>
+<dt id="anovos.feature_recommender.feature_exploration.list_all_industry"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">list_all_industry</span></span>(<span class="n">)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>:return: DataFrame of all the supported industries as part of feature exploration/recommendation</p></div>
@@ -297,8 +297,8 @@ def list_all_industry():
 </pre>
 </details>
 </dd>
-<dt id="anovos.feature_recommender.feature_exploration.list_all_pair"><code class="name flex">
-<span>def <span class="ident">list_all_pair</span></span>(<span>)</span>
+<dt id="anovos.feature_recommender.feature_exploration.list_all_pair"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">list_all_pair</span></span>(<span class="n">)</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="returns">Returns</h2>
@@ -324,8 +324,8 @@ def list_all_pair():
 </pre>
 </details>
 </dd>
-<dt id="anovos.feature_recommender.feature_exploration.list_all_usecase"><code class="name flex">
-<span>def <span class="ident">list_all_usecase</span></span>(<span>)</span>
+<dt id="anovos.feature_recommender.feature_exploration.list_all_usecase"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">list_all_usecase</span></span>(<span class="n">)</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="returns">Returns</h2>
@@ -353,8 +353,8 @@ def list_all_usecase():
 </pre>
 </details>
 </dd>
-<dt id="anovos.feature_recommender.feature_exploration.list_feature_by_industry"><code class="name flex">
-<span>def <span class="ident">list_feature_by_industry</span></span>(<span>industry, num_of_feat=100, semantic=True)</span>
+<dt id="anovos.feature_recommender.feature_exploration.list_feature_by_industry"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">list_feature_by_industry</span></span>(<span class="n">industry, num_of_feat=100, semantic=True)</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
@@ -411,8 +411,8 @@ def list_feature_by_industry(industry, num_of_feat=100, semantic=True):
 </pre>
 </details>
 </dd>
-<dt id="anovos.feature_recommender.feature_exploration.list_feature_by_pair"><code class="name flex">
-<span>def <span class="ident">list_feature_by_pair</span></span>(<span>industry, usecase, num_of_feat=100, semantic=True)</span>
+<dt id="anovos.feature_recommender.feature_exploration.list_feature_by_pair"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">list_feature_by_pair</span></span>(<span class="n">industry, usecase, num_of_feat=100, semantic=True)</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
@@ -477,8 +477,8 @@ def list_feature_by_pair(industry, usecase, num_of_feat=100, semantic=True):
 </pre>
 </details>
 </dd>
-<dt id="anovos.feature_recommender.feature_exploration.list_feature_by_usecase"><code class="name flex">
-<span>def <span class="ident">list_feature_by_usecase</span></span>(<span>usecase, num_of_feat=100, semantic=True)</span>
+<dt id="anovos.feature_recommender.feature_exploration.list_feature_by_usecase"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">list_feature_by_usecase</span></span>(<span class="n">usecase, num_of_feat=100, semantic=True)</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
@@ -536,8 +536,8 @@ def list_feature_by_usecase(usecase, num_of_feat=100, semantic=True):
 </pre>
 </details>
 </dd>
-<dt id="anovos.feature_recommender.feature_exploration.list_industry_by_usecase"><code class="name flex">
-<span>def <span class="ident">list_industry_by_usecase</span></span>(<span>usecase, semantic=True)</span>
+<dt id="anovos.feature_recommender.feature_exploration.list_industry_by_usecase"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">list_industry_by_usecase</span></span>(<span class="n">usecase, semantic=True)</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
@@ -576,8 +576,8 @@ def list_industry_by_usecase(usecase, semantic=True):
 </pre>
 </details>
 </dd>
-<dt id="anovos.feature_recommender.feature_exploration.list_usecase_by_industry"><code class="name flex">
-<span>def <span class="ident">list_usecase_by_industry</span></span>(<span>industry, semantic=True)</span>
+<dt id="anovos.feature_recommender.feature_exploration.list_usecase_by_industry"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">list_usecase_by_industry</span></span>(<span class="n">industry, semantic=True)</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
@@ -616,8 +616,8 @@ def list_usecase_by_industry(industry, semantic=True):
 </pre>
 </details>
 </dd>
-<dt id="anovos.feature_recommender.feature_exploration.process_industry"><code class="name flex">
-<span>def <span class="ident">process_industry</span></span>(<span>industry: str, semantic: bool)</span>
+<dt id="anovos.feature_recommender.feature_exploration.process_industry"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">process_industry</span></span>(<span class="n">industry: str, semantic: bool)</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
@@ -674,8 +674,8 @@ def process_industry(industry: str, semantic: bool):
 </pre>
 </details>
 </dd>
-<dt id="anovos.feature_recommender.feature_exploration.process_usecase"><code class="name flex">
-<span>def <span class="ident">process_usecase</span></span>(<span>usecase: str, semantic: bool)</span>
+<dt id="anovos.feature_recommender.feature_exploration.process_usecase"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">process_usecase</span></span>(<span class="n">usecase: str, semantic: bool)</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>

@@ -172,8 +172,8 @@ def check_distance_method(func=None, param="method_type"):
 </details>
 ## Functions
 <dl>
-<dt id="anovos.drift.validations.check_distance_method"><code class="name flex">
-<span>def <span class="ident">check_distance_method</span></span>(<span>func=None, param='method_type')</span>
+<dt id="anovos.drift.validations.check_distance_method"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">check_distance_method</span></span>(<span class="n">func=None, param='method_type')</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
@@ -244,8 +244,8 @@ def check_distance_method(func=None, param="method_type"):
 </pre>
 </details>
 </dd>
-<dt id="anovos.drift.validations.check_list_of_columns"><code class="name flex">
-<span>def <span class="ident">check_list_of_columns</span></span>(<span>func=None, columns='list_of_cols', target_idx: int = 1, target: str = 'idf_target', drop='drop_cols')</span>
+<dt id="anovos.drift.validations.check_list_of_columns"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">check_list_of_columns</span></span>(<span class="n">func=None, columns='list_of_cols', target_idx: int = 1, target: str = 'idf_target', drop='drop_cols')</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>

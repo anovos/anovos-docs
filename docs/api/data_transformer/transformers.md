@@ -3710,8 +3710,8 @@ def expression_parser(idf, list_of_expr, postfix="", print_impact=False):
 </details>
 ## Functions
 <dl>
-<dt id="anovos.data_transformer.transformers.IQR_standardization"><code class="name flex">
-<span>def <span class="ident">IQR_standardization</span></span>(<span>spark, idf, list_of_cols='all', drop_cols=[], pre_existing_model=False, model_path='NA', output_mode='replace', print_impact=False)</span>
+<dt id="anovos.data_transformer.transformers.IQR_standardization"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">IQR_standardization</span></span>(<span class="n">spark, idf, list_of_cols='all', drop_cols=[], pre_existing_model=False, model_path='NA', output_mode='replace', print_impact=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
@@ -3880,8 +3880,8 @@ def IQR_standardization(
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_transformer.transformers.PCA_latentFeatures"><code class="name flex">
-<span>def <span class="ident">PCA_latentFeatures</span></span>(<span>spark, idf, list_of_cols='all', drop_cols=[], explained_variance_cutoff=0.95, pre_existing_model=False, model_path='NA', standardization=True, standardization_configs={'pre_existing_model': False, 'model_path': 'NA'}, imputation=False, imputation_configs={'imputation_function': 'imputation_MMM'}, stats_missing={}, output_mode='replace', print_impact=False)</span>
+<dt id="anovos.data_transformer.transformers.PCA_latentFeatures"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">PCA_latentFeatures</span></span>(<span class="n">spark, idf, list_of_cols='all', drop_cols=[], explained_variance_cutoff=0.95, pre_existing_model=False, model_path='NA', standardization=True, standardization_configs={'pre_existing_model': False, 'model_path': 'NA'}, imputation=False, imputation_configs={'imputation_function': 'imputation_MMM'}, stats_missing={}, output_mode='replace', print_impact=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Similar to autoencoder_latentFeatures, PCA_latentFeatures also generates latent features which reduces the
@@ -4237,8 +4237,8 @@ def PCA_latentFeatures(
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_transformer.transformers.attribute_binning"><code class="name flex">
-<span>def <span class="ident">attribute_binning</span></span>(<span>spark, idf, list_of_cols='all', drop_cols=[], method_type='equal_range', bin_size=10, bin_dtype='numerical', pre_existing_model=False, model_path='NA', output_mode='replace', print_impact=False)</span>
+<dt id="anovos.data_transformer.transformers.attribute_binning"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">attribute_binning</span></span>(<span class="n">spark, idf, list_of_cols='all', drop_cols=[], method_type='equal_range', bin_size=10, bin_dtype='numerical', pre_existing_model=False, model_path='NA', output_mode='replace', print_impact=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Attribute binning (or discretization) is a method of numerical attribute into discrete (integer or categorical
@@ -4548,8 +4548,8 @@ def attribute_binning(
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_transformer.transformers.auto_imputation"><code class="name flex">
-<span>def <span class="ident">auto_imputation</span></span>(<span>spark, idf, list_of_cols='missing', drop_cols=[], id_col='', null_pct=0.1, stats_missing={}, output_mode='replace', print_impact=True)</span>
+<dt id="anovos.data_transformer.transformers.auto_imputation"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">auto_imputation</span></span>(<span class="n">spark, idf, list_of_cols='missing', drop_cols=[], id_col='', null_pct=0.1, stats_missing={}, output_mode='replace', print_impact=True)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>auto_imputation tests for 5 imputation methods using the other imputation functions provided in this module
@@ -4861,8 +4861,8 @@ def auto_imputation(
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_transformer.transformers.autoencoder_latentFeatures"><code class="name flex">
-<span>def <span class="ident">autoencoder_latentFeatures</span></span>(<span>spark, idf, list_of_cols='all', drop_cols=[], reduction_params=0.5, sample_size=500000, epochs=100, batch_size=256, pre_existing_model=False, model_path='NA', standardization=True, standardization_configs={'pre_existing_model': False, 'model_path': 'NA'}, imputation=False, imputation_configs={'imputation_function': 'imputation_MMM'}, stats_missing={}, output_mode='replace', run_type='local', print_impact=False)</span>
+<dt id="anovos.data_transformer.transformers.autoencoder_latentFeatures"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">autoencoder_latentFeatures</span></span>(<span class="n">spark, idf, list_of_cols='all', drop_cols=[], reduction_params=0.5, sample_size=500000, epochs=100, batch_size=256, pre_existing_model=False, model_path='NA', standardization=True, standardization_configs={'pre_existing_model': False, 'model_path': 'NA'}, imputation=False, imputation_configs={'imputation_function': 'imputation_MMM'}, stats_missing={}, output_mode='replace', run_type='local', print_impact=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Many machine learning models suffer from "the curse of dimensionality" when the number of features is too
@@ -5346,8 +5346,8 @@ def autoencoder_latentFeatures(
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_transformer.transformers.boxcox_transformation"><code class="name flex">
-<span>def <span class="ident">boxcox_transformation</span></span>(<span>idf, list_of_cols='all', drop_cols=[], boxcox_lambda=None, output_mode='replace', print_impact=False)</span>
+<dt id="anovos.data_transformer.transformers.boxcox_transformation"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">boxcox_transformation</span></span>(<span class="n">idf, list_of_cols='all', drop_cols=[], boxcox_lambda=None, output_mode='replace', print_impact=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Some machine learning algorithms require the input data to follow normal distributions. Thus, when the input
@@ -5578,8 +5578,8 @@ def boxcox_transformation(
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_transformer.transformers.cat_to_num_supervised"><code class="name flex">
-<span>def <span class="ident">cat_to_num_supervised</span></span>(<span>spark, idf, list_of_cols='all', drop_cols=[], label_col='label', event_label=1, pre_existing_model=False, model_path='NA', output_mode='replace', print_impact=False)</span>
+<dt id="anovos.data_transformer.transformers.cat_to_num_supervised"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">cat_to_num_supervised</span></span>(<span class="n">spark, idf, list_of_cols='all', drop_cols=[], label_col='label', event_label=1, pre_existing_model=False, model_path='NA', output_mode='replace', print_impact=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>This is a supervised method to convert a categorical attribute into a numerical attribute. It takes a
@@ -5823,8 +5823,8 @@ def cat_to_num_supervised(
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_transformer.transformers.cat_to_num_unsupervised"><code class="name flex">
-<span>def <span class="ident">cat_to_num_unsupervised</span></span>(<span>spark, idf, list_of_cols='all', drop_cols=[], method_type=1, index_order='frequencyDesc', cardinality_threshold=100, pre_existing_model=False, model_path='NA', output_mode='replace', print_impact=False)</span>
+<dt id="anovos.data_transformer.transformers.cat_to_num_unsupervised"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">cat_to_num_unsupervised</span></span>(<span class="n">spark, idf, list_of_cols='all', drop_cols=[], method_type=1, index_order='frequencyDesc', cardinality_threshold=100, pre_existing_model=False, model_path='NA', output_mode='replace', print_impact=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>This is unsupervised method of converting a categorical attribute into numerical attribute(s). This is among
@@ -6169,8 +6169,8 @@ def cat_to_num_unsupervised(
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_transformer.transformers.expression_parser"><code class="name flex">
-<span>def <span class="ident">expression_parser</span></span>(<span>idf, list_of_expr, postfix='', print_impact=False)</span>
+<dt id="anovos.data_transformer.transformers.expression_parser"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">expression_parser</span></span>(<span class="n">idf, list_of_expr, postfix='', print_impact=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>expression_parser can be used to evaluate a list of SQL expressions and output the result as new features. It
@@ -6314,8 +6314,8 @@ def expression_parser(idf, list_of_expr, postfix="", print_impact=False):
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_transformer.transformers.feature_transformation"><code class="name flex">
-<span>def <span class="ident">feature_transformation</span></span>(<span>idf, list_of_cols='all', drop_cols=[], method_type='sqrt', N=None, output_mode='replace', print_impact=False)</span>
+<dt id="anovos.data_transformer.transformers.feature_transformation"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">feature_transformation</span></span>(<span class="n">idf, list_of_cols='all', drop_cols=[], method_type='sqrt', N=None, output_mode='replace', print_impact=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>As the name indicates, feature_transformation performs mathematical transformation over selected attributes.
@@ -6547,8 +6547,8 @@ def feature_transformation(
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_transformer.transformers.imputation_MMM"><code class="name flex">
-<span>def <span class="ident">imputation_MMM</span></span>(<span>spark, idf, list_of_cols='missing', drop_cols=[], method_type='median', pre_existing_model=False, model_path='NA', output_mode='replace', stats_missing={}, stats_mode={}, print_impact=False)</span>
+<dt id="anovos.data_transformer.transformers.imputation_MMM"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">imputation_MMM</span></span>(<span class="n">spark, idf, list_of_cols='missing', drop_cols=[], method_type='median', pre_existing_model=False, model_path='NA', output_mode='replace', stats_missing={}, stats_mode={}, print_impact=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>This function handles missing value related issues by substituting null values by the measure of central
@@ -6944,8 +6944,8 @@ def imputation_MMM(
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_transformer.transformers.imputation_matrixFactorization"><code class="name flex">
-<span>def <span class="ident">imputation_matrixFactorization</span></span>(<span>spark, idf, list_of_cols='missing', drop_cols=[], id_col='', output_mode='replace', stats_missing={}, print_impact=False)</span>
+<dt id="anovos.data_transformer.transformers.imputation_matrixFactorization"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">imputation_matrixFactorization</span></span>(<span class="n">spark, idf, list_of_cols='missing', drop_cols=[], id_col='', output_mode='replace', stats_missing={}, print_impact=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>imputation_matrixFactorization uses collaborative filtering technique to impute missing values. Collaborative
@@ -7243,8 +7243,8 @@ def imputation_matrixFactorization(
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_transformer.transformers.imputation_sklearn"><code class="name flex">
-<span>def <span class="ident">imputation_sklearn</span></span>(<span>spark, idf, list_of_cols='missing', drop_cols=[], method_type='KNN', sample_size=500000, pre_existing_model=False, model_path='NA', output_mode='replace', stats_missing={}, run_type='local', print_impact=False)</span>
+<dt id="anovos.data_transformer.transformers.imputation_sklearn"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">imputation_sklearn</span></span>(<span class="n">spark, idf, list_of_cols='missing', drop_cols=[], method_type='KNN', sample_size=500000, pre_existing_model=False, model_path='NA', output_mode='replace', stats_missing={}, run_type='local', print_impact=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>The function "imputation_sklearn" trains a sklearn imputer to handle missing values in numerical columns. It
@@ -7616,8 +7616,8 @@ def imputation_sklearn(
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_transformer.transformers.monotonic_binning"><code class="name flex">
-<span>def <span class="ident">monotonic_binning</span></span>(<span>spark, idf, list_of_cols='all', drop_cols=[], label_col='label', event_label=1, bin_method='equal_range', bin_size=10, bin_dtype='numerical', output_mode='replace')</span>
+<dt id="anovos.data_transformer.transformers.monotonic_binning"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">monotonic_binning</span></span>(<span class="n">spark, idf, list_of_cols='all', drop_cols=[], label_col='label', event_label=1, bin_method='equal_range', bin_size=10, bin_dtype='numerical', output_mode='replace')</span>
 </code></dt>
 <dd>
 <div class="desc"><p>This function constitutes supervised way of binning the numerical attribute into discrete (integer or
@@ -7839,8 +7839,8 @@ def monotonic_binning(
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_transformer.transformers.normalization"><code class="name flex">
-<span>def <span class="ident">normalization</span></span>(<span>idf, list_of_cols='all', drop_cols=[], pre_existing_model=False, model_path='NA', output_mode='replace', print_impact=False)</span>
+<dt id="anovos.data_transformer.transformers.normalization"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">normalization</span></span>(<span class="n">idf, list_of_cols='all', drop_cols=[], pre_existing_model=False, model_path='NA', output_mode='replace', print_impact=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
@@ -8022,8 +8022,8 @@ def normalization(
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_transformer.transformers.outlier_categories"><code class="name flex">
-<span>def <span class="ident">outlier_categories</span></span>(<span>spark, idf, list_of_cols='all', drop_cols=[], coverage=1.0, max_category=50, pre_existing_model=False, model_path='NA', output_mode='replace', print_impact=False)</span>
+<dt id="anovos.data_transformer.transformers.outlier_categories"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">outlier_categories</span></span>(<span class="n">spark, idf, list_of_cols='all', drop_cols=[], coverage=1.0, max_category=50, pre_existing_model=False, model_path='NA', output_mode='replace', print_impact=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>This function replaces less frequently seen values (called as outlier values in the current context) in a
@@ -8265,8 +8265,8 @@ def outlier_categories(
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_transformer.transformers.z_standardization"><code class="name flex">
-<span>def <span class="ident">z_standardization</span></span>(<span>spark, idf, list_of_cols='all', drop_cols=[], pre_existing_model=False, model_path='NA', output_mode='replace', print_impact=False)</span>
+<dt id="anovos.data_transformer.transformers.z_standardization"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">z_standardization</span></span>(<span class="n">spark, idf, list_of_cols='all', drop_cols=[], pre_existing_model=False, model_path='NA', output_mode='replace', print_impact=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Standardization is commonly used in data pre-processing process. z_standardization standardizes the selected

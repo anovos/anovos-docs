@@ -98,8 +98,8 @@ list_embedding_train_fer = model_fer.encode(list_train_fer, convert_to_tensor=Tr
 </details>
 ## Functions
 <dl>
-<dt id="anovos.feature_recommender.featrec_init.camel_case_split"><code class="name flex">
-<span>def <span class="ident">camel_case_split</span></span>(<span>input)</span>
+<dt id="anovos.feature_recommender.featrec_init.camel_case_split"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">camel_case_split</span></span>(<span class="n">input)</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
@@ -135,8 +135,8 @@ def camel_case_split(input):
 </pre>
 </details>
 </dd>
-<dt id="anovos.feature_recommender.featrec_init.recommendation_data_prep"><code class="name flex">
-<span>def <span class="ident">recommendation_data_prep</span></span>(<span>df, name_column, desc_column)</span>
+<dt id="anovos.feature_recommender.featrec_init.recommendation_data_prep"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">recommendation_data_prep</span></span>(<span class="n">df, name_column, desc_column)</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>

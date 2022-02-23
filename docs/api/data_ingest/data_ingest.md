@@ -378,8 +378,8 @@ def recast_column(idf, list_of_cols, list_of_dtypes, print_impact=False):
 </details>
 ## Functions
 <dl>
-<dt id="anovos.data_ingest.data_ingest.concatenate_dataset"><code class="name flex">
-<span>def <span class="ident">concatenate_dataset</span></span>(<span>*idfs, method_type='name')</span>
+<dt id="anovos.data_ingest.data_ingest.concatenate_dataset"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">concatenate_dataset</span></span>(<span class="n">*idfs, method_type='name')</span>
 </code></dt>
 <dd>
 <div class="desc"><p>This function combines multiple dataframes into a single dataframe. A pairwise concatenation is performed on
@@ -443,8 +443,8 @@ def concatenate_dataset(*idfs, method_type="name"):
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_ingest.data_ingest.delete_column"><code class="name flex">
-<span>def <span class="ident">delete_column</span></span>(<span>idf, list_of_cols, print_impact=False)</span>
+<dt id="anovos.data_ingest.data_ingest.delete_column"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">delete_column</span></span>(<span class="n">idf, list_of_cols, print_impact=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>This function is used to delete specific columns from the input data. It is executed using drop functionality
@@ -515,8 +515,8 @@ def delete_column(idf, list_of_cols, print_impact=False):
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_ingest.data_ingest.join_dataset"><code class="name flex">
-<span>def <span class="ident">join_dataset</span></span>(<span>*idfs, join_cols, join_type)</span>
+<dt id="anovos.data_ingest.data_ingest.join_dataset"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">join_dataset</span></span>(<span class="n">*idfs, join_cols, join_type)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>This function joins multiple dataframes into a single dataframe by a joining key column. Pairwise joining is
@@ -585,8 +585,8 @@ def join_dataset(*idfs, join_cols, join_type):
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_ingest.data_ingest.read_dataset"><code class="name flex">
-<span>def <span class="ident">read_dataset</span></span>(<span>spark, file_path, file_type, file_configs={})</span>
+<dt id="anovos.data_ingest.data_ingest.read_dataset"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">read_dataset</span></span>(<span class="n">spark, file_path, file_type, file_configs={})</span>
 </code></dt>
 <dd>
 <div class="desc"><p>This function reads the input data path and return a Spark DataFrame. Under the hood, this function is based
@@ -662,8 +662,8 @@ def read_dataset(spark, file_path, file_type, file_configs={}):
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_ingest.data_ingest.recast_column"><code class="name flex">
-<span>def <span class="ident">recast_column</span></span>(<span>idf, list_of_cols, list_of_dtypes, print_impact=False)</span>
+<dt id="anovos.data_ingest.data_ingest.recast_column"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">recast_column</span></span>(<span class="n">idf, list_of_cols, list_of_dtypes, print_impact=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>This function is used to modify the datatype of columns. Multiple columns can be cast; however,
@@ -761,8 +761,8 @@ def recast_column(idf, list_of_cols, list_of_dtypes, print_impact=False):
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_ingest.data_ingest.rename_column"><code class="name flex">
-<span>def <span class="ident">rename_column</span></span>(<span>idf, list_of_cols, list_of_newcols, print_impact=False)</span>
+<dt id="anovos.data_ingest.data_ingest.rename_column"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">rename_column</span></span>(<span class="n">idf, list_of_cols, list_of_newcols, print_impact=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>This function is used to rename the columns of the input data. Multiple columns can be renamed; however,
@@ -851,8 +851,8 @@ def rename_column(idf, list_of_cols, list_of_newcols, print_impact=False):
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_ingest.data_ingest.select_column"><code class="name flex">
-<span>def <span class="ident">select_column</span></span>(<span>idf, list_of_cols, print_impact=False)</span>
+<dt id="anovos.data_ingest.data_ingest.select_column"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">select_column</span></span>(<span class="n">idf, list_of_cols, print_impact=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>This function is used to select specific columns from the input data. It is executed using select operation of
@@ -923,8 +923,8 @@ def select_column(idf, list_of_cols, print_impact=False):
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_ingest.data_ingest.write_dataset"><code class="name flex">
-<span>def <span class="ident">write_dataset</span></span>(<span>idf, file_path, file_type, file_configs={}, column_order=[])</span>
+<dt id="anovos.data_ingest.data_ingest.write_dataset"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">write_dataset</span></span>(<span class="n">idf, file_path, file_type, file_configs={}, column_order=[])</span>
 </code></dt>
 <dd>
 <div class="desc"><p>This function saves the Spark DataFrame in the user-provided output path. Like read_dataset, this function is

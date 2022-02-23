@@ -844,8 +844,8 @@ def feature_stability_estimation(
 </details>
 ## Functions
 <dl>
-<dt id="anovos.drift.detector.feature_stability_estimation"><code class="name flex">
-<span>def <span class="ident">feature_stability_estimation</span></span>(<span>spark, attribute_stats, attribute_transformation, metric_weightages={'mean': 0.5, 'stddev': 0.3, 'kurtosis': 0.2}, threshold=1, print_impact=False)</span>
+<dt id="anovos.drift.detector.feature_stability_estimation"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">feature_stability_estimation</span></span>(<span class="n">spark, attribute_stats, attribute_transformation, metric_weightages={'mean': 0.5, 'stddev': 0.3, 'kurtosis': 0.2}, threshold=1, print_impact=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
@@ -1118,8 +1118,8 @@ def feature_stability_estimation(
 </pre>
 </details>
 </dd>
-<dt id="anovos.drift.detector.stability_index_computation"><code class="name flex">
-<span>def <span class="ident">stability_index_computation</span></span>(<span>spark, *idfs, list_of_cols='all', drop_cols=[], metric_weightages={'mean': 0.5, 'stddev': 0.3, 'kurtosis': 0.2}, existing_metric_path='', appended_metric_path='', threshold=1, print_impact=False)</span>
+<dt id="anovos.drift.detector.stability_index_computation"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">stability_index_computation</span></span>(<span class="n">spark, *idfs, list_of_cols='all', drop_cols=[], metric_weightages={'mean': 0.5, 'stddev': 0.3, 'kurtosis': 0.2}, existing_metric_path='', appended_metric_path='', threshold=1, print_impact=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>The data stability is represented by a single metric to summarise the stability of an attribute over multiple
@@ -1644,8 +1644,8 @@ def stability_index_computation(
 </pre>
 </details>
 </dd>
-<dt id="anovos.drift.detector.statistics"><code class="name flex">
-<span>def <span class="ident">statistics</span></span>(<span>spark: pyspark.sql.session.SparkSession, idf_target: pyspark.sql.dataframe.DataFrame, idf_source: pyspark.sql.dataframe.DataFrame, *, list_of_cols: list = 'all', drop_cols: list = None, method_type: str = 'PSI', bin_method: str = 'equal_range', bin_size: int = 10, threshold: float = 0.1, pre_existing_source: bool = False, source_path: str = 'NA', model_directory: str = 'drift_statistics', print_impact: bool = False)</span>
+<dt id="anovos.drift.detector.statistics"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">statistics</span></span>(<span class="n">spark: pyspark.sql.session.SparkSession, idf_target: pyspark.sql.dataframe.DataFrame, idf_source: pyspark.sql.dataframe.DataFrame, *, list_of_cols: list = 'all', drop_cols: list = None, method_type: str = 'PSI', bin_method: str = 'equal_range', bin_size: int = 10, threshold: float = 0.1, pre_existing_source: bool = False, source_path: str = 'NA', model_directory: str = 'drift_statistics', print_impact: bool = False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>When the performance of a deployed machine learning model degrades in production, one potential reason is that
