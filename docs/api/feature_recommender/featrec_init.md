@@ -20,8 +20,6 @@ def camel_case_split(input):
 
     Returns
     -------
-    type
-        Processed Input (string)
 
     """
     processed_input = ""
@@ -104,11 +102,7 @@ list_embedding_train_fer = model_fer.encode(list_train_fer, convert_to_tensor=Tr
 <div class="desc"><h2 id="parameters">Parameters</h2>
 <p>input :
 Input (string) which requires cleaning</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>type</code></dt>
-<dd>Processed Input (string)</dd>
-</dl></div>
+<h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -125,8 +119,6 @@ def camel_case_split(input):
 
     Returns
     -------
-    type
-        Processed Input (string)
 
     """
     processed_input = ""

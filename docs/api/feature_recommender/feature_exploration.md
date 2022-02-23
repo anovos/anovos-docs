@@ -53,8 +53,6 @@ def process_usecase(usecase, semantic):
 
     Returns
     -------
-    type
-        Processed Usecase(string)
 
     """
     if type(semantic) != bool:
@@ -91,8 +89,6 @@ def process_industry(industry, semantic):
 
     Returns
     -------
-    type
-        Processed Industry(string)
 
     """
     if type(semantic) != bool:
@@ -131,8 +127,6 @@ def list_usecase_by_industry(industry, semantic=True):
 
     Returns
     -------
-    type
-        DataFrame
 
     """
     industry = process_industry(industry, semantic)
@@ -153,8 +147,6 @@ def list_industry_by_usecase(usecase, semantic=True):
 
     Returns
     -------
-    type
-        DataFrame
 
     """
     usecase = process_usecase(usecase, semantic)
@@ -178,8 +170,6 @@ def list_feature_by_industry(industry, num_of_feat=100, semantic=True):
 
     Returns
     -------
-    type
-        DataFrame
 
     """
     if type(num_of_feat) != int or num_of_feat < 0:
@@ -215,8 +205,6 @@ def list_feature_by_usecase(usecase, num_of_feat=100, semantic=True):
 
     Returns
     -------
-    type
-        DataFrame
 
     """
     if type(num_of_feat) != int or num_of_feat < 0:
@@ -254,8 +242,6 @@ def list_feature_by_pair(industry, usecase, num_of_feat=100, semantic=True):
 
     Returns
     -------
-    type
-        DataFrame
 
     """
     if type(num_of_feat) != int or num_of_feat < 0:
@@ -353,11 +339,7 @@ Number of features to be displayed in the output.
 Value can be either integer, or 'all' - display all features matched with the input. Default is 100.
 semantic :
 Input semantic (boolean) - Whether the input needs to go through semantic similarity or not. Default is True.</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>type</code></dt>
-<dd>DataFrame</dd>
-</dl></div>
+<h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -379,8 +361,6 @@ def list_feature_by_industry(industry, num_of_feat=100, semantic=True):
 
     Returns
     -------
-    type
-        DataFrame
 
     """
     if type(num_of_feat) != int or num_of_feat < 0:
@@ -418,11 +398,7 @@ Value can be either integer, or 'all' - display all features matched with the in
 Default is 100.
 semantic :
 Input semantic (boolean) - Whether the input needs to go through semantic similarity or not. Default is True.</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>type</code></dt>
-<dd>DataFrame</dd>
-</dl></div>
+<h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -446,8 +422,6 @@ def list_feature_by_pair(industry, usecase, num_of_feat=100, semantic=True):
 
     Returns
     -------
-    type
-        DataFrame
 
     """
     if type(num_of_feat) != int or num_of_feat < 0:
@@ -486,11 +460,7 @@ Value can be either integer, or 'all' - display all features matched with the in
 Default is 100.
 semantic :
 Input semantic (boolean) - Whether the input needs to go through semantic similarity or not. Default is True.</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>type</code></dt>
-<dd>DataFrame</dd>
-</dl></div>
+<h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -512,8 +482,6 @@ def list_feature_by_usecase(usecase, num_of_feat=100, semantic=True):
 
     Returns
     -------
-    type
-        DataFrame
 
     """
     if type(num_of_feat) != int or num_of_feat < 0:
@@ -545,11 +513,7 @@ def list_feature_by_usecase(usecase, num_of_feat=100, semantic=True):
 Input usecase (string)
 semantic :
 Input semantic (boolean) - Whether the input needs to go through semantic similarity or not. Default is True.</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>type</code></dt>
-<dd>DataFrame</dd>
-</dl></div>
+<h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -568,8 +532,6 @@ def list_industry_by_usecase(usecase, semantic=True):
 
     Returns
     -------
-    type
-        DataFrame
 
     """
     usecase = process_usecase(usecase, semantic)
@@ -589,11 +551,7 @@ def list_industry_by_usecase(usecase, semantic=True):
 Input industry (string)
 semantic :
 Input semantic (boolean) - Whether the input needs to go through semantic similarity or not. Default is True.</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>type</code></dt>
-<dd>DataFrame</dd>
-</dl></div>
+<h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -612,8 +570,6 @@ def list_usecase_by_industry(industry, semantic=True):
 
     Returns
     -------
-    type
-        DataFrame
 
     """
     industry = process_industry(industry, semantic)
@@ -633,11 +589,7 @@ def list_usecase_by_industry(industry, semantic=True):
 Input industry (string)
 semantic :
 Input semantic (boolean) - Whether the input needs to go through semantic similarity or not. Default is True.</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>type</code></dt>
-<dd>Processed Industry(string)</dd>
-</dl></div>
+<h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -656,8 +608,6 @@ def process_industry(industry, semantic):
 
     Returns
     -------
-    type
-        Processed Industry(string)
 
     """
     if type(semantic) != bool:
@@ -695,11 +645,7 @@ def process_industry(industry, semantic):
 Input usecase (string)
 semantic :
 Input semantic (boolean) - Whether the input needs to go through semantic similarity or not. Default is True.</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>type</code></dt>
-<dd>Processed Usecase(string)</dd>
-</dl></div>
+<h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -718,8 +664,6 @@ def process_usecase(usecase, semantic):
 
     Returns
     -------
-    type
-        Processed Usecase(string)
 
     """
     if type(semantic) != bool:

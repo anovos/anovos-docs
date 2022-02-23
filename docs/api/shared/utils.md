@@ -22,8 +22,6 @@ def flatten_dataframe(idf, fixed_cols):
 
     Returns
     -------
-    type
-        Flatten/Melted dataframe
 
     """
     valid_cols = [e for e in idf.columns if e not in fixed_cols]
@@ -47,8 +45,6 @@ def transpose_dataframe(idf, fixed_col):
 
     Returns
     -------
-    type
-        Transposed dataframe
 
     """
     idf_flatten = flatten_dataframe(idf, fixed_cols=[fixed_col])
@@ -66,9 +62,6 @@ def attributeType_segregation(idf):
 
     Returns
     -------
-    type
-        list1, list2, list3)
-        3 lists - each corresponding to numerical, categorical, and others columns
 
     """
     cat_cols = []
@@ -99,8 +92,6 @@ def get_dtype(idf, col):
 
     Returns
     -------
-    type
-        data type
 
     """
     return [dtype for name, dtype in idf.dtypes if name == col][0]
@@ -118,8 +109,6 @@ def ends_with(string, end_str="/"):
 
     Returns
     -------
-    type
-        s3:mw-bucket/"
 
     """
     string = str(string)
@@ -134,7 +123,7 @@ def pairwise_reduce(op, x):
     Parameters
     ----------
     op :
-
+        param x:
     x :
 
 
@@ -160,12 +149,7 @@ def pairwise_reduce(op, x):
 <div class="desc"><h2 id="parameters">Parameters</h2>
 <p>idf :
 Input Dataframe</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>type</code></dt>
-<dd>list1, list2, list3)
-3 lists - each corresponding to numerical, categorical, and others columns</dd>
-</dl></div>
+<h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -182,9 +166,6 @@ def attributeType_segregation(idf):
 
     Returns
     -------
-    type
-        list1, list2, list3)
-        3 lists - each corresponding to numerical, categorical, and others columns
 
     """
     cat_cols = []
@@ -214,11 +195,7 @@ def attributeType_segregation(idf):
 s3:mw-bucket"
 end_str :
 return: "s3:mw-bucket/" (Default value = "/")</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>type</code></dt>
-<dd>s3:mw-bucket/"</dd>
-</dl></div>
+<h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -237,8 +214,6 @@ def ends_with(string, end_str="/"):
 
     Returns
     -------
-    type
-        s3:mw-bucket/"
 
     """
     string = str(string)
@@ -258,11 +233,7 @@ def ends_with(string, end_str="/"):
 Input Dataframe
 fixed_cols :
 All columns except in this list will be melted/unpivoted</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>type</code></dt>
-<dd>Flatten/Melted dataframe</dd>
-</dl></div>
+<h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -281,8 +252,6 @@ def flatten_dataframe(idf, fixed_cols):
 
     Returns
     -------
-    type
-        Flatten/Melted dataframe
 
     """
     valid_cols = [e for e in idf.columns if e not in fixed_cols]
@@ -304,11 +273,7 @@ def flatten_dataframe(idf, fixed_cols):
 Input Dataframe
 col :
 Column Name for datatype detection</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>type</code></dt>
-<dd>data type</dd>
-</dl></div>
+<h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -327,8 +292,6 @@ def get_dtype(idf, col):
 
     Returns
     -------
-    type
-        data type
 
     """
     return [dtype for name, dtype in idf.dtypes if name == col][0]
@@ -341,8 +304,9 @@ def get_dtype(idf, col):
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
-<p>op :</p>
-<p>x :</p>
+<p>op :
+param x:
+x :</p>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -356,7 +320,7 @@ def pairwise_reduce(op, x):
     Parameters
     ----------
     op :
-
+        param x:
     x :
 
 
@@ -384,11 +348,7 @@ Input Dataframe
 fixed_col :
 Values in this column will be converted into columns as header.
 Ideally all values should be unique</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>type</code></dt>
-<dd>Transposed dataframe</dd>
-</dl></div>
+<h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -408,8 +368,6 @@ def transpose_dataframe(idf, fixed_col):
 
     Returns
     -------
-    type
-        Transposed dataframe
 
     """
     idf_flatten = flatten_dataframe(idf, fixed_cols=[fixed_col])
