@@ -5,10 +5,6 @@
 <dd>
 <div class="desc"></div>
 </dd>
-<dt><code class="name"><a title="anovos.data_drift" href="data_drift/index.html">anovos.data_drift</a></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
 <dt><code class="name"><a title="anovos.data_ingest" href="data_ingest/index.html">anovos.data_ingest</a></code></dt>
 <dd>
 <div class="desc"></div>
@@ -18,6 +14,14 @@
 <div class="desc"></div>
 </dd>
 <dt><code class="name"><a title="anovos.data_transformer" href="data_transformer/index.html">anovos.data_transformer</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="anovos.drift" href="drift/index.html">anovos.drift</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="anovos.feature_recommender" href="feature_recommender/index.html">anovos.feature_recommender</a></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
