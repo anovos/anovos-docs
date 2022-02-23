@@ -108,8 +108,8 @@ spark, sc, sqlContext = init_spark(**configs)
 </details>
 ## Functions
 <dl>
-<dt id="anovos.shared.spark.init_spark"><code class="name flex">
-<span>def <span class="ident">init_spark</span></span>(<span>app_name='anovos', master='local[*]', jars_packages=None, py_files=None, spark_config=None)</span>
+<dt id="anovos.shared.spark.init_spark"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">init_spark</span></span>(<span class="n">app_name='anovos', master='local[*]', jars_packages=None, py_files=None, spark_config=None)</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>

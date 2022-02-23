@@ -565,8 +565,8 @@ def anovos_basic_report(
 </details>
 ## Functions
 <dl>
-<dt id="anovos.data_report.basic_report_generation.anovos_basic_report"><code class="name flex">
-<span>def <span class="ident">anovos_basic_report</span></span>(<span>spark, idf, id_col='', label_col='', event_label='', output_path='.', run_type='local', print_impact=True)</span>
+<dt id="anovos.data_report.basic_report_generation.anovos_basic_report"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">anovos_basic_report</span></span>(<span class="n">spark, idf, id_col='', label_col='', event_label='', output_path='.', run_type='local', print_impact=True)</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
@@ -1067,8 +1067,8 @@ def anovos_basic_report(
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_report.basic_report_generation.stats_args"><code class="name flex">
-<span>def <span class="ident">stats_args</span></span>(<span>path, func)</span>
+<dt id="anovos.data_report.basic_report_generation.stats_args"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">stats_args</span></span>(<span class="n">path, func)</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>

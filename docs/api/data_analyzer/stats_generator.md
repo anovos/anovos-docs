@@ -890,8 +890,8 @@ def measures_of_shape(spark, idf, list_of_cols="all", drop_cols=[], print_impact
 </details>
 ## Functions
 <dl>
-<dt id="anovos.data_analyzer.stats_generator.global_summary"><code class="name flex">
-<span>def <span class="ident">global_summary</span></span>(<span>spark, idf, list_of_cols='all', drop_cols=[], print_impact=True)</span>
+<dt id="anovos.data_analyzer.stats_generator.global_summary"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">global_summary</span></span>(<span class="n">spark, idf, list_of_cols='all', drop_cols=[], print_impact=True)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>The global summary function computes the following universal statistics/metrics and returns a Spark DataFrame
@@ -1006,8 +1006,8 @@ def global_summary(spark, idf, list_of_cols="all", drop_cols=[], print_impact=Tr
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_analyzer.stats_generator.measures_of_cardinality"><code class="name flex">
-<span>def <span class="ident">measures_of_cardinality</span></span>(<span>spark, idf, list_of_cols='all', drop_cols=[], print_impact=False)</span>
+<dt id="anovos.data_analyzer.stats_generator.measures_of_cardinality"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">measures_of_cardinality</span></span>(<span class="n">spark, idf, list_of_cols='all', drop_cols=[], print_impact=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>The Measures of Cardinality function provides statistics that are related to unique values seen in an
@@ -1134,8 +1134,8 @@ def measures_of_cardinality(
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_analyzer.stats_generator.measures_of_centralTendency"><code class="name flex">
-<span>def <span class="ident">measures_of_centralTendency</span></span>(<span>spark, idf, list_of_cols='all', drop_cols=[], print_impact=False)</span>
+<dt id="anovos.data_analyzer.stats_generator.measures_of_centralTendency"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">measures_of_centralTendency</span></span>(<span class="n">spark, idf, list_of_cols='all', drop_cols=[], print_impact=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>The Measures of Central Tendency function provides summary statistics that represents the centre point or most
@@ -1247,8 +1247,8 @@ def measures_of_centralTendency(
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_analyzer.stats_generator.measures_of_counts"><code class="name flex">
-<span>def <span class="ident">measures_of_counts</span></span>(<span>spark, idf, list_of_cols='all', drop_cols=[], print_impact=False)</span>
+<dt id="anovos.data_analyzer.stats_generator.measures_of_counts"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">measures_of_counts</span></span>(<span class="n">spark, idf, list_of_cols='all', drop_cols=[], print_impact=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>The Measures of Counts function computes different count metrics for each column (interchangeably called an
@@ -1361,8 +1361,8 @@ def measures_of_counts(
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_analyzer.stats_generator.measures_of_dispersion"><code class="name flex">
-<span>def <span class="ident">measures_of_dispersion</span></span>(<span>spark, idf, list_of_cols='all', drop_cols=[], print_impact=False)</span>
+<dt id="anovos.data_analyzer.stats_generator.measures_of_dispersion"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">measures_of_dispersion</span></span>(<span class="n">spark, idf, list_of_cols='all', drop_cols=[], print_impact=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>The Measures of Dispersion function provides statistics that describe the spread of a numerical attribute.
@@ -1519,8 +1519,8 @@ def measures_of_dispersion(
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_analyzer.stats_generator.measures_of_percentiles"><code class="name flex">
-<span>def <span class="ident">measures_of_percentiles</span></span>(<span>spark, idf, list_of_cols='all', drop_cols=[], print_impact=False)</span>
+<dt id="anovos.data_analyzer.stats_generator.measures_of_percentiles"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">measures_of_percentiles</span></span>(<span class="n">spark, idf, list_of_cols='all', drop_cols=[], print_impact=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>The Measures of Percentiles function provides statistics at different percentiles. Nth percentile can be
@@ -1639,8 +1639,8 @@ def measures_of_percentiles(
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_analyzer.stats_generator.measures_of_shape"><code class="name flex">
-<span>def <span class="ident">measures_of_shape</span></span>(<span>spark, idf, list_of_cols='all', drop_cols=[], print_impact=False)</span>
+<dt id="anovos.data_analyzer.stats_generator.measures_of_shape"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">measures_of_shape</span></span>(<span class="n">spark, idf, list_of_cols='all', drop_cols=[], print_impact=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>The Measures of Shapes function provides statistics related to the shape of an attribute's distribution.
@@ -1766,8 +1766,8 @@ def measures_of_shape(spark, idf, list_of_cols="all", drop_cols=[], print_impact
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_analyzer.stats_generator.missingCount_computation"><code class="name flex">
-<span>def <span class="ident">missingCount_computation</span></span>(<span>spark, idf, list_of_cols='all', drop_cols=[], print_impact=False)</span>
+<dt id="anovos.data_analyzer.stats_generator.missingCount_computation"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">missingCount_computation</span></span>(<span class="n">spark, idf, list_of_cols='all', drop_cols=[], print_impact=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
@@ -1857,8 +1857,8 @@ def missingCount_computation(
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_analyzer.stats_generator.mode_computation"><code class="name flex">
-<span>def <span class="ident">mode_computation</span></span>(<span>spark, idf, list_of_cols='all', drop_cols=[], print_impact=False)</span>
+<dt id="anovos.data_analyzer.stats_generator.mode_computation"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">mode_computation</span></span>(<span class="n">spark, idf, list_of_cols='all', drop_cols=[], print_impact=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
@@ -1972,8 +1972,8 @@ def mode_computation(spark, idf, list_of_cols="all", drop_cols=[], print_impact=
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_analyzer.stats_generator.nonzeroCount_computation"><code class="name flex">
-<span>def <span class="ident">nonzeroCount_computation</span></span>(<span>spark, idf, list_of_cols='all', drop_cols=[], print_impact=False)</span>
+<dt id="anovos.data_analyzer.stats_generator.nonzeroCount_computation"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">nonzeroCount_computation</span></span>(<span class="n">spark, idf, list_of_cols='all', drop_cols=[], print_impact=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
@@ -2072,8 +2072,8 @@ def nonzeroCount_computation(
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_analyzer.stats_generator.uniqueCount_computation"><code class="name flex">
-<span>def <span class="ident">uniqueCount_computation</span></span>(<span>spark, idf, list_of_cols='all', drop_cols=[], print_impact=False)</span>
+<dt id="anovos.data_analyzer.stats_generator.uniqueCount_computation"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">uniqueCount_computation</span></span>(<span class="n">spark, idf, list_of_cols='all', drop_cols=[], print_impact=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>

@@ -1591,8 +1591,8 @@ def invalidEntries_detection(
 </details>
 ## Functions
 <dl>
-<dt id="anovos.data_analyzer.quality_checker.IDness_detection"><code class="name flex">
-<span>def <span class="ident">IDness_detection</span></span>(<span>spark, idf, list_of_cols='all', drop_cols=[], treatment=False, treatment_threshold=0.8, stats_unique={}, print_impact=False)</span>
+<dt id="anovos.data_analyzer.quality_checker.IDness_detection"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">IDness_detection</span></span>(<span class="n">spark, idf, list_of_cols='all', drop_cols=[], treatment=False, treatment_threshold=0.8, stats_unique={}, print_impact=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>IDness of an attribute is defined as the ratio of number of unique values seen in an attribute by number of
@@ -1771,8 +1771,8 @@ def IDness_detection(
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_analyzer.quality_checker.biasedness_detection"><code class="name flex">
-<span>def <span class="ident">biasedness_detection</span></span>(<span>spark, idf, list_of_cols='all', drop_cols=[], treatment=False, treatment_threshold=0.8, stats_mode={}, print_impact=False)</span>
+<dt id="anovos.data_analyzer.quality_checker.biasedness_detection"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">biasedness_detection</span></span>(<span class="n">spark, idf, list_of_cols='all', drop_cols=[], treatment=False, treatment_threshold=0.8, stats_mode={}, print_impact=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>This function flags column if they are biased or skewed towards one specific value and is equivalent to
@@ -1971,8 +1971,8 @@ def biasedness_detection(
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_analyzer.quality_checker.duplicate_detection"><code class="name flex">
-<span>def <span class="ident">duplicate_detection</span></span>(<span>spark, idf, list_of_cols='all', drop_cols=[], treatment=False, print_impact=False)</span>
+<dt id="anovos.data_analyzer.quality_checker.duplicate_detection"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">duplicate_detection</span></span>(<span class="n">spark, idf, list_of_cols='all', drop_cols=[], treatment=False, print_impact=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>As the name implies, this function detects duplication in the input dataset. This means, for a pair of
@@ -2091,8 +2091,8 @@ def duplicate_detection(
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_analyzer.quality_checker.invalidEntries_detection"><code class="name flex">
-<span>def <span class="ident">invalidEntries_detection</span></span>(<span>spark, idf, list_of_cols='all', drop_cols=[], detection_type='auto', invalid_entries=[], valid_entries=[], partial_match=False, treatment=False, treatment_method='null_replacement', treatment_configs={}, stats_missing={}, stats_unique={}, stats_mode={}, output_mode='replace', print_impact=False)</span>
+<dt id="anovos.data_analyzer.quality_checker.invalidEntries_detection"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">invalidEntries_detection</span></span>(<span class="n">spark, idf, list_of_cols='all', drop_cols=[], detection_type='auto', invalid_entries=[], valid_entries=[], partial_match=False, treatment=False, treatment_method='null_replacement', treatment_configs={}, stats_missing={}, stats_unique={}, stats_mode={}, output_mode='replace', print_impact=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>This function checks for certain suspicious patterns in attributes’ values. These suspicious values can be
@@ -2566,8 +2566,8 @@ def invalidEntries_detection(
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_analyzer.quality_checker.nullColumns_detection"><code class="name flex">
-<span>def <span class="ident">nullColumns_detection</span></span>(<span>spark, idf, list_of_cols='missing', drop_cols=[], treatment=False, treatment_method='row_removal', treatment_configs={}, stats_missing={}, stats_unique={}, stats_mode={}, print_impact=False)</span>
+<dt id="anovos.data_analyzer.quality_checker.nullColumns_detection"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">nullColumns_detection</span></span>(<span class="n">spark, idf, list_of_cols='missing', drop_cols=[], treatment=False, treatment_method='row_removal', treatment_configs={}, stats_missing={}, stats_unique={}, stats_mode={}, print_impact=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>This function inspects the column quality and computes the number of rows that are missing for a column. This
@@ -2898,8 +2898,8 @@ def nullColumns_detection(
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_analyzer.quality_checker.nullRows_detection"><code class="name flex">
-<span>def <span class="ident">nullRows_detection</span></span>(<span>spark, idf, list_of_cols='all', drop_cols=[], treatment=False, treatment_threshold=0.8, print_impact=False)</span>
+<dt id="anovos.data_analyzer.quality_checker.nullRows_detection"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">nullRows_detection</span></span>(<span class="n">spark, idf, list_of_cols='all', drop_cols=[], treatment=False, treatment_threshold=0.8, print_impact=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>This function inspects the row quality and computes the number of columns that are missing for a row. This
@@ -3104,8 +3104,8 @@ def nullRows_detection(
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_analyzer.quality_checker.outlier_detection"><code class="name flex">
-<span>def <span class="ident">outlier_detection</span></span>(<span>spark, idf, list_of_cols='all', drop_cols=[], detection_side='upper', detection_configs={'pctile_lower': 0.05, 'pctile_upper': 0.95, 'stdev_lower': 3.0, 'stdev_upper': 3.0, 'IQR_lower': 1.5, 'IQR_upper': 1.5, 'min_validation': 2}, treatment=False, treatment_method='value_replacement', pre_existing_model=False, model_path='NA', output_mode='replace', stats_unique={}, print_impact=False)</span>
+<dt id="anovos.data_analyzer.quality_checker.outlier_detection"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">outlier_detection</span></span>(<span class="n">spark, idf, list_of_cols='all', drop_cols=[], detection_side='upper', detection_configs={'pctile_lower': 0.05, 'pctile_upper': 0.95, 'stdev_lower': 3.0, 'stdev_upper': 3.0, 'IQR_lower': 1.5, 'IQR_upper': 1.5, 'min_validation': 2}, treatment=False, treatment_method='value_replacement', pre_existing_model=False, model_path='NA', output_mode='replace', stats_unique={}, print_impact=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>In Machine Learning, outlier detection identifies values that deviate drastically from the rest of the

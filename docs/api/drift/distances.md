@@ -103,8 +103,8 @@ def ks(p, q):
 </details>
 ## Functions
 <dl>
-<dt id="anovos.drift.distances.hellinger"><code class="name flex">
-<span>def <span class="ident">hellinger</span></span>(<span>p, q)</span>
+<dt id="anovos.drift.distances.hellinger"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">hellinger</span></span>(<span class="n">p, q)</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
@@ -140,8 +140,8 @@ def hellinger(p, q):
 </pre>
 </details>
 </dd>
-<dt id="anovos.drift.distances.js_divergence"><code class="name flex">
-<span>def <span class="ident">js_divergence</span></span>(<span>p, q)</span>
+<dt id="anovos.drift.distances.js_divergence"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">js_divergence</span></span>(<span class="n">p, q)</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
@@ -181,8 +181,8 @@ def js_divergence(p, q):
 </pre>
 </details>
 </dd>
-<dt id="anovos.drift.distances.kl_divergence"><code class="name flex">
-<span>def <span class="ident">kl_divergence</span></span>(<span>p, q)</span>
+<dt id="anovos.drift.distances.kl_divergence"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">kl_divergence</span></span>(<span class="n">p, q)</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
@@ -219,8 +219,8 @@ def kl_divergence(p, q):
 </pre>
 </details>
 </dd>
-<dt id="anovos.drift.distances.ks"><code class="name flex">
-<span>def <span class="ident">ks</span></span>(<span>p, q)</span>
+<dt id="anovos.drift.distances.ks"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">ks</span></span>(<span class="n">p, q)</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
@@ -256,8 +256,8 @@ def ks(p, q):
 </pre>
 </details>
 </dd>
-<dt id="anovos.drift.distances.psi"><code class="name flex">
-<span>def <span class="ident">psi</span></span>(<span>p, q)</span>
+<dt id="anovos.drift.distances.psi"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">psi</span></span>(<span class="n">p, q)</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>

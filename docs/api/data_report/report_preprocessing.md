@@ -702,8 +702,8 @@ def charts_to_objects(
 </details>
 ## Functions
 <dl>
-<dt id="anovos.data_report.report_preprocessing.binRange_to_binIdx"><code class="name flex">
-<span>def <span class="ident">binRange_to_binIdx</span></span>(<span>spark, col, cutoffs_path)</span>
+<dt id="anovos.data_report.report_preprocessing.binRange_to_binIdx"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">binRange_to_binIdx</span></span>(<span class="n">spark, col, cutoffs_path)</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
@@ -766,8 +766,8 @@ def binRange_to_binIdx(spark, col, cutoffs_path):
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_report.report_preprocessing.charts_to_objects"><code class="name flex">
-<span>def <span class="ident">charts_to_objects</span></span>(<span>spark, idf, list_of_cols='all', drop_cols=[], label_col=None, event_label=1, bin_method='equal_range', bin_size=10, coverage=1.0, drift_detector=False, source_path='NA', master_path='.', stats_unique={}, run_type='local')</span>
+<dt id="anovos.data_report.report_preprocessing.charts_to_objects"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">charts_to_objects</span></span>(<span class="n">spark, idf, list_of_cols='all', drop_cols=[], label_col=None, event_label=1, bin_method='equal_range', bin_size=10, coverage=1.0, drift_detector=False, source_path='NA', master_path='.', stats_unique={}, run_type='local')</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
@@ -1062,8 +1062,8 @@ def charts_to_objects(
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_report.report_preprocessing.edit_binRange"><code class="name flex">
-<span>def <span class="ident">edit_binRange</span></span>(<span>col)</span>
+<dt id="anovos.data_report.report_preprocessing.edit_binRange"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">edit_binRange</span></span>(<span class="n">col)</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
@@ -1106,8 +1106,8 @@ def edit_binRange(col):
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_report.report_preprocessing.f_edit_binRange"><code class="name flex">
-<span>def <span class="ident">f_edit_binRange</span></span>(<span>col)</span>
+<dt id="anovos.data_report.report_preprocessing.f_edit_binRange"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">f_edit_binRange</span></span>(<span class="n">col)</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
@@ -1150,8 +1150,8 @@ def edit_binRange(col):
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_report.report_preprocessing.master_to_local"><code class="name flex">
-<span>def <span class="ident">master_to_local</span></span>(<span>master_path)</span>
+<dt id="anovos.data_report.report_preprocessing.master_to_local"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">master_to_local</span></span>(<span class="n">master_path)</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
@@ -1188,8 +1188,8 @@ def master_to_local(master_path):
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_report.report_preprocessing.plot_comparative_drift"><code class="name flex">
-<span>def <span class="ident">plot_comparative_drift</span></span>(<span>spark, idf, source, col, cutoffs_path)</span>
+<dt id="anovos.data_report.report_preprocessing.plot_comparative_drift"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">plot_comparative_drift</span></span>(<span class="n">spark, idf, source, col, cutoffs_path)</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
@@ -1313,8 +1313,8 @@ def plot_comparative_drift(spark, idf, source, col, cutoffs_path):
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_report.report_preprocessing.plot_eventRate"><code class="name flex">
-<span>def <span class="ident">plot_eventRate</span></span>(<span>spark, idf, col, label_col, event_label, cutoffs_path)</span>
+<dt id="anovos.data_report.report_preprocessing.plot_eventRate"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">plot_eventRate</span></span>(<span class="n">spark, idf, col, label_col, event_label, cutoffs_path)</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
@@ -1408,8 +1408,8 @@ def plot_eventRate(spark, idf, col, label_col, event_label, cutoffs_path):
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_report.report_preprocessing.plot_frequency"><code class="name flex">
-<span>def <span class="ident">plot_frequency</span></span>(<span>spark, idf, col, cutoffs_path)</span>
+<dt id="anovos.data_report.report_preprocessing.plot_frequency"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">plot_frequency</span></span>(<span class="n">spark, idf, col, cutoffs_path)</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
@@ -1493,8 +1493,8 @@ def plot_frequency(spark, idf, col, cutoffs_path):
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_report.report_preprocessing.plot_outlier"><code class="name flex">
-<span>def <span class="ident">plot_outlier</span></span>(<span>spark, idf, col, split_var=None, sample_size=500000)</span>
+<dt id="anovos.data_report.report_preprocessing.plot_outlier"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">plot_outlier</span></span>(<span class="n">spark, idf, col, split_var=None, sample_size=500000)</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
@@ -1562,8 +1562,8 @@ def plot_outlier(spark, idf, col, split_var=None, sample_size=500000):
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_report.report_preprocessing.save_stats"><code class="name flex">
-<span>def <span class="ident">save_stats</span></span>(<span>spark, idf, master_path, function_name, reread=False, run_type='local')</span>
+<dt id="anovos.data_report.report_preprocessing.save_stats"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">save_stats</span></span>(<span class="n">spark, idf, master_path, function_name, reread=False, run_type='local')</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>

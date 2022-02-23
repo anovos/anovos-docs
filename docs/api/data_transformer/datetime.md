@@ -1996,8 +1996,8 @@ def lagged_ts(
 </details>
 ## Functions
 <dl>
-<dt id="anovos.data_transformer.datetime.adding_timeUnits"><code class="name flex">
-<span>def <span class="ident">adding_timeUnits</span></span>(<span>idf, list_of_cols, unit, unit_value, output_mode='append')</span>
+<dt id="anovos.data_transformer.datetime.adding_timeUnits"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">adding_timeUnits</span></span>(<span class="n">idf, list_of_cols, unit, unit_value, output_mode='append')</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Add or subtract given time units to/from timestamp columns. Currently the following units are supported:
@@ -2090,8 +2090,8 @@ def adding_timeUnits(idf, list_of_cols, unit, unit_value, output_mode="append"):
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_transformer.datetime.aggregator"><code class="name flex">
-<span>def <span class="ident">aggregator</span></span>(<span>idf, list_of_cols, list_of_aggs, time_col, granularity_format='%Y-%m-%d')</span>
+<dt id="anovos.data_transformer.datetime.aggregator"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">aggregator</span></span>(<span class="n">idf, list_of_cols, list_of_aggs, time_col, granularity_format='%Y-%m-%d')</span>
 </code></dt>
 <dd>
 <div class="desc"><p>aggregator performs groupBy over the timestamp/date column and calcuates a list of aggregate metrics over all
@@ -2237,8 +2237,8 @@ def aggregator(
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_transformer.datetime.argument_checker"><code class="name flex">
-<span>def <span class="ident">argument_checker</span></span>(<span>func_name, args)</span>
+<dt id="anovos.data_transformer.datetime.argument_checker"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">argument_checker</span></span>(<span class="n">func_name, args)</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
@@ -2341,8 +2341,8 @@ def argument_checker(func_name, args):
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_transformer.datetime.dateformat_conversion"><code class="name flex">
-<span>def <span class="ident">dateformat_conversion</span></span>(<span>idf, list_of_cols, input_format='%Y-%m-%d %H:%M:%S', output_format='%Y-%m-%d %H:%M:%S', output_mode='replace')</span>
+<dt id="anovos.data_transformer.datetime.dateformat_conversion"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">dateformat_conversion</span></span>(<span class="n">idf, list_of_cols, input_format='%Y-%m-%d %H:%M:%S', output_format='%Y-%m-%d %H:%M:%S', output_mode='replace')</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Convert time string columns with given input format ("%Y-%m-%d %H:%M:%S", by default) to time string columns
@@ -2440,8 +2440,8 @@ def dateformat_conversion(
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_transformer.datetime.end_of_month"><code class="name flex">
-<span>def <span class="ident">end_of_month</span></span>(<span>idf, list_of_cols, output_mode='append')</span>
+<dt id="anovos.data_transformer.datetime.end_of_month"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">end_of_month</span></span>(<span class="n">idf, list_of_cols, output_mode='append')</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Check if values in given timestamp/date columns are the last day of a month. The derived values are 1 if True
@@ -2512,8 +2512,8 @@ def end_of_month(idf, list_of_cols, output_mode="append"):
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_transformer.datetime.end_of_quarter"><code class="name flex">
-<span>def <span class="ident">end_of_quarter</span></span>(<span>idf, list_of_cols, output_mode='append')</span>
+<dt id="anovos.data_transformer.datetime.end_of_quarter"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">end_of_quarter</span></span>(<span class="n">idf, list_of_cols, output_mode='append')</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Extract the last day of the quarter of given timestamp/date columns.</p>
@@ -2586,8 +2586,8 @@ def end_of_quarter(idf, list_of_cols, output_mode="append"):
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_transformer.datetime.end_of_year"><code class="name flex">
-<span>def <span class="ident">end_of_year</span></span>(<span>idf, list_of_cols, output_mode='append')</span>
+<dt id="anovos.data_transformer.datetime.end_of_year"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">end_of_year</span></span>(<span class="n">idf, list_of_cols, output_mode='append')</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Check if values in given timestamp/date columns are the last day of a year.
@@ -2661,8 +2661,8 @@ def end_of_year(idf, list_of_cols, output_mode="append"):
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_transformer.datetime.is_leapYear"><code class="name flex">
-<span>def <span class="ident">is_leapYear</span></span>(<span>idf, list_of_cols, output_mode='append')</span>
+<dt id="anovos.data_transformer.datetime.is_leapYear"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">is_leapYear</span></span>(<span class="n">idf, list_of_cols, output_mode='append')</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Check if values in given timestamp/date columns are in a leap year.
@@ -2752,8 +2752,8 @@ def is_leapYear(idf, list_of_cols, output_mode="append"):
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_transformer.datetime.is_monthEnd"><code class="name flex">
-<span>def <span class="ident">is_monthEnd</span></span>(<span>idf, list_of_cols, output_mode='append')</span>
+<dt id="anovos.data_transformer.datetime.is_monthEnd"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">is_monthEnd</span></span>(<span class="n">idf, list_of_cols, output_mode='append')</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Extract the first day of the year of given timestamp/date columns.</p>
@@ -2826,8 +2826,8 @@ def is_monthEnd(idf, list_of_cols, output_mode="append"):
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_transformer.datetime.is_monthStart"><code class="name flex">
-<span>def <span class="ident">is_monthStart</span></span>(<span>idf, list_of_cols, output_mode='append')</span>
+<dt id="anovos.data_transformer.datetime.is_monthStart"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">is_monthStart</span></span>(<span class="n">idf, list_of_cols, output_mode='append')</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Check if values in given timestamp/date columns are the first day of a month. The derived values are 1 if True
@@ -2902,8 +2902,8 @@ def is_monthStart(idf, list_of_cols, output_mode="append"):
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_transformer.datetime.is_quarterEnd"><code class="name flex">
-<span>def <span class="ident">is_quarterEnd</span></span>(<span>idf, list_of_cols, output_mode='append')</span>
+<dt id="anovos.data_transformer.datetime.is_quarterEnd"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">is_quarterEnd</span></span>(<span class="n">idf, list_of_cols, output_mode='append')</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Check if values in given timestamp/date columns are the last day of a quarter.
@@ -2978,8 +2978,8 @@ def is_quarterEnd(idf, list_of_cols, output_mode="append"):
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_transformer.datetime.is_quarterStart"><code class="name flex">
-<span>def <span class="ident">is_quarterStart</span></span>(<span>idf, list_of_cols, output_mode='append')</span>
+<dt id="anovos.data_transformer.datetime.is_quarterStart"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">is_quarterStart</span></span>(<span class="n">idf, list_of_cols, output_mode='append')</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Check if values in given timestamp/date columns are the first day of a quarter.
@@ -3054,8 +3054,8 @@ def is_quarterStart(idf, list_of_cols, output_mode="append"):
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_transformer.datetime.is_selectedHour"><code class="name flex">
-<span>def <span class="ident">is_selectedHour</span></span>(<span>idf, list_of_cols, start_hour, end_hour, output_mode='append')</span>
+<dt id="anovos.data_transformer.datetime.is_selectedHour"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">is_selectedHour</span></span>(<span class="n">idf, list_of_cols, start_hour, end_hour, output_mode='append')</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Check if the hour component of given timestamp columns are between start hour (inclusive) and end hour (
@@ -3148,8 +3148,8 @@ def is_selectedHour(idf, list_of_cols, start_hour, end_hour, output_mode="append
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_transformer.datetime.is_weekend"><code class="name flex">
-<span>def <span class="ident">is_weekend</span></span>(<span>idf, list_of_cols, output_mode='append')</span>
+<dt id="anovos.data_transformer.datetime.is_weekend"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">is_weekend</span></span>(<span class="n">idf, list_of_cols, output_mode='append')</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Check if values in given timestamp/date columns are on weekends. The derived values are 1 if True and 0 if False.</p>
@@ -3220,8 +3220,8 @@ def is_weekend(idf, list_of_cols, output_mode="append"):
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_transformer.datetime.is_yearEnd"><code class="name flex">
-<span>def <span class="ident">is_yearEnd</span></span>(<span>idf, list_of_cols, output_mode='append')</span>
+<dt id="anovos.data_transformer.datetime.is_yearEnd"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">is_yearEnd</span></span>(<span class="n">idf, list_of_cols, output_mode='append')</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
@@ -3293,8 +3293,8 @@ def is_yearEnd(idf, list_of_cols, output_mode="append"):
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_transformer.datetime.is_yearFirstHalf"><code class="name flex">
-<span>def <span class="ident">is_yearFirstHalf</span></span>(<span>idf, list_of_cols, output_mode='append')</span>
+<dt id="anovos.data_transformer.datetime.is_yearFirstHalf"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">is_yearFirstHalf</span></span>(<span class="n">idf, list_of_cols, output_mode='append')</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Check if values in given timestamp/date columns are in the first half of a year.
@@ -3369,8 +3369,8 @@ def is_yearFirstHalf(idf, list_of_cols, output_mode="append"):
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_transformer.datetime.is_yearStart"><code class="name flex">
-<span>def <span class="ident">is_yearStart</span></span>(<span>idf, list_of_cols, output_mode='append')</span>
+<dt id="anovos.data_transformer.datetime.is_yearStart"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">is_yearStart</span></span>(<span class="n">idf, list_of_cols, output_mode='append')</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Extract the last day of the year of given timestamp/date columns.</p>
@@ -3443,8 +3443,8 @@ def is_yearStart(idf, list_of_cols, output_mode="append"):
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_transformer.datetime.lagged_ts"><code class="name flex">
-<span>def <span class="ident">lagged_ts</span></span>(<span>idf, list_of_cols, lag, output_type='ts', tsdiff_unit='days', partition_col='', output_mode='append')</span>
+<dt id="anovos.data_transformer.datetime.lagged_ts"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">lagged_ts</span></span>(<span class="n">idf, list_of_cols, lag, output_type='ts', tsdiff_unit='days', partition_col='', output_mode='append')</span>
 </code></dt>
 <dd>
 <div class="desc"><p>lagged_ts returns the values that are <em>lag</em> rows before the current rows, and None if there is less than <em>lag</em>
@@ -3576,8 +3576,8 @@ def lagged_ts(
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_transformer.datetime.start_of_month"><code class="name flex">
-<span>def <span class="ident">start_of_month</span></span>(<span>idf, list_of_cols, output_mode='append')</span>
+<dt id="anovos.data_transformer.datetime.start_of_month"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">start_of_month</span></span>(<span class="n">idf, list_of_cols, output_mode='append')</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Extract the first day of the month of given timestamp/date columns.</p>
@@ -3646,8 +3646,8 @@ def start_of_month(idf, list_of_cols, output_mode="append"):
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_transformer.datetime.start_of_quarter"><code class="name flex">
-<span>def <span class="ident">start_of_quarter</span></span>(<span>idf, list_of_cols, output_mode='append')</span>
+<dt id="anovos.data_transformer.datetime.start_of_quarter"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">start_of_quarter</span></span>(<span class="n">idf, list_of_cols, output_mode='append')</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Extract the first day of the quarter of given timestamp/date columns.</p>
@@ -3715,8 +3715,8 @@ def start_of_quarter(idf, list_of_cols, output_mode="append"):
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_transformer.datetime.start_of_year"><code class="name flex">
-<span>def <span class="ident">start_of_year</span></span>(<span>idf, list_of_cols, output_mode='append')</span>
+<dt id="anovos.data_transformer.datetime.start_of_year"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">start_of_year</span></span>(<span class="n">idf, list_of_cols, output_mode='append')</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Check if values in given timestamp/date columns are the first day of a year.
@@ -3787,8 +3787,8 @@ def start_of_year(idf, list_of_cols, output_mode="append"):
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_transformer.datetime.string_to_timestamp"><code class="name flex">
-<span>def <span class="ident">string_to_timestamp</span></span>(<span>idf, list_of_cols, input_format='%Y-%m-%d %H:%M:%S', output_type='ts', output_mode='replace')</span>
+<dt id="anovos.data_transformer.datetime.string_to_timestamp"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">string_to_timestamp</span></span>(<span class="n">idf, list_of_cols, input_format='%Y-%m-%d %H:%M:%S', output_type='ts', output_mode='replace')</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Convert time string columns with given input format ("%Y-%m-%d %H:%M:%S", by default) to
@@ -3900,8 +3900,8 @@ def string_to_timestamp(
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_transformer.datetime.timeUnits_extraction"><code class="name flex">
-<span>def <span class="ident">timeUnits_extraction</span></span>(<span>idf, list_of_cols, units, output_mode='append')</span>
+<dt id="anovos.data_transformer.datetime.timeUnits_extraction"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">timeUnits_extraction</span></span>(<span class="n">idf, list_of_cols, units, output_mode='append')</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Extract the unit(s) of given timestamp columns as integer. Currently the following units are supported: hour,
@@ -4013,8 +4013,8 @@ def timeUnits_extraction(idf, list_of_cols, units, output_mode="append"):
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_transformer.datetime.time_diff"><code class="name flex">
-<span>def <span class="ident">time_diff</span></span>(<span>idf, ts1, ts2, unit, output_mode='append')</span>
+<dt id="anovos.data_transformer.datetime.time_diff"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">time_diff</span></span>(<span class="n">idf, ts1, ts2, unit, output_mode='append')</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Calculate the time difference between 2 timestamp columns (Timestamp 1 - Timestamp 2) in a given unit.
@@ -4110,8 +4110,8 @@ def time_diff(idf, ts1, ts2, unit, output_mode="append"):
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_transformer.datetime.time_elapsed"><code class="name flex">
-<span>def <span class="ident">time_elapsed</span></span>(<span>idf, list_of_cols, unit, output_mode='append')</span>
+<dt id="anovos.data_transformer.datetime.time_elapsed"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">time_elapsed</span></span>(<span class="n">idf, list_of_cols, unit, output_mode='append')</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Calculate time difference between the current and the given timestamp (Current - Given Timestamp) in a given
@@ -4217,8 +4217,8 @@ def time_elapsed(idf, list_of_cols, unit, output_mode="append"):
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_transformer.datetime.timestamp_comparison"><code class="name flex">
-<span>def <span class="ident">timestamp_comparison</span></span>(<span>idf, list_of_cols, comparison_type, comparison_value, comparison_format='%Y-%m-%d %H:%M:%S', output_mode='append')</span>
+<dt id="anovos.data_transformer.datetime.timestamp_comparison"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">timestamp_comparison</span></span>(<span class="n">idf, list_of_cols, comparison_type, comparison_value, comparison_format='%Y-%m-%d %H:%M:%S', output_mode='append')</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Compare timestamp columns with a given timestamp/date value (comparison_value) of given format (
@@ -4339,8 +4339,8 @@ def timestamp_comparison(
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_transformer.datetime.timestamp_to_string"><code class="name flex">
-<span>def <span class="ident">timestamp_to_string</span></span>(<span>idf, list_of_cols, output_format='%Y-%m-%d %H:%M:%S', output_mode='replace')</span>
+<dt id="anovos.data_transformer.datetime.timestamp_to_string"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">timestamp_to_string</span></span>(<span class="n">idf, list_of_cols, output_format='%Y-%m-%d %H:%M:%S', output_mode='replace')</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Convert timestamp/date columns to time string columns with given output format ("%Y-%m-%d %H:%M:%S", by default)</p>
@@ -4438,8 +4438,8 @@ def timestamp_to_string(
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_transformer.datetime.timestamp_to_unix"><code class="name flex">
-<span>def <span class="ident">timestamp_to_unix</span></span>(<span>spark, idf, list_of_cols, precision='s', tz='local', output_mode='replace')</span>
+<dt id="anovos.data_transformer.datetime.timestamp_to_unix"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">timestamp_to_unix</span></span>(<span class="n">spark, idf, list_of_cols, precision='s', tz='local', output_mode='replace')</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Convert timestamp columns in a specified time zone to Unix time stamp in seconds or milliseconds.</p>
@@ -4543,8 +4543,8 @@ def timestamp_to_unix(
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_transformer.datetime.timezone_conversion"><code class="name flex">
-<span>def <span class="ident">timezone_conversion</span></span>(<span>spark, idf, list_of_cols, given_tz, output_tz, output_mode='replace')</span>
+<dt id="anovos.data_transformer.datetime.timezone_conversion"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">timezone_conversion</span></span>(<span class="n">spark, idf, list_of_cols, given_tz, output_tz, output_mode='replace')</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Convert timestamp columns from the given timezone (given_tz) to the output timezone (output_tz).</p>
@@ -4637,8 +4637,8 @@ def timezone_conversion(
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_transformer.datetime.unix_to_timestamp"><code class="name flex">
-<span>def <span class="ident">unix_to_timestamp</span></span>(<span>spark, idf, list_of_cols, precision='s', tz='local', output_mode='replace')</span>
+<dt id="anovos.data_transformer.datetime.unix_to_timestamp"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">unix_to_timestamp</span></span>(<span class="n">spark, idf, list_of_cols, precision='s', tz='local', output_mode='replace')</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Convert the number of seconds or milliseconds from unix epoch (1970-01-01 00:00:00 UTC) to a timestamp column
@@ -4744,8 +4744,8 @@ def unix_to_timestamp(
 </pre>
 </details>
 </dd>
-<dt id="anovos.data_transformer.datetime.window_aggregator"><code class="name flex">
-<span>def <span class="ident">window_aggregator</span></span>(<span>idf, list_of_cols, list_of_aggs, order_col, window_type='expanding', window_size='unbounded', partition_col='', output_mode='append')</span>
+<dt id="anovos.data_transformer.datetime.window_aggregator"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">window_aggregator</span></span>(<span class="n">idf, list_of_cols, list_of_aggs, order_col, window_type='expanding', window_size='unbounded', partition_col='', output_mode='append')</span>
 </code></dt>
 <dd>
 <div class="desc"><p>window_aggregator calcuates a list of aggregate metrics for all input columns over a window frame (expanding

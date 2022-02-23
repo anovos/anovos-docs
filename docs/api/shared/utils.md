@@ -142,8 +142,8 @@ def pairwise_reduce(op, x):
 </details>
 ## Functions
 <dl>
-<dt id="anovos.shared.utils.attributeType_segregation"><code class="name flex">
-<span>def <span class="ident">attributeType_segregation</span></span>(<span>idf)</span>
+<dt id="anovos.shared.utils.attributeType_segregation"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">attributeType_segregation</span></span>(<span class="n">idf)</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
@@ -188,8 +188,8 @@ def attributeType_segregation(idf):
 </pre>
 </details>
 </dd>
-<dt id="anovos.shared.utils.ends_with"><code class="name flex">
-<span>def <span class="ident">ends_with</span></span>(<span>string, end_str='/')</span>
+<dt id="anovos.shared.utils.ends_with"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">ends_with</span></span>(<span class="n">string, end_str='/')</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
@@ -228,8 +228,8 @@ def ends_with(string, end_str="/"):
 </pre>
 </details>
 </dd>
-<dt id="anovos.shared.utils.flatten_dataframe"><code class="name flex">
-<span>def <span class="ident">flatten_dataframe</span></span>(<span>idf, fixed_cols)</span>
+<dt id="anovos.shared.utils.flatten_dataframe"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">flatten_dataframe</span></span>(<span class="n">idf, fixed_cols)</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
@@ -270,8 +270,8 @@ def flatten_dataframe(idf, fixed_cols):
 </pre>
 </details>
 </dd>
-<dt id="anovos.shared.utils.get_dtype"><code class="name flex">
-<span>def <span class="ident">get_dtype</span></span>(<span>idf, col)</span>
+<dt id="anovos.shared.utils.get_dtype"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">get_dtype</span></span>(<span class="n">idf, col)</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
@@ -307,8 +307,8 @@ def get_dtype(idf, col):
 </pre>
 </details>
 </dd>
-<dt id="anovos.shared.utils.pairwise_reduce"><code class="name flex">
-<span>def <span class="ident">pairwise_reduce</span></span>(<span>op, x)</span>
+<dt id="anovos.shared.utils.pairwise_reduce"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">pairwise_reduce</span></span>(<span class="n">op, x)</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
@@ -349,8 +349,8 @@ def pairwise_reduce(op, x):
 </pre>
 </details>
 </dd>
-<dt id="anovos.shared.utils.transpose_dataframe"><code class="name flex">
-<span>def <span class="ident">transpose_dataframe</span></span>(<span>idf, fixed_col)</span>
+<dt id="anovos.shared.utils.transpose_dataframe"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">transpose_dataframe</span></span>(<span class="n">idf, fixed_col)</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
