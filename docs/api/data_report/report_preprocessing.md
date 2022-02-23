@@ -75,8 +75,6 @@ def save_stats(spark, idf, master_path, function_name, reread=False, run_type="l
 
     Returns
     -------
-    type
-        None, dataframe saved
 
     """
     if run_type == "local":
@@ -119,7 +117,6 @@ def edit_binRange(col):
     ----------
     col :
         The column which is passed as input and needs to be treated.
-
         The generated output will not contain any range whose value at either side is the same.
 
     Returns
@@ -1067,9 +1064,8 @@ def charts_to_objects(
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
 <p>col :
-The column which is passed as input and needs to be treated.</p>
-<pre><code>The generated output will not contain any range whose value at either side is the same.
-</code></pre>
+The column which is passed as input and needs to be treated.
+The generated output will not contain any range whose value at either side is the same.</p>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -1084,7 +1080,6 @@ def edit_binRange(col):
     ----------
     col :
         The column which is passed as input and needs to be treated.
-
         The generated output will not contain any range whose value at either side is the same.
 
     Returns
@@ -1111,9 +1106,8 @@ def edit_binRange(col):
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
 <p>col :
-The column which is passed as input and needs to be treated.</p>
-<pre><code>The generated output will not contain any range whose value at either side is the same.
-</code></pre>
+The column which is passed as input and needs to be treated.
+The generated output will not contain any range whose value at either side is the same.</p>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -1128,7 +1122,6 @@ def edit_binRange(col):
     ----------
     col :
         The column which is passed as input and needs to be treated.
-
         The generated output will not contain any range whose value at either side is the same.
 
     Returns
@@ -1567,11 +1560,7 @@ reread :
 option to reread. Default value is kept as False
 run_type :
 local or emr or databricks based on the mode of execution. Default value is kept as local</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>type</code></dt>
-<dd>None, dataframe saved</dd>
-</dl></div>
+<h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1598,8 +1587,6 @@ def save_stats(spark, idf, master_path, function_name, reread=False, run_type="l
 
     Returns
     -------
-    type
-        None, dataframe saved
 
     """
     if run_type == "local":

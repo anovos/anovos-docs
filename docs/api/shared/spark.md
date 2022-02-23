@@ -56,8 +56,6 @@ def init_spark(
 
     Returns
     -------
-    type
-        A tuple of references to the Spark Session, Spark Context & SQL Context.
 
     """
     logger.info(f"Getting spark session, context and sql context app_name: {app_name}")
@@ -127,11 +125,7 @@ py_files :
 List of files to send to Spark cluster (master and workers). (Default value = None)
 spark_config :
 Dictionary of config key-value pairs. (Default value = None)</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>type</code></dt>
-<dd>A tuple of references to the Spark Session, Spark Context &amp; SQL Context.</dd>
-</dl></div>
+<h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -164,8 +158,6 @@ def init_spark(
 
     Returns
     -------
-    type
-        A tuple of references to the Spark Session, Spark Context & SQL Context.
 
     """
     logger.info(f"Getting spark session, context and sql context app_name: {app_name}")

@@ -1,10 +1,84 @@
 # <code>datetime</code>
+<p>Datetime module supports various transformations related to columns of date and timestamp type.
+All available functions in this release can be classified into the following 4 categories:</p>
+<p>Conversion:
+- Between Timestamp and Epoch (<code><a title="anovos.data_transformer.datetime.timestamp_to_unix" href="#anovos.data_transformer.datetime.timestamp_to_unix">timestamp_to_unix()</a></code> and <code><a title="anovos.data_transformer.datetime.unix_to_timestamp" href="#anovos.data_transformer.datetime.unix_to_timestamp">unix_to_timestamp()</a></code>)
+- Between Timestamp and String (<code><a title="anovos.data_transformer.datetime.timestamp_to_string" href="#anovos.data_transformer.datetime.timestamp_to_string">timestamp_to_string()</a></code> and <code><a title="anovos.data_transformer.datetime.string_to_timestamp" href="#anovos.data_transformer.datetime.string_to_timestamp">string_to_timestamp()</a></code>)
+- Between Date Formats (<code><a title="anovos.data_transformer.datetime.dateformat_conversion" href="#anovos.data_transformer.datetime.dateformat_conversion">dateformat_conversion()</a></code>)
+- Between Time Zones (<code><a title="anovos.data_transformer.datetime.timezone_conversion" href="#anovos.data_transformer.datetime.timezone_conversion">timezone_conversion()</a></code>)</p>
+<p>Calculation:
+- Time difference - [Timestamp 1 - Timestamp 2] (<code><a title="anovos.data_transformer.datetime.time_diff" href="#anovos.data_transformer.datetime.time_diff">time_diff()</a></code>)
+- Time elapsed - [Current - Given Timestamp] (<code><a title="anovos.data_transformer.datetime.time_elapsed" href="#anovos.data_transformer.datetime.time_elapsed">time_elapsed()</a></code>)
+- Adding/subtracting time units (<code><a title="anovos.data_transformer.datetime.adding_timeUnits" href="#anovos.data_transformer.datetime.adding_timeUnits">adding_timeUnits()</a></code>)
+- Aggregate features at X granularity level (<code><a title="anovos.data_transformer.datetime.aggregator" href="#anovos.data_transformer.datetime.aggregator">aggregator()</a></code>)
+- Aggregate features with window frame (<code><a title="anovos.data_transformer.datetime.window_aggregator" href="#anovos.data_transformer.datetime.window_aggregator">window_aggregator()</a></code>)
+- Lagged features - lagged date and time diff from the lagged date (<code><a title="anovos.data_transformer.datetime.lagged_ts" href="#anovos.data_transformer.datetime.lagged_ts">lagged_ts()</a></code>)</p>
+<p>Extraction:
+- Time component extraction (<code><a title="anovos.data_transformer.datetime.timeUnits_extraction" href="#anovos.data_transformer.datetime.timeUnits_extraction">timeUnits_extraction()</a></code>)
+- Start/end of month/year/quarter (<code><a title="anovos.data_transformer.datetime.start_of_month" href="#anovos.data_transformer.datetime.start_of_month">start_of_month()</a></code>, <code><a title="anovos.data_transformer.datetime.end_of_month" href="#anovos.data_transformer.datetime.end_of_month">end_of_month()</a></code>, <code><a title="anovos.data_transformer.datetime.start_of_year" href="#anovos.data_transformer.datetime.start_of_year">start_of_year()</a></code>, <code><a title="anovos.data_transformer.datetime.end_of_year" href="#anovos.data_transformer.datetime.end_of_year">end_of_year()</a></code>, <code><a title="anovos.data_transformer.datetime.start_of_quarter" href="#anovos.data_transformer.datetime.start_of_quarter">start_of_quarter()</a></code>
+and <code><a title="anovos.data_transformer.datetime.end_of_quarter" href="#anovos.data_transformer.datetime.end_of_quarter">end_of_quarter()</a></code>)</p>
+<p>Binary features:
+- Timestamp comparison (<code><a title="anovos.data_transformer.datetime.timestamp_comparison" href="#anovos.data_transformer.datetime.timestamp_comparison">timestamp_comparison()</a></code>)
+- Is start/end of month/year/quarter nor not (<code><a title="anovos.data_transformer.datetime.is_monthStart" href="#anovos.data_transformer.datetime.is_monthStart">is_monthStart()</a></code>, <code><a title="anovos.data_transformer.datetime.is_monthEnd" href="#anovos.data_transformer.datetime.is_monthEnd">is_monthEnd()</a></code>, <code><a title="anovos.data_transformer.datetime.is_yearStart" href="#anovos.data_transformer.datetime.is_yearStart">is_yearStart()</a></code>, <code><a title="anovos.data_transformer.datetime.is_yearEnd" href="#anovos.data_transformer.datetime.is_yearEnd">is_yearEnd()</a></code>,
+<code><a title="anovos.data_transformer.datetime.is_quarterStart" href="#anovos.data_transformer.datetime.is_quarterStart">is_quarterStart()</a></code>, <code><a title="anovos.data_transformer.datetime.is_quarterEnd" href="#anovos.data_transformer.datetime.is_quarterEnd">is_quarterEnd()</a></code>)
+- Is first half of the year/selected hours/leap year/weekend or not (<code><a title="anovos.data_transformer.datetime.is_yearFirstHalf" href="#anovos.data_transformer.datetime.is_yearFirstHalf">is_yearFirstHalf()</a></code>, <code><a title="anovos.data_transformer.datetime.is_selectedHour" href="#anovos.data_transformer.datetime.is_selectedHour">is_selectedHour()</a></code>,
+<code><a title="anovos.data_transformer.datetime.is_leapYear" href="#anovos.data_transformer.datetime.is_leapYear">is_leapYear()</a></code> and <code><a title="anovos.data_transformer.datetime.is_weekend" href="#anovos.data_transformer.datetime.is_weekend">is_weekend()</a></code>)</p>
+<p>Columns which are subjected to these analysis can be controlled by arguments list_of_cols. Most functions have the
+following common arguments:</p>
+<ul>
+<li><em>idf</em>: Input dataframe</li>
+<li><em>list_of_cols</em>: This argument, in a list format, is used to specify the columns which are subjected to the analysis
+in the input dataframe. Alternatively, instead of list, columns can be specified in a single text format
+where different column names are separated by pipe delimiter “|”.</li>
+<li><em>output_mode</em>: "replace" or "append". “replace” option replaces original columns with transformed column, whereas
+“append” option append transformed column to the input dataset.</li>
+</ul>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre>
 ```python
+"""Datetime module supports various transformations related to columns of date and timestamp type.
+All available functions in this release can be classified into the following 4 categories:
+
+Conversion:
+- Between Timestamp and Epoch (`timestamp_to_unix` and `unix_to_timestamp`)
+- Between Timestamp and String (`timestamp_to_string` and `string_to_timestamp`)
+- Between Date Formats (`dateformat_conversion`)
+- Between Time Zones (`timezone_conversion`)
+
+Calculation:
+- Time difference - [Timestamp 1 - Timestamp 2] (`time_diff`)
+- Time elapsed - [Current - Given Timestamp] (`time_elapsed`)
+- Adding/subtracting time units (`adding_timeUnits`)
+- Aggregate features at X granularity level (`aggregator`)
+- Aggregate features with window frame (`window_aggregator`)
+- Lagged features - lagged date and time diff from the lagged date (`lagged_ts`)
+
+Extraction:
+- Time component extraction (`timeUnits_extraction`)
+- Start/end of month/year/quarter (`start_of_month`, `end_of_month`, `start_of_year`, `end_of_year`, `start_of_quarter`
+ and `end_of_quarter`)
+
+Binary features:
+- Timestamp comparison (`timestamp_comparison`)
+- Is start/end of month/year/quarter nor not (`is_monthStart`, `is_monthEnd`, `is_yearStart`, `is_yearEnd`,
+`is_quarterStart`, `is_quarterEnd`)
+- Is first half of the year/selected hours/leap year/weekend or not (`is_yearFirstHalf`, `is_selectedHour`,
+`is_leapYear` and `is_weekend`)
+
+Columns which are subjected to these analysis can be controlled by arguments list_of_cols. Most functions have the
+ following common arguments:
+
+- *idf*: Input dataframe
+- *list_of_cols*: This argument, in a list format, is used to specify the columns which are subjected to the analysis
+in the input dataframe. Alternatively, instead of list, columns can be specified in a single text format
+where different column names are separated by pipe delimiter “|”.
+- *output_mode*: "replace" or "append". “replace” option replaces original columns with transformed column, whereas
+“append” option append transformed column to the input dataset.
+
+"""
 import calendar
 import warnings
 
@@ -21,7 +95,7 @@ def argument_checker(func_name, args):
     Parameters
     ----------
     func_name :
-
+        param args:
     args :
 
 
@@ -102,7 +176,7 @@ def argument_checker(func_name, args):
 def timestamp_to_unix(
     spark, idf, list_of_cols, precision="s", tz="local", output_mode="replace"
 ):
-    """
+    """Convert timestamp columns in a specified time zone to Unix time stamp in seconds or milliseconds.
 
     Parameters
     ----------
@@ -128,8 +202,6 @@ def timestamp_to_unix(
 
     Returns
     -------
-    type
-        Output Dataframe with derived column
 
     """
     tz = tz.lower()
@@ -173,7 +245,8 @@ def timestamp_to_unix(
 def unix_to_timestamp(
     spark, idf, list_of_cols, precision="s", tz="local", output_mode="replace"
 ):
-    """
+    """Convert the number of seconds or milliseconds from unix epoch (1970-01-01 00:00:00 UTC) to a timestamp column
+    in the specified time zone.
 
     Parameters
     ----------
@@ -199,8 +272,6 @@ def unix_to_timestamp(
 
     Returns
     -------
-    type
-        Output Dataframe with derived column
 
     """
     tz = tz.lower()
@@ -244,7 +315,7 @@ def unix_to_timestamp(
 def timezone_conversion(
     spark, idf, list_of_cols, given_tz, output_tz, output_mode="replace"
 ):
-    """
+    """Convert timestamp columns from the given timezone (given_tz) to the output timezone (output_tz).
 
     Parameters
     ----------
@@ -267,8 +338,6 @@ def timezone_conversion(
 
     Returns
     -------
-    type
-        Output Dataframe with derived column
 
     """
     list_of_cols = argument_checker(
@@ -311,7 +380,8 @@ def string_to_timestamp(
     output_type="ts",
     output_mode="replace",
 ):
-    """
+    """Convert time string columns with given input format ("%Y-%m-%d %H:%M:%S", by default) to
+     TimestampType or DateType columns.
 
     Parameters
     ----------
@@ -336,8 +406,6 @@ def string_to_timestamp(
 
     Returns
     -------
-    type
-        Output Dataframe with derived column
 
     """
     list_of_cols = argument_checker(
@@ -358,7 +426,7 @@ def string_to_timestamp(
         Parameters
         ----------
         col :
-
+            param form:
         form :
 
 
@@ -385,7 +453,7 @@ def string_to_timestamp(
 def timestamp_to_string(
     idf, list_of_cols, output_format="%Y-%m-%d %H:%M:%S", output_mode="replace"
 ):
-    """
+    """Convert timestamp/date columns to time string columns with given output format ("%Y-%m-%d %H:%M:%S", by default)
 
     Parameters
     ----------
@@ -407,8 +475,6 @@ def timestamp_to_string(
 
     Returns
     -------
-    type
-        Output Dataframe with derived column
 
     """
     list_of_cols = argument_checker(
@@ -428,7 +494,7 @@ def timestamp_to_string(
         Parameters
         ----------
         col :
-
+            param form:
         form :
 
 
@@ -458,7 +524,8 @@ def dateformat_conversion(
     output_format="%Y-%m-%d %H:%M:%S",
     output_mode="replace",
 ):
-    """
+    """Convert time string columns with given input format ("%Y-%m-%d %H:%M:%S", by default) to time string columns
+     with given output format ("%Y-%m-%d %H:%M:%S", by default).
 
     Parameters
     ----------
@@ -481,8 +548,6 @@ def dateformat_conversion(
 
     Returns
     -------
-    type
-        Output Dataframe with derived column
 
     """
     list_of_cols = argument_checker(
@@ -518,7 +583,9 @@ def dateformat_conversion(
 
 
 def timeUnits_extraction(idf, list_of_cols, units, output_mode="append"):
-    """
+    """Extract the unit(s) of given timestamp columns as integer. Currently the following units are supported: hour,
+    minute, second, dayofmonth, dayofweek, dayofyear, weekofyear, month, quarter, year. Multiple units can be
+    calculated at the same time by inputting a list of units or a string of units separated by pipe delimiter “|”.
 
     Parameters
     ----------
@@ -545,8 +612,6 @@ def timeUnits_extraction(idf, list_of_cols, units, output_mode="append"):
 
     Returns
     -------
-    type
-        Output Dataframe with derived column
 
     """
     all_units = [
@@ -592,7 +657,9 @@ def timeUnits_extraction(idf, list_of_cols, units, output_mode="append"):
 
 
 def time_diff(idf, ts1, ts2, unit, output_mode="append"):
-    """
+    """Calculate the time difference between 2 timestamp columns (Timestamp 1 - Timestamp 2) in a given unit.
+    Currently the following units are supported: second, minute, hour, day, week, month, year.
+
 
     Parameters
     ----------
@@ -614,8 +681,6 @@ def time_diff(idf, ts1, ts2, unit, output_mode="append"):
 
     Returns
     -------
-    type
-        Output Dataframe with derived column
 
     """
     argument_checker(
@@ -656,7 +721,9 @@ def time_diff(idf, ts1, ts2, unit, output_mode="append"):
 
 
 def time_elapsed(idf, list_of_cols, unit, output_mode="append"):
-    """
+    """Calculate time difference between the current and the given timestamp (Current - Given Timestamp) in a given
+    unit. Currently the following units are supported: second, minute, hour, day, week, month, year.
+
 
     Parameters
     ----------
@@ -680,8 +747,6 @@ def time_elapsed(idf, list_of_cols, unit, output_mode="append"):
 
     Returns
     -------
-    type
-        Output Dataframe with derived column
 
     """
     list_of_cols = argument_checker(
@@ -728,7 +793,9 @@ def time_elapsed(idf, list_of_cols, unit, output_mode="append"):
 
 
 def adding_timeUnits(idf, list_of_cols, unit, unit_value, output_mode="append"):
-    """
+    """Add or subtract given time units to/from timestamp columns. Currently the following units are supported:
+    second, minute, hour, day, week, month, year. Subtraction can be performed by setting a negative unit_value.
+
 
     Parameters
     ----------
@@ -754,8 +821,6 @@ def adding_timeUnits(idf, list_of_cols, unit, unit_value, output_mode="append"):
 
     Returns
     -------
-    type
-        Output Dataframe with derived column
 
     """
     all_units = ["hour", "minute", "second", "day", "week", "month", "year"]
@@ -792,7 +857,10 @@ def timestamp_comparison(
     comparison_format="%Y-%m-%d %H:%M:%S",
     output_mode="append",
 ):
-    """
+    """Compare timestamp columns with a given timestamp/date value (comparison_value) of given format (
+    comparison_format). Supported comparison types include greater_than, less_than, greaterThan_equalTo and
+    lessThan_equalTo. The derived values are 1 if True and 0 if False.
+
 
     Parameters
     ----------
@@ -820,8 +888,6 @@ def timestamp_comparison(
 
     Returns
     -------
-    type
-        Output Dataframe with derived column
 
     """
     all_types = ["greater_than", "less_than", "greaterThan_equalTo", "lessThan_equalTo"]
@@ -866,7 +932,8 @@ def timestamp_comparison(
 
 
 def start_of_month(idf, list_of_cols, output_mode="append"):
-    """
+    """Extract the first day of the month of given timestamp/date columns.
+
 
     Parameters
     ----------
@@ -884,8 +951,6 @@ def start_of_month(idf, list_of_cols, output_mode="append"):
 
     Returns
     -------
-    type
-        Output Dataframe with derived column
 
     """
     list_of_cols = argument_checker(
@@ -909,7 +974,9 @@ def start_of_month(idf, list_of_cols, output_mode="append"):
 
 
 def is_monthStart(idf, list_of_cols, output_mode="append"):
-    """
+    """Check if values in given timestamp/date columns are the first day of a month. The derived values are 1 if True
+    and 0 if False.
+
 
     Parameters
     ----------
@@ -927,8 +994,6 @@ def is_monthStart(idf, list_of_cols, output_mode="append"):
 
     Returns
     -------
-    type
-        Output Dataframe with derived column
 
     """
     list_of_cols = argument_checker(
@@ -956,7 +1021,9 @@ def is_monthStart(idf, list_of_cols, output_mode="append"):
 
 
 def end_of_month(idf, list_of_cols, output_mode="append"):
-    """
+    """Check if values in given timestamp/date columns are the last day of a month. The derived values are 1 if True
+    and 0 if False.
+
 
     Parameters
     ----------
@@ -974,8 +1041,6 @@ def end_of_month(idf, list_of_cols, output_mode="append"):
 
     Returns
     -------
-    type
-        Output Dataframe with derived column
 
     """
     list_of_cols = argument_checker(
@@ -999,7 +1064,8 @@ def end_of_month(idf, list_of_cols, output_mode="append"):
 
 
 def is_monthEnd(idf, list_of_cols, output_mode="append"):
-    """
+    """Extract the first day of the year of given timestamp/date columns.
+
 
     Parameters
     ----------
@@ -1017,8 +1083,6 @@ def is_monthEnd(idf, list_of_cols, output_mode="append"):
 
     Returns
     -------
-    type
-        Output Dataframe with derived column
 
     """
     list_of_cols = argument_checker(
@@ -1046,7 +1110,9 @@ def is_monthEnd(idf, list_of_cols, output_mode="append"):
 
 
 def start_of_year(idf, list_of_cols, output_mode="append"):
-    """
+    """Check if values in given timestamp/date columns are the first day of a year.
+    The derived values are 1 if True and 0 if False.
+
 
     Parameters
     ----------
@@ -1064,8 +1130,6 @@ def start_of_year(idf, list_of_cols, output_mode="append"):
 
     Returns
     -------
-    type
-        Output Dataframe with derived column
 
     """
     list_of_cols = argument_checker(
@@ -1089,7 +1153,8 @@ def start_of_year(idf, list_of_cols, output_mode="append"):
 
 
 def is_yearStart(idf, list_of_cols, output_mode="append"):
-    """
+    """Extract the last day of the year of given timestamp/date columns.
+
 
     Parameters
     ----------
@@ -1107,8 +1172,6 @@ def is_yearStart(idf, list_of_cols, output_mode="append"):
 
     Returns
     -------
-    type
-        Output Dataframe with derived column
 
     """
     list_of_cols = argument_checker(
@@ -1136,7 +1199,9 @@ def is_yearStart(idf, list_of_cols, output_mode="append"):
 
 
 def end_of_year(idf, list_of_cols, output_mode="append"):
-    """
+    """Check if values in given timestamp/date columns are the last day of a year.
+    The derived values are 1 if True and 0 if False.
+
 
     Parameters
     ----------
@@ -1154,8 +1219,6 @@ def end_of_year(idf, list_of_cols, output_mode="append"):
 
     Returns
     -------
-    type
-        Output Dataframe with derived column
 
     """
     list_of_cols = argument_checker(
@@ -1184,6 +1247,7 @@ def end_of_year(idf, list_of_cols, output_mode="append"):
 def is_yearEnd(idf, list_of_cols, output_mode="append"):
     """
 
+
     Parameters
     ----------
     idf :
@@ -1200,8 +1264,6 @@ def is_yearEnd(idf, list_of_cols, output_mode="append"):
 
     Returns
     -------
-    type
-        Output Dataframe with derived column
 
     """
     list_of_cols = argument_checker(
@@ -1229,7 +1291,7 @@ def is_yearEnd(idf, list_of_cols, output_mode="append"):
 
 
 def start_of_quarter(idf, list_of_cols, output_mode="append"):
-    """
+    """Extract the first day of the quarter of given timestamp/date columns.
 
     Parameters
     ----------
@@ -1247,8 +1309,6 @@ def start_of_quarter(idf, list_of_cols, output_mode="append"):
 
     Returns
     -------
-    type
-        Output Dataframe with derived column
 
     """
     list_of_cols = argument_checker(
@@ -1272,7 +1332,9 @@ def start_of_quarter(idf, list_of_cols, output_mode="append"):
 
 
 def is_quarterStart(idf, list_of_cols, output_mode="append"):
-    """
+    """Check if values in given timestamp/date columns are the first day of a quarter.
+     The derived values are 1 if True and 0 if False.
+
 
     Parameters
     ----------
@@ -1290,8 +1352,6 @@ def is_quarterStart(idf, list_of_cols, output_mode="append"):
 
     Returns
     -------
-    type
-        Output Dataframe with derived column
 
     """
     list_of_cols = argument_checker(
@@ -1319,7 +1379,7 @@ def is_quarterStart(idf, list_of_cols, output_mode="append"):
 
 
 def end_of_quarter(idf, list_of_cols, output_mode="append"):
-    """
+    """Extract the last day of the quarter of given timestamp/date columns.
 
     Parameters
     ----------
@@ -1337,8 +1397,6 @@ def end_of_quarter(idf, list_of_cols, output_mode="append"):
 
     Returns
     -------
-    type
-        Output Dataframe with derived column
 
     """
     list_of_cols = argument_checker(
@@ -1367,7 +1425,9 @@ def end_of_quarter(idf, list_of_cols, output_mode="append"):
 
 
 def is_quarterEnd(idf, list_of_cols, output_mode="append"):
-    """
+    """Check if values in given timestamp/date columns are the last day of a quarter.
+    The derived values are 1 if True and 0 if False.
+
 
     Parameters
     ----------
@@ -1385,8 +1445,6 @@ def is_quarterEnd(idf, list_of_cols, output_mode="append"):
 
     Returns
     -------
-    type
-        Output Dataframe with derived column
 
     """
     list_of_cols = argument_checker(
@@ -1414,7 +1472,9 @@ def is_quarterEnd(idf, list_of_cols, output_mode="append"):
 
 
 def is_yearFirstHalf(idf, list_of_cols, output_mode="append"):
-    """
+    """Check if values in given timestamp/date columns are in the first half of a year.
+    The derived values are 1 if True and 0 if False.
+
 
     Parameters
     ----------
@@ -1432,8 +1492,6 @@ def is_yearFirstHalf(idf, list_of_cols, output_mode="append"):
 
     Returns
     -------
-    type
-        Output Dataframe with derived column
 
     """
     list_of_cols = argument_checker(
@@ -1461,7 +1519,10 @@ def is_yearFirstHalf(idf, list_of_cols, output_mode="append"):
 
 
 def is_selectedHour(idf, list_of_cols, start_hour, end_hour, output_mode="append"):
-    """
+    """Check if the hour component of given timestamp columns are between start hour (inclusive) and end hour (
+    inclusive). The derived values are 1 if True and 0 if False. Start hour can be larger than end hour, for example,
+    start_hour=22 and end_hour=3 can be used to check whether the hour component is in [22, 23, 0, 1, 2, 3].
+
 
     Parameters
     ----------
@@ -1483,8 +1544,6 @@ def is_selectedHour(idf, list_of_cols, start_hour, end_hour, output_mode="append
 
     Returns
     -------
-    type
-        Output Dataframe with derived column
 
     """
     list_of_cols = argument_checker(
@@ -1520,7 +1579,9 @@ def is_selectedHour(idf, list_of_cols, start_hour, end_hour, output_mode="append
 
 
 def is_leapYear(idf, list_of_cols, output_mode="append"):
-    """
+    """Check if values in given timestamp/date columns are in a leap year.
+    The derived values are 1 if True and 0 if False.
+
 
     Parameters
     ----------
@@ -1538,8 +1599,6 @@ def is_leapYear(idf, list_of_cols, output_mode="append"):
 
     Returns
     -------
-    type
-        Output Dataframe with derived column
 
     """
     list_of_cols = argument_checker(
@@ -1582,7 +1641,8 @@ def is_leapYear(idf, list_of_cols, output_mode="append"):
 
 
 def is_weekend(idf, list_of_cols, output_mode="append"):
-    """
+    """Check if values in given timestamp/date columns are on weekends. The derived values are 1 if True and 0 if False.
+
 
     Parameters
     ----------
@@ -1600,8 +1660,6 @@ def is_weekend(idf, list_of_cols, output_mode="append"):
 
     Returns
     -------
-    type
-        Output Dataframe with derived column
 
     """
     list_of_cols = argument_checker(
@@ -1629,7 +1687,12 @@ def is_weekend(idf, list_of_cols, output_mode="append"):
 def aggregator(
     idf, list_of_cols, list_of_aggs, time_col, granularity_format="%Y-%m-%d"
 ):
-    """
+    """aggregator performs groupBy over the timestamp/date column and calcuates a list of aggregate metrics over all
+    input columns. The timestamp column is firstly converted to the given granularity format ("%Y-%m-%d", by default)
+    before applying groupBy and the conversion step can be skipped by setting granularity format to be an empty string.
+
+    The following aggregate metrics are supported: count, min, max, sum, mean, median, stddev, countDistinct,
+    sumDistinct, collect_list, collect_set.
 
     Parameters
     ----------
@@ -1654,8 +1717,6 @@ def aggregator(
 
     Returns
     -------
-    type
-        Dataframe with time_col + aggregated columns
 
     """
     all_aggs = [
@@ -1697,7 +1758,7 @@ def aggregator(
         Parameters
         ----------
         col :
-
+            param agg:
         agg :
 
 
@@ -1741,7 +1802,12 @@ def window_aggregator(
     partition_col="",
     output_mode="append",
 ):
-    """
+    """window_aggregator calcuates a list of aggregate metrics for all input columns over a window frame (expanding
+    by default, or rolling type) ordered by the given timestamp column and partitioned by partition_col ("" by
+    default, to indicate no partition).
+
+    Window size needs to be provided as an integer for rolling window type. The following aggregate metrics are
+    supported: count, min, max, sum, mean, median.
 
     Parameters
     ----------
@@ -1774,8 +1840,6 @@ def window_aggregator(
 
     Returns
     -------
-    type
-        Output Dataframe with derived column(s)
 
     """
 
@@ -1855,7 +1919,11 @@ def lagged_ts(
     partition_col="",
     output_mode="append",
 ):
-    """
+    """lagged_ts returns the values that are *lag* rows before the current rows, and None if there is less than *lag*
+    rows before the current rows. If output_type is "ts_diff", an additional column is generated with values being
+    the time difference between the original timestamp and the lagged timestamp in given unit *tsdiff_unit*.
+    Currently the following units are supported: second, minute, hour, day, week, month, year.
+
 
     Parameters
     ----------
@@ -1891,8 +1959,6 @@ def lagged_ts(
 
     Returns
     -------
-    type
-        Output Dataframe with derived column
 
     """
     list_of_cols = argument_checker(
@@ -1934,7 +2000,9 @@ def lagged_ts(
 <span>def <span class="ident">adding_timeUnits</span></span>(<span>idf, list_of_cols, unit, unit_value, output_mode='append')</span>
 </code></dt>
 <dd>
-<div class="desc"><h2 id="parameters">Parameters</h2>
+<div class="desc"><p>Add or subtract given time units to/from timestamp columns. Currently the following units are supported:
+second, minute, hour, day, week, month, year. Subtraction can be performed by setting a negative unit_value.</p>
+<h2 id="parameters">Parameters</h2>
 <p>spark :
 Spark Session
 idf :
@@ -1954,11 +2022,7 @@ replace", "append".
 e.g. column X is replaced with X_adjusted.
 “append” option appends derived column to the input dataset with a postfix "_adjusted",
 e.g. column X is appended as X_adjusted. (Default value = "append")</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>type</code></dt>
-<dd>Output Dataframe with derived column</dd>
-</dl></div>
+<h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1966,7 +2030,9 @@ e.g. column X is appended as X_adjusted. (Default value = "append")</p>
 <pre>
 ```python
 def adding_timeUnits(idf, list_of_cols, unit, unit_value, output_mode="append"):
-    """
+    """Add or subtract given time units to/from timestamp columns. Currently the following units are supported:
+    second, minute, hour, day, week, month, year. Subtraction can be performed by setting a negative unit_value.
+
 
     Parameters
     ----------
@@ -1992,8 +2058,6 @@ def adding_timeUnits(idf, list_of_cols, unit, unit_value, output_mode="append"):
 
     Returns
     -------
-    type
-        Output Dataframe with derived column
 
     """
     all_units = ["hour", "minute", "second", "day", "week", "month", "year"]
@@ -2028,7 +2092,12 @@ def adding_timeUnits(idf, list_of_cols, unit, unit_value, output_mode="append"):
 <span>def <span class="ident">aggregator</span></span>(<span>idf, list_of_cols, list_of_aggs, time_col, granularity_format='%Y-%m-%d')</span>
 </code></dt>
 <dd>
-<div class="desc"><h2 id="parameters">Parameters</h2>
+<div class="desc"><p>aggregator performs groupBy over the timestamp/date column and calcuates a list of aggregate metrics over all
+input columns. The timestamp column is firstly converted to the given granularity format ("%Y-%m-%d", by default)
+before applying groupBy and the conversion step can be skipped by setting granularity format to be an empty string.</p>
+<p>The following aggregate metrics are supported: count, min, max, sum, mean, median, stddev, countDistinct,
+sumDistinct, collect_list, collect_set.</p>
+<h2 id="parameters">Parameters</h2>
 <p>idf :
 Input Dataframe
 list_of_cols :
@@ -2047,11 +2116,7 @@ granularity_format :
 Format to be applied to time_col before groupBy. The default value is
 '%Y-%m-%d', which means grouping by the date component of time_col.
 Alternatively, '' can be used if no formatting is necessary.</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>type</code></dt>
-<dd>Dataframe with time_col + aggregated columns</dd>
-</dl></div>
+<h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2061,7 +2126,12 @@ Alternatively, '' can be used if no formatting is necessary.</p>
 def aggregator(
     idf, list_of_cols, list_of_aggs, time_col, granularity_format="%Y-%m-%d"
 ):
-    """
+    """aggregator performs groupBy over the timestamp/date column and calcuates a list of aggregate metrics over all
+    input columns. The timestamp column is firstly converted to the given granularity format ("%Y-%m-%d", by default)
+    before applying groupBy and the conversion step can be skipped by setting granularity format to be an empty string.
+
+    The following aggregate metrics are supported: count, min, max, sum, mean, median, stddev, countDistinct,
+    sumDistinct, collect_list, collect_set.
 
     Parameters
     ----------
@@ -2086,8 +2156,6 @@ def aggregator(
 
     Returns
     -------
-    type
-        Dataframe with time_col + aggregated columns
 
     """
     all_aggs = [
@@ -2129,7 +2197,7 @@ def aggregator(
         Parameters
         ----------
         col :
-
+            param agg:
         agg :
 
 
@@ -2170,8 +2238,9 @@ def aggregator(
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
-<p>func_name :</p>
-<p>args :</p>
+<p>func_name :
+param args:
+args :</p>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -2185,7 +2254,7 @@ def argument_checker(func_name, args):
     Parameters
     ----------
     func_name :
-
+        param args:
     args :
 
 
@@ -2269,7 +2338,9 @@ def argument_checker(func_name, args):
 <span>def <span class="ident">dateformat_conversion</span></span>(<span>idf, list_of_cols, input_format='%Y-%m-%d %H:%M:%S', output_format='%Y-%m-%d %H:%M:%S', output_mode='replace')</span>
 </code></dt>
 <dd>
-<div class="desc"><h2 id="parameters">Parameters</h2>
+<div class="desc"><p>Convert time string columns with given input format ("%Y-%m-%d %H:%M:%S", by default) to time string columns
+with given output format ("%Y-%m-%d %H:%M:%S", by default).</p>
+<h2 id="parameters">Parameters</h2>
 <p>spark :
 Spark Session
 idf :
@@ -2286,11 +2357,7 @@ output_mode :
 replace", "append".
 “replace” option replaces original columns with derived column. “append” option appends derived
 column to the input dataset with a postfix "_ts" e.g. column X is appended as X_ts. (Default value = "replace")</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>type</code></dt>
-<dd>Output Dataframe with derived column</dd>
-</dl></div>
+<h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2304,7 +2371,8 @@ def dateformat_conversion(
     output_format="%Y-%m-%d %H:%M:%S",
     output_mode="replace",
 ):
-    """
+    """Convert time string columns with given input format ("%Y-%m-%d %H:%M:%S", by default) to time string columns
+     with given output format ("%Y-%m-%d %H:%M:%S", by default).
 
     Parameters
     ----------
@@ -2327,8 +2395,6 @@ def dateformat_conversion(
 
     Returns
     -------
-    type
-        Output Dataframe with derived column
 
     """
     list_of_cols = argument_checker(
@@ -2369,7 +2435,9 @@ def dateformat_conversion(
 <span>def <span class="ident">end_of_month</span></span>(<span>idf, list_of_cols, output_mode='append')</span>
 </code></dt>
 <dd>
-<div class="desc"><h2 id="parameters">Parameters</h2>
+<div class="desc"><p>Check if values in given timestamp/date columns are the last day of a month. The derived values are 1 if True
+and 0 if False.</p>
+<h2 id="parameters">Parameters</h2>
 <p>idf :
 Input Dataframe
 list_of_cols :
@@ -2381,11 +2449,7 @@ replace", "append".
 “replace” option replaces original columns with derived column with a postfix "_monthEnd".
 “append” option appends derived column to the input dataset with a postfix "_monthEnd",
 e.g. column X is appended as X_monthEnd. (Default value = "append")</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>type</code></dt>
-<dd>Output Dataframe with derived column</dd>
-</dl></div>
+<h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2393,7 +2457,9 @@ e.g. column X is appended as X_monthEnd. (Default value = "append")</p>
 <pre>
 ```python
 def end_of_month(idf, list_of_cols, output_mode="append"):
-    """
+    """Check if values in given timestamp/date columns are the last day of a month. The derived values are 1 if True
+    and 0 if False.
+
 
     Parameters
     ----------
@@ -2411,8 +2477,6 @@ def end_of_month(idf, list_of_cols, output_mode="append"):
 
     Returns
     -------
-    type
-        Output Dataframe with derived column
 
     """
     list_of_cols = argument_checker(
@@ -2441,7 +2505,8 @@ def end_of_month(idf, list_of_cols, output_mode="append"):
 <span>def <span class="ident">end_of_quarter</span></span>(<span>idf, list_of_cols, output_mode='append')</span>
 </code></dt>
 <dd>
-<div class="desc"><h2 id="parameters">Parameters</h2>
+<div class="desc"><p>Extract the last day of the quarter of given timestamp/date columns.</p>
+<h2 id="parameters">Parameters</h2>
 <p>idf :
 Input Dataframe
 list_of_cols :
@@ -2453,11 +2518,7 @@ replace", "append".
 “replace” option replaces original columns with derived column with a postfix "_quarterEnd".
 “append” option appends derived column to the input dataset with a postfix "_quarterEnd",
 e.g. column X is appended as X_quarterEnd. (Default value = "append")</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>type</code></dt>
-<dd>Output Dataframe with derived column</dd>
-</dl></div>
+<h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2465,7 +2526,7 @@ e.g. column X is appended as X_quarterEnd. (Default value = "append")</p>
 <pre>
 ```python
 def end_of_quarter(idf, list_of_cols, output_mode="append"):
-    """
+    """Extract the last day of the quarter of given timestamp/date columns.
 
     Parameters
     ----------
@@ -2483,8 +2544,6 @@ def end_of_quarter(idf, list_of_cols, output_mode="append"):
 
     Returns
     -------
-    type
-        Output Dataframe with derived column
 
     """
     list_of_cols = argument_checker(
@@ -2518,7 +2577,9 @@ def end_of_quarter(idf, list_of_cols, output_mode="append"):
 <span>def <span class="ident">end_of_year</span></span>(<span>idf, list_of_cols, output_mode='append')</span>
 </code></dt>
 <dd>
-<div class="desc"><h2 id="parameters">Parameters</h2>
+<div class="desc"><p>Check if values in given timestamp/date columns are the last day of a year.
+The derived values are 1 if True and 0 if False.</p>
+<h2 id="parameters">Parameters</h2>
 <p>idf :
 Input Dataframe
 list_of_cols :
@@ -2530,11 +2591,7 @@ replace", "append".
 “replace” option replaces original columns with derived column with a postfix "_yearEnd".
 “append” option appends derived column to the input dataset with a postfix "_yearEnd",
 e.g. column X is appended as X_yearEnd. (Default value = "append")</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>type</code></dt>
-<dd>Output Dataframe with derived column</dd>
-</dl></div>
+<h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2542,7 +2599,9 @@ e.g. column X is appended as X_yearEnd. (Default value = "append")</p>
 <pre>
 ```python
 def end_of_year(idf, list_of_cols, output_mode="append"):
-    """
+    """Check if values in given timestamp/date columns are the last day of a year.
+    The derived values are 1 if True and 0 if False.
+
 
     Parameters
     ----------
@@ -2560,8 +2619,6 @@ def end_of_year(idf, list_of_cols, output_mode="append"):
 
     Returns
     -------
-    type
-        Output Dataframe with derived column
 
     """
     list_of_cols = argument_checker(
@@ -2593,7 +2650,9 @@ def end_of_year(idf, list_of_cols, output_mode="append"):
 <span>def <span class="ident">is_leapYear</span></span>(<span>idf, list_of_cols, output_mode='append')</span>
 </code></dt>
 <dd>
-<div class="desc"><h2 id="parameters">Parameters</h2>
+<div class="desc"><p>Check if values in given timestamp/date columns are in a leap year.
+The derived values are 1 if True and 0 if False.</p>
+<h2 id="parameters">Parameters</h2>
 <p>idf :
 Input Dataframe
 list_of_cols :
@@ -2605,11 +2664,7 @@ replace", "append".
 “replace” option replaces original columns with derived column with a postfix "_isleapYear".
 “append” option appends derived column to the input dataset with a postfix "_isleapYear",
 e.g. column X is appended as X_isleapYear. (Default value = "append")</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>type</code></dt>
-<dd>Output Dataframe with derived column</dd>
-</dl></div>
+<h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2617,7 +2672,9 @@ e.g. column X is appended as X_isleapYear. (Default value = "append")</p>
 <pre>
 ```python
 def is_leapYear(idf, list_of_cols, output_mode="append"):
-    """
+    """Check if values in given timestamp/date columns are in a leap year.
+    The derived values are 1 if True and 0 if False.
+
 
     Parameters
     ----------
@@ -2635,8 +2692,6 @@ def is_leapYear(idf, list_of_cols, output_mode="append"):
 
     Returns
     -------
-    type
-        Output Dataframe with derived column
 
     """
     list_of_cols = argument_checker(
@@ -2684,7 +2739,8 @@ def is_leapYear(idf, list_of_cols, output_mode="append"):
 <span>def <span class="ident">is_monthEnd</span></span>(<span>idf, list_of_cols, output_mode='append')</span>
 </code></dt>
 <dd>
-<div class="desc"><h2 id="parameters">Parameters</h2>
+<div class="desc"><p>Extract the first day of the year of given timestamp/date columns.</p>
+<h2 id="parameters">Parameters</h2>
 <p>idf :
 Input Dataframe
 list_of_cols :
@@ -2696,11 +2752,7 @@ replace", "append".
 “replace” option replaces original columns with derived column with a postfix "_ismonthEnd".
 “append” option appends derived column to the input dataset with a postfix "_ismonthEnd",
 e.g. column X is appended as X_ismonthEnd. (Default value = "append")</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>type</code></dt>
-<dd>Output Dataframe with derived column</dd>
-</dl></div>
+<h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2708,7 +2760,8 @@ e.g. column X is appended as X_ismonthEnd. (Default value = "append")</p>
 <pre>
 ```python
 def is_monthEnd(idf, list_of_cols, output_mode="append"):
-    """
+    """Extract the first day of the year of given timestamp/date columns.
+
 
     Parameters
     ----------
@@ -2726,8 +2779,6 @@ def is_monthEnd(idf, list_of_cols, output_mode="append"):
 
     Returns
     -------
-    type
-        Output Dataframe with derived column
 
     """
     list_of_cols = argument_checker(
@@ -2760,7 +2811,9 @@ def is_monthEnd(idf, list_of_cols, output_mode="append"):
 <span>def <span class="ident">is_monthStart</span></span>(<span>idf, list_of_cols, output_mode='append')</span>
 </code></dt>
 <dd>
-<div class="desc"><h2 id="parameters">Parameters</h2>
+<div class="desc"><p>Check if values in given timestamp/date columns are the first day of a month. The derived values are 1 if True
+and 0 if False.</p>
+<h2 id="parameters">Parameters</h2>
 <p>idf :
 Input Dataframe
 list_of_cols :
@@ -2772,11 +2825,7 @@ replace", "append".
 “replace” option replaces original columns with derived column with a postfix "_ismonthStart".
 “append” option appends derived column to the input dataset with a postfix "_ismonthStart",
 e.g. column X is appended as X_ismonthStart. (Default value = "append")</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>type</code></dt>
-<dd>Output Dataframe with derived column</dd>
-</dl></div>
+<h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2784,7 +2833,9 @@ e.g. column X is appended as X_ismonthStart. (Default value = "append")</p>
 <pre>
 ```python
 def is_monthStart(idf, list_of_cols, output_mode="append"):
-    """
+    """Check if values in given timestamp/date columns are the first day of a month. The derived values are 1 if True
+    and 0 if False.
+
 
     Parameters
     ----------
@@ -2802,8 +2853,6 @@ def is_monthStart(idf, list_of_cols, output_mode="append"):
 
     Returns
     -------
-    type
-        Output Dataframe with derived column
 
     """
     list_of_cols = argument_checker(
@@ -2836,7 +2885,9 @@ def is_monthStart(idf, list_of_cols, output_mode="append"):
 <span>def <span class="ident">is_quarterEnd</span></span>(<span>idf, list_of_cols, output_mode='append')</span>
 </code></dt>
 <dd>
-<div class="desc"><h2 id="parameters">Parameters</h2>
+<div class="desc"><p>Check if values in given timestamp/date columns are the last day of a quarter.
+The derived values are 1 if True and 0 if False.</p>
+<h2 id="parameters">Parameters</h2>
 <p>idf :
 Input Dataframe
 list_of_cols :
@@ -2848,11 +2899,7 @@ replace", "append".
 “replace” option replaces original columns with derived column with a postfix "_isquarterEnd".
 “append” option appends derived column to the input dataset with a postfix "_isquarterEnd",
 e.g. column X is appended as X_isquarterEnd. (Default value = "append")</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>type</code></dt>
-<dd>Output Dataframe with derived column</dd>
-</dl></div>
+<h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2860,7 +2907,9 @@ e.g. column X is appended as X_isquarterEnd. (Default value = "append")</p>
 <pre>
 ```python
 def is_quarterEnd(idf, list_of_cols, output_mode="append"):
-    """
+    """Check if values in given timestamp/date columns are the last day of a quarter.
+    The derived values are 1 if True and 0 if False.
+
 
     Parameters
     ----------
@@ -2878,8 +2927,6 @@ def is_quarterEnd(idf, list_of_cols, output_mode="append"):
 
     Returns
     -------
-    type
-        Output Dataframe with derived column
 
     """
     list_of_cols = argument_checker(
@@ -2912,7 +2959,9 @@ def is_quarterEnd(idf, list_of_cols, output_mode="append"):
 <span>def <span class="ident">is_quarterStart</span></span>(<span>idf, list_of_cols, output_mode='append')</span>
 </code></dt>
 <dd>
-<div class="desc"><h2 id="parameters">Parameters</h2>
+<div class="desc"><p>Check if values in given timestamp/date columns are the first day of a quarter.
+The derived values are 1 if True and 0 if False.</p>
+<h2 id="parameters">Parameters</h2>
 <p>idf :
 Input Dataframe
 list_of_cols :
@@ -2924,11 +2973,7 @@ replace", "append".
 “replace” option replaces original columns with derived column with a postfix "_isquarterStart".
 “append” option appends derived column to the input dataset with a postfix "_isquarterStart",
 e.g. column X is appended as X_isquarterStart. (Default value = "append")</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>type</code></dt>
-<dd>Output Dataframe with derived column</dd>
-</dl></div>
+<h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2936,7 +2981,9 @@ e.g. column X is appended as X_isquarterStart. (Default value = "append")</p>
 <pre>
 ```python
 def is_quarterStart(idf, list_of_cols, output_mode="append"):
-    """
+    """Check if values in given timestamp/date columns are the first day of a quarter.
+     The derived values are 1 if True and 0 if False.
+
 
     Parameters
     ----------
@@ -2954,8 +3001,6 @@ def is_quarterStart(idf, list_of_cols, output_mode="append"):
 
     Returns
     -------
-    type
-        Output Dataframe with derived column
 
     """
     list_of_cols = argument_checker(
@@ -2988,7 +3033,10 @@ def is_quarterStart(idf, list_of_cols, output_mode="append"):
 <span>def <span class="ident">is_selectedHour</span></span>(<span>idf, list_of_cols, start_hour, end_hour, output_mode='append')</span>
 </code></dt>
 <dd>
-<div class="desc"><h2 id="parameters">Parameters</h2>
+<div class="desc"><p>Check if the hour component of given timestamp columns are between start hour (inclusive) and end hour (
+inclusive). The derived values are 1 if True and 0 if False. Start hour can be larger than end hour, for example,
+start_hour=22 and end_hour=3 can be used to check whether the hour component is in [22, 23, 0, 1, 2, 3].</p>
+<h2 id="parameters">Parameters</h2>
 <p>idf :
 Input Dataframe
 list_of_cols :
@@ -3004,11 +3052,7 @@ replace", "append".
 “replace” option replaces original columns with derived column with a postfix "_isselectedHour".
 “append” option appends derived column to the input dataset with a postfix "_isselectedHour",
 e.g. column X is appended as X_isselectedHour. (Default value = "append")</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>type</code></dt>
-<dd>Output Dataframe with derived column</dd>
-</dl></div>
+<h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -3016,7 +3060,10 @@ e.g. column X is appended as X_isselectedHour. (Default value = "append")</p>
 <pre>
 ```python
 def is_selectedHour(idf, list_of_cols, start_hour, end_hour, output_mode="append"):
-    """
+    """Check if the hour component of given timestamp columns are between start hour (inclusive) and end hour (
+    inclusive). The derived values are 1 if True and 0 if False. Start hour can be larger than end hour, for example,
+    start_hour=22 and end_hour=3 can be used to check whether the hour component is in [22, 23, 0, 1, 2, 3].
+
 
     Parameters
     ----------
@@ -3038,8 +3085,6 @@ def is_selectedHour(idf, list_of_cols, start_hour, end_hour, output_mode="append
 
     Returns
     -------
-    type
-        Output Dataframe with derived column
 
     """
     list_of_cols = argument_checker(
@@ -3080,7 +3125,8 @@ def is_selectedHour(idf, list_of_cols, start_hour, end_hour, output_mode="append
 <span>def <span class="ident">is_weekend</span></span>(<span>idf, list_of_cols, output_mode='append')</span>
 </code></dt>
 <dd>
-<div class="desc"><h2 id="parameters">Parameters</h2>
+<div class="desc"><p>Check if values in given timestamp/date columns are on weekends. The derived values are 1 if True and 0 if False.</p>
+<h2 id="parameters">Parameters</h2>
 <p>idf :
 Input Dataframe
 list_of_cols :
@@ -3092,11 +3138,7 @@ replace", "append".
 “replace” option replaces original columns with derived column with a postfix "_isweekend".
 “append” option appends derived column to the input dataset with a postfix "_isweekend",
 e.g. column X is appended as X_isweekend. (Default value = "append")</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>type</code></dt>
-<dd>Output Dataframe with derived column</dd>
-</dl></div>
+<h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -3104,7 +3146,8 @@ e.g. column X is appended as X_isweekend. (Default value = "append")</p>
 <pre>
 ```python
 def is_weekend(idf, list_of_cols, output_mode="append"):
-    """
+    """Check if values in given timestamp/date columns are on weekends. The derived values are 1 if True and 0 if False.
+
 
     Parameters
     ----------
@@ -3122,8 +3165,6 @@ def is_weekend(idf, list_of_cols, output_mode="append"):
 
     Returns
     -------
-    type
-        Output Dataframe with derived column
 
     """
     list_of_cols = argument_checker(
@@ -3166,11 +3207,7 @@ replace", "append".
 “replace” option replaces original columns with derived column with a postfix "_isyearEnd".
 “append” option appends derived column to the input dataset with a postfix "_isyearEnd",
 e.g. column X is appended as X_isyearEnd. (Default value = "append")</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>type</code></dt>
-<dd>Output Dataframe with derived column</dd>
-</dl></div>
+<h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -3179,6 +3216,7 @@ e.g. column X is appended as X_isyearEnd. (Default value = "append")</p>
 ```python
 def is_yearEnd(idf, list_of_cols, output_mode="append"):
     """
+
 
     Parameters
     ----------
@@ -3196,8 +3234,6 @@ def is_yearEnd(idf, list_of_cols, output_mode="append"):
 
     Returns
     -------
-    type
-        Output Dataframe with derived column
 
     """
     list_of_cols = argument_checker(
@@ -3230,7 +3266,9 @@ def is_yearEnd(idf, list_of_cols, output_mode="append"):
 <span>def <span class="ident">is_yearFirstHalf</span></span>(<span>idf, list_of_cols, output_mode='append')</span>
 </code></dt>
 <dd>
-<div class="desc"><h2 id="parameters">Parameters</h2>
+<div class="desc"><p>Check if values in given timestamp/date columns are in the first half of a year.
+The derived values are 1 if True and 0 if False.</p>
+<h2 id="parameters">Parameters</h2>
 <p>idf :
 Input Dataframe
 list_of_cols :
@@ -3242,11 +3280,7 @@ replace", "append".
 “replace” option replaces original columns with derived column with a postfix "_isFirstHalf".
 “append” option appends derived column to the input dataset with a postfix "_isFirstHalf",
 e.g. column X is appended as X_isFirstHalf. (Default value = "append")</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>type</code></dt>
-<dd>Output Dataframe with derived column</dd>
-</dl></div>
+<h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -3254,7 +3288,9 @@ e.g. column X is appended as X_isFirstHalf. (Default value = "append")</p>
 <pre>
 ```python
 def is_yearFirstHalf(idf, list_of_cols, output_mode="append"):
-    """
+    """Check if values in given timestamp/date columns are in the first half of a year.
+    The derived values are 1 if True and 0 if False.
+
 
     Parameters
     ----------
@@ -3272,8 +3308,6 @@ def is_yearFirstHalf(idf, list_of_cols, output_mode="append"):
 
     Returns
     -------
-    type
-        Output Dataframe with derived column
 
     """
     list_of_cols = argument_checker(
@@ -3306,7 +3340,8 @@ def is_yearFirstHalf(idf, list_of_cols, output_mode="append"):
 <span>def <span class="ident">is_yearStart</span></span>(<span>idf, list_of_cols, output_mode='append')</span>
 </code></dt>
 <dd>
-<div class="desc"><h2 id="parameters">Parameters</h2>
+<div class="desc"><p>Extract the last day of the year of given timestamp/date columns.</p>
+<h2 id="parameters">Parameters</h2>
 <p>idf :
 Input Dataframe
 list_of_cols :
@@ -3318,11 +3353,7 @@ replace", "append".
 “replace” option replaces original columns with derived column with a postfix "_isyearStart".
 “append” option appends derived column to the input dataset with a postfix "_isyearStart",
 e.g. column X is appended as X_isyearStart. (Default value = "append")</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>type</code></dt>
-<dd>Output Dataframe with derived column</dd>
-</dl></div>
+<h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -3330,7 +3361,8 @@ e.g. column X is appended as X_isyearStart. (Default value = "append")</p>
 <pre>
 ```python
 def is_yearStart(idf, list_of_cols, output_mode="append"):
-    """
+    """Extract the last day of the year of given timestamp/date columns.
+
 
     Parameters
     ----------
@@ -3348,8 +3380,6 @@ def is_yearStart(idf, list_of_cols, output_mode="append"):
 
     Returns
     -------
-    type
-        Output Dataframe with derived column
 
     """
     list_of_cols = argument_checker(
@@ -3382,7 +3412,11 @@ def is_yearStart(idf, list_of_cols, output_mode="append"):
 <span>def <span class="ident">lagged_ts</span></span>(<span>idf, list_of_cols, lag, output_type='ts', tsdiff_unit='days', partition_col='', output_mode='append')</span>
 </code></dt>
 <dd>
-<div class="desc"><h2 id="parameters">Parameters</h2>
+<div class="desc"><p>lagged_ts returns the values that are <em>lag</em> rows before the current rows, and None if there is less than <em>lag</em>
+rows before the current rows. If output_type is "ts_diff", an additional column is generated with values being
+the time difference between the original timestamp and the lagged timestamp in given unit <em>tsdiff_unit</em>.
+Currently the following units are supported: second, minute, hour, day, week, month, year.</p>
+<h2 id="parameters">Parameters</h2>
 <p>spark :
 Spark Session
 idf :
@@ -3413,11 +3447,7 @@ replace", "append".
 <col></em><col><em>lag<lag></em><tsdiff_unit>diff for "ts_diff" output_type.
 “append” option appends derived column to the input dataset, e.g. given output_type="ts_diff",
 lag=5, tsdiff_unit="days", column X is appended as X_lag5 and X_X_lag5_daydiff. (Default value = "append")</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>type</code></dt>
-<dd>Output Dataframe with derived column</dd>
-</dl></div>
+<h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -3433,7 +3463,11 @@ def lagged_ts(
     partition_col="",
     output_mode="append",
 ):
-    """
+    """lagged_ts returns the values that are *lag* rows before the current rows, and None if there is less than *lag*
+    rows before the current rows. If output_type is "ts_diff", an additional column is generated with values being
+    the time difference between the original timestamp and the lagged timestamp in given unit *tsdiff_unit*.
+    Currently the following units are supported: second, minute, hour, day, week, month, year.
+
 
     Parameters
     ----------
@@ -3469,8 +3503,6 @@ def lagged_ts(
 
     Returns
     -------
-    type
-        Output Dataframe with derived column
 
     """
     list_of_cols = argument_checker(
@@ -3511,7 +3543,8 @@ def lagged_ts(
 <span>def <span class="ident">start_of_month</span></span>(<span>idf, list_of_cols, output_mode='append')</span>
 </code></dt>
 <dd>
-<div class="desc"><h2 id="parameters">Parameters</h2>
+<div class="desc"><p>Extract the first day of the month of given timestamp/date columns.</p>
+<h2 id="parameters">Parameters</h2>
 <p>idf :
 Input Dataframe
 list_of_cols :
@@ -3523,11 +3556,7 @@ replace", "append".
 “replace” option replaces original columns with derived column with a postfix "_monthStart".
 “append” option appends derived column to the input dataset with a postfix "_monthStart",
 e.g. column X is appended as X_monthStart. (Default value = "append")</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>type</code></dt>
-<dd>Output Dataframe with derived column</dd>
-</dl></div>
+<h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -3535,7 +3564,8 @@ e.g. column X is appended as X_monthStart. (Default value = "append")</p>
 <pre>
 ```python
 def start_of_month(idf, list_of_cols, output_mode="append"):
-    """
+    """Extract the first day of the month of given timestamp/date columns.
+
 
     Parameters
     ----------
@@ -3553,8 +3583,6 @@ def start_of_month(idf, list_of_cols, output_mode="append"):
 
     Returns
     -------
-    type
-        Output Dataframe with derived column
 
     """
     list_of_cols = argument_checker(
@@ -3583,7 +3611,8 @@ def start_of_month(idf, list_of_cols, output_mode="append"):
 <span>def <span class="ident">start_of_quarter</span></span>(<span>idf, list_of_cols, output_mode='append')</span>
 </code></dt>
 <dd>
-<div class="desc"><h2 id="parameters">Parameters</h2>
+<div class="desc"><p>Extract the first day of the quarter of given timestamp/date columns.</p>
+<h2 id="parameters">Parameters</h2>
 <p>idf :
 Input Dataframe
 list_of_cols :
@@ -3595,11 +3624,7 @@ replace", "append".
 “replace” option replaces original columns with derived column with a postfix "_quarterStart.
 “append” option appends derived column to the input dataset with a postfix "_quarterStart",
 e.g. column X is appended as X_quarterStart. (Default value = "append")</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>type</code></dt>
-<dd>Output Dataframe with derived column</dd>
-</dl></div>
+<h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -3607,7 +3632,7 @@ e.g. column X is appended as X_quarterStart. (Default value = "append")</p>
 <pre>
 ```python
 def start_of_quarter(idf, list_of_cols, output_mode="append"):
-    """
+    """Extract the first day of the quarter of given timestamp/date columns.
 
     Parameters
     ----------
@@ -3625,8 +3650,6 @@ def start_of_quarter(idf, list_of_cols, output_mode="append"):
 
     Returns
     -------
-    type
-        Output Dataframe with derived column
 
     """
     list_of_cols = argument_checker(
@@ -3655,7 +3678,9 @@ def start_of_quarter(idf, list_of_cols, output_mode="append"):
 <span>def <span class="ident">start_of_year</span></span>(<span>idf, list_of_cols, output_mode='append')</span>
 </code></dt>
 <dd>
-<div class="desc"><h2 id="parameters">Parameters</h2>
+<div class="desc"><p>Check if values in given timestamp/date columns are the first day of a year.
+The derived values are 1 if True and 0 if False.</p>
+<h2 id="parameters">Parameters</h2>
 <p>idf :
 Input Dataframe
 list_of_cols :
@@ -3667,11 +3692,7 @@ replace", "append".
 “replace” option replaces original columns with derived column with a postfix "_yearStart".
 “append” option appends derived column to the input dataset with a postfix "_yearStart",
 e.g. column X is appended as X_yearStart. (Default value = "append")</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>type</code></dt>
-<dd>Output Dataframe with derived column</dd>
-</dl></div>
+<h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -3679,7 +3700,9 @@ e.g. column X is appended as X_yearStart. (Default value = "append")</p>
 <pre>
 ```python
 def start_of_year(idf, list_of_cols, output_mode="append"):
-    """
+    """Check if values in given timestamp/date columns are the first day of a year.
+    The derived values are 1 if True and 0 if False.
+
 
     Parameters
     ----------
@@ -3697,8 +3720,6 @@ def start_of_year(idf, list_of_cols, output_mode="append"):
 
     Returns
     -------
-    type
-        Output Dataframe with derived column
 
     """
     list_of_cols = argument_checker(
@@ -3727,7 +3748,9 @@ def start_of_year(idf, list_of_cols, output_mode="append"):
 <span>def <span class="ident">string_to_timestamp</span></span>(<span>idf, list_of_cols, input_format='%Y-%m-%d %H:%M:%S', output_type='ts', output_mode='replace')</span>
 </code></dt>
 <dd>
-<div class="desc"><h2 id="parameters">Parameters</h2>
+<div class="desc"><p>Convert time string columns with given input format ("%Y-%m-%d %H:%M:%S", by default) to
+TimestampType or DateType columns.</p>
+<h2 id="parameters">Parameters</h2>
 <p>spark :
 Spark Session
 idf :
@@ -3746,11 +3769,7 @@ output_mode :
 replace", "append".
 “replace” option replaces original columns with derived column. “append” option appends derived
 column to the input dataset with a postfix "_ts" e.g. column X is appended as X_ts. (Default value = "replace")</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>type</code></dt>
-<dd>Output Dataframe with derived column</dd>
-</dl></div>
+<h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -3764,7 +3783,8 @@ def string_to_timestamp(
     output_type="ts",
     output_mode="replace",
 ):
-    """
+    """Convert time string columns with given input format ("%Y-%m-%d %H:%M:%S", by default) to
+     TimestampType or DateType columns.
 
     Parameters
     ----------
@@ -3789,8 +3809,6 @@ def string_to_timestamp(
 
     Returns
     -------
-    type
-        Output Dataframe with derived column
 
     """
     list_of_cols = argument_checker(
@@ -3811,7 +3829,7 @@ def string_to_timestamp(
         Parameters
         ----------
         col :
-
+            param form:
         form :
 
 
@@ -3841,7 +3859,10 @@ def string_to_timestamp(
 <span>def <span class="ident">timeUnits_extraction</span></span>(<span>idf, list_of_cols, units, output_mode='append')</span>
 </code></dt>
 <dd>
-<div class="desc"><h2 id="parameters">Parameters</h2>
+<div class="desc"><p>Extract the unit(s) of given timestamp columns as integer. Currently the following units are supported: hour,
+minute, second, dayofmonth, dayofweek, dayofyear, weekofyear, month, quarter, year. Multiple units can be
+calculated at the same time by inputting a list of units or a string of units separated by pipe delimiter “|”.</p>
+<h2 id="parameters">Parameters</h2>
 <p>spark :
 Spark Session
 idf :
@@ -3862,11 +3883,7 @@ replace", "append".
 e.g. column X is replaced with X_second for units="second".
 “append” option appends derived column to the input dataset with a postfix "</em><unit>",
 e.g. column X is appended as X_second for units="second". (Default value = "append")</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>type</code></dt>
-<dd>Output Dataframe with derived column</dd>
-</dl></div>
+<h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -3874,7 +3891,9 @@ e.g. column X is appended as X_second for units="second". (Default value = "appe
 <pre>
 ```python
 def timeUnits_extraction(idf, list_of_cols, units, output_mode="append"):
-    """
+    """Extract the unit(s) of given timestamp columns as integer. Currently the following units are supported: hour,
+    minute, second, dayofmonth, dayofweek, dayofyear, weekofyear, month, quarter, year. Multiple units can be
+    calculated at the same time by inputting a list of units or a string of units separated by pipe delimiter “|”.
 
     Parameters
     ----------
@@ -3901,8 +3920,6 @@ def timeUnits_extraction(idf, list_of_cols, units, output_mode="append"):
 
     Returns
     -------
-    type
-        Output Dataframe with derived column
 
     """
     all_units = [
@@ -3953,7 +3970,9 @@ def timeUnits_extraction(idf, list_of_cols, units, output_mode="append"):
 <span>def <span class="ident">time_diff</span></span>(<span>idf, ts1, ts2, unit, output_mode='append')</span>
 </code></dt>
 <dd>
-<div class="desc"><h2 id="parameters">Parameters</h2>
+<div class="desc"><p>Calculate the time difference between 2 timestamp columns (Timestamp 1 - Timestamp 2) in a given unit.
+Currently the following units are supported: second, minute, hour, day, week, month, year.</p>
+<h2 id="parameters">Parameters</h2>
 <p>idf :
 Input Dataframe
 ts1 :
@@ -3968,11 +3987,7 @@ e.g. Given ts1=X, ts2=Y , X and Y are replaced with X_Y_daydiff for unit="day".
 “append” option appends derived column to the input dataset with name = <ts1><em><ts2></em><unit>diff,
 e.g. Given ts1=X, ts2=Y, X_Y_daydiff is appended for unit="day". (Default value = "append")
 ts2 :</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>type</code></dt>
-<dd>Output Dataframe with derived column</dd>
-</dl></div>
+<h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -3980,7 +3995,9 @@ ts2 :</p>
 <pre>
 ```python
 def time_diff(idf, ts1, ts2, unit, output_mode="append"):
-    """
+    """Calculate the time difference between 2 timestamp columns (Timestamp 1 - Timestamp 2) in a given unit.
+    Currently the following units are supported: second, minute, hour, day, week, month, year.
+
 
     Parameters
     ----------
@@ -4002,8 +4019,6 @@ def time_diff(idf, ts1, ts2, unit, output_mode="append"):
 
     Returns
     -------
-    type
-        Output Dataframe with derived column
 
     """
     argument_checker(
@@ -4049,7 +4064,9 @@ def time_diff(idf, ts1, ts2, unit, output_mode="append"):
 <span>def <span class="ident">time_elapsed</span></span>(<span>idf, list_of_cols, unit, output_mode='append')</span>
 </code></dt>
 <dd>
-<div class="desc"><h2 id="parameters">Parameters</h2>
+<div class="desc"><p>Calculate time difference between the current and the given timestamp (Current - Given Timestamp) in a given
+unit. Currently the following units are supported: second, minute, hour, day, week, month, year.</p>
+<h2 id="parameters">Parameters</h2>
 <p>spark :
 Spark Session
 idf :
@@ -4067,11 +4084,7 @@ replace", "append".
 e.g. column X is replaced with X_daydiff for unit="day".
 “append” option appends derived column to the input dataset with a postfix "</em><unit>diff",
 e.g. column X is appended as X_daydiff for unit="day". (Default value = "append")</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>type</code></dt>
-<dd>Output Dataframe with derived column</dd>
-</dl></div>
+<h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -4079,7 +4092,9 @@ e.g. column X is appended as X_daydiff for unit="day". (Default value = "append"
 <pre>
 ```python
 def time_elapsed(idf, list_of_cols, unit, output_mode="append"):
-    """
+    """Calculate time difference between the current and the given timestamp (Current - Given Timestamp) in a given
+    unit. Currently the following units are supported: second, minute, hour, day, week, month, year.
+
 
     Parameters
     ----------
@@ -4103,8 +4118,6 @@ def time_elapsed(idf, list_of_cols, unit, output_mode="append"):
 
     Returns
     -------
-    type
-        Output Dataframe with derived column
 
     """
     list_of_cols = argument_checker(
@@ -4156,7 +4169,10 @@ def time_elapsed(idf, list_of_cols, unit, output_mode="append"):
 <span>def <span class="ident">timestamp_comparison</span></span>(<span>idf, list_of_cols, comparison_type, comparison_value, comparison_format='%Y-%m-%d %H:%M:%S', output_mode='append')</span>
 </code></dt>
 <dd>
-<div class="desc"><h2 id="parameters">Parameters</h2>
+<div class="desc"><p>Compare timestamp columns with a given timestamp/date value (comparison_value) of given format (
+comparison_format). Supported comparison types include greater_than, less_than, greaterThan_equalTo and
+lessThan_equalTo. The derived values are 1 if True and 0 if False.</p>
+<h2 id="parameters">Parameters</h2>
 <p>spark :
 Spark Session
 idf :
@@ -4178,11 +4194,7 @@ replace", "append".
 e.g. column X is replaced with X_compared.
 “append” option appends derived column to the input dataset with a postfix "_compared",
 e.g. column X is appended as X_compared. (Default value = "append")</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>type</code></dt>
-<dd>Output Dataframe with derived column</dd>
-</dl></div>
+<h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -4197,7 +4209,10 @@ def timestamp_comparison(
     comparison_format="%Y-%m-%d %H:%M:%S",
     output_mode="append",
 ):
-    """
+    """Compare timestamp columns with a given timestamp/date value (comparison_value) of given format (
+    comparison_format). Supported comparison types include greater_than, less_than, greaterThan_equalTo and
+    lessThan_equalTo. The derived values are 1 if True and 0 if False.
+
 
     Parameters
     ----------
@@ -4225,8 +4240,6 @@ def timestamp_comparison(
 
     Returns
     -------
-    type
-        Output Dataframe with derived column
 
     """
     all_types = ["greater_than", "less_than", "greaterThan_equalTo", "lessThan_equalTo"]
@@ -4276,7 +4289,8 @@ def timestamp_comparison(
 <span>def <span class="ident">timestamp_to_string</span></span>(<span>idf, list_of_cols, output_format='%Y-%m-%d %H:%M:%S', output_mode='replace')</span>
 </code></dt>
 <dd>
-<div class="desc"><h2 id="parameters">Parameters</h2>
+<div class="desc"><p>Convert timestamp/date columns to time string columns with given output format ("%Y-%m-%d %H:%M:%S", by default)</p>
+<h2 id="parameters">Parameters</h2>
 <p>spark :
 Spark Session
 idf :
@@ -4292,11 +4306,7 @@ output_mode :
 replace", "append".
 “replace” option replaces original columns with derived column. “append” option appends derived
 column to the input dataset with a postfix "_str" e.g. column X is appended as X_str. (Default value = "replace")</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>type</code></dt>
-<dd>Output Dataframe with derived column</dd>
-</dl></div>
+<h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -4306,7 +4316,7 @@ column to the input dataset with a postfix "_str" e.g. column X is appended as X
 def timestamp_to_string(
     idf, list_of_cols, output_format="%Y-%m-%d %H:%M:%S", output_mode="replace"
 ):
-    """
+    """Convert timestamp/date columns to time string columns with given output format ("%Y-%m-%d %H:%M:%S", by default)
 
     Parameters
     ----------
@@ -4328,8 +4338,6 @@ def timestamp_to_string(
 
     Returns
     -------
-    type
-        Output Dataframe with derived column
 
     """
     list_of_cols = argument_checker(
@@ -4349,7 +4357,7 @@ def timestamp_to_string(
         Parameters
         ----------
         col :
-
+            param form:
         form :
 
 
@@ -4378,7 +4386,8 @@ def timestamp_to_string(
 <span>def <span class="ident">timestamp_to_unix</span></span>(<span>spark, idf, list_of_cols, precision='s', tz='local', output_mode='replace')</span>
 </code></dt>
 <dd>
-<div class="desc"><h2 id="parameters">Parameters</h2>
+<div class="desc"><p>Convert timestamp columns in a specified time zone to Unix time stamp in seconds or milliseconds.</p>
+<h2 id="parameters">Parameters</h2>
 <p>spark :
 Spark Session
 idf :
@@ -4398,11 +4407,7 @@ output_mode :
 replace", "append".
 “replace” option replaces original columns with derived column. “append” option appends derived
 column to the input dataset with a postfix "_unix" e.g. column X is appended as X_unix. (Default value = "replace")</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>type</code></dt>
-<dd>Output Dataframe with derived column</dd>
-</dl></div>
+<h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -4412,7 +4417,7 @@ column to the input dataset with a postfix "_unix" e.g. column X is appended as 
 def timestamp_to_unix(
     spark, idf, list_of_cols, precision="s", tz="local", output_mode="replace"
 ):
-    """
+    """Convert timestamp columns in a specified time zone to Unix time stamp in seconds or milliseconds.
 
     Parameters
     ----------
@@ -4438,8 +4443,6 @@ def timestamp_to_unix(
 
     Returns
     -------
-    type
-        Output Dataframe with derived column
 
     """
     tz = tz.lower()
@@ -4486,7 +4489,8 @@ def timestamp_to_unix(
 <span>def <span class="ident">timezone_conversion</span></span>(<span>spark, idf, list_of_cols, given_tz, output_tz, output_mode='replace')</span>
 </code></dt>
 <dd>
-<div class="desc"><h2 id="parameters">Parameters</h2>
+<div class="desc"><p>Convert timestamp columns from the given timezone (given_tz) to the output timezone (output_tz).</p>
+<h2 id="parameters">Parameters</h2>
 <p>spark :
 Spark Session
 idf :
@@ -4503,11 +4507,7 @@ output_mode :
 replace", "append".
 “replace” option replaces original columns with derived column. “append” option appends derived
 column to the input dataset with a postfix "_tzconverted" e.g. column X is appended as X_tzconverted. (Default value = "replace")</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>type</code></dt>
-<dd>Output Dataframe with derived column</dd>
-</dl></div>
+<h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -4517,7 +4517,7 @@ column to the input dataset with a postfix "_tzconverted" e.g. column X is appen
 def timezone_conversion(
     spark, idf, list_of_cols, given_tz, output_tz, output_mode="replace"
 ):
-    """
+    """Convert timestamp columns from the given timezone (given_tz) to the output timezone (output_tz).
 
     Parameters
     ----------
@@ -4540,8 +4540,6 @@ def timezone_conversion(
 
     Returns
     -------
-    type
-        Output Dataframe with derived column
 
     """
     list_of_cols = argument_checker(
@@ -4583,7 +4581,9 @@ def timezone_conversion(
 <span>def <span class="ident">unix_to_timestamp</span></span>(<span>spark, idf, list_of_cols, precision='s', tz='local', output_mode='replace')</span>
 </code></dt>
 <dd>
-<div class="desc"><h2 id="parameters">Parameters</h2>
+<div class="desc"><p>Convert the number of seconds or milliseconds from unix epoch (1970-01-01 00:00:00 UTC) to a timestamp column
+in the specified time zone.</p>
+<h2 id="parameters">Parameters</h2>
 <p>spark :
 Spark Session
 idf :
@@ -4603,11 +4603,7 @@ output_mode :
 replace", "append".
 “replace” option replaces original columns with derived column. “append” option appends derived
 column to the input dataset with a postfix "_ts" e.g. column X is appended as X_ts. (Default value = "replace")</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>type</code></dt>
-<dd>Output Dataframe with derived column</dd>
-</dl></div>
+<h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -4617,7 +4613,8 @@ column to the input dataset with a postfix "_ts" e.g. column X is appended as X_
 def unix_to_timestamp(
     spark, idf, list_of_cols, precision="s", tz="local", output_mode="replace"
 ):
-    """
+    """Convert the number of seconds or milliseconds from unix epoch (1970-01-01 00:00:00 UTC) to a timestamp column
+    in the specified time zone.
 
     Parameters
     ----------
@@ -4643,8 +4640,6 @@ def unix_to_timestamp(
 
     Returns
     -------
-    type
-        Output Dataframe with derived column
 
     """
     tz = tz.lower()
@@ -4691,7 +4686,12 @@ def unix_to_timestamp(
 <span>def <span class="ident">window_aggregator</span></span>(<span>idf, list_of_cols, list_of_aggs, order_col, window_type='expanding', window_size='unbounded', partition_col='', output_mode='append')</span>
 </code></dt>
 <dd>
-<div class="desc"><h2 id="parameters">Parameters</h2>
+<div class="desc"><p>window_aggregator calcuates a list of aggregate metrics for all input columns over a window frame (expanding
+by default, or rolling type) ordered by the given timestamp column and partitioned by partition_col ("" by
+default, to indicate no partition).</p>
+<p>Window size needs to be provided as an integer for rolling window type. The following aggregate metrics are
+supported: count, min, max, sum, mean, median.</p>
+<h2 id="parameters">Parameters</h2>
 <p>idf :
 Input Dataframe
 list_of_cols :
@@ -4718,11 +4718,7 @@ replace", "append".
 “replace” option replaces original columns with derived column(s) with metric name as postfix.
 “append” option appends derived column(s) to the input dataset with metric name as postfix,
 e.g. "_count", "_mean". (Default value = "append")</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>type</code></dt>
-<dd>Output Dataframe with derived column(s)</dd>
-</dl></div>
+<h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -4739,7 +4735,12 @@ def window_aggregator(
     partition_col="",
     output_mode="append",
 ):
-    """
+    """window_aggregator calcuates a list of aggregate metrics for all input columns over a window frame (expanding
+    by default, or rolling type) ordered by the given timestamp column and partitioned by partition_col ("" by
+    default, to indicate no partition).
+
+    Window size needs to be provided as an integer for rolling window type. The following aggregate metrics are
+    supported: count, min, max, sum, mean, median.
 
     Parameters
     ----------
@@ -4772,8 +4773,6 @@ def window_aggregator(
 
     Returns
     -------
-    type
-        Output Dataframe with derived column(s)
 
     """
 

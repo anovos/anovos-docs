@@ -62,7 +62,7 @@ def stats_args(path, func):
     Parameters
     ----------
     path :
-
+        param func:
     func :
 
 
@@ -1070,8 +1070,9 @@ def anovos_basic_report(
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
-<p>path :</p>
-<p>func :</p>
+<p>path :
+param func:
+func :</p>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -1085,7 +1086,7 @@ def stats_args(path, func):
     Parameters
     ----------
     path :
-
+        param func:
     func :
 
 

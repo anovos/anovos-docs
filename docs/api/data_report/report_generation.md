@@ -429,10 +429,10 @@ def drift_stability_ind(
     Parameters
     ----------
     missing_recs_drift :
-
-    drift_tab :
-
+        param drift_tab:
     missing_recs_stability :
+        param stability_tab:
+    drift_tab :
 
     stability_tab :
 
@@ -4133,9 +4133,11 @@ drift_tab: "drift_statistics"
 missing_recs_stability: Missing files from the stability tab
 stability_tab:"stability_index, stabilityIndex_metrics"</p>
 <h2 id="parameters">Parameters</h2>
-<p>missing_recs_drift :</p>
-<p>drift_tab :</p>
-<p>missing_recs_stability :</p>
+<p>missing_recs_drift :
+param drift_tab:
+missing_recs_stability :
+param stability_tab:
+drift_tab :</p>
 <p>stability_tab :</p>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
@@ -4155,10 +4157,10 @@ def drift_stability_ind(
     Parameters
     ----------
     missing_recs_drift :
-
-    drift_tab :
-
+        param drift_tab:
     missing_recs_stability :
+        param stability_tab:
+    drift_tab :
 
     stability_tab :
 
