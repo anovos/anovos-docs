@@ -123,9 +123,9 @@ def check_distance_method(func=None, param="method_type"):
     Parameters
     ----------
     func
-        Default value = None)
-    param
-        Default value = "method_type")
+        (Default value = None)
+    param : str
+        (Default value = "method_type")
 
     Returns
     -------
@@ -179,9 +179,9 @@ def check_distance_method(func=None, param="method_type"):
 <div class="desc"><h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>func</code></strong></dt>
-<dd>Default value = None)</dd>
-<dt><strong><code>param</code></strong></dt>
-<dd>Default value = "method_type")</dd>
+<dd>(Default value = None)</dd>
+<dt><strong><code>param</code></strong> :&ensp;<code>str</code></dt>
+<dd>(Default value = "method_type")</dd>
 </dl>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
@@ -196,9 +196,9 @@ def check_distance_method(func=None, param="method_type"):
     Parameters
     ----------
     func
-        Default value = None)
-    param
-        Default value = "method_type")
+        (Default value = None)
+    param : str
+        (Default value = "method_type")
 
     Returns
     -------

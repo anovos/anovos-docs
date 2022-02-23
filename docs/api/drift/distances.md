@@ -16,7 +16,7 @@ def hellinger(p, q):
     Parameters
     ----------
     p
-        param q:
+
     q
 
 
@@ -33,7 +33,7 @@ def psi(p, q):
     Parameters
     ----------
     p
-        param q:
+
     q
 
 
@@ -50,7 +50,7 @@ def kl_divergence(p, q):
     Parameters
     ----------
     p
-        param q:
+
     q
 
 
@@ -68,7 +68,7 @@ def js_divergence(p, q):
     Parameters
     ----------
     p
-        param q:
+
     q
 
 
@@ -89,7 +89,7 @@ def ks(p, q):
     Parameters
     ----------
     p
-        param q:
+
     q
 
 
@@ -110,7 +110,7 @@ def ks(p, q):
 <div class="desc"><h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>p</code></strong></dt>
-<dd>param q:</dd>
+<dd>&nbsp;</dd>
 <dt><strong><code>q</code></strong></dt>
 <dd>&nbsp;</dd>
 </dl>
@@ -127,7 +127,7 @@ def hellinger(p, q):
     Parameters
     ----------
     p
-        param q:
+
     q
 
 
@@ -147,7 +147,7 @@ def hellinger(p, q):
 <div class="desc"><h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>p</code></strong></dt>
-<dd>param q:</dd>
+<dd>&nbsp;</dd>
 <dt><strong><code>q</code></strong></dt>
 <dd>&nbsp;</dd>
 </dl>
@@ -164,7 +164,7 @@ def js_divergence(p, q):
     Parameters
     ----------
     p
-        param q:
+
     q
 
 
@@ -188,7 +188,7 @@ def js_divergence(p, q):
 <div class="desc"><h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>p</code></strong></dt>
-<dd>param q:</dd>
+<dd>&nbsp;</dd>
 <dt><strong><code>q</code></strong></dt>
 <dd>&nbsp;</dd>
 </dl>
@@ -205,7 +205,7 @@ def kl_divergence(p, q):
     Parameters
     ----------
     p
-        param q:
+
     q
 
 
@@ -226,7 +226,7 @@ def kl_divergence(p, q):
 <div class="desc"><h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>p</code></strong></dt>
-<dd>param q:</dd>
+<dd>&nbsp;</dd>
 <dt><strong><code>q</code></strong></dt>
 <dd>&nbsp;</dd>
 </dl>
@@ -243,7 +243,7 @@ def ks(p, q):
     Parameters
     ----------
     p
-        param q:
+
     q
 
 
@@ -263,7 +263,7 @@ def ks(p, q):
 <div class="desc"><h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>p</code></strong></dt>
-<dd>param q:</dd>
+<dd>&nbsp;</dd>
 <dt><strong><code>q</code></strong></dt>
 <dd>&nbsp;</dd>
 </dl>
@@ -280,7 +280,7 @@ def psi(p, q):
     Parameters
     ----------
     p
-        param q:
+
     q
 
 
