@@ -417,39 +417,39 @@ def stability_index_computation(
         Spark Session
     idfs
         Variable number of input dataframes
-    list_of_cols :
+    list_of_colsOneHotEncoder
         List of numerical columns to check stability e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
         "all" can be passed to include all numerical columns for analysis.
         Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
         drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
-    drop_cols :
+    drop_colsOneHotEncoder
         List of columns to be dropped e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])
-    metric_weightages :
+    metric_weightagesOneHotEncoder
         Takes input in dictionary format with keys being the metric name - "mean","stdev","kurtosis"
         and value being the weightage of the metric (between 0 and 1). Sum of all weightages must be 1.
          (Default value = {"mean": 0.5)
-    existing_metric_path :
+    existing_metric_pathOneHotEncoder
         This argument is path for referring pre-existing metrics of historical datasets and is
         of schema [idx, attribute, mean, stdev, kurtosis].
         idx is index number of historical datasets assigned in chronological order. (Default value = "")
-    appended_metric_path :
+    appended_metric_pathOneHotEncoder
         This argument is path for saving input dataframes metrics after appending to the
         historical datasets' metrics. (Default value = "")
-    threshold :
+    thresholdOneHotEncoder
         A column is flagged if the stability index is below the threshold, which varies between 0 to 4.
         The following criteria can be used to classifiy stability_index (SI): very unstable: 0≤SI<1,
         unstable: 1≤SI<2, marginally stable: 2≤SI<3, stable: 3≤SI<3.5 and very stable: 3.5≤SI≤4. (Default value = 1)
-    print_impact :
+    print_impactOneHotEncoder
         True, False (Default value = False)
-    *idfs :
+    *idfsOneHotEncoder
 
-    "stddev": 0.3 :
+    "stddev": 0.3OneHotEncoder
 
-    "kurtosis": 0.2} :
+    "kurtosis": 0.2}OneHotEncoder
 
 
     Returns
@@ -554,21 +554,21 @@ def stability_index_computation(
 
         Parameters
         ----------
-        cv :
+        cvOneHotEncoder
             param thresholds: (Default value = [0.03)
-        0 :
+        0OneHotEncoder
             1:
-        0 :
+        0OneHotEncoder
             2:
-        0 :
+        0OneHotEncoder
             5]:
-        thresholds :
+        thresholdsOneHotEncoder
              (Default value = [0.03)
-        0.1 :
+        0.1OneHotEncoder
 
-        0.2 :
+        0.2OneHotEncoder
 
-        0.5] :
+        0.5]OneHotEncoder
 
 
         Returns
@@ -635,29 +635,29 @@ def feature_stability_estimation(
 
     Parameters
     ----------
-    spark :
+    sparkOneHotEncoder
         Spark Session
-    attribute_stats :
+    attribute_statsOneHotEncoder
         Spark dataframe. The intermediate dataframe saved by running function
         stabilityIndex_computation with schema [idx, attribute, mean, stddev, kurtosis].
         It should contain all the attributes used in argument attribute_transformation.
-    attribute_transformation :
+    attribute_transformationOneHotEncoder
         Takes input in dictionary format: each key-value combination represents one
         new feature. Each key is a string containing all the attributes involved in
         the new feature seperated by '|'. Each value is the transformation of the
         attributes in string. For example, {'X|Y|Z': 'X**2+Y/Z', 'A': 'log(A)'}
-    metric_weightages :
+    metric_weightagesOneHotEncoder
         Takes input in dictionary format with keys being the metric name - "mean","stdev","kurtosis"
         and value being the weightage of the metric (between 0 and 1). Sum of all weightages must be 1. (Default value = {"mean": 0.5)
-    threshold :
+    thresholdOneHotEncoder
         A column is flagged if the stability index is below the threshold, which varies between 0 to 4.
         The following criteria can be used to classifiy stability_index (SI): very unstable: 0≤SI<1,
         unstable: 1≤SI<2, marginally stable: 2≤SI<3, stable: 3≤SI<3.5 and very stable: 3.5≤SI≤4. (Default value = 1)
-    print_impact :
+    print_impactOneHotEncoder
         True, False (Default value = False)
-    "stddev": 0.3 :
+    "stddev": 0.3OneHotEncoder
 
-    "kurtosis": 0.2} :
+    "kurtosis": 0.2}OneHotEncoder
 
 
     Returns
@@ -670,13 +670,13 @@ def feature_stability_estimation(
 
         Parameters
         ----------
-        attributes :
+        attributesOneHotEncoder
             param transformation:
-        mean :
+        meanOneHotEncoder
             param stddev:
-        transformation :
+        transformationOneHotEncoder
 
-        stddev :
+        stddevOneHotEncoder
 
 
         Returns
@@ -795,21 +795,21 @@ def feature_stability_estimation(
 
         Parameters
         ----------
-        cv :
+        cvOneHotEncoder
             param thresholds: (Default value = [0.03)
-        0 :
+        0OneHotEncoder
             1:
-        0 :
+        0OneHotEncoder
             2:
-        0 :
+        0OneHotEncoder
             5]:
-        thresholds :
+        thresholdsOneHotEncoder
              (Default value = [0.03)
-        0.1 :
+        0.1OneHotEncoder
 
-        0.2 :
+        0.2OneHotEncoder
 
-        0.5] :
+        0.5]OneHotEncoder
 
 
         Returns
@@ -886,28 +886,30 @@ def feature_stability_estimation(
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
-<p>spark :
-Spark Session
-attribute_stats :
-Spark dataframe. The intermediate dataframe saved by running function
+<dl>
+<dt><strong><code>sparkOneHotEncoder</code></strong></dt>
+<dd>Spark Session</dd>
+<dt><strong><code>attribute_statsOneHotEncoder</code></strong></dt>
+<dd>Spark dataframe. The intermediate dataframe saved by running function
 stabilityIndex_computation with schema [idx, attribute, mean, stddev, kurtosis].
-It should contain all the attributes used in argument attribute_transformation.
-attribute_transformation :
-Takes input in dictionary format: each key-value combination represents one
+It should contain all the attributes used in argument attribute_transformation.</dd>
+<dt><strong><code>attribute_transformationOneHotEncoder</code></strong></dt>
+<dd>Takes input in dictionary format: each key-value combination represents one
 new feature. Each key is a string containing all the attributes involved in
 the new feature seperated by '|'. Each value is the transformation of the
-attributes in string. For example, {'X|Y|Z': 'X**2+Y/Z', 'A': 'log(A)'}
-metric_weightages :
-Takes input in dictionary format with keys being the metric name - "mean","stdev","kurtosis"
-and value being the weightage of the metric (between 0 and 1). Sum of all weightages must be 1. (Default value = {"mean": 0.5)
-threshold :
-A column is flagged if the stability index is below the threshold, which varies between 0 to 4.
+attributes in string. For example, {'X|Y|Z': 'X**2+Y/Z', 'A': 'log(A)'}</dd>
+<dt><strong><code>metric_weightagesOneHotEncoder</code></strong></dt>
+<dd>Takes input in dictionary format with keys being the metric name - "mean","stdev","kurtosis"
+and value being the weightage of the metric (between 0 and 1). Sum of all weightages must be 1. (Default value = {"mean": 0.5)</dd>
+<dt><strong><code>thresholdOneHotEncoder</code></strong></dt>
+<dd>A column is flagged if the stability index is below the threshold, which varies between 0 to 4.
 The following criteria can be used to classifiy stability_index (SI): very unstable: 0≤SI&lt;1,
-unstable: 1≤SI&lt;2, marginally stable: 2≤SI&lt;3, stable: 3≤SI&lt;3.5 and very stable: 3.5≤SI≤4. (Default value = 1)
-print_impact :
-True, False (Default value = False)
-"stddev": 0.3 :</p>
-<p>"kurtosis": 0.2} :</p>
+unstable: 1≤SI&lt;2, marginally stable: 2≤SI&lt;3, stable: 3≤SI&lt;3.5 and very stable: 3.5≤SI≤4. (Default value = 1)</dd>
+<dt><strong><code>print_impactOneHotEncoder</code></strong></dt>
+<dd>True, False (Default value = False)</dd>
+</dl>
+<p>"stddev": 0.3OneHotEncoder</p>
+<p>"kurtosis": 0.2}OneHotEncoder</p>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -927,29 +929,29 @@ def feature_stability_estimation(
 
     Parameters
     ----------
-    spark :
+    sparkOneHotEncoder
         Spark Session
-    attribute_stats :
+    attribute_statsOneHotEncoder
         Spark dataframe. The intermediate dataframe saved by running function
         stabilityIndex_computation with schema [idx, attribute, mean, stddev, kurtosis].
         It should contain all the attributes used in argument attribute_transformation.
-    attribute_transformation :
+    attribute_transformationOneHotEncoder
         Takes input in dictionary format: each key-value combination represents one
         new feature. Each key is a string containing all the attributes involved in
         the new feature seperated by '|'. Each value is the transformation of the
         attributes in string. For example, {'X|Y|Z': 'X**2+Y/Z', 'A': 'log(A)'}
-    metric_weightages :
+    metric_weightagesOneHotEncoder
         Takes input in dictionary format with keys being the metric name - "mean","stdev","kurtosis"
         and value being the weightage of the metric (between 0 and 1). Sum of all weightages must be 1. (Default value = {"mean": 0.5)
-    threshold :
+    thresholdOneHotEncoder
         A column is flagged if the stability index is below the threshold, which varies between 0 to 4.
         The following criteria can be used to classifiy stability_index (SI): very unstable: 0≤SI<1,
         unstable: 1≤SI<2, marginally stable: 2≤SI<3, stable: 3≤SI<3.5 and very stable: 3.5≤SI≤4. (Default value = 1)
-    print_impact :
+    print_impactOneHotEncoder
         True, False (Default value = False)
-    "stddev": 0.3 :
+    "stddev": 0.3OneHotEncoder
 
-    "kurtosis": 0.2} :
+    "kurtosis": 0.2}OneHotEncoder
 
 
     Returns
@@ -962,13 +964,13 @@ def feature_stability_estimation(
 
         Parameters
         ----------
-        attributes :
+        attributesOneHotEncoder
             param transformation:
-        mean :
+        meanOneHotEncoder
             param stddev:
-        transformation :
+        transformationOneHotEncoder
 
-        stddev :
+        stddevOneHotEncoder
 
 
         Returns
@@ -1087,21 +1089,21 @@ def feature_stability_estimation(
 
         Parameters
         ----------
-        cv :
+        cvOneHotEncoder
             param thresholds: (Default value = [0.03)
-        0 :
+        0OneHotEncoder
             1:
-        0 :
+        0OneHotEncoder
             2:
-        0 :
+        0OneHotEncoder
             5]:
-        thresholds :
+        thresholdsOneHotEncoder
              (Default value = [0.03)
-        0.1 :
+        0.1OneHotEncoder
 
-        0.2 :
+        0.2OneHotEncoder
 
-        0.5] :
+        0.5]OneHotEncoder
 
 
         Returns
@@ -1344,38 +1346,39 @@ appending to the historical datasets' metrics. - <em>threshold</em>: To flag uns
 <dd>Spark Session</dd>
 <dt><strong><code>idfs</code></strong></dt>
 <dd>Variable number of input dataframes</dd>
-</dl>
-<p>list_of_cols :
-List of numerical columns to check stability e.g., ["col1","col2"].
+<dt><strong><code>list_of_colsOneHotEncoder</code></strong></dt>
+<dd>List of numerical columns to check stability e.g., ["col1","col2"].
 Alternatively, columns can be specified in a string format,
 where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
 "all" can be passed to include all numerical columns for analysis.
 Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
-drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
-drop_cols :
-List of columns to be dropped e.g., ["col1","col2"].
+drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")</dd>
+<dt><strong><code>drop_colsOneHotEncoder</code></strong></dt>
+<dd>List of columns to be dropped e.g., ["col1","col2"].
 Alternatively, columns can be specified in a string format,
-where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])
-metric_weightages :
-Takes input in dictionary format with keys being the metric name - "mean","stdev","kurtosis"
+where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])</dd>
+<dt><strong><code>metric_weightagesOneHotEncoder</code></strong></dt>
+<dd>Takes input in dictionary format with keys being the metric name - "mean","stdev","kurtosis"
 and value being the weightage of the metric (between 0 and 1). Sum of all weightages must be 1.
-(Default value = {"mean": 0.5)
-existing_metric_path :
-This argument is path for referring pre-existing metrics of historical datasets and is
+(Default value = {"mean": 0.5)</dd>
+<dt><strong><code>existing_metric_pathOneHotEncoder</code></strong></dt>
+<dd>This argument is path for referring pre-existing metrics of historical datasets and is
 of schema [idx, attribute, mean, stdev, kurtosis].
-idx is index number of historical datasets assigned in chronological order. (Default value = "")
-appended_metric_path :
-This argument is path for saving input dataframes metrics after appending to the
-historical datasets' metrics. (Default value = "")
-threshold :
-A column is flagged if the stability index is below the threshold, which varies between 0 to 4.
+idx is index number of historical datasets assigned in chronological order. (Default value = "")</dd>
+<dt><strong><code>appended_metric_pathOneHotEncoder</code></strong></dt>
+<dd>This argument is path for saving input dataframes metrics after appending to the
+historical datasets' metrics. (Default value = "")</dd>
+<dt><strong><code>thresholdOneHotEncoder</code></strong></dt>
+<dd>A column is flagged if the stability index is below the threshold, which varies between 0 to 4.
 The following criteria can be used to classifiy stability_index (SI): very unstable: 0≤SI&lt;1,
-unstable: 1≤SI&lt;2, marginally stable: 2≤SI&lt;3, stable: 3≤SI&lt;3.5 and very stable: 3.5≤SI≤4. (Default value = 1)
-print_impact :
-True, False (Default value = False)
-*idfs :</p>
-<p>"stddev": 0.3 :</p>
-<p>"kurtosis": 0.2} :</p>
+unstable: 1≤SI&lt;2, marginally stable: 2≤SI&lt;3, stable: 3≤SI&lt;3.5 and very stable: 3.5≤SI≤4. (Default value = 1)</dd>
+<dt><strong><code>print_impactOneHotEncoder</code></strong></dt>
+<dd>True, False (Default value = False)</dd>
+<dt><strong><code>*idfsOneHotEncoder</code></strong></dt>
+<dd>&nbsp;</dd>
+</dl>
+<p>"stddev": 0.3OneHotEncoder</p>
+<p>"kurtosis": 0.2}OneHotEncoder</p>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -1511,39 +1514,39 @@ def stability_index_computation(
         Spark Session
     idfs
         Variable number of input dataframes
-    list_of_cols :
+    list_of_colsOneHotEncoder
         List of numerical columns to check stability e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
         "all" can be passed to include all numerical columns for analysis.
         Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
         drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
-    drop_cols :
+    drop_colsOneHotEncoder
         List of columns to be dropped e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])
-    metric_weightages :
+    metric_weightagesOneHotEncoder
         Takes input in dictionary format with keys being the metric name - "mean","stdev","kurtosis"
         and value being the weightage of the metric (between 0 and 1). Sum of all weightages must be 1.
          (Default value = {"mean": 0.5)
-    existing_metric_path :
+    existing_metric_pathOneHotEncoder
         This argument is path for referring pre-existing metrics of historical datasets and is
         of schema [idx, attribute, mean, stdev, kurtosis].
         idx is index number of historical datasets assigned in chronological order. (Default value = "")
-    appended_metric_path :
+    appended_metric_pathOneHotEncoder
         This argument is path for saving input dataframes metrics after appending to the
         historical datasets' metrics. (Default value = "")
-    threshold :
+    thresholdOneHotEncoder
         A column is flagged if the stability index is below the threshold, which varies between 0 to 4.
         The following criteria can be used to classifiy stability_index (SI): very unstable: 0≤SI<1,
         unstable: 1≤SI<2, marginally stable: 2≤SI<3, stable: 3≤SI<3.5 and very stable: 3.5≤SI≤4. (Default value = 1)
-    print_impact :
+    print_impactOneHotEncoder
         True, False (Default value = False)
-    *idfs :
+    *idfsOneHotEncoder
 
-    "stddev": 0.3 :
+    "stddev": 0.3OneHotEncoder
 
-    "kurtosis": 0.2} :
+    "kurtosis": 0.2}OneHotEncoder
 
 
     Returns
@@ -1648,21 +1651,21 @@ def stability_index_computation(
 
         Parameters
         ----------
-        cv :
+        cvOneHotEncoder
             param thresholds: (Default value = [0.03)
-        0 :
+        0OneHotEncoder
             1:
-        0 :
+        0OneHotEncoder
             2:
-        0 :
+        0OneHotEncoder
             5]:
-        thresholds :
+        thresholdsOneHotEncoder
              (Default value = [0.03)
-        0.1 :
+        0.1OneHotEncoder
 
-        0.2 :
+        0.2OneHotEncoder
 
-        0.5] :
+        0.5]OneHotEncoder
 
 
         Returns
