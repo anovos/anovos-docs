@@ -16,7 +16,7 @@ def hellinger(p, q):
     Parameters
     ----------
     p :
-
+        param q:
     q :
 
 
@@ -33,7 +33,7 @@ def psi(p, q):
     Parameters
     ----------
     p :
-
+        param q:
     q :
 
 
@@ -50,7 +50,7 @@ def kl_divergence(p, q):
     Parameters
     ----------
     p :
-
+        param q:
     q :
 
 
@@ -68,7 +68,7 @@ def js_divergence(p, q):
     Parameters
     ----------
     p :
-
+        param q:
     q :
 
 
@@ -89,7 +89,7 @@ def ks(p, q):
     Parameters
     ----------
     p :
-
+        param q:
     q :
 
 
@@ -108,8 +108,9 @@ def ks(p, q):
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
-<p>p :</p>
-<p>q :</p>
+<p>p :
+param q:
+q :</p>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -123,7 +124,7 @@ def hellinger(p, q):
     Parameters
     ----------
     p :
-
+        param q:
     q :
 
 
@@ -141,8 +142,9 @@ def hellinger(p, q):
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
-<p>p :</p>
-<p>q :</p>
+<p>p :
+param q:
+q :</p>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -156,7 +158,7 @@ def js_divergence(p, q):
     Parameters
     ----------
     p :
-
+        param q:
     q :
 
 
@@ -178,8 +180,9 @@ def js_divergence(p, q):
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
-<p>p :</p>
-<p>q :</p>
+<p>p :
+param q:
+q :</p>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -193,7 +196,7 @@ def kl_divergence(p, q):
     Parameters
     ----------
     p :
-
+        param q:
     q :
 
 
@@ -212,8 +215,9 @@ def kl_divergence(p, q):
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
-<p>p :</p>
-<p>q :</p>
+<p>p :
+param q:
+q :</p>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -227,7 +231,7 @@ def ks(p, q):
     Parameters
     ----------
     p :
-
+        param q:
     q :
 
 
@@ -245,8 +249,9 @@ def ks(p, q):
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
-<p>p :</p>
-<p>q :</p>
+<p>p :
+param q:
+q :</p>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -260,7 +265,7 @@ def psi(p, q):
     Parameters
     ----------
     p :
-
+        param q:
     q :
 
 

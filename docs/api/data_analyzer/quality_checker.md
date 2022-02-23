@@ -1,4 +1,30 @@
 # <code>quality_checker</code>
+<p>This submodule focuses on assessing the data quality at both row-level and column-level and also provides an
+appropriate treatment option to fix quality issues. Columns subjected to this analysis can be controlled by the right
+combination of arguments - list_of_cols and drop_cols. All functions have the following arguments:</p>
+<ul>
+<li><strong>idf</strong>: Input dataframe - <strong>list_of_cols</strong>: This argument, in a list format, is used to specify the columns
+subjected to the analysis in the input dataframe. Instead of a list, columns can be specified in a single text format
+where different column names are separated by pipe delimiter “|”. The user can also use “all” as an input to this
+argument to consider all columns. This is super useful instead of specifying all column names manually. -
+<strong>drop_cols</strong>: In a list format, this argument is used to specify the columns that need to be dropped from
+list_of_cols. Instead of list, columns can be specified in a single text format where different column names are
+separated by pipe delimiter “|”. It is most useful when coupled with the “all” value of list_of_cols, when we need to
+consider all columns except a few handful of them. - <strong>print_impact</strong>: This argument is to print out the statistics.</li>
+</ul>
+<p>At the row level, the following checks are done:</p>
+<ul>
+<li>duplicate_detection</li>
+<li>nullRows_detection</li>
+</ul>
+<p>At the column level, the following checks are done:</p>
+<ul>
+<li>nullColumns_detection</li>
+<li>outlier_detection</li>
+<li>IDness_detection</li>
+<li>biasedness_detection</li>
+<li>invalidEntries_detection</li>
+</ul>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -6,6 +32,33 @@
 <pre>
 ```python
 # coding=utf-8
+"""This submodule focuses on assessing the data quality at both row-level and column-level and also provides an
+appropriate treatment option to fix quality issues. Columns subjected to this analysis can be controlled by the right
+combination of arguments - list_of_cols and drop_cols. All functions have the following arguments:
+
+- **idf**: Input dataframe - **list_of_cols**: This argument, in a list format, is used to specify the columns
+subjected to the analysis in the input dataframe. Instead of a list, columns can be specified in a single text format
+where different column names are separated by pipe delimiter “|”. The user can also use “all” as an input to this
+argument to consider all columns. This is super useful instead of specifying all column names manually. -
+**drop_cols**: In a list format, this argument is used to specify the columns that need to be dropped from
+list_of_cols. Instead of list, columns can be specified in a single text format where different column names are
+separated by pipe delimiter “|”. It is most useful when coupled with the “all” value of list_of_cols, when we need to
+consider all columns except a few handful of them. - **print_impact**: This argument is to print out the statistics.
+
+At the row level, the following checks are done:
+
+- duplicate_detection
+- nullRows_detection
+
+At the column level, the following checks are done:
+
+- nullColumns_detection
+- outlier_detection
+- IDness_detection
+- biasedness_detection
+- invalidEntries_detection
+
+"""
 import re
 import warnings
 
@@ -35,7 +88,12 @@ from anovos.shared.utils import (
 def duplicate_detection(
     spark, idf, list_of_cols="all", drop_cols=[], treatment=False, print_impact=False
 ):
-    """
+    """As the name implies, this function detects duplication in the input dataset. This means, for a pair of
+    duplicate rows, the values in each column coincide. Duplication check is confined to the list of columns passed
+    in the arguments. As part of treatment, duplicated rows are removed. This function returns two dataframes in
+    tuple format; the 1st dataframe is the input dataset after deduplication (if treated).  The 2nd dataframe is of
+    schema – metric, value and contains the total number of rows and number of unique rows.
+
 
     Parameters
     ----------
@@ -61,11 +119,6 @@ def duplicate_detection(
 
     Returns
     -------
-    type
-        Output Dataframe, Metric Dataframe)
-        Output Dataframe is de-duplicated dataframe if treated, else original input dataframe.
-        Metric Dataframe is of schema [metric, value] and contains metrics - number of rows, number of unique rows,
-        number of duplicate rows and percentage of duplicate rows in total.
 
     """
     if list_of_cols == "all":
@@ -120,7 +173,22 @@ def nullRows_detection(
     treatment_threshold=0.8,
     print_impact=False,
 ):
-    """
+    """This function inspects the row quality and computes the number of columns that are missing for a row. This
+    metric is further aggregated to check how many columns are missing for how many rows (also at % level). Intuition
+    is if too many columns are missing for a row, removing it from the modeling may give better results than relying
+    on its imputed values. Therefore as part of the treatment, rows with missing columns above the specified
+    threshold are removed. This function returns two dataframes in tuple format; the 1st dataframe is the input
+    dataset after filtering rows with a high number of missing columns (if treated). The 2nd dataframe is of schema –
+    null_cols_count, row_count, row_pct, flagged.
+
+    | null_cols_count | row_count | row_pct | flagged |
+    |-----------------|-----------|---------|---------|
+    | 5               | 11        | 3.0E-4  | 0       |
+    | 7               | 1306      | 0.0401  | 1       |
+
+
+    Interpretation: 1306 rows (4.01% of total rows) have 7 missing columns and flagged for are removal because
+    null\_cols\_count is above the threshold.
 
     Parameters
     ----------
@@ -152,13 +220,6 @@ def nullRows_detection(
 
     Returns
     -------
-    type
-        Output Dataframe, Metric Dataframe)
-        Output Dataframe is the dataframe after row removal if treated, else original input dataframe.
-        Metric Dataframe is of schema [null_cols_count, row_count, row_pct, flagged/treated]. null_cols_count is defined as
-        no. of missing columns in a row. row_count is no. of rows with null_cols_count missing columns.
-        row_pct is row_count divided by number of rows. flagged/treated is 1 if null_cols_count is more than
-        (threshold  X Number of Columns), else 0.
 
     """
 
@@ -248,7 +309,19 @@ def nullColumns_detection(
     stats_mode={},
     print_impact=False,
 ):
-    """
+    """This function inspects the column quality and computes the number of rows that are missing for a column. This
+    function also leverages statistics computed as part of the State Generator module. Statistics are not computed
+    twice if already available.
+
+    As part of treatments, it currently supports 3 methods – Mean Median Mode (MMM), row_removal or column_removal (
+    more methods to be added soon). MMM replaces null value with the measure of central tendency (mode for
+    categorical features and mean/median for numerical features). row_removal removes all rows with any missing value
+    (output of this treatment is same as nullRows_detection with treatment_threshold of 0). column_removal remove a
+    column if %rows with a missing value is above treatment_threshold.
+
+    This function returns two dataframes in tuple format – 1st dataframe is input dataset after imputation (if
+    treated else the original dataset) and  2nd dataframe is of schema – attribute, missing_count, missing_pct.
+
 
     Parameters
     ----------
@@ -307,15 +380,10 @@ def nullColumns_detection(
         to read pre-saved statistics on most frequently seen values i.e. if measures_of_centralTendency or
         mode_computation (data_analyzer.stats_generator module) has been computed & saved before. (Default value = {})
     print_impact :
-         (Default value = False)
+        Default value = False)
 
     Returns
     -------
-    type
-        Output Dataframe, Metric Dataframe)
-        Output Dataframe is the imputed dataframe if treated, else original input dataframe.
-        Metric Dataframe is of schema [attribute, missing_count, missing_pct]. missing_count is number of rows
-        with null values for an attribute and missing_pct is missing_count divided by number of rows.
 
     """
     if stats_missing == {}:
@@ -500,7 +568,35 @@ def outlier_detection(
     stats_unique={},
     print_impact=False,
 ):
-    """
+    """In Machine Learning, outlier detection identifies values that deviate drastically from the rest of the
+    attribute values. An outlier may be caused simply by chance, measurement error, or inherent heavy-tailed
+    distribution. This function identifies extreme values in both directions (or any direction provided by the user
+    via detection_side argument). Outlier is identified by 3 different methodologies and tagged an outlier only if it
+    is validated by at least 2 methods (can be changed by the user via min_validation under detection_configs
+    argument).
+
+    - **Percentile Method**: In this methodology, a value higher than a certain (default 95th) percentile value is
+    considered as an outlier. Similarly, a value lower than a certain (default 5th) percentile value is considered as
+    an outlier.
+
+    - **Standard Deviation Method**: In this methodology, if a value is a certain number of standard deviations (
+    default 3) away from the mean, it is identified as an outlier.
+
+    - **Interquartile Range (IQR) Method**: A value below Q1 – 1.5 IQR or above Q3 + 1.5 IQR are identified as
+    outliers, where Q1 is in first quantile/25th percentile, Q3 is in third quantile/75th percentile, and IQR is the
+    difference between third quantile & first quantile.
+
+    This function also leverages statistics which were computed as the part of the State Generator module so that
+    statistics are not computed twice if already available.
+
+    As part of treatments available, outlier values can be replaced by null so that it can be imputed by a reliable
+    imputation methodology (null_replacement). It can also be replaced by maximum or minimum permissible by above
+    methodologies (value_replacement). Lastly, rows can be removed if it is identified with any outlier (row_removal).
+
+    This function returns two dataframes in tuple format – 1st dataframe is input dataset after treating outlier (the
+    original dataset if no treatment) and  2nd dataframe is of schema – attribute, lower_outliers, upper_outliers. If
+    outliers are checked only for upper end, then lower_outliers column will be shown all zero. Similarly if checked
+    only for lower end, then upper_outliers will be zero for all attributes.
 
     Parameters
     ----------
@@ -580,11 +676,6 @@ def outlier_detection(
 
     Returns
     -------
-    type
-        Output Dataframe, Metric Dataframe)
-        Output Dataframe is the imputed dataframe if treated, else original input dataframe.
-        Metric Dataframe is of schema [attribute, lower_outliers, upper_outliers]. lower_outliers is no. of outliers
-        found in the lower spectrum of the attribute range and upper_outliers is outlier count in the upper spectrum.
 
     """
 
@@ -858,7 +949,14 @@ def IDness_detection(
     stats_unique={},
     print_impact=False,
 ):
-    """
+    """IDness of an attribute is defined as the ratio of number of unique values seen in an attribute by number of
+    non-null rows. It varies between 0 to 100% where IDness of 100% means there are as many unique values as number
+    of rows (primary key in the input dataset). IDness is computed only for categorical features. This function
+    leverages the statistics from Measures of Cardinality function and flag the columns if IDness is above a certain
+    threshold. Such columns can be deleted from the modelling analysis if directed for a treatment.
+
+    This function returns two dataframes in tuple format – 1st dataframe is input dataset after removing high IDness
+    columns (the original dataset if no treatment) and  2nd dataframe is of schema – attribute, , unique_values, IDness.
 
     Parameters
     ----------
@@ -894,12 +992,6 @@ def IDness_detection(
 
     Returns
     -------
-    type
-        Output Dataframe, Metric Dataframe)
-        Output Dataframe is the dataframe after column removal if treated, else original input dataframe.
-        Metric Dataframe is of schema [attribute, unique_values, IDness, flagged/treated]. unique_values is no. of distinct
-        values in a column, IDness is unique_values divided by no. of non-null values. A column is flagged 1
-        if IDness is above the threshold, else 0.
 
     """
 
@@ -984,7 +1076,15 @@ def biasedness_detection(
     stats_mode={},
     print_impact=False,
 ):
-    """
+    """This function flags column if they are biased or skewed towards one specific value and is equivalent to
+    mode_pct computation from Measures of Central Tendency i.e. number of rows with mode value (most frequently seen
+    value) divided by number of non-null values. It varies between 0 to 100% where biasedness of 100% means there is
+    only a single value (other than null). The function flags a column if its biasedness is above a certain
+    threshold. Such columns can be deleted from the modelling analysis, if required.
+
+    This function returns two dataframes in tuple format – 1st dataframe is input dataset after removing high biased
+    columns (the original dataset if no treatment) and  2nd dataframe is of schema – attribute, mode, mode_pct.
+
 
     Parameters
     ----------
@@ -1020,12 +1120,6 @@ def biasedness_detection(
 
     Returns
     -------
-    type
-        Output Dataframe, Metric Dataframe)
-        Output Dataframe is the dataframe after column removal if treated, else original input dataframe.
-        Metric Dataframe is of schema [attribute, mode, mode_rows, mode_pct, flagged/treated]. mode is the most frequently seen value,
-        mode_rows is number of rows with mode value and mode_pct is number of rows with mode value divided by non-null values.
-        A column is flagged 1 if mode_pct is above the threshold else 0.
 
     """
 
@@ -1137,7 +1231,28 @@ def invalidEntries_detection(
     output_mode="replace",
     print_impact=False,
 ):
-    """
+    """This function checks for certain suspicious patterns in attributes’ values. These suspicious values can be
+    replaced as null and treated as missing. Patterns that are considered for this quality check:
+
+    - Missing Values: The function checks for all text strings which directly or indirectly indicate the missing
+    value in an attribute. Currently, we check the following string values - '', ' ', 'nan', 'null', 'na', 'inf',
+    'n/a', 'not defined', 'none', 'undefined', 'blank'. The function also check for special characters such as ?, *,
+    to name a few.
+
+    - Repetitive Characters: Certain attributes’ values with repetitive characters may be default value or system
+    error, rather than being a legit value etc xx, zzzzz, 99999 etc. Such values are flagged for the user to take an
+    appropriate action. There may be certain false positive which are legit values.
+
+    - Consecutive Characters: Similar to repetitive characters, consecutive characters (at least 3 characters long)
+    such as abc, 1234 etc may not be legit values, and hence flagged. There may be certain false positive which are
+    legit values.
+
+    This function returns two dataframes in tuple format – 1st dataframe is input dataset after replacing flagged
+    values as null (or the original dataset if no treatment) and  2nd dataframe is of schema – attribute,
+    invalid_entries, invalid_count, invalid_pct. All potential invalid values (separated by delimiter pipe “|”) are
+    shown under invalid_entries column. Total number of rows impacted by these entries for each attribute is shown
+    under invalid_count. invalid_pct is invalid_count divided by number of rows
+
 
     Parameters
     ----------
@@ -1202,12 +1317,6 @@ def invalidEntries_detection(
 
     Returns
     -------
-    type
-        Output Dataframe, Metric Dataframe)
-        Output Dataframe is the dataframe after treatment if applicable, else original input dataframe.
-        Metric Dataframe is of schema [attribute, invalid_entries, invalid_count, invalid_pct].
-        invalid_entries are all potential invalid values (separated by delimiter pipe “|”), invalid_count is no.
-        of rows which are impacted by invalid entries and invalid_pct is invalid_count divided by no of rows.
 
     """
 
@@ -1486,7 +1595,15 @@ def invalidEntries_detection(
 <span>def <span class="ident">IDness_detection</span></span>(<span>spark, idf, list_of_cols='all', drop_cols=[], treatment=False, treatment_threshold=0.8, stats_unique={}, print_impact=False)</span>
 </code></dt>
 <dd>
-<div class="desc"><h2 id="parameters">Parameters</h2>
+<div class="desc"><p>IDness of an attribute is defined as the ratio of number of unique values seen in an attribute by number of
+non-null rows. It varies between 0 to 100% where IDness of 100% means there are as many unique values as number
+of rows (primary key in the input dataset). IDness is computed only for categorical features. This function
+leverages the statistics from Measures of Cardinality function and flag the columns if IDness is above a certain
+threshold. Such columns can be deleted from the modelling analysis if directed for a treatment.</p>
+<p>This function returns two dataframes in tuple format – 1st dataframe is input dataset after removing high IDness
+columns (the original dataset if no treatment) and
+2nd dataframe is of schema – attribute, , unique_values, IDness.</p>
+<h2 id="parameters">Parameters</h2>
 <p>spark :
 Spark Session
 idf :
@@ -1516,15 +1633,7 @@ to read pre-saved statistics on unique value count i.e. if measures_of_cardinali
 uniqueCount_computation (data_analyzer.stats_generator module) has been computed &amp; saved before. (Default value = {})
 print_impact :
 True,False. (Default value = False)</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>type</code></dt>
-<dd>Output Dataframe, Metric Dataframe)
-Output Dataframe is the dataframe after column removal if treated, else original input dataframe.
-Metric Dataframe is of schema [attribute, unique_values, IDness, flagged/treated]. unique_values is no. of distinct
-values in a column, IDness is unique_values divided by no. of non-null values. A column is flagged 1
-if IDness is above the threshold, else 0.</dd>
-</dl></div>
+<h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1541,7 +1650,14 @@ def IDness_detection(
     stats_unique={},
     print_impact=False,
 ):
-    """
+    """IDness of an attribute is defined as the ratio of number of unique values seen in an attribute by number of
+    non-null rows. It varies between 0 to 100% where IDness of 100% means there are as many unique values as number
+    of rows (primary key in the input dataset). IDness is computed only for categorical features. This function
+    leverages the statistics from Measures of Cardinality function and flag the columns if IDness is above a certain
+    threshold. Such columns can be deleted from the modelling analysis if directed for a treatment.
+
+    This function returns two dataframes in tuple format – 1st dataframe is input dataset after removing high IDness
+    columns (the original dataset if no treatment) and  2nd dataframe is of schema – attribute, , unique_values, IDness.
 
     Parameters
     ----------
@@ -1577,12 +1693,6 @@ def IDness_detection(
 
     Returns
     -------
-    type
-        Output Dataframe, Metric Dataframe)
-        Output Dataframe is the dataframe after column removal if treated, else original input dataframe.
-        Metric Dataframe is of schema [attribute, unique_values, IDness, flagged/treated]. unique_values is no. of distinct
-        values in a column, IDness is unique_values divided by no. of non-null values. A column is flagged 1
-        if IDness is above the threshold, else 0.
 
     """
 
@@ -1663,7 +1773,15 @@ def IDness_detection(
 <span>def <span class="ident">biasedness_detection</span></span>(<span>spark, idf, list_of_cols='all', drop_cols=[], treatment=False, treatment_threshold=0.8, stats_mode={}, print_impact=False)</span>
 </code></dt>
 <dd>
-<div class="desc"><h2 id="parameters">Parameters</h2>
+<div class="desc"><p>This function flags column if they are biased or skewed towards one specific value and is equivalent to
+mode_pct computation from Measures of Central Tendency i.e. number of rows with mode value (most frequently seen
+value) divided by number of non-null values. It varies between 0 to 100% where biasedness of 100% means there is
+only a single value (other than null). The function flags a column if its biasedness is above a certain
+threshold. Such columns can be deleted from the modelling analysis, if required.</p>
+<p>This function returns two dataframes in tuple format – 1st dataframe is input dataset after removing high biased
+columns (the original dataset if no treatment) and
+2nd dataframe is of schema – attribute, mode, mode_pct.</p>
+<h2 id="parameters">Parameters</h2>
 <p>spark :
 Spark Session
 idf :
@@ -1693,15 +1811,7 @@ to read pre-saved statistics on most frequently seen values i.e. if measures_of_
 mode_computation (data_analyzer.stats_generator module) has been computed &amp; saved before. (Default value = {})
 print_impact :
 True, False (Default value = False)</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>type</code></dt>
-<dd>Output Dataframe, Metric Dataframe)
-Output Dataframe is the dataframe after column removal if treated, else original input dataframe.
-Metric Dataframe is of schema [attribute, mode, mode_rows, mode_pct, flagged/treated]. mode is the most frequently seen value,
-mode_rows is number of rows with mode value and mode_pct is number of rows with mode value divided by non-null values.
-A column is flagged 1 if mode_pct is above the threshold else 0.</dd>
-</dl></div>
+<h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1718,7 +1828,15 @@ def biasedness_detection(
     stats_mode={},
     print_impact=False,
 ):
-    """
+    """This function flags column if they are biased or skewed towards one specific value and is equivalent to
+    mode_pct computation from Measures of Central Tendency i.e. number of rows with mode value (most frequently seen
+    value) divided by number of non-null values. It varies between 0 to 100% where biasedness of 100% means there is
+    only a single value (other than null). The function flags a column if its biasedness is above a certain
+    threshold. Such columns can be deleted from the modelling analysis, if required.
+
+    This function returns two dataframes in tuple format – 1st dataframe is input dataset after removing high biased
+    columns (the original dataset if no treatment) and  2nd dataframe is of schema – attribute, mode, mode_pct.
+
 
     Parameters
     ----------
@@ -1754,12 +1872,6 @@ def biasedness_detection(
 
     Returns
     -------
-    type
-        Output Dataframe, Metric Dataframe)
-        Output Dataframe is the dataframe after column removal if treated, else original input dataframe.
-        Metric Dataframe is of schema [attribute, mode, mode_rows, mode_pct, flagged/treated]. mode is the most frequently seen value,
-        mode_rows is number of rows with mode value and mode_pct is number of rows with mode value divided by non-null values.
-        A column is flagged 1 if mode_pct is above the threshold else 0.
 
     """
 
@@ -1859,7 +1971,13 @@ def biasedness_detection(
 <span>def <span class="ident">duplicate_detection</span></span>(<span>spark, idf, list_of_cols='all', drop_cols=[], treatment=False, print_impact=False)</span>
 </code></dt>
 <dd>
-<div class="desc"><h2 id="parameters">Parameters</h2>
+<div class="desc"><p>As the name implies, this function detects duplication in the input dataset. This means, for a pair of
+duplicate rows, the values in each column coincide. Duplication check is confined to the list of columns passed
+in the arguments. As part of treatment, duplicated rows are removed. This function returns two dataframes in
+tuple format; the 1st dataframe is the input dataset after deduplication (if treated).
+The 2nd dataframe is of
+schema – metric, value and contains the total number of rows and number of unique rows.</p>
+<h2 id="parameters">Parameters</h2>
 <p>spark :
 Spark Session
 idf :
@@ -1879,14 +1997,7 @@ treatment :
 Boolean argument – True or False. If True, duplicate rows are removed from the input dataframe. (Default value = False)
 print_impact :
 True, False (Default value = False)</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>type</code></dt>
-<dd>Output Dataframe, Metric Dataframe)
-Output Dataframe is de-duplicated dataframe if treated, else original input dataframe.
-Metric Dataframe is of schema [metric, value] and contains metrics - number of rows, number of unique rows,
-number of duplicate rows and percentage of duplicate rows in total.</dd>
-</dl></div>
+<h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1896,7 +2007,12 @@ number of duplicate rows and percentage of duplicate rows in total.</dd>
 def duplicate_detection(
     spark, idf, list_of_cols="all", drop_cols=[], treatment=False, print_impact=False
 ):
-    """
+    """As the name implies, this function detects duplication in the input dataset. This means, for a pair of
+    duplicate rows, the values in each column coincide. Duplication check is confined to the list of columns passed
+    in the arguments. As part of treatment, duplicated rows are removed. This function returns two dataframes in
+    tuple format; the 1st dataframe is the input dataset after deduplication (if treated).  The 2nd dataframe is of
+    schema – metric, value and contains the total number of rows and number of unique rows.
+
 
     Parameters
     ----------
@@ -1922,11 +2038,6 @@ def duplicate_detection(
 
     Returns
     -------
-    type
-        Output Dataframe, Metric Dataframe)
-        Output Dataframe is de-duplicated dataframe if treated, else original input dataframe.
-        Metric Dataframe is of schema [metric, value] and contains metrics - number of rows, number of unique rows,
-        number of duplicate rows and percentage of duplicate rows in total.
 
     """
     if list_of_cols == "all":
@@ -1978,7 +2089,33 @@ def duplicate_detection(
 <span>def <span class="ident">invalidEntries_detection</span></span>(<span>spark, idf, list_of_cols='all', drop_cols=[], detection_type='auto', invalid_entries=[], valid_entries=[], partial_match=False, treatment=False, treatment_method='null_replacement', treatment_configs={}, stats_missing={}, stats_unique={}, stats_mode={}, output_mode='replace', print_impact=False)</span>
 </code></dt>
 <dd>
-<div class="desc"><h2 id="parameters">Parameters</h2>
+<div class="desc"><p>This function checks for certain suspicious patterns in attributes’ values. These suspicious values can be
+replaced as null and treated as missing. Patterns that are considered for this quality check:</p>
+<ul>
+<li>
+<p>Missing Values: The function checks for all text strings which directly or indirectly indicate the missing
+value in an attribute. Currently, we check the following string values - '', ' ', 'nan', 'null', 'na', 'inf',
+'n/a', 'not defined', 'none', 'undefined', 'blank'. The function also check for special characters such as ?, *,
+to name a few.</p>
+</li>
+<li>
+<p>Repetitive Characters: Certain attributes’ values with repetitive characters may be default value or system
+error, rather than being a legit value etc xx, zzzzz, 99999 etc. Such values are flagged for the user to take an
+appropriate action. There may be certain false positive which are legit values.</p>
+</li>
+<li>
+<p>Consecutive Characters: Similar to repetitive characters, consecutive characters (at least 3 characters long)
+such as abc, 1234 etc may not be legit values, and hence flagged. There may be certain false positive which are
+legit values.</p>
+</li>
+</ul>
+<p>This function returns two dataframes in tuple format – 1st dataframe is input dataset after replacing flagged
+values as null (or the original dataset if no treatment) and
+2nd dataframe is of schema – attribute,
+invalid_entries, invalid_count, invalid_pct. All potential invalid values (separated by delimiter pipe “|”) are
+shown under invalid_entries column. Total number of rows impacted by these entries for each attribute is shown
+under invalid_count. invalid_pct is invalid_count divided by number of rows</p>
+<h2 id="parameters">Parameters</h2>
 <p>spark :
 Spark Session
 idf :
@@ -2037,15 +2174,7 @@ replace", "append".
 column to the input dataset with a postfix "_invalid" e.g. column X is appended as X_invalid. (Default value = "replace")
 print_impact :
 True, False. (Default value = False)</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>type</code></dt>
-<dd>Output Dataframe, Metric Dataframe)
-Output Dataframe is the dataframe after treatment if applicable, else original input dataframe.
-Metric Dataframe is of schema [attribute, invalid_entries, invalid_count, invalid_pct].
-invalid_entries are all potential invalid values (separated by delimiter pipe “|”), invalid_count is no.
-of rows which are impacted by invalid entries and invalid_pct is invalid_count divided by no of rows.</dd>
-</dl></div>
+<h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2070,7 +2199,28 @@ def invalidEntries_detection(
     output_mode="replace",
     print_impact=False,
 ):
-    """
+    """This function checks for certain suspicious patterns in attributes’ values. These suspicious values can be
+    replaced as null and treated as missing. Patterns that are considered for this quality check:
+
+    - Missing Values: The function checks for all text strings which directly or indirectly indicate the missing
+    value in an attribute. Currently, we check the following string values - '', ' ', 'nan', 'null', 'na', 'inf',
+    'n/a', 'not defined', 'none', 'undefined', 'blank'. The function also check for special characters such as ?, *,
+    to name a few.
+
+    - Repetitive Characters: Certain attributes’ values with repetitive characters may be default value or system
+    error, rather than being a legit value etc xx, zzzzz, 99999 etc. Such values are flagged for the user to take an
+    appropriate action. There may be certain false positive which are legit values.
+
+    - Consecutive Characters: Similar to repetitive characters, consecutive characters (at least 3 characters long)
+    such as abc, 1234 etc may not be legit values, and hence flagged. There may be certain false positive which are
+    legit values.
+
+    This function returns two dataframes in tuple format – 1st dataframe is input dataset after replacing flagged
+    values as null (or the original dataset if no treatment) and  2nd dataframe is of schema – attribute,
+    invalid_entries, invalid_count, invalid_pct. All potential invalid values (separated by delimiter pipe “|”) are
+    shown under invalid_entries column. Total number of rows impacted by these entries for each attribute is shown
+    under invalid_count. invalid_pct is invalid_count divided by number of rows
+
 
     Parameters
     ----------
@@ -2135,12 +2285,6 @@ def invalidEntries_detection(
 
     Returns
     -------
-    type
-        Output Dataframe, Metric Dataframe)
-        Output Dataframe is the dataframe after treatment if applicable, else original input dataframe.
-        Metric Dataframe is of schema [attribute, invalid_entries, invalid_count, invalid_pct].
-        invalid_entries are all potential invalid values (separated by delimiter pipe “|”), invalid_count is no.
-        of rows which are impacted by invalid entries and invalid_pct is invalid_count divided by no of rows.
 
     """
 
@@ -2418,7 +2562,18 @@ def invalidEntries_detection(
 <span>def <span class="ident">nullColumns_detection</span></span>(<span>spark, idf, list_of_cols='missing', drop_cols=[], treatment=False, treatment_method='row_removal', treatment_configs={}, stats_missing={}, stats_unique={}, stats_mode={}, print_impact=False)</span>
 </code></dt>
 <dd>
-<div class="desc"><h2 id="parameters">Parameters</h2>
+<div class="desc"><p>This function inspects the column quality and computes the number of rows that are missing for a column. This
+function also leverages statistics computed as part of the State Generator module. Statistics are not computed
+twice if already available.</p>
+<p>As part of treatments, it currently supports 3 methods – Mean Median Mode (MMM), row_removal or column_removal (
+more methods to be added soon). MMM replaces null value with the measure of central tendency (mode for
+categorical features and mean/median for numerical features). row_removal removes all rows with any missing value
+(output of this treatment is same as nullRows_detection with treatment_threshold of 0). column_removal remove a
+column if %rows with a missing value is above treatment_threshold.</p>
+<p>This function returns two dataframes in tuple format – 1st dataframe is input dataset after imputation (if
+treated else the original dataset) and
+2nd dataframe is of schema – attribute, missing_count, missing_pct.</p>
+<h2 id="parameters">Parameters</h2>
 <p>spark :
 Spark Session
 idf :
@@ -2474,15 +2629,8 @@ Takes arguments for read_dataset (data_ingest module) function in a dictionary f
 to read pre-saved statistics on most frequently seen values i.e. if measures_of_centralTendency or
 mode_computation (data_analyzer.stats_generator module) has been computed &amp; saved before. (Default value = {})
 print_impact :
-(Default value = False)</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>type</code></dt>
-<dd>Output Dataframe, Metric Dataframe)
-Output Dataframe is the imputed dataframe if treated, else original input dataframe.
-Metric Dataframe is of schema [attribute, missing_count, missing_pct]. missing_count is number of rows
-with null values for an attribute and missing_pct is missing_count divided by number of rows.</dd>
-</dl></div>
+Default value = False)</p>
+<h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2502,7 +2650,19 @@ def nullColumns_detection(
     stats_mode={},
     print_impact=False,
 ):
-    """
+    """This function inspects the column quality and computes the number of rows that are missing for a column. This
+    function also leverages statistics computed as part of the State Generator module. Statistics are not computed
+    twice if already available.
+
+    As part of treatments, it currently supports 3 methods – Mean Median Mode (MMM), row_removal or column_removal (
+    more methods to be added soon). MMM replaces null value with the measure of central tendency (mode for
+    categorical features and mean/median for numerical features). row_removal removes all rows with any missing value
+    (output of this treatment is same as nullRows_detection with treatment_threshold of 0). column_removal remove a
+    column if %rows with a missing value is above treatment_threshold.
+
+    This function returns two dataframes in tuple format – 1st dataframe is input dataset after imputation (if
+    treated else the original dataset) and  2nd dataframe is of schema – attribute, missing_count, missing_pct.
+
 
     Parameters
     ----------
@@ -2561,15 +2721,10 @@ def nullColumns_detection(
         to read pre-saved statistics on most frequently seen values i.e. if measures_of_centralTendency or
         mode_computation (data_analyzer.stats_generator module) has been computed & saved before. (Default value = {})
     print_impact :
-         (Default value = False)
+        Default value = False)
 
     Returns
     -------
-    type
-        Output Dataframe, Metric Dataframe)
-        Output Dataframe is the imputed dataframe if treated, else original input dataframe.
-        Metric Dataframe is of schema [attribute, missing_count, missing_pct]. missing_count is number of rows
-        with null values for an attribute and missing_pct is missing_count divided by number of rows.
 
     """
     if stats_missing == {}:
@@ -2737,7 +2892,40 @@ def nullColumns_detection(
 <span>def <span class="ident">nullRows_detection</span></span>(<span>spark, idf, list_of_cols='all', drop_cols=[], treatment=False, treatment_threshold=0.8, print_impact=False)</span>
 </code></dt>
 <dd>
-<div class="desc"><h2 id="parameters">Parameters</h2>
+<div class="desc"><p>This function inspects the row quality and computes the number of columns that are missing for a row. This
+metric is further aggregated to check how many columns are missing for how many rows (also at % level). Intuition
+is if too many columns are missing for a row, removing it from the modeling may give better results than relying
+on its imputed values. Therefore as part of the treatment, rows with missing columns above the specified
+threshold are removed. This function returns two dataframes in tuple format; the 1st dataframe is the input
+dataset after filtering rows with a high number of missing columns (if treated). The 2nd dataframe is of schema –
+null_cols_count, row_count, row_pct, flagged.</p>
+<table>
+<thead>
+<tr>
+<th>null_cols_count</th>
+<th>row_count</th>
+<th>row_pct</th>
+<th>flagged</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>5</td>
+<td>11</td>
+<td>3.0E-4</td>
+<td>0</td>
+</tr>
+<tr>
+<td>7</td>
+<td>1306</td>
+<td>0.0401</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<p>Interpretation: 1306 rows (4.01% of total rows) have 7 missing columns and flagged for are removal because
+null_cols_count is above the threshold.</p>
+<h2 id="parameters">Parameters</h2>
 <p>spark :
 Spark Session
 idf :
@@ -2763,17 +2951,7 @@ There is no row removal if the threshold is 1.0. And if the threshold is 0, all 
 null value are removed. (Default value = 0.8)
 print_impact :
 True, False. (Default value = False)</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>type</code></dt>
-<dd>Output Dataframe, Metric Dataframe)
-Output Dataframe is the dataframe after row removal if treated, else original input dataframe.
-Metric Dataframe is of schema [null_cols_count, row_count, row_pct, flagged/treated]. null_cols_count is defined as
-no. of missing columns in a row. row_count is no. of rows with null_cols_count missing columns.
-row_pct is row_count divided by number of rows. flagged/treated is 1 if null_cols_count is more than
-(threshold
-X Number of Columns), else 0.</dd>
-</dl></div>
+<h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2789,7 +2967,22 @@ def nullRows_detection(
     treatment_threshold=0.8,
     print_impact=False,
 ):
-    """
+    """This function inspects the row quality and computes the number of columns that are missing for a row. This
+    metric is further aggregated to check how many columns are missing for how many rows (also at % level). Intuition
+    is if too many columns are missing for a row, removing it from the modeling may give better results than relying
+    on its imputed values. Therefore as part of the treatment, rows with missing columns above the specified
+    threshold are removed. This function returns two dataframes in tuple format; the 1st dataframe is the input
+    dataset after filtering rows with a high number of missing columns (if treated). The 2nd dataframe is of schema –
+    null_cols_count, row_count, row_pct, flagged.
+
+    | null_cols_count | row_count | row_pct | flagged |
+    |-----------------|-----------|---------|---------|
+    | 5               | 11        | 3.0E-4  | 0       |
+    | 7               | 1306      | 0.0401  | 1       |
+
+
+    Interpretation: 1306 rows (4.01% of total rows) have 7 missing columns and flagged for are removal because
+    null\_cols\_count is above the threshold.
 
     Parameters
     ----------
@@ -2821,13 +3014,6 @@ def nullRows_detection(
 
     Returns
     -------
-    type
-        Output Dataframe, Metric Dataframe)
-        Output Dataframe is the dataframe after row removal if treated, else original input dataframe.
-        Metric Dataframe is of schema [null_cols_count, row_count, row_pct, flagged/treated]. null_cols_count is defined as
-        no. of missing columns in a row. row_count is no. of rows with null_cols_count missing columns.
-        row_pct is row_count divided by number of rows. flagged/treated is 1 if null_cols_count is more than
-        (threshold  X Number of Columns), else 0.
 
     """
 
@@ -2910,7 +3096,39 @@ def nullRows_detection(
 <span>def <span class="ident">outlier_detection</span></span>(<span>spark, idf, list_of_cols='all', drop_cols=[], detection_side='upper', detection_configs={'pctile_lower': 0.05, 'pctile_upper': 0.95, 'stdev_lower': 3.0, 'stdev_upper': 3.0, 'IQR_lower': 1.5, 'IQR_upper': 1.5, 'min_validation': 2}, treatment=False, treatment_method='value_replacement', pre_existing_model=False, model_path='NA', output_mode='replace', stats_unique={}, print_impact=False)</span>
 </code></dt>
 <dd>
-<div class="desc"><h2 id="parameters">Parameters</h2>
+<div class="desc"><p>In Machine Learning, outlier detection identifies values that deviate drastically from the rest of the
+attribute values. An outlier may be caused simply by chance, measurement error, or inherent heavy-tailed
+distribution. This function identifies extreme values in both directions (or any direction provided by the user
+via detection_side argument). Outlier is identified by 3 different methodologies and tagged an outlier only if it
+is validated by at least 2 methods (can be changed by the user via min_validation under detection_configs
+argument).</p>
+<ul>
+<li>
+<p><strong>Percentile Method</strong>: In this methodology, a value higher than a certain (default 95th) percentile value is
+considered as an outlier. Similarly, a value lower than a certain (default 5th) percentile value is considered as
+an outlier.</p>
+</li>
+<li>
+<p><strong>Standard Deviation Method</strong>: In this methodology, if a value is a certain number of standard deviations (
+default 3) away from the mean, it is identified as an outlier.</p>
+</li>
+<li>
+<p><strong>Interquartile Range (IQR) Method</strong>: A value below Q1 – 1.5 IQR or above Q3 + 1.5 IQR are identified as
+outliers, where Q1 is in first quantile/25th percentile, Q3 is in third quantile/75th percentile, and IQR is the
+difference between third quantile &amp; first quantile.</p>
+</li>
+</ul>
+<p>This function also leverages statistics which were computed as the part of the State Generator module so that
+statistics are not computed twice if already available.</p>
+<p>As part of treatments available, outlier values can be replaced by null so that it can be imputed by a reliable
+imputation methodology (null_replacement). It can also be replaced by maximum or minimum permissible by above
+methodologies (value_replacement). Lastly, rows can be removed if it is identified with any outlier (row_removal).</p>
+<p>This function returns two dataframes in tuple format – 1st dataframe is input dataset after treating outlier (the
+original dataset if no treatment) and
+2nd dataframe is of schema – attribute, lower_outliers, upper_outliers. If
+outliers are checked only for upper end, then lower_outliers column will be shown all zero. Similarly if checked
+only for lower end, then upper_outliers will be zero for all attributes.</p>
+<h2 id="parameters">Parameters</h2>
 <p>spark :
 Spark Session
 idf :
@@ -2977,14 +3195,7 @@ True, False. (Default value = False)
 <p>"IQR_upper": 1.5 :</p>
 <p>"min_validation": 2 :</p>
 <p>} :</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>type</code></dt>
-<dd>Output Dataframe, Metric Dataframe)
-Output Dataframe is the imputed dataframe if treated, else original input dataframe.
-Metric Dataframe is of schema [attribute, lower_outliers, upper_outliers]. lower_outliers is no. of outliers
-found in the lower spectrum of the attribute range and upper_outliers is outlier count in the upper spectrum.</dd>
-</dl></div>
+<h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -3014,7 +3225,35 @@ def outlier_detection(
     stats_unique={},
     print_impact=False,
 ):
-    """
+    """In Machine Learning, outlier detection identifies values that deviate drastically from the rest of the
+    attribute values. An outlier may be caused simply by chance, measurement error, or inherent heavy-tailed
+    distribution. This function identifies extreme values in both directions (or any direction provided by the user
+    via detection_side argument). Outlier is identified by 3 different methodologies and tagged an outlier only if it
+    is validated by at least 2 methods (can be changed by the user via min_validation under detection_configs
+    argument).
+
+    - **Percentile Method**: In this methodology, a value higher than a certain (default 95th) percentile value is
+    considered as an outlier. Similarly, a value lower than a certain (default 5th) percentile value is considered as
+    an outlier.
+
+    - **Standard Deviation Method**: In this methodology, if a value is a certain number of standard deviations (
+    default 3) away from the mean, it is identified as an outlier.
+
+    - **Interquartile Range (IQR) Method**: A value below Q1 – 1.5 IQR or above Q3 + 1.5 IQR are identified as
+    outliers, where Q1 is in first quantile/25th percentile, Q3 is in third quantile/75th percentile, and IQR is the
+    difference between third quantile & first quantile.
+
+    This function also leverages statistics which were computed as the part of the State Generator module so that
+    statistics are not computed twice if already available.
+
+    As part of treatments available, outlier values can be replaced by null so that it can be imputed by a reliable
+    imputation methodology (null_replacement). It can also be replaced by maximum or minimum permissible by above
+    methodologies (value_replacement). Lastly, rows can be removed if it is identified with any outlier (row_removal).
+
+    This function returns two dataframes in tuple format – 1st dataframe is input dataset after treating outlier (the
+    original dataset if no treatment) and  2nd dataframe is of schema – attribute, lower_outliers, upper_outliers. If
+    outliers are checked only for upper end, then lower_outliers column will be shown all zero. Similarly if checked
+    only for lower end, then upper_outliers will be zero for all attributes.
 
     Parameters
     ----------
@@ -3094,11 +3333,6 @@ def outlier_detection(
 
     Returns
     -------
-    type
-        Output Dataframe, Metric Dataframe)
-        Output Dataframe is the imputed dataframe if treated, else original input dataframe.
-        Metric Dataframe is of schema [attribute, lower_outliers, upper_outliers]. lower_outliers is no. of outliers
-        found in the lower spectrum of the attribute range and upper_outliers is outlier count in the upper spectrum.
 
     """
 

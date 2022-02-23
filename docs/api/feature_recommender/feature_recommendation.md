@@ -45,8 +45,6 @@ def feature_recommendation(
 
     Returns
     -------
-    type
-        DataFrame with Recommended Features with the Input DataFrame and/or Users' Industry/Usecase of interest
 
     """
     if not isinstance(df, pd.DataFrame):
@@ -325,8 +323,6 @@ def find_attr_by_relevance(
 
     Returns
     -------
-    type
-        DataFrame with Input Feature Description and Input Attribute matching
 
     """
     if not isinstance(df, pd.DataFrame):
@@ -491,8 +487,6 @@ def sankey_visualization(df, industry_included=False, usecase_included=False):
 
     Returns
     -------
-    type
-        Sankey plot
 
     """
     fr_proper_col_list = [
@@ -697,11 +691,7 @@ top_n :
 Number of features displayed (int). Default is 2
 threshold :
 Input threshold value (float). Default is 0.3</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>type</code></dt>
-<dd>DataFrame with Recommended Features with the Input DataFrame and/or Users' Industry/Usecase of interest</dd>
-</dl></div>
+<h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -741,8 +731,6 @@ def feature_recommendation(
 
     Returns
     -------
-    type
-        DataFrame with Recommended Features with the Input DataFrame and/or Users' Industry/Usecase of interest
 
     """
     if not isinstance(df, pd.DataFrame):
@@ -1018,11 +1006,7 @@ desc_column :
 Input, column name of Attribute Description in Input DataFrame (string). Default is None.
 threshold :
 Input threshold value (float). Default is 0.3</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>type</code></dt>
-<dd>DataFrame with Input Feature Description and Input Attribute matching</dd>
-</dl></div>
+<h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1049,8 +1033,6 @@ def find_attr_by_relevance(
 
     Returns
     -------
-    type
-        DataFrame with Input Feature Description and Input Attribute matching
 
     """
     if not isinstance(df, pd.DataFrame):
@@ -1214,11 +1196,7 @@ industry_included :
 Whether the plot needs to include industry mapping or not (boolean). Default is False
 usecase_included :
 Whether the plot needs to include usecase mapping or not (boolean). Default is False</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>type</code></dt>
-<dd>Sankey plot</dd>
-</dl></div>
+<h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1239,8 +1217,6 @@ def sankey_visualization(df, industry_included=False, usecase_included=False):
 
     Returns
     -------
-    type
-        Sankey plot
 
     """
     fr_proper_col_list = [
