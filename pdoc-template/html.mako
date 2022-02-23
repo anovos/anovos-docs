@@ -100,12 +100,12 @@ ${d.source}
   submodules = module.submodules()
   %>
   <%def name="show_func(f)">
-    <dt id="${f.refname}"><code class="name flex">
+    <dt id="${f.refname}"><code class="name flex hljs csharp">
         <%
             params = ', '.join(f.params(annotate=show_type_annotations, link=link))
             return_type = get_annotation(f.return_annotation, '\N{non-breaking hyphen}>')
         %>
-       <span>${f.funcdef()} ${ident(f.name)}</span>(<span>${params})${return_type}</span>
+       <span class="k">${f.funcdef()}</span> <span class="nf">${ident(f.name)}</span>(<span class="n">${params})${return_type}</span>
     </code></dt>
     <dd>${show_desc(f)}</dd>
   </%def>
