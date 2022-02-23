@@ -26,21 +26,21 @@ def feature_recommendation(
 
     Parameters
     ----------
-    df :
+    df
         Input DataFrame - Users' Data dictionary. It is expected to consist of attribute name and/or attribute description
-    name_column :
+    name_column
         Input, column name of Attribute Name in Input DataFrame (string). Default is None.
-    desc_column :
+    desc_column
         Input, column name of Attribute Description in Input DataFrame (string). Default is None.
-    suggested_industry :
+    suggested_industry
         Input, Industry of interest to the user (if any) to be filtered out (string). Default is 'all', meaning all Industries available.
-    suggested_usecase :
+    suggested_usecase
         Input, Usecase of interest to the user (if any) to be filtered out (string). Default is 'all', meaning all Usecases available.
-    semantic :
+    semantic
         Input semantic (boolean) - Whether the input needs to go through semantic similarity or not. Default is True.
-    top_n :
+    top_n
         Number of features displayed (int). Default is 2
-    threshold :
+    threshold
         Input threshold value (float). Default is 0.3
 
     Returns
@@ -310,15 +310,15 @@ def find_attr_by_relevance(
 
     Parameters
     ----------
-    df :
+    df
         Input DataFrame - Users' Data dictionary. It is expected to consist of attribute name and/or attribute description
-    building_corpus :
+    building_corpus
         Input Feature Description (list)
-    name_column :
+    name_column
         Input, column name of Attribute Name in Input DataFrame (string). Default is None.
-    desc_column :
+    desc_column
         Input, column name of Attribute Description in Input DataFrame (string). Default is None.
-    threshold :
+    threshold
         Input threshold value (float). Default is 0.3
 
     Returns
@@ -478,11 +478,11 @@ def sankey_visualization(df, industry_included=False, usecase_included=False):
 
     Parameters
     ----------
-    df :
+    df
         Input DataFrame. This DataFrame needs to be output of feature_recommendation or find_attr_by_relevance, or in the same format.
-    industry_included :
+    industry_included
         Whether the plot needs to include industry mapping or not (boolean). Default is False
-    usecase_included :
+    usecase_included
         Whether the plot needs to include usecase mapping or not (boolean). Default is False
 
     Returns
@@ -675,22 +675,24 @@ def sankey_visualization(df, industry_included=False, usecase_included=False):
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
-<p>df :
-Input DataFrame - Users' Data dictionary. It is expected to consist of attribute name and/or attribute description
-name_column :
-Input, column name of Attribute Name in Input DataFrame (string). Default is None.
-desc_column :
-Input, column name of Attribute Description in Input DataFrame (string). Default is None.
-suggested_industry :
-Input, Industry of interest to the user (if any) to be filtered out (string). Default is 'all', meaning all Industries available.
-suggested_usecase :
-Input, Usecase of interest to the user (if any) to be filtered out (string). Default is 'all', meaning all Usecases available.
-semantic :
-Input semantic (boolean) - Whether the input needs to go through semantic similarity or not. Default is True.
-top_n :
-Number of features displayed (int). Default is 2
-threshold :
-Input threshold value (float). Default is 0.3</p>
+<dl>
+<dt><strong><code>df</code></strong></dt>
+<dd>Input DataFrame - Users' Data dictionary. It is expected to consist of attribute name and/or attribute description</dd>
+<dt><strong><code>name_column</code></strong></dt>
+<dd>Input, column name of Attribute Name in Input DataFrame (string). Default is None.</dd>
+<dt><strong><code>desc_column</code></strong></dt>
+<dd>Input, column name of Attribute Description in Input DataFrame (string). Default is None.</dd>
+<dt><strong><code>suggested_industry</code></strong></dt>
+<dd>Input, Industry of interest to the user (if any) to be filtered out (string). Default is 'all', meaning all Industries available.</dd>
+<dt><strong><code>suggested_usecase</code></strong></dt>
+<dd>Input, Usecase of interest to the user (if any) to be filtered out (string). Default is 'all', meaning all Usecases available.</dd>
+<dt><strong><code>semantic</code></strong></dt>
+<dd>Input semantic (boolean) - Whether the input needs to go through semantic similarity or not. Default is True.</dd>
+<dt><strong><code>top_n</code></strong></dt>
+<dd>Number of features displayed (int). Default is 2</dd>
+<dt><strong><code>threshold</code></strong></dt>
+<dd>Input threshold value (float). Default is 0.3</dd>
+</dl>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -712,21 +714,21 @@ def feature_recommendation(
 
     Parameters
     ----------
-    df :
+    df
         Input DataFrame - Users' Data dictionary. It is expected to consist of attribute name and/or attribute description
-    name_column :
+    name_column
         Input, column name of Attribute Name in Input DataFrame (string). Default is None.
-    desc_column :
+    desc_column
         Input, column name of Attribute Description in Input DataFrame (string). Default is None.
-    suggested_industry :
+    suggested_industry
         Input, Industry of interest to the user (if any) to be filtered out (string). Default is 'all', meaning all Industries available.
-    suggested_usecase :
+    suggested_usecase
         Input, Usecase of interest to the user (if any) to be filtered out (string). Default is 'all', meaning all Usecases available.
-    semantic :
+    semantic
         Input semantic (boolean) - Whether the input needs to go through semantic similarity or not. Default is True.
-    top_n :
+    top_n
         Number of features displayed (int). Default is 2
-    threshold :
+    threshold
         Input threshold value (float). Default is 0.3
 
     Returns
@@ -996,16 +998,18 @@ def feature_recommendation(
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
-<p>df :
-Input DataFrame - Users' Data dictionary. It is expected to consist of attribute name and/or attribute description
-building_corpus :
-Input Feature Description (list)
-name_column :
-Input, column name of Attribute Name in Input DataFrame (string). Default is None.
-desc_column :
-Input, column name of Attribute Description in Input DataFrame (string). Default is None.
-threshold :
-Input threshold value (float). Default is 0.3</p>
+<dl>
+<dt><strong><code>df</code></strong></dt>
+<dd>Input DataFrame - Users' Data dictionary. It is expected to consist of attribute name and/or attribute description</dd>
+<dt><strong><code>building_corpus</code></strong></dt>
+<dd>Input Feature Description (list)</dd>
+<dt><strong><code>name_column</code></strong></dt>
+<dd>Input, column name of Attribute Name in Input DataFrame (string). Default is None.</dd>
+<dt><strong><code>desc_column</code></strong></dt>
+<dd>Input, column name of Attribute Description in Input DataFrame (string). Default is None.</dd>
+<dt><strong><code>threshold</code></strong></dt>
+<dd>Input threshold value (float). Default is 0.3</dd>
+</dl>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -1020,15 +1024,15 @@ def find_attr_by_relevance(
 
     Parameters
     ----------
-    df :
+    df
         Input DataFrame - Users' Data dictionary. It is expected to consist of attribute name and/or attribute description
-    building_corpus :
+    building_corpus
         Input Feature Description (list)
-    name_column :
+    name_column
         Input, column name of Attribute Name in Input DataFrame (string). Default is None.
-    desc_column :
+    desc_column
         Input, column name of Attribute Description in Input DataFrame (string). Default is None.
-    threshold :
+    threshold
         Input threshold value (float). Default is 0.3
 
     Returns
@@ -1190,12 +1194,14 @@ def find_attr_by_relevance(
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
-<p>df :
-Input DataFrame. This DataFrame needs to be output of feature_recommendation or find_attr_by_relevance, or in the same format.
-industry_included :
-Whether the plot needs to include industry mapping or not (boolean). Default is False
-usecase_included :
-Whether the plot needs to include usecase mapping or not (boolean). Default is False</p>
+<dl>
+<dt><strong><code>df</code></strong></dt>
+<dd>Input DataFrame. This DataFrame needs to be output of feature_recommendation or find_attr_by_relevance, or in the same format.</dd>
+<dt><strong><code>industry_included</code></strong></dt>
+<dd>Whether the plot needs to include industry mapping or not (boolean). Default is False</dd>
+<dt><strong><code>usecase_included</code></strong></dt>
+<dd>Whether the plot needs to include usecase mapping or not (boolean). Default is False</dd>
+</dl>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -1208,11 +1214,11 @@ def sankey_visualization(df, industry_included=False, usecase_included=False):
 
     Parameters
     ----------
-    df :
+    df
         Input DataFrame. This DataFrame needs to be output of feature_recommendation or find_attr_by_relevance, or in the same format.
-    industry_included :
+    industry_included
         Whether the plot needs to include industry mapping or not (boolean). Default is False
-    usecase_included :
+    usecase_included
         Whether the plot needs to include usecase mapping or not (boolean). Default is False
 
     Returns

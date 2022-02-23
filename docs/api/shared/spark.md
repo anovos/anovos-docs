@@ -41,17 +41,17 @@ def init_spark(
 
     Parameters
     ----------
-    app_name :
+    app_name
         Name of Spark app. (Default value = "anovos")
-    master :
+    master
         Cluster connection details
         Defaults to local[*] which means to run Spark locally with as many worker threads
         as logical cores on the machine.
-    jars_packages :
+    jars_packages
         List of Spark JAR package names. (Default value = None)
-    py_files :
+    py_files
         List of files to send to Spark cluster (master and workers). (Default value = None)
-    spark_config :
+    spark_config
         Dictionary of config key-value pairs. (Default value = None)
 
     Returns
@@ -113,18 +113,20 @@ spark, sc, sqlContext = init_spark(**configs)
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
-<p>app_name :
-Name of Spark app. (Default value = "anovos")
-master :
-Cluster connection details
+<dl>
+<dt><strong><code>app_name</code></strong></dt>
+<dd>Name of Spark app. (Default value = "anovos")</dd>
+<dt><strong><code>master</code></strong></dt>
+<dd>Cluster connection details
 Defaults to local[*] which means to run Spark locally with as many worker threads
-as logical cores on the machine.
-jars_packages :
-List of Spark JAR package names. (Default value = None)
-py_files :
-List of files to send to Spark cluster (master and workers). (Default value = None)
-spark_config :
-Dictionary of config key-value pairs. (Default value = None)</p>
+as logical cores on the machine.</dd>
+<dt><strong><code>jars_packages</code></strong></dt>
+<dd>List of Spark JAR package names. (Default value = None)</dd>
+<dt><strong><code>py_files</code></strong></dt>
+<dd>List of files to send to Spark cluster (master and workers). (Default value = None)</dd>
+<dt><strong><code>spark_config</code></strong></dt>
+<dd>Dictionary of config key-value pairs. (Default value = None)</dd>
+</dl>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -143,17 +145,17 @@ def init_spark(
 
     Parameters
     ----------
-    app_name :
+    app_name
         Name of Spark app. (Default value = "anovos")
-    master :
+    master
         Cluster connection details
         Defaults to local[*] which means to run Spark locally with as many worker threads
         as logical cores on the machine.
-    jars_packages :
+    jars_packages
         List of Spark JAR package names. (Default value = None)
-    py_files :
+    py_files
         List of files to send to Spark cluster (master and workers). (Default value = None)
-    spark_config :
+    spark_config
         Dictionary of config key-value pairs. (Default value = None)
 
     Returns

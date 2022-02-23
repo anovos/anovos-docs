@@ -41,7 +41,7 @@ def remove_u_score(col):
 
     Parameters
     ----------
-    col :
+    col
         Analysis column containing "_" present gets replaced along with upper case conversion
 
     Returns
@@ -65,11 +65,11 @@ def line_chart_gen_stability(df1, df2, col):
 
     Parameters
     ----------
-    df1 :
+    df1
         Analysis dataframe pertaining to summarized stability metrics
-    df2 :
+    df2
         Analysis dataframe pertaining to historical data
-    col :
+    col
         Analysis column
 
     Returns
@@ -82,7 +82,7 @@ def line_chart_gen_stability(df1, df2, col):
 
         Parameters
         ----------
-        val :
+        val
 
 
         Returns
@@ -190,11 +190,11 @@ def data_analyzer_output(master_path, avl_recs_tab, tab_name):
 
     Parameters
     ----------
-    master_path :
+    master_path
         Path containing all the output from analyzed data
-    avl_recs_tab :
+    avl_recs_tab
         Available file names from the analysis tab
-    tab_name :
+    tab_name
         Analysis tab from association_evaluator / quality_checker / stats_generator
 
     Returns
@@ -428,13 +428,13 @@ def drift_stability_ind(
 
     Parameters
     ----------
-    missing_recs_drift :
+    missing_recs_drift
         param drift_tab:
-    missing_recs_stability :
+    missing_recs_stability
         param stability_tab:
-    drift_tab :
+    drift_tab
 
-    stability_tab :
+    stability_tab
 
 
     Returns
@@ -465,11 +465,11 @@ def chart_gen_list(master_path, chart_type, type_col=None):
 
     Parameters
     ----------
-    master_path :
+    master_path
         Path containing all the charts same as the other files from data analyzed output
-    chart_type :
+    chart_type
         Files containing only the specific chart names for the specific chart category
-    type_col :
+    type_col
         None. Default value is kept as None
 
     Returns
@@ -525,17 +525,17 @@ def executive_summary_gen(
 
     Parameters
     ----------
-    master_path :
+    master_path
         Path containing the input files.
-    label_col :
+    label_col
         Label column.
-    ds_ind :
+    ds_ind
         Drift stability indicator in list form.
-    id_col :
+    id_col
         ID column.
-    iv_threshold :
+    iv_threshold
         IV threshold beyond which attributes can be called as significant.
-    corr_threshold :
+    corr_threshold
         Correlation threshold beyond which attributes can be categorized under correlated.
     print_report :
         Printing option flexibility. Default value is kept as False.
@@ -3045,12 +3045,14 @@ def attribute_associations(
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
-<p>master_path :
-Path containing all the charts same as the other files from data analyzed output
-chart_type :
-Files containing only the specific chart names for the specific chart category
-type_col :
-None. Default value is kept as None</p>
+<dl>
+<dt><strong><code>master_path</code></strong></dt>
+<dd>Path containing all the charts same as the other files from data analyzed output</dd>
+<dt><strong><code>chart_type</code></strong></dt>
+<dd>Files containing only the specific chart names for the specific chart category</dd>
+<dt><strong><code>type_col</code></strong></dt>
+<dd>None. Default value is kept as None</dd>
+</dl>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -3063,11 +3065,11 @@ def chart_gen_list(master_path, chart_type, type_col=None):
 
     Parameters
     ----------
-    master_path :
+    master_path
         Path containing all the charts same as the other files from data analyzed output
-    chart_type :
+    chart_type
         Files containing only the specific chart names for the specific chart category
-    type_col :
+    type_col
         None. Default value is kept as None
 
     Returns
@@ -3117,12 +3119,14 @@ def chart_gen_list(master_path, chart_type, type_col=None):
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
-<p>master_path :
-Path containing all the output from analyzed data
-avl_recs_tab :
-Available file names from the analysis tab
-tab_name :
-Analysis tab from association_evaluator / quality_checker / stats_generator</p>
+<dl>
+<dt><strong><code>master_path</code></strong></dt>
+<dd>Path containing all the output from analyzed data</dd>
+<dt><strong><code>avl_recs_tab</code></strong></dt>
+<dd>Available file names from the analysis tab</dd>
+<dt><strong><code>tab_name</code></strong></dt>
+<dd>Analysis tab from association_evaluator / quality_checker / stats_generator</dd>
+</dl>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -3135,11 +3139,11 @@ def data_analyzer_output(master_path, avl_recs_tab, tab_name):
 
     Parameters
     ----------
-    master_path :
+    master_path
         Path containing all the output from analyzed data
-    avl_recs_tab :
+    avl_recs_tab
         Available file names from the analysis tab
-    tab_name :
+    tab_name
         Analysis tab from association_evaluator / quality_checker / stats_generator
 
     Returns
@@ -4133,12 +4137,16 @@ drift_tab: "drift_statistics"
 missing_recs_stability: Missing files from the stability tab
 stability_tab:"stability_index, stabilityIndex_metrics"</p>
 <h2 id="parameters">Parameters</h2>
-<p>missing_recs_drift :
-param drift_tab:
-missing_recs_stability :
-param stability_tab:
-drift_tab :</p>
-<p>stability_tab :</p>
+<dl>
+<dt><strong><code>missing_recs_drift</code></strong></dt>
+<dd>param drift_tab:</dd>
+<dt><strong><code>missing_recs_stability</code></strong></dt>
+<dd>param stability_tab:</dd>
+<dt><strong><code>drift_tab</code></strong></dt>
+<dd>&nbsp;</dd>
+<dt><strong><code>stability_tab</code></strong></dt>
+<dd>&nbsp;</dd>
+</dl>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -4156,13 +4164,13 @@ def drift_stability_ind(
 
     Parameters
     ----------
-    missing_recs_drift :
+    missing_recs_drift
         param drift_tab:
-    missing_recs_stability :
+    missing_recs_stability
         param stability_tab:
-    drift_tab :
+    drift_tab
 
-    stability_tab :
+    stability_tab
 
 
     Returns
@@ -4195,19 +4203,21 @@ def drift_stability_ind(
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
-<p>master_path :
-Path containing the input files.
-label_col :
-Label column.
-ds_ind :
-Drift stability indicator in list form.
-id_col :
-ID column.
-iv_threshold :
-IV threshold beyond which attributes can be called as significant.
-corr_threshold :
-Correlation threshold beyond which attributes can be categorized under correlated.
-print_report :
+<dl>
+<dt><strong><code>master_path</code></strong></dt>
+<dd>Path containing the input files.</dd>
+<dt><strong><code>label_col</code></strong></dt>
+<dd>Label column.</dd>
+<dt><strong><code>ds_ind</code></strong></dt>
+<dd>Drift stability indicator in list form.</dd>
+<dt><strong><code>id_col</code></strong></dt>
+<dd>ID column.</dd>
+<dt><strong><code>iv_threshold</code></strong></dt>
+<dd>IV threshold beyond which attributes can be called as significant.</dd>
+<dt><strong><code>corr_threshold</code></strong></dt>
+<dd>Correlation threshold beyond which attributes can be categorized under correlated.</dd>
+</dl>
+<p>print_report :
 Printing option flexibility. Default value is kept as False.</p>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
@@ -4229,17 +4239,17 @@ def executive_summary_gen(
 
     Parameters
     ----------
-    master_path :
+    master_path
         Path containing the input files.
-    label_col :
+    label_col
         Label column.
-    ds_ind :
+    ds_ind
         Drift stability indicator in list form.
-    id_col :
+    id_col
         ID column.
-    iv_threshold :
+    iv_threshold
         IV threshold beyond which attributes can be called as significant.
-    corr_threshold :
+    corr_threshold
         Correlation threshold beyond which attributes can be categorized under correlated.
     print_report :
         Printing option flexibility. Default value is kept as False.
@@ -4636,12 +4646,14 @@ def executive_summary_gen(
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
-<p>df1 :
-Analysis dataframe pertaining to summarized stability metrics
-df2 :
-Analysis dataframe pertaining to historical data
-col :
-Analysis column</p>
+<dl>
+<dt><strong><code>df1</code></strong></dt>
+<dd>Analysis dataframe pertaining to summarized stability metrics</dd>
+<dt><strong><code>df2</code></strong></dt>
+<dd>Analysis dataframe pertaining to historical data</dd>
+<dt><strong><code>col</code></strong></dt>
+<dd>Analysis column</dd>
+</dl>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -4654,11 +4666,11 @@ def line_chart_gen_stability(df1, df2, col):
 
     Parameters
     ----------
-    df1 :
+    df1
         Analysis dataframe pertaining to summarized stability metrics
-    df2 :
+    df2
         Analysis dataframe pertaining to historical data
-    col :
+    col
         Analysis column
 
     Returns
@@ -4671,7 +4683,7 @@ def line_chart_gen_stability(df1, df2, col):
 
         Parameters
         ----------
-        val :
+        val
 
 
         Returns
@@ -4972,8 +4984,10 @@ def quality_check(
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
-<p>col :
-Analysis column containing "_" present gets replaced along with upper case conversion</p>
+<dl>
+<dt><strong><code>col</code></strong></dt>
+<dd>Analysis column containing "_" present gets replaced along with upper case conversion</dd>
+</dl>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -4986,7 +5000,7 @@ def remove_u_score(col):
 
     Parameters
     ----------
-    col :
+    col
         Analysis column containing "_" present gets replaced along with upper case conversion
 
     Returns

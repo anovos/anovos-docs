@@ -94,9 +94,9 @@ def argument_checker(func_name, args):
 
     Parameters
     ----------
-    func_name :
+    func_name
         param args:
-    args :
+    args
 
 
     Returns
@@ -180,22 +180,22 @@ def timestamp_to_unix(
 
     Parameters
     ----------
-    spark :
+    spark
         Spark Session
-    idf :
+    idf
         Input Dataframe
-    list_of_cols :
+    list_of_cols
         List of columns to transform e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
-    precision :
+    precision
         ms", "s".
         "ms" option returns the number of milliseconds from the unix epoch (1970-01-01 00:00:00 UTC) .
         "s" option returns the number of seconds from the unix epoch. (Default value = "s")
-    tz :
+    tz
         local", "gmt", "utc".
         Timezone of the input column(s) (Default value = "local")
-    output_mode :
+    output_mode
         replace", "append".
         “replace” option replaces original columns with derived column. “append” option appends derived
         column to the input dataset with a postfix "_unix" e.g. column X is appended as X_unix. (Default value = "replace")
@@ -250,22 +250,22 @@ def unix_to_timestamp(
 
     Parameters
     ----------
-    spark :
+    spark
         Spark Session
-    idf :
+    idf
         Input Dataframe
-    list_of_cols :
+    list_of_cols
         List of columns to transform e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
-    precision :
+    precision
         ms", "s".
         "ms" treats the input columns as the number of milliseconds from the unix epoch (1970-01-01 00:00:00 UTC) .
         "s" treats the input columns as the number of seconds from the unix epoch. (Default value = "s")
-    tz :
+    tz
         local", "gmt", "utc".
         timezone of the output column(s) (Default value = "local")
-    output_mode :
+    output_mode
         replace", "append".
         “replace” option replaces original columns with derived column. “append” option appends derived
         column to the input dataset with a postfix "_ts" e.g. column X is appended as X_ts. (Default value = "replace")
@@ -319,19 +319,19 @@ def timezone_conversion(
 
     Parameters
     ----------
-    spark :
+    spark
         Spark Session
-    idf :
+    idf
         Input Dataframe
-    list_of_cols :
+    list_of_cols
         List of columns to transform e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
-    given_tz :
+    given_tz
         Timezone of the input column(s). If "local", the timezone of the spark session will be used.
-    output_tz :
+    output_tz
         Timezone of the output column(s). If "local", the timezone of the spark session will be used.
-    output_mode :
+    output_mode
         replace", "append".
         “replace” option replaces original columns with derived column. “append” option appends derived
         column to the input dataset with a postfix "_tzconverted" e.g. column X is appended as X_tzconverted. (Default value = "replace")
@@ -385,21 +385,21 @@ def string_to_timestamp(
 
     Parameters
     ----------
-    spark :
+    spark
         Spark Session
-    idf :
+    idf
         Input Dataframe
-    list_of_cols :
+    list_of_cols
         List of columns to transform e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
-    input_format :
+    input_format
         Format of the input column(s) in string (Default value = "%Y-%m-%d %H:%M:%S")
-    output_type :
+    output_type
         ts", "dt"
         "ts" option returns result in T.TimestampType()
         "dt" option returns result in T.DateType() (Default value = "ts")
-    output_mode :
+    output_mode
         replace", "append".
         “replace” option replaces original columns with derived column. “append” option appends derived
         column to the input dataset with a postfix "_ts" e.g. column X is appended as X_ts. (Default value = "replace")
@@ -425,9 +425,9 @@ def string_to_timestamp(
 
         Parameters
         ----------
-        col :
+        col
             param form:
-        form :
+        form
 
 
         Returns
@@ -457,11 +457,11 @@ def timestamp_to_string(
 
     Parameters
     ----------
-    spark :
+    spark
         Spark Session
-    idf :
+    idf
         Input Dataframe
-    list_of_cols :
+    list_of_cols
         List of columns to transform e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
@@ -2238,9 +2238,12 @@ def aggregator(
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
-<p>func_name :
-param args:
-args :</p>
+<dl>
+<dt><strong><code>func_name</code></strong></dt>
+<dd>param args:</dd>
+<dt><strong><code>args</code></strong></dt>
+<dd>&nbsp;</dd>
+</dl>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -2253,9 +2256,9 @@ def argument_checker(func_name, args):
 
     Parameters
     ----------
-    func_name :
+    func_name
         param args:
-    args :
+    args
 
 
     Returns
@@ -3751,24 +3754,26 @@ def start_of_year(idf, list_of_cols, output_mode="append"):
 <div class="desc"><p>Convert time string columns with given input format ("%Y-%m-%d %H:%M:%S", by default) to
 TimestampType or DateType columns.</p>
 <h2 id="parameters">Parameters</h2>
-<p>spark :
-Spark Session
-idf :
-Input Dataframe
-list_of_cols :
-List of columns to transform e.g., ["col1","col2"].
+<dl>
+<dt><strong><code>spark</code></strong></dt>
+<dd>Spark Session</dd>
+<dt><strong><code>idf</code></strong></dt>
+<dd>Input Dataframe</dd>
+<dt><strong><code>list_of_cols</code></strong></dt>
+<dd>List of columns to transform e.g., ["col1","col2"].
 Alternatively, columns can be specified in a string format,
-where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
-input_format :
-Format of the input column(s) in string (Default value = "%Y-%m-%d %H:%M:%S")
-output_type :
-ts", "dt"
+where different column names are separated by pipe delimiter “|” e.g., "col1|col2".</dd>
+<dt><strong><code>input_format</code></strong></dt>
+<dd>Format of the input column(s) in string (Default value = "%Y-%m-%d %H:%M:%S")</dd>
+<dt><strong><code>output_type</code></strong></dt>
+<dd>ts", "dt"
 "ts" option returns result in T.TimestampType()
-"dt" option returns result in T.DateType() (Default value = "ts")
-output_mode :
-replace", "append".
+"dt" option returns result in T.DateType() (Default value = "ts")</dd>
+<dt><strong><code>output_mode</code></strong></dt>
+<dd>replace", "append".
 “replace” option replaces original columns with derived column. “append” option appends derived
-column to the input dataset with a postfix "_ts" e.g. column X is appended as X_ts. (Default value = "replace")</p>
+column to the input dataset with a postfix "_ts" e.g. column X is appended as X_ts. (Default value = "replace")</dd>
+</dl>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -3788,21 +3793,21 @@ def string_to_timestamp(
 
     Parameters
     ----------
-    spark :
+    spark
         Spark Session
-    idf :
+    idf
         Input Dataframe
-    list_of_cols :
+    list_of_cols
         List of columns to transform e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
-    input_format :
+    input_format
         Format of the input column(s) in string (Default value = "%Y-%m-%d %H:%M:%S")
-    output_type :
+    output_type
         ts", "dt"
         "ts" option returns result in T.TimestampType()
         "dt" option returns result in T.DateType() (Default value = "ts")
-    output_mode :
+    output_mode
         replace", "append".
         “replace” option replaces original columns with derived column. “append” option appends derived
         column to the input dataset with a postfix "_ts" e.g. column X is appended as X_ts. (Default value = "replace")
@@ -3828,9 +3833,9 @@ def string_to_timestamp(
 
         Parameters
         ----------
-        col :
+        col
             param form:
-        form :
+        form
 
 
         Returns
@@ -4291,16 +4296,18 @@ def timestamp_comparison(
 <dd>
 <div class="desc"><p>Convert timestamp/date columns to time string columns with given output format ("%Y-%m-%d %H:%M:%S", by default)</p>
 <h2 id="parameters">Parameters</h2>
-<p>spark :
-Spark Session
-idf :
-Input Dataframe
-list_of_cols :
-List of columns to transform e.g., ["col1","col2"].
+<dl>
+<dt><strong><code>spark</code></strong></dt>
+<dd>Spark Session</dd>
+<dt><strong><code>idf</code></strong></dt>
+<dd>Input Dataframe</dd>
+<dt><strong><code>list_of_cols</code></strong></dt>
+<dd>List of columns to transform e.g., ["col1","col2"].
 Alternatively, columns can be specified in a string format,
 where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
-Columns must be of Datetime type or String type in "%Y-%m-%d %H:%M:%S" format.
-output_format :
+Columns must be of Datetime type or String type in "%Y-%m-%d %H:%M:%S" format.</dd>
+</dl>
+<p>output_format :
 Format of the output column(s) (Default value = "%Y-%m-%d %H:%M:%S")
 output_mode :
 replace", "append".
@@ -4320,11 +4327,11 @@ def timestamp_to_string(
 
     Parameters
     ----------
-    spark :
+    spark
         Spark Session
-    idf :
+    idf
         Input Dataframe
-    list_of_cols :
+    list_of_cols
         List of columns to transform e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
@@ -4388,25 +4395,27 @@ def timestamp_to_string(
 <dd>
 <div class="desc"><p>Convert timestamp columns in a specified time zone to Unix time stamp in seconds or milliseconds.</p>
 <h2 id="parameters">Parameters</h2>
-<p>spark :
-Spark Session
-idf :
-Input Dataframe
-list_of_cols :
-List of columns to transform e.g., ["col1","col2"].
+<dl>
+<dt><strong><code>spark</code></strong></dt>
+<dd>Spark Session</dd>
+<dt><strong><code>idf</code></strong></dt>
+<dd>Input Dataframe</dd>
+<dt><strong><code>list_of_cols</code></strong></dt>
+<dd>List of columns to transform e.g., ["col1","col2"].
 Alternatively, columns can be specified in a string format,
-where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
-precision :
-ms", "s".
+where different column names are separated by pipe delimiter “|” e.g., "col1|col2".</dd>
+<dt><strong><code>precision</code></strong></dt>
+<dd>ms", "s".
 "ms" option returns the number of milliseconds from the unix epoch (1970-01-01 00:00:00 UTC) .
-"s" option returns the number of seconds from the unix epoch. (Default value = "s")
-tz :
-local", "gmt", "utc".
-Timezone of the input column(s) (Default value = "local")
-output_mode :
-replace", "append".
+"s" option returns the number of seconds from the unix epoch. (Default value = "s")</dd>
+<dt><strong><code>tz</code></strong></dt>
+<dd>local", "gmt", "utc".
+Timezone of the input column(s) (Default value = "local")</dd>
+<dt><strong><code>output_mode</code></strong></dt>
+<dd>replace", "append".
 “replace” option replaces original columns with derived column. “append” option appends derived
-column to the input dataset with a postfix "_unix" e.g. column X is appended as X_unix. (Default value = "replace")</p>
+column to the input dataset with a postfix "_unix" e.g. column X is appended as X_unix. (Default value = "replace")</dd>
+</dl>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -4421,22 +4430,22 @@ def timestamp_to_unix(
 
     Parameters
     ----------
-    spark :
+    spark
         Spark Session
-    idf :
+    idf
         Input Dataframe
-    list_of_cols :
+    list_of_cols
         List of columns to transform e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
-    precision :
+    precision
         ms", "s".
         "ms" option returns the number of milliseconds from the unix epoch (1970-01-01 00:00:00 UTC) .
         "s" option returns the number of seconds from the unix epoch. (Default value = "s")
-    tz :
+    tz
         local", "gmt", "utc".
         Timezone of the input column(s) (Default value = "local")
-    output_mode :
+    output_mode
         replace", "append".
         “replace” option replaces original columns with derived column. “append” option appends derived
         column to the input dataset with a postfix "_unix" e.g. column X is appended as X_unix. (Default value = "replace")
@@ -4491,22 +4500,24 @@ def timestamp_to_unix(
 <dd>
 <div class="desc"><p>Convert timestamp columns from the given timezone (given_tz) to the output timezone (output_tz).</p>
 <h2 id="parameters">Parameters</h2>
-<p>spark :
-Spark Session
-idf :
-Input Dataframe
-list_of_cols :
-List of columns to transform e.g., ["col1","col2"].
+<dl>
+<dt><strong><code>spark</code></strong></dt>
+<dd>Spark Session</dd>
+<dt><strong><code>idf</code></strong></dt>
+<dd>Input Dataframe</dd>
+<dt><strong><code>list_of_cols</code></strong></dt>
+<dd>List of columns to transform e.g., ["col1","col2"].
 Alternatively, columns can be specified in a string format,
-where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
-given_tz :
-Timezone of the input column(s). If "local", the timezone of the spark session will be used.
-output_tz :
-Timezone of the output column(s). If "local", the timezone of the spark session will be used.
-output_mode :
-replace", "append".
+where different column names are separated by pipe delimiter “|” e.g., "col1|col2".</dd>
+<dt><strong><code>given_tz</code></strong></dt>
+<dd>Timezone of the input column(s). If "local", the timezone of the spark session will be used.</dd>
+<dt><strong><code>output_tz</code></strong></dt>
+<dd>Timezone of the output column(s). If "local", the timezone of the spark session will be used.</dd>
+<dt><strong><code>output_mode</code></strong></dt>
+<dd>replace", "append".
 “replace” option replaces original columns with derived column. “append” option appends derived
-column to the input dataset with a postfix "_tzconverted" e.g. column X is appended as X_tzconverted. (Default value = "replace")</p>
+column to the input dataset with a postfix "_tzconverted" e.g. column X is appended as X_tzconverted. (Default value = "replace")</dd>
+</dl>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -4521,19 +4532,19 @@ def timezone_conversion(
 
     Parameters
     ----------
-    spark :
+    spark
         Spark Session
-    idf :
+    idf
         Input Dataframe
-    list_of_cols :
+    list_of_cols
         List of columns to transform e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
-    given_tz :
+    given_tz
         Timezone of the input column(s). If "local", the timezone of the spark session will be used.
-    output_tz :
+    output_tz
         Timezone of the output column(s). If "local", the timezone of the spark session will be used.
-    output_mode :
+    output_mode
         replace", "append".
         “replace” option replaces original columns with derived column. “append” option appends derived
         column to the input dataset with a postfix "_tzconverted" e.g. column X is appended as X_tzconverted. (Default value = "replace")
@@ -4584,25 +4595,27 @@ def timezone_conversion(
 <div class="desc"><p>Convert the number of seconds or milliseconds from unix epoch (1970-01-01 00:00:00 UTC) to a timestamp column
 in the specified time zone.</p>
 <h2 id="parameters">Parameters</h2>
-<p>spark :
-Spark Session
-idf :
-Input Dataframe
-list_of_cols :
-List of columns to transform e.g., ["col1","col2"].
+<dl>
+<dt><strong><code>spark</code></strong></dt>
+<dd>Spark Session</dd>
+<dt><strong><code>idf</code></strong></dt>
+<dd>Input Dataframe</dd>
+<dt><strong><code>list_of_cols</code></strong></dt>
+<dd>List of columns to transform e.g., ["col1","col2"].
 Alternatively, columns can be specified in a string format,
-where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
-precision :
-ms", "s".
+where different column names are separated by pipe delimiter “|” e.g., "col1|col2".</dd>
+<dt><strong><code>precision</code></strong></dt>
+<dd>ms", "s".
 "ms" treats the input columns as the number of milliseconds from the unix epoch (1970-01-01 00:00:00 UTC) .
-"s" treats the input columns as the number of seconds from the unix epoch. (Default value = "s")
-tz :
-local", "gmt", "utc".
-timezone of the output column(s) (Default value = "local")
-output_mode :
-replace", "append".
+"s" treats the input columns as the number of seconds from the unix epoch. (Default value = "s")</dd>
+<dt><strong><code>tz</code></strong></dt>
+<dd>local", "gmt", "utc".
+timezone of the output column(s) (Default value = "local")</dd>
+<dt><strong><code>output_mode</code></strong></dt>
+<dd>replace", "append".
 “replace” option replaces original columns with derived column. “append” option appends derived
-column to the input dataset with a postfix "_ts" e.g. column X is appended as X_ts. (Default value = "replace")</p>
+column to the input dataset with a postfix "_ts" e.g. column X is appended as X_ts. (Default value = "replace")</dd>
+</dl>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -4618,22 +4631,22 @@ def unix_to_timestamp(
 
     Parameters
     ----------
-    spark :
+    spark
         Spark Session
-    idf :
+    idf
         Input Dataframe
-    list_of_cols :
+    list_of_cols
         List of columns to transform e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
-    precision :
+    precision
         ms", "s".
         "ms" treats the input columns as the number of milliseconds from the unix epoch (1970-01-01 00:00:00 UTC) .
         "s" treats the input columns as the number of seconds from the unix epoch. (Default value = "s")
-    tz :
+    tz
         local", "gmt", "utc".
         timezone of the output column(s) (Default value = "local")
-    output_mode :
+    output_mode
         replace", "append".
         “replace” option replaces original columns with derived column. “append” option appends derived
         column to the input dataset with a postfix "_ts" e.g. column X is appended as X_ts. (Default value = "replace")
