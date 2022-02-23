@@ -55,6 +55,11 @@ jobs:
           rm -rf docs/api || true
           cp -r anovos/src/main/api docs/
 
+      - name: Update Licensing information
+        run: |
+          rm -rf docs/license.md || true
+          cp anovos/LICENSE docs/license.md
+
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3
         with:
