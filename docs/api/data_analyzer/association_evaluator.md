@@ -101,26 +101,26 @@ def correlation_matrix(
 
     Parameters
     ----------
-    spark :
+    spark
         Spark Session
-    idf :
+    idf
         Input Dataframe
-    list_of_cols :
+    list_of_cols
         List of columns to analyse e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
         "all" can be passed to include all columns for analysis.
         Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
         drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
-    drop_cols :
+    drop_cols
         List of columns to be dropped e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])
-    stats_unique :
+    stats_unique
         Takes arguments for read_dataset (data_ingest module) function in a dictionary format
         to read pre-saved statistics on unique value count i.e. if measures_of_cardinality or
         uniqueCount_computation (data_analyzer.stats_generator module) has been computed & saved before. (Default value = {})
-    print_impact :
+    print_impact
         True, False (Default value = False)
 
     Returns
@@ -210,33 +210,33 @@ def variable_clustering(
 
     Parameters
     ----------
-    spark :
+    spark
         Spark Session
-    idf :
+    idf
         Input Dataframe
-    list_of_cols :
+    list_of_cols
         List of columns to analyse e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
         "all" can be passed to include all columns for analysis.
         Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
         drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
-    drop_cols :
+    drop_cols
         List of columns to be dropped e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])
-    sample_size :
+    sample_size
         Maximum sample size (in terms of number of rows) taken for the computation.
         Sample dataset is extracted using random sampling. (Default value = 100000)
-    stats_unique :
+    stats_unique
         Takes arguments for read_dataset (data_ingest module) function in a dictionary format
         to read pre-saved statistics on unique value count i.e. if measures_of_cardinality or
         uniqueCount_computation (data_analyzer.stats_generator module) has been computed & saved before. (Default value = {})
-    stats_mode :
+    stats_mode
         Takes arguments for read_dataset (data_ingest module) function in a dictionary format
         to read pre-saved statistics on most frequently seen values i.e. if measures_of_centralTendency or
         mode_computation (data_analyzer.stats_generator module) has been computed & saved before. (Default value = {})
-    print_impact :
+    print_impact
         True, False (Default value = False)
 
     Returns
@@ -341,26 +341,26 @@ def IV_calculation(
 
     Parameters
     ----------
-    spark :
+    spark
         Spark Session
-    idf :
+    idf
         Input Dataframe
-    list_of_cols :
+    list_of_cols
         List of columns to analyse e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
         "all" can be passed to include all columns for analysis.
         Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
         drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
-    drop_cols :
+    drop_cols
         List of columns to be dropped e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])
-    label_col :
+    label_col
         Label/Target column (Default value = "label")
-    event_label :
+    event_label
         Value of (positive) event (i.e label 1) (Default value = 1)
-    encoding_configs :
+    encoding_configs
         Takes input in dictionary format. Default {} i.e. empty dict means no encoding is required.
         In case numerical columns are present and encoding is required, following keys shall be
         provided - "bin_size" i.e. no. of bins for converting the numerical columns to categorical,
@@ -865,33 +865,35 @@ in dictionary format with keys related to binning operation - 'bin_method' (defa
 the bin_size ensuring monotonic nature and can be expensive operation. - <strong>print_impact</strong></li>
 </ul>
 <h2 id="parameters">Parameters</h2>
-<p>spark :
-Spark Session
-idf :
-Input Dataframe
-list_of_cols :
-List of columns to analyse e.g., ["col1","col2"].
+<dl>
+<dt><strong><code>spark</code></strong></dt>
+<dd>Spark Session</dd>
+<dt><strong><code>idf</code></strong></dt>
+<dd>Input Dataframe</dd>
+<dt><strong><code>list_of_cols</code></strong></dt>
+<dd>List of columns to analyse e.g., ["col1","col2"].
 Alternatively, columns can be specified in a string format,
 where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
 "all" can be passed to include all columns for analysis.
 Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
-drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
-drop_cols :
-List of columns to be dropped e.g., ["col1","col2"].
+drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")</dd>
+<dt><strong><code>drop_cols</code></strong></dt>
+<dd>List of columns to be dropped e.g., ["col1","col2"].
 Alternatively, columns can be specified in a string format,
-where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])
-label_col :
-Label/Target column (Default value = "label")
-event_label :
-Value of (positive) event (i.e label 1) (Default value = 1)
-encoding_configs :
-Takes input in dictionary format. Default {} i.e. empty dict means no encoding is required.
+where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])</dd>
+<dt><strong><code>label_col</code></strong></dt>
+<dd>Label/Target column (Default value = "label")</dd>
+<dt><strong><code>event_label</code></strong></dt>
+<dd>Value of (positive) event (i.e label 1) (Default value = 1)</dd>
+<dt><strong><code>encoding_configs</code></strong></dt>
+<dd>Takes input in dictionary format. Default {} i.e. empty dict means no encoding is required.
 In case numerical columns are present and encoding is required, following keys shall be
 provided - "bin_size" i.e. no. of bins for converting the numerical columns to categorical,
 "bin_method" i.e. method of binning - "equal_frequency" or "equal_range" and
 "monotonicity_check" 1 for monotonic binning else 0. monotonicity_check of 1 will
-dynamically calculate the bin_size ensuring monotonic nature but can be expensive operation.
-print_impact :
+dynamically calculate the bin_size ensuring monotonic nature but can be expensive operation.</dd>
+</dl>
+<p>print_impact :
 True, False (Default value = False)
 "bin_size": 10 :</p>
 <p>"monotonicity_check": 0 :</p>
@@ -941,26 +943,26 @@ def IV_calculation(
 
     Parameters
     ----------
-    spark :
+    spark
         Spark Session
-    idf :
+    idf
         Input Dataframe
-    list_of_cols :
+    list_of_cols
         List of columns to analyse e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
         "all" can be passed to include all columns for analysis.
         Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
         drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
-    drop_cols :
+    drop_cols
         List of columns to be dropped e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])
-    label_col :
+    label_col
         Label/Target column (Default value = "label")
-    event_label :
+    event_label
         Value of (positive) event (i.e label 1) (Default value = 1)
-    encoding_configs :
+    encoding_configs
         Takes input in dictionary format. Default {} i.e. empty dict means no encoding is required.
         In case numerical columns are present and encoding is required, following keys shall be
         provided - "bin_size" i.e. no. of bins for converting the numerical columns to categorical,
@@ -1086,27 +1088,29 @@ between attribute X and Y can be found at intersection of a) row with value X in
 in dictionary format, to read output from measures_of_cardinality function of stats generator. - <strong>print_impact</strong></li>
 </ul>
 <h2 id="parameters">Parameters</h2>
-<p>spark :
-Spark Session
-idf :
-Input Dataframe
-list_of_cols :
-List of columns to analyse e.g., ["col1","col2"].
+<dl>
+<dt><strong><code>spark</code></strong></dt>
+<dd>Spark Session</dd>
+<dt><strong><code>idf</code></strong></dt>
+<dd>Input Dataframe</dd>
+<dt><strong><code>list_of_cols</code></strong></dt>
+<dd>List of columns to analyse e.g., ["col1","col2"].
 Alternatively, columns can be specified in a string format,
 where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
 "all" can be passed to include all columns for analysis.
 Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
-drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
-drop_cols :
-List of columns to be dropped e.g., ["col1","col2"].
+drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")</dd>
+<dt><strong><code>drop_cols</code></strong></dt>
+<dd>List of columns to be dropped e.g., ["col1","col2"].
 Alternatively, columns can be specified in a string format,
-where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])
-stats_unique :
-Takes arguments for read_dataset (data_ingest module) function in a dictionary format
+where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])</dd>
+<dt><strong><code>stats_unique</code></strong></dt>
+<dd>Takes arguments for read_dataset (data_ingest module) function in a dictionary format
 to read pre-saved statistics on unique value count i.e. if measures_of_cardinality or
-uniqueCount_computation (data_analyzer.stats_generator module) has been computed &amp; saved before. (Default value = {})
-print_impact :
-True, False (Default value = False)</p>
+uniqueCount_computation (data_analyzer.stats_generator module) has been computed &amp; saved before. (Default value = {})</dd>
+<dt><strong><code>print_impact</code></strong></dt>
+<dd>True, False (Default value = False)</dd>
+</dl>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -1142,26 +1146,26 @@ def correlation_matrix(
 
     Parameters
     ----------
-    spark :
+    spark
         Spark Session
-    idf :
+    idf
         Input Dataframe
-    list_of_cols :
+    list_of_cols
         List of columns to analyse e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
         "all" can be passed to include all columns for analysis.
         Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
         drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
-    drop_cols :
+    drop_cols
         List of columns to be dropped e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])
-    stats_unique :
+    stats_unique
         Takes arguments for read_dataset (data_ingest module) function in a dictionary format
         to read pre-saved statistics on unique value count i.e. if measures_of_cardinality or
         uniqueCount_computation (data_analyzer.stats_generator module) has been computed & saved before. (Default value = {})
-    print_impact :
+    print_impact
         True, False (Default value = False)
 
     Returns
@@ -1243,34 +1247,36 @@ dictionary format, to read output from measures_of_centralTendency function of s
 MMM imputation as Variable Clustering doesn’t work with missing values. - <strong>print_impact</strong></li>
 </ul>
 <h2 id="parameters">Parameters</h2>
-<p>spark :
-Spark Session
-idf :
-Input Dataframe
-list_of_cols :
-List of columns to analyse e.g., ["col1","col2"].
+<dl>
+<dt><strong><code>spark</code></strong></dt>
+<dd>Spark Session</dd>
+<dt><strong><code>idf</code></strong></dt>
+<dd>Input Dataframe</dd>
+<dt><strong><code>list_of_cols</code></strong></dt>
+<dd>List of columns to analyse e.g., ["col1","col2"].
 Alternatively, columns can be specified in a string format,
 where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
 "all" can be passed to include all columns for analysis.
 Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
-drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
-drop_cols :
-List of columns to be dropped e.g., ["col1","col2"].
+drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")</dd>
+<dt><strong><code>drop_cols</code></strong></dt>
+<dd>List of columns to be dropped e.g., ["col1","col2"].
 Alternatively, columns can be specified in a string format,
-where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])
-sample_size :
-Maximum sample size (in terms of number of rows) taken for the computation.
-Sample dataset is extracted using random sampling. (Default value = 100000)
-stats_unique :
-Takes arguments for read_dataset (data_ingest module) function in a dictionary format
+where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])</dd>
+<dt><strong><code>sample_size</code></strong></dt>
+<dd>Maximum sample size (in terms of number of rows) taken for the computation.
+Sample dataset is extracted using random sampling. (Default value = 100000)</dd>
+<dt><strong><code>stats_unique</code></strong></dt>
+<dd>Takes arguments for read_dataset (data_ingest module) function in a dictionary format
 to read pre-saved statistics on unique value count i.e. if measures_of_cardinality or
-uniqueCount_computation (data_analyzer.stats_generator module) has been computed &amp; saved before. (Default value = {})
-stats_mode :
-Takes arguments for read_dataset (data_ingest module) function in a dictionary format
+uniqueCount_computation (data_analyzer.stats_generator module) has been computed &amp; saved before. (Default value = {})</dd>
+<dt><strong><code>stats_mode</code></strong></dt>
+<dd>Takes arguments for read_dataset (data_ingest module) function in a dictionary format
 to read pre-saved statistics on most frequently seen values i.e. if measures_of_centralTendency or
-mode_computation (data_analyzer.stats_generator module) has been computed &amp; saved before. (Default value = {})
-print_impact :
-True, False (Default value = False)</p>
+mode_computation (data_analyzer.stats_generator module) has been computed &amp; saved before. (Default value = {})</dd>
+<dt><strong><code>print_impact</code></strong></dt>
+<dd>True, False (Default value = False)</dd>
+</dl>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -1310,33 +1316,33 @@ def variable_clustering(
 
     Parameters
     ----------
-    spark :
+    spark
         Spark Session
-    idf :
+    idf
         Input Dataframe
-    list_of_cols :
+    list_of_cols
         List of columns to analyse e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
         "all" can be passed to include all columns for analysis.
         Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
         drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
-    drop_cols :
+    drop_cols
         List of columns to be dropped e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])
-    sample_size :
+    sample_size
         Maximum sample size (in terms of number of rows) taken for the computation.
         Sample dataset is extracted using random sampling. (Default value = 100000)
-    stats_unique :
+    stats_unique
         Takes arguments for read_dataset (data_ingest module) function in a dictionary format
         to read pre-saved statistics on unique value count i.e. if measures_of_cardinality or
         uniqueCount_computation (data_analyzer.stats_generator module) has been computed & saved before. (Default value = {})
-    stats_mode :
+    stats_mode
         Takes arguments for read_dataset (data_ingest module) function in a dictionary format
         to read pre-saved statistics on most frequently seen values i.e. if measures_of_centralTendency or
         mode_computation (data_analyzer.stats_generator module) has been computed & saved before. (Default value = {})
-    print_impact :
+    print_impact
         True, False (Default value = False)
 
     Returns

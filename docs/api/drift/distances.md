@@ -15,9 +15,9 @@ def hellinger(p, q):
 
     Parameters
     ----------
-    p :
+    p
         param q:
-    q :
+    q
 
 
     Returns
@@ -32,9 +32,9 @@ def psi(p, q):
 
     Parameters
     ----------
-    p :
+    p
         param q:
-    q :
+    q
 
 
     Returns
@@ -49,9 +49,9 @@ def kl_divergence(p, q):
 
     Parameters
     ----------
-    p :
+    p
         param q:
-    q :
+    q
 
 
     Returns
@@ -67,9 +67,9 @@ def js_divergence(p, q):
 
     Parameters
     ----------
-    p :
+    p
         param q:
-    q :
+    q
 
 
     Returns
@@ -88,9 +88,9 @@ def ks(p, q):
 
     Parameters
     ----------
-    p :
+    p
         param q:
-    q :
+    q
 
 
     Returns
@@ -108,9 +108,12 @@ def ks(p, q):
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
-<p>p :
-param q:
-q :</p>
+<dl>
+<dt><strong><code>p</code></strong></dt>
+<dd>param q:</dd>
+<dt><strong><code>q</code></strong></dt>
+<dd>&nbsp;</dd>
+</dl>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -123,9 +126,9 @@ def hellinger(p, q):
 
     Parameters
     ----------
-    p :
+    p
         param q:
-    q :
+    q
 
 
     Returns
@@ -142,9 +145,12 @@ def hellinger(p, q):
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
-<p>p :
-param q:
-q :</p>
+<dl>
+<dt><strong><code>p</code></strong></dt>
+<dd>param q:</dd>
+<dt><strong><code>q</code></strong></dt>
+<dd>&nbsp;</dd>
+</dl>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -157,9 +163,9 @@ def js_divergence(p, q):
 
     Parameters
     ----------
-    p :
+    p
         param q:
-    q :
+    q
 
 
     Returns
@@ -180,9 +186,12 @@ def js_divergence(p, q):
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
-<p>p :
-param q:
-q :</p>
+<dl>
+<dt><strong><code>p</code></strong></dt>
+<dd>param q:</dd>
+<dt><strong><code>q</code></strong></dt>
+<dd>&nbsp;</dd>
+</dl>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -195,9 +204,9 @@ def kl_divergence(p, q):
 
     Parameters
     ----------
-    p :
+    p
         param q:
-    q :
+    q
 
 
     Returns
@@ -215,9 +224,12 @@ def kl_divergence(p, q):
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
-<p>p :
-param q:
-q :</p>
+<dl>
+<dt><strong><code>p</code></strong></dt>
+<dd>param q:</dd>
+<dt><strong><code>q</code></strong></dt>
+<dd>&nbsp;</dd>
+</dl>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -230,9 +242,9 @@ def ks(p, q):
 
     Parameters
     ----------
-    p :
+    p
         param q:
-    q :
+    q
 
 
     Returns
@@ -249,9 +261,12 @@ def ks(p, q):
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
-<p>p :
-param q:
-q :</p>
+<dl>
+<dt><strong><code>p</code></strong></dt>
+<dd>param q:</dd>
+<dt><strong><code>q</code></strong></dt>
+<dd>&nbsp;</dd>
+</dl>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -264,9 +279,9 @@ def psi(p, q):
 
     Parameters
     ----------
-    p :
+    p
         param q:
-    q :
+    q
 
 
     Returns
