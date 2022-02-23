@@ -40,12 +40,11 @@ jobs:
 
       - name: Install Python requirements for API docs generation
         run: |
-          pip install pdoc3 pyment
+          pip install pdoc3
 
       - name: Generate API docs
         run: |
           cd anovos/src/main
-          pyment -o google -w anovos
           pdoc --output-dir=./api --template-dir=../../../pdoc-template --html anovos
           mv ./api/anovos/* ./api/
           rmdir ./api/anovos
