@@ -29,27 +29,36 @@ def list_all_industry():
 
 
 def list_all_usecase():
-    """:return: DataFrame of all the supported usecases as part of feature exploration/recommendation"""
+    """
+
+    Returns
+    -------
+    DataFrame of all the supported usecases as part of feature exploration/recommendation
+    """
     odf_uni = df_input_fer.iloc[:, 3].unique()
     odf = pd.DataFrame(odf_uni, columns=["Usecase"])
     return odf
 
 
 def list_all_pair():
-    """:return: DataFrame of all the supported Industry/Usecase pairs as part of feature exploration/recommendation"""
+    """
+    Returns
+    -------
+    DataFrame of all the supported Industry/Usecase pairs as part of feature exploration/recommendation
+    """
     odf = df_input_fer.iloc[:, [2, 3]].drop_duplicates(keep="last", ignore_index=True)
     return odf
 
 
-def process_usecase(usecase, semantic):
+def process_usecase(usecase: str, semantic: bool):
     """
 
     Parameters
     ----------
-    usecase :
-        Input usecase (string)
-    semantic :
-        Input semantic (boolean) - Whether the input needs to go through semantic similarity or not. Default is True.
+    usecase : str
+        Input usecase
+    semantic : bool
+        Whether the input needs to go through semantic similarity or not. Default is True.
 
     Returns
     -------
@@ -77,15 +86,15 @@ def process_usecase(usecase, semantic):
     return processed_usecase
 
 
-def process_industry(industry, semantic):
+def process_industry(industry: str, semantic: bool):
     """
 
     Parameters
     ----------
-    industry :
-        Input industry (string)
-    semantic :
-        Input semantic (boolean) - Whether the input needs to go through semantic similarity or not. Default is True.
+    industry : str
+        Input industry
+    semantic : bool
+        Whether the input needs to go through semantic similarity or not. Default is True.
 
     Returns
     -------
@@ -120,9 +129,9 @@ def list_usecase_by_industry(industry, semantic=True):
 
     Parameters
     ----------
-    industry :
+    industry
         Input industry (string)
-    semantic :
+    semantic
         Input semantic (boolean) - Whether the input needs to go through semantic similarity or not. Default is True.
 
     Returns
@@ -140,9 +149,9 @@ def list_industry_by_usecase(usecase, semantic=True):
 
     Parameters
     ----------
-    usecase :
+    usecase
         Input usecase (string)
-    semantic :
+    semantic
         Input semantic (boolean) - Whether the input needs to go through semantic similarity or not. Default is True.
 
     Returns
@@ -160,12 +169,12 @@ def list_feature_by_industry(industry, num_of_feat=100, semantic=True):
 
     Parameters
     ----------
-    industry :
+    industry
         Input industry (string)
-    num_of_feat :
+    num_of_feat
         Number of features to be displayed in the output.
         Value can be either integer, or 'all' - display all features matched with the input. Default is 100.
-    semantic :
+    semantic
         Input semantic (boolean) - Whether the input needs to go through semantic similarity or not. Default is True.
 
     Returns
@@ -195,12 +204,12 @@ def list_feature_by_usecase(usecase, num_of_feat=100, semantic=True):
 
     Parameters
     ----------
-    usecase :
+    usecase
         Input usecase (string)
-    num_of_feat :
+    num_of_feat
         Number of features to be displayed in the output.
         Value can be either integer, or 'all' - display all features matched with the input.  Default is 100.
-    semantic :
+    semantic
         Input semantic (boolean) - Whether the input needs to go through semantic similarity or not. Default is True.
 
     Returns
@@ -230,14 +239,14 @@ def list_feature_by_pair(industry, usecase, num_of_feat=100, semantic=True):
 
     Parameters
     ----------
-    industry :
+    industry
         Input industry (string)
-    usecase :
+    usecase
         Input usecase (string)
-    num_of_feat :
+    num_of_feat
         Number of features to be displayed in the output.
         Value can be either integer, or 'all' - display all features matched with the input.  Default is 100.
-    semantic :
+    semantic
         Input semantic (boolean) - Whether the input needs to go through semantic similarity or not. Default is True.
 
     Returns
@@ -292,7 +301,11 @@ def list_all_industry():
 <span>def <span class="ident">list_all_pair</span></span>(<span>)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>:return: DataFrame of all the supported Industry/Usecase pairs as part of feature exploration/recommendation</p></div>
+<div class="desc"><h2 id="returns">Returns</h2>
+<dl>
+<dt><code>DataFrame</code> of <code>all the supported Industry/Usecase pairs as part</code> of <code>feature exploration/recommendation</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -300,7 +313,11 @@ def list_all_industry():
 <pre>
 ```python
 def list_all_pair():
-    """:return: DataFrame of all the supported Industry/Usecase pairs as part of feature exploration/recommendation"""
+    """
+    Returns
+    -------
+    DataFrame of all the supported Industry/Usecase pairs as part of feature exploration/recommendation
+    """
     odf = df_input_fer.iloc[:, [2, 3]].drop_duplicates(keep="last", ignore_index=True)
     return odf
 ```
@@ -311,7 +328,11 @@ def list_all_pair():
 <span>def <span class="ident">list_all_usecase</span></span>(<span>)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>:return: DataFrame of all the supported usecases as part of feature exploration/recommendation</p></div>
+<div class="desc"><h2 id="returns">Returns</h2>
+<dl>
+<dt><code>DataFrame</code> of <code>all the supported usecases as part</code> of <code>feature exploration/recommendation</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -319,7 +340,12 @@ def list_all_pair():
 <pre>
 ```python
 def list_all_usecase():
-    """:return: DataFrame of all the supported usecases as part of feature exploration/recommendation"""
+    """
+
+    Returns
+    -------
+    DataFrame of all the supported usecases as part of feature exploration/recommendation
+    """
     odf_uni = df_input_fer.iloc[:, 3].unique()
     odf = pd.DataFrame(odf_uni, columns=["Usecase"])
     return odf
@@ -332,13 +358,15 @@ def list_all_usecase():
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
-<p>industry :
-Input industry (string)
-num_of_feat :
-Number of features to be displayed in the output.
-Value can be either integer, or 'all' - display all features matched with the input. Default is 100.
-semantic :
-Input semantic (boolean) - Whether the input needs to go through semantic similarity or not. Default is True.</p>
+<dl>
+<dt><strong><code>industry</code></strong></dt>
+<dd>Input industry (string)</dd>
+<dt><strong><code>num_of_feat</code></strong></dt>
+<dd>Number of features to be displayed in the output.
+Value can be either integer, or 'all' - display all features matched with the input. Default is 100.</dd>
+<dt><strong><code>semantic</code></strong></dt>
+<dd>Input semantic (boolean) - Whether the input needs to go through semantic similarity or not. Default is True.</dd>
+</dl>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -351,12 +379,12 @@ def list_feature_by_industry(industry, num_of_feat=100, semantic=True):
 
     Parameters
     ----------
-    industry :
+    industry
         Input industry (string)
-    num_of_feat :
+    num_of_feat
         Number of features to be displayed in the output.
         Value can be either integer, or 'all' - display all features matched with the input. Default is 100.
-    semantic :
+    semantic
         Input semantic (boolean) - Whether the input needs to go through semantic similarity or not. Default is True.
 
     Returns
@@ -388,16 +416,18 @@ def list_feature_by_industry(industry, num_of_feat=100, semantic=True):
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
-<p>industry :
-Input industry (string)
-usecase :
-Input usecase (string)
-num_of_feat :
-Number of features to be displayed in the output.
+<dl>
+<dt><strong><code>industry</code></strong></dt>
+<dd>Input industry (string)</dd>
+<dt><strong><code>usecase</code></strong></dt>
+<dd>Input usecase (string)</dd>
+<dt><strong><code>num_of_feat</code></strong></dt>
+<dd>Number of features to be displayed in the output.
 Value can be either integer, or 'all' - display all features matched with the input.
-Default is 100.
-semantic :
-Input semantic (boolean) - Whether the input needs to go through semantic similarity or not. Default is True.</p>
+Default is 100.</dd>
+<dt><strong><code>semantic</code></strong></dt>
+<dd>Input semantic (boolean) - Whether the input needs to go through semantic similarity or not. Default is True.</dd>
+</dl>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -410,14 +440,14 @@ def list_feature_by_pair(industry, usecase, num_of_feat=100, semantic=True):
 
     Parameters
     ----------
-    industry :
+    industry
         Input industry (string)
-    usecase :
+    usecase
         Input usecase (string)
-    num_of_feat :
+    num_of_feat
         Number of features to be displayed in the output.
         Value can be either integer, or 'all' - display all features matched with the input.  Default is 100.
-    semantic :
+    semantic
         Input semantic (boolean) - Whether the input needs to go through semantic similarity or not. Default is True.
 
     Returns
@@ -452,14 +482,16 @@ def list_feature_by_pair(industry, usecase, num_of_feat=100, semantic=True):
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
-<p>usecase :
-Input usecase (string)
-num_of_feat :
-Number of features to be displayed in the output.
+<dl>
+<dt><strong><code>usecase</code></strong></dt>
+<dd>Input usecase (string)</dd>
+<dt><strong><code>num_of_feat</code></strong></dt>
+<dd>Number of features to be displayed in the output.
 Value can be either integer, or 'all' - display all features matched with the input.
-Default is 100.
-semantic :
-Input semantic (boolean) - Whether the input needs to go through semantic similarity or not. Default is True.</p>
+Default is 100.</dd>
+<dt><strong><code>semantic</code></strong></dt>
+<dd>Input semantic (boolean) - Whether the input needs to go through semantic similarity or not. Default is True.</dd>
+</dl>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -472,12 +504,12 @@ def list_feature_by_usecase(usecase, num_of_feat=100, semantic=True):
 
     Parameters
     ----------
-    usecase :
+    usecase
         Input usecase (string)
-    num_of_feat :
+    num_of_feat
         Number of features to be displayed in the output.
         Value can be either integer, or 'all' - display all features matched with the input.  Default is 100.
-    semantic :
+    semantic
         Input semantic (boolean) - Whether the input needs to go through semantic similarity or not. Default is True.
 
     Returns
@@ -509,10 +541,12 @@ def list_feature_by_usecase(usecase, num_of_feat=100, semantic=True):
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
-<p>usecase :
-Input usecase (string)
-semantic :
-Input semantic (boolean) - Whether the input needs to go through semantic similarity or not. Default is True.</p>
+<dl>
+<dt><strong><code>usecase</code></strong></dt>
+<dd>Input usecase (string)</dd>
+<dt><strong><code>semantic</code></strong></dt>
+<dd>Input semantic (boolean) - Whether the input needs to go through semantic similarity or not. Default is True.</dd>
+</dl>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -525,9 +559,9 @@ def list_industry_by_usecase(usecase, semantic=True):
 
     Parameters
     ----------
-    usecase :
+    usecase
         Input usecase (string)
-    semantic :
+    semantic
         Input semantic (boolean) - Whether the input needs to go through semantic similarity or not. Default is True.
 
     Returns
@@ -547,10 +581,12 @@ def list_industry_by_usecase(usecase, semantic=True):
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
-<p>industry :
-Input industry (string)
-semantic :
-Input semantic (boolean) - Whether the input needs to go through semantic similarity or not. Default is True.</p>
+<dl>
+<dt><strong><code>industry</code></strong></dt>
+<dd>Input industry (string)</dd>
+<dt><strong><code>semantic</code></strong></dt>
+<dd>Input semantic (boolean) - Whether the input needs to go through semantic similarity or not. Default is True.</dd>
+</dl>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -563,9 +599,9 @@ def list_usecase_by_industry(industry, semantic=True):
 
     Parameters
     ----------
-    industry :
+    industry
         Input industry (string)
-    semantic :
+    semantic
         Input semantic (boolean) - Whether the input needs to go through semantic similarity or not. Default is True.
 
     Returns
@@ -581,14 +617,16 @@ def list_usecase_by_industry(industry, semantic=True):
 </details>
 </dd>
 <dt id="anovos.feature_recommender.feature_exploration.process_industry"><code class="name flex">
-<span>def <span class="ident">process_industry</span></span>(<span>industry, semantic)</span>
+<span>def <span class="ident">process_industry</span></span>(<span>industry: str, semantic: bool)</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
-<p>industry :
-Input industry (string)
-semantic :
-Input semantic (boolean) - Whether the input needs to go through semantic similarity or not. Default is True.</p>
+<dl>
+<dt><strong><code>industry</code></strong> :&ensp;<code>str</code></dt>
+<dd>Input industry</dd>
+<dt><strong><code>semantic</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Whether the input needs to go through semantic similarity or not. Default is True.</dd>
+</dl>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -596,15 +634,15 @@ Input semantic (boolean) - Whether the input needs to go through semantic simila
 </summary>
 <pre>
 ```python
-def process_industry(industry, semantic):
+def process_industry(industry: str, semantic: bool):
     """
 
     Parameters
     ----------
-    industry :
-        Input industry (string)
-    semantic :
-        Input semantic (boolean) - Whether the input needs to go through semantic similarity or not. Default is True.
+    industry : str
+        Input industry
+    semantic : bool
+        Whether the input needs to go through semantic similarity or not. Default is True.
 
     Returns
     -------
@@ -637,14 +675,16 @@ def process_industry(industry, semantic):
 </details>
 </dd>
 <dt id="anovos.feature_recommender.feature_exploration.process_usecase"><code class="name flex">
-<span>def <span class="ident">process_usecase</span></span>(<span>usecase, semantic)</span>
+<span>def <span class="ident">process_usecase</span></span>(<span>usecase: str, semantic: bool)</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
-<p>usecase :
-Input usecase (string)
-semantic :
-Input semantic (boolean) - Whether the input needs to go through semantic similarity or not. Default is True.</p>
+<dl>
+<dt><strong><code>usecase</code></strong> :&ensp;<code>str</code></dt>
+<dd>Input usecase</dd>
+<dt><strong><code>semantic</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Whether the input needs to go through semantic similarity or not. Default is True.</dd>
+</dl>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -652,15 +692,15 @@ Input semantic (boolean) - Whether the input needs to go through semantic simila
 </summary>
 <pre>
 ```python
-def process_usecase(usecase, semantic):
+def process_usecase(usecase: str, semantic: bool):
     """
 
     Parameters
     ----------
-    usecase :
-        Input usecase (string)
-    semantic :
-        Input semantic (boolean) - Whether the input needs to go through semantic similarity or not. Default is True.
+    usecase : str
+        Input usecase
+    semantic : bool
+        Whether the input needs to go through semantic similarity or not. Default is True.
 
     Returns
     -------

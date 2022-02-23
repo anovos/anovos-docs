@@ -41,7 +41,7 @@ def remove_u_score(col):
 
     Parameters
     ----------
-    col :
+    col
         Analysis column containing "_" present gets replaced along with upper case conversion
 
     Returns
@@ -65,11 +65,11 @@ def line_chart_gen_stability(df1, df2, col):
 
     Parameters
     ----------
-    df1 :
+    df1
         Analysis dataframe pertaining to summarized stability metrics
-    df2 :
+    df2
         Analysis dataframe pertaining to historical data
-    col :
+    col
         Analysis column
 
     Returns
@@ -82,7 +82,7 @@ def line_chart_gen_stability(df1, df2, col):
 
         Parameters
         ----------
-        val :
+        val
 
 
         Returns
@@ -190,11 +190,11 @@ def data_analyzer_output(master_path, avl_recs_tab, tab_name):
 
     Parameters
     ----------
-    master_path :
+    master_path
         Path containing all the output from analyzed data
-    avl_recs_tab :
+    avl_recs_tab
         Available file names from the analysis tab
-    tab_name :
+    tab_name
         Analysis tab from association_evaluator / quality_checker / stats_generator
 
     Returns
@@ -428,13 +428,13 @@ def drift_stability_ind(
 
     Parameters
     ----------
-    missing_recs_drift :
+    missing_recs_drift
         param drift_tab:
-    missing_recs_stability :
+    missing_recs_stability
         param stability_tab:
-    drift_tab :
+    drift_tab
 
-    stability_tab :
+    stability_tab
 
 
     Returns
@@ -465,11 +465,11 @@ def chart_gen_list(master_path, chart_type, type_col=None):
 
     Parameters
     ----------
-    master_path :
+    master_path
         Path containing all the charts same as the other files from data analyzed output
-    chart_type :
+    chart_type
         Files containing only the specific chart names for the specific chart category
-    type_col :
+    type_col
         None. Default value is kept as None
 
     Returns
@@ -525,19 +525,19 @@ def executive_summary_gen(
 
     Parameters
     ----------
-    master_path :
+    master_path
         Path containing the input files.
-    label_col :
+    label_col
         Label column.
-    ds_ind :
+    ds_ind
         Drift stability indicator in list form.
-    id_col :
+    id_col
         ID column.
-    iv_threshold :
+    iv_threshold
         IV threshold beyond which attributes can be called as significant.
-    corr_threshold :
+    corr_threshold
         Correlation threshold beyond which attributes can be categorized under correlated.
-    print_report :
+    print_report
         Printing option flexibility. Default value is kept as False.
 
     Returns
@@ -933,13 +933,13 @@ def wiki_generator(
 
     Parameters
     ----------
-    master_path :
+    master_path
         Path containing the input files.
-    dataDict_path :
+    dataDict_path
         Data dictionary path. Default value is kept as None.
-    metricDict_path :
+    metricDict_path
         Metric dictionary path. Default value is kept as None.
-    print_report :
+    print_report
         Printing option flexibility. Default value is kept as False.
 
     Returns
@@ -1030,19 +1030,19 @@ def descriptive_statistics(
 
     Parameters
     ----------
-    master_path :
+    master_path
         Path containing the input files.
-    SG_tabs :
+    SG_tabs
         measures_of_counts','measures_of_centralTendency','measures_of_cardinality','measures_of_percentiles','measures_of_dispersion','measures_of_shape','global_summary'
-    avl_recs_SG :
+    avl_recs_SG
         Available files from the SG_tabs (Stats Generator tabs)
-    missing_recs_SG :
+    missing_recs_SG
         Missing files from the SG_tabs (Stats Generator tabs)
-    all_charts_num_1_ :
+    all_charts_num_1_
         Numerical charts (histogram) all collated in a list format supported as per datapane objects
-    all_charts_cat_1_ :
+    all_charts_cat_1_
         Categorical charts (barplot) all collated in a list format supported as per datapane objects
-    print_report :
+    print_report
         Printing option flexibility. Default value is kept as False.
 
     Returns
@@ -1208,17 +1208,17 @@ def quality_check(
 
     Parameters
     ----------
-    master_path :
+    master_path
         Path containing the input files.
-    QC_tabs :
+    QC_tabs
         nullColumns_detection','IDness_detection','biasedness_detection','invalidEntries_detection','duplicate_detection','nullRows_detection','outlier_detection'
-    avl_recs_QC :
+    avl_recs_QC
         Available files from the QC_tabs (Quality Checker tabs)
-    missing_recs_QC :
+    missing_recs_QC
         Missing files from the QC_tabs (Quality Checker tabs)
-    all_charts_num_3_ :
+    all_charts_num_3_
         Numerical charts (outlier charts) all collated in a list format supported as per datapane objects
-    print_report :
+    print_report
         Printing option flexibility. Default value is kept as False.
 
     Returns
@@ -1375,21 +1375,21 @@ def attribute_associations(
 
     Parameters
     ----------
-    master_path :
+    master_path
         Path containing the input files.
-    AE_tabs :
+    AE_tabs
         correlation_matrix','IV_calculation','IG_calculation','variable_clustering'
-    avl_recs_AE :
+    avl_recs_AE
         Available files from the AE_tabs (Association Evaluator tabs)
-    missing_recs_AE :
+    missing_recs_AE
         Missing files from the AE_tabs (Association Evaluator tabs)
-    label_col :
+    label_col
         label column
-    all_charts_num_2_ :
+    all_charts_num_2_
         Numerical charts (histogram) all collated in a list format supported as per datapane objects
-    all_charts_cat_2_ :
+    all_charts_cat_2_
         Categorical charts (barplot) all collated in a list format supported as per datapane objects
-    print_report :
+    print_report
         Printing option flexibility. Default value is kept as False.
 
     Returns
@@ -1529,17 +1529,17 @@ def data_drift_stability(
 
     Parameters
     ----------
-    master_path :
+    master_path
         Path containing the input files.
-    ds_ind :
+    ds_ind
         Drift stability indicator in list form.
-    id_col :
+    id_col
         ID column
-    drift_threshold_model :
+    drift_threshold_model
         threshold which the user is specifying for tagging an attribute to be drifted or not
-    all_drift_charts_ :
+    all_drift_charts_
         Charts (histogram/barplot) all collated in a list format supported as per datapane objects
-    print_report :
+    print_report
         Printing option flexibility. Default value is kept as False.
 
     Returns
@@ -1651,9 +1651,9 @@ def data_drift_stability(
 
             Parameters
             ----------
-            drifted_feats :
+            drifted_feats
                 count of attributes drifted
-            len_feats :
+            len_feats
                 count of attributes passed for analysis
 
             Returns
@@ -2059,25 +2059,25 @@ def anovos_report(
 
     Parameters
     ----------
-    master_path :
+    master_path
         Path containing the input files.
-    id_col :
+    id_col
         ID column (Default value = "")
-    label_col :
+    label_col
         label column (Default value = "")
-    corr_threshold :
+    corr_threshold
         Correlation threshold beyond which attributes can be categorized under correlated. (Default value = 0.4)
-    iv_threshold :
+    iv_threshold
         IV threshold beyond which attributes can be called as significant. (Default value = 0.02)
-    drift_threshold_model :
+    drift_threshold_model
         threshold which the user is specifying for tagging an attribute to be drifted or not (Default value = 0.1)
-    dataDict_path :
+    dataDict_path
         Data dictionary path. Default value is kept as None.
-    metricDict_path :
+    metricDict_path
         Metric dictionary path. Default value is kept as None.
-    run_type :
+    run_type
         local or emr or databricks option. Default is kept as local
-    final_report_path :
+    final_report_path
         Path where the report will be saved. (Default value = ".")
 
     Returns
@@ -2438,26 +2438,28 @@ def anovos_report(
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
-<p>master_path :
-Path containing the input files.
-id_col :
-ID column (Default value = "")
-label_col :
-label column (Default value = "")
-corr_threshold :
-Correlation threshold beyond which attributes can be categorized under correlated. (Default value = 0.4)
-iv_threshold :
-IV threshold beyond which attributes can be called as significant. (Default value = 0.02)
-drift_threshold_model :
-threshold which the user is specifying for tagging an attribute to be drifted or not (Default value = 0.1)
-dataDict_path :
-Data dictionary path. Default value is kept as None.
-metricDict_path :
-Metric dictionary path. Default value is kept as None.
-run_type :
-local or emr or databricks option. Default is kept as local
-final_report_path :
-Path where the report will be saved. (Default value = ".")</p>
+<dl>
+<dt><strong><code>master_path</code></strong></dt>
+<dd>Path containing the input files.</dd>
+<dt><strong><code>id_col</code></strong></dt>
+<dd>ID column (Default value = "")</dd>
+<dt><strong><code>label_col</code></strong></dt>
+<dd>label column (Default value = "")</dd>
+<dt><strong><code>corr_threshold</code></strong></dt>
+<dd>Correlation threshold beyond which attributes can be categorized under correlated. (Default value = 0.4)</dd>
+<dt><strong><code>iv_threshold</code></strong></dt>
+<dd>IV threshold beyond which attributes can be called as significant. (Default value = 0.02)</dd>
+<dt><strong><code>drift_threshold_model</code></strong></dt>
+<dd>threshold which the user is specifying for tagging an attribute to be drifted or not (Default value = 0.1)</dd>
+<dt><strong><code>dataDict_path</code></strong></dt>
+<dd>Data dictionary path. Default value is kept as None.</dd>
+<dt><strong><code>metricDict_path</code></strong></dt>
+<dd>Metric dictionary path. Default value is kept as None.</dd>
+<dt><strong><code>run_type</code></strong></dt>
+<dd>local or emr or databricks option. Default is kept as local</dd>
+<dt><strong><code>final_report_path</code></strong></dt>
+<dd>Path where the report will be saved. (Default value = ".")</dd>
+</dl>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -2481,25 +2483,25 @@ def anovos_report(
 
     Parameters
     ----------
-    master_path :
+    master_path
         Path containing the input files.
-    id_col :
+    id_col
         ID column (Default value = "")
-    label_col :
+    label_col
         label column (Default value = "")
-    corr_threshold :
+    corr_threshold
         Correlation threshold beyond which attributes can be categorized under correlated. (Default value = 0.4)
-    iv_threshold :
+    iv_threshold
         IV threshold beyond which attributes can be called as significant. (Default value = 0.02)
-    drift_threshold_model :
+    drift_threshold_model
         threshold which the user is specifying for tagging an attribute to be drifted or not (Default value = 0.1)
-    dataDict_path :
+    dataDict_path
         Data dictionary path. Default value is kept as None.
-    metricDict_path :
+    metricDict_path
         Metric dictionary path. Default value is kept as None.
-    run_type :
+    run_type
         local or emr or databricks option. Default is kept as local
-    final_report_path :
+    final_report_path
         Path where the report will be saved. (Default value = ".")
 
     Returns
@@ -2859,22 +2861,24 @@ def anovos_report(
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
-<p>master_path :
-Path containing the input files.
-AE_tabs :
-correlation_matrix','IV_calculation','IG_calculation','variable_clustering'
-avl_recs_AE :
-Available files from the AE_tabs (Association Evaluator tabs)
-missing_recs_AE :
-Missing files from the AE_tabs (Association Evaluator tabs)
-label_col :
-label column
-all_charts_num_2_ :
-Numerical charts (histogram) all collated in a list format supported as per datapane objects
-all_charts_cat_2_ :
-Categorical charts (barplot) all collated in a list format supported as per datapane objects
-print_report :
-Printing option flexibility. Default value is kept as False.</p>
+<dl>
+<dt><strong><code>master_path</code></strong></dt>
+<dd>Path containing the input files.</dd>
+<dt><strong><code>AE_tabs</code></strong></dt>
+<dd>correlation_matrix','IV_calculation','IG_calculation','variable_clustering'</dd>
+<dt><strong><code>avl_recs_AE</code></strong></dt>
+<dd>Available files from the AE_tabs (Association Evaluator tabs)</dd>
+<dt><strong><code>missing_recs_AE</code></strong></dt>
+<dd>Missing files from the AE_tabs (Association Evaluator tabs)</dd>
+<dt><strong><code>label_col</code></strong></dt>
+<dd>label column</dd>
+<dt><strong><code>all_charts_num_2_</code></strong></dt>
+<dd>Numerical charts (histogram) all collated in a list format supported as per datapane objects</dd>
+<dt><strong><code>all_charts_cat_2_</code></strong></dt>
+<dd>Categorical charts (barplot) all collated in a list format supported as per datapane objects</dd>
+<dt><strong><code>print_report</code></strong></dt>
+<dd>Printing option flexibility. Default value is kept as False.</dd>
+</dl>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -2896,21 +2900,21 @@ def attribute_associations(
 
     Parameters
     ----------
-    master_path :
+    master_path
         Path containing the input files.
-    AE_tabs :
+    AE_tabs
         correlation_matrix','IV_calculation','IG_calculation','variable_clustering'
-    avl_recs_AE :
+    avl_recs_AE
         Available files from the AE_tabs (Association Evaluator tabs)
-    missing_recs_AE :
+    missing_recs_AE
         Missing files from the AE_tabs (Association Evaluator tabs)
-    label_col :
+    label_col
         label column
-    all_charts_num_2_ :
+    all_charts_num_2_
         Numerical charts (histogram) all collated in a list format supported as per datapane objects
-    all_charts_cat_2_ :
+    all_charts_cat_2_
         Categorical charts (barplot) all collated in a list format supported as per datapane objects
-    print_report :
+    print_report
         Printing option flexibility. Default value is kept as False.
 
     Returns
@@ -3045,12 +3049,14 @@ def attribute_associations(
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
-<p>master_path :
-Path containing all the charts same as the other files from data analyzed output
-chart_type :
-Files containing only the specific chart names for the specific chart category
-type_col :
-None. Default value is kept as None</p>
+<dl>
+<dt><strong><code>master_path</code></strong></dt>
+<dd>Path containing all the charts same as the other files from data analyzed output</dd>
+<dt><strong><code>chart_type</code></strong></dt>
+<dd>Files containing only the specific chart names for the specific chart category</dd>
+<dt><strong><code>type_col</code></strong></dt>
+<dd>None. Default value is kept as None</dd>
+</dl>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -3063,11 +3069,11 @@ def chart_gen_list(master_path, chart_type, type_col=None):
 
     Parameters
     ----------
-    master_path :
+    master_path
         Path containing all the charts same as the other files from data analyzed output
-    chart_type :
+    chart_type
         Files containing only the specific chart names for the specific chart category
-    type_col :
+    type_col
         None. Default value is kept as None
 
     Returns
@@ -3117,12 +3123,14 @@ def chart_gen_list(master_path, chart_type, type_col=None):
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
-<p>master_path :
-Path containing all the output from analyzed data
-avl_recs_tab :
-Available file names from the analysis tab
-tab_name :
-Analysis tab from association_evaluator / quality_checker / stats_generator</p>
+<dl>
+<dt><strong><code>master_path</code></strong></dt>
+<dd>Path containing all the output from analyzed data</dd>
+<dt><strong><code>avl_recs_tab</code></strong></dt>
+<dd>Available file names from the analysis tab</dd>
+<dt><strong><code>tab_name</code></strong></dt>
+<dd>Analysis tab from association_evaluator / quality_checker / stats_generator</dd>
+</dl>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -3135,11 +3143,11 @@ def data_analyzer_output(master_path, avl_recs_tab, tab_name):
 
     Parameters
     ----------
-    master_path :
+    master_path
         Path containing all the output from analyzed data
-    avl_recs_tab :
+    avl_recs_tab
         Available file names from the analysis tab
-    tab_name :
+    tab_name
         Analysis tab from association_evaluator / quality_checker / stats_generator
 
     Returns
@@ -3370,18 +3378,20 @@ def data_analyzer_output(master_path, avl_recs_tab, tab_name):
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
-<p>master_path :
-Path containing the input files.
-ds_ind :
-Drift stability indicator in list form.
-id_col :
-ID column
-drift_threshold_model :
-threshold which the user is specifying for tagging an attribute to be drifted or not
-all_drift_charts_ :
-Charts (histogram/barplot) all collated in a list format supported as per datapane objects
-print_report :
-Printing option flexibility. Default value is kept as False.</p>
+<dl>
+<dt><strong><code>master_path</code></strong></dt>
+<dd>Path containing the input files.</dd>
+<dt><strong><code>ds_ind</code></strong></dt>
+<dd>Drift stability indicator in list form.</dd>
+<dt><strong><code>id_col</code></strong></dt>
+<dd>ID column</dd>
+<dt><strong><code>drift_threshold_model</code></strong></dt>
+<dd>threshold which the user is specifying for tagging an attribute to be drifted or not</dd>
+<dt><strong><code>all_drift_charts_</code></strong></dt>
+<dd>Charts (histogram/barplot) all collated in a list format supported as per datapane objects</dd>
+<dt><strong><code>print_report</code></strong></dt>
+<dd>Printing option flexibility. Default value is kept as False.</dd>
+</dl>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -3401,17 +3411,17 @@ def data_drift_stability(
 
     Parameters
     ----------
-    master_path :
+    master_path
         Path containing the input files.
-    ds_ind :
+    ds_ind
         Drift stability indicator in list form.
-    id_col :
+    id_col
         ID column
-    drift_threshold_model :
+    drift_threshold_model
         threshold which the user is specifying for tagging an attribute to be drifted or not
-    all_drift_charts_ :
+    all_drift_charts_
         Charts (histogram/barplot) all collated in a list format supported as per datapane objects
-    print_report :
+    print_report
         Printing option flexibility. Default value is kept as False.
 
     Returns
@@ -3523,9 +3533,9 @@ def data_drift_stability(
 
             Parameters
             ----------
-            drifted_feats :
+            drifted_feats
                 count of attributes drifted
-            len_feats :
+            len_feats
                 count of attributes passed for analysis
 
             Returns
@@ -3922,20 +3932,22 @@ def data_drift_stability(
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
-<p>master_path :
-Path containing the input files.
-SG_tabs :
-measures_of_counts','measures_of_centralTendency','measures_of_cardinality','measures_of_percentiles','measures_of_dispersion','measures_of_shape','global_summary'
-avl_recs_SG :
-Available files from the SG_tabs (Stats Generator tabs)
-missing_recs_SG :
-Missing files from the SG_tabs (Stats Generator tabs)
-all_charts_num_1_ :
-Numerical charts (histogram) all collated in a list format supported as per datapane objects
-all_charts_cat_1_ :
-Categorical charts (barplot) all collated in a list format supported as per datapane objects
-print_report :
-Printing option flexibility. Default value is kept as False.</p>
+<dl>
+<dt><strong><code>master_path</code></strong></dt>
+<dd>Path containing the input files.</dd>
+<dt><strong><code>SG_tabs</code></strong></dt>
+<dd>measures_of_counts','measures_of_centralTendency','measures_of_cardinality','measures_of_percentiles','measures_of_dispersion','measures_of_shape','global_summary'</dd>
+<dt><strong><code>avl_recs_SG</code></strong></dt>
+<dd>Available files from the SG_tabs (Stats Generator tabs)</dd>
+<dt><strong><code>missing_recs_SG</code></strong></dt>
+<dd>Missing files from the SG_tabs (Stats Generator tabs)</dd>
+<dt><strong><code>all_charts_num_1_</code></strong></dt>
+<dd>Numerical charts (histogram) all collated in a list format supported as per datapane objects</dd>
+<dt><strong><code>all_charts_cat_1_</code></strong></dt>
+<dd>Categorical charts (barplot) all collated in a list format supported as per datapane objects</dd>
+<dt><strong><code>print_report</code></strong></dt>
+<dd>Printing option flexibility. Default value is kept as False.</dd>
+</dl>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -3956,19 +3968,19 @@ def descriptive_statistics(
 
     Parameters
     ----------
-    master_path :
+    master_path
         Path containing the input files.
-    SG_tabs :
+    SG_tabs
         measures_of_counts','measures_of_centralTendency','measures_of_cardinality','measures_of_percentiles','measures_of_dispersion','measures_of_shape','global_summary'
-    avl_recs_SG :
+    avl_recs_SG
         Available files from the SG_tabs (Stats Generator tabs)
-    missing_recs_SG :
+    missing_recs_SG
         Missing files from the SG_tabs (Stats Generator tabs)
-    all_charts_num_1_ :
+    all_charts_num_1_
         Numerical charts (histogram) all collated in a list format supported as per datapane objects
-    all_charts_cat_1_ :
+    all_charts_cat_1_
         Categorical charts (barplot) all collated in a list format supported as per datapane objects
-    print_report :
+    print_report
         Printing option flexibility. Default value is kept as False.
 
     Returns
@@ -4133,12 +4145,16 @@ drift_tab: "drift_statistics"
 missing_recs_stability: Missing files from the stability tab
 stability_tab:"stability_index, stabilityIndex_metrics"</p>
 <h2 id="parameters">Parameters</h2>
-<p>missing_recs_drift :
-param drift_tab:
-missing_recs_stability :
-param stability_tab:
-drift_tab :</p>
-<p>stability_tab :</p>
+<dl>
+<dt><strong><code>missing_recs_drift</code></strong></dt>
+<dd>param drift_tab:</dd>
+<dt><strong><code>missing_recs_stability</code></strong></dt>
+<dd>param stability_tab:</dd>
+<dt><strong><code>drift_tab</code></strong></dt>
+<dd>&nbsp;</dd>
+<dt><strong><code>stability_tab</code></strong></dt>
+<dd>&nbsp;</dd>
+</dl>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -4156,13 +4172,13 @@ def drift_stability_ind(
 
     Parameters
     ----------
-    missing_recs_drift :
+    missing_recs_drift
         param drift_tab:
-    missing_recs_stability :
+    missing_recs_stability
         param stability_tab:
-    drift_tab :
+    drift_tab
 
-    stability_tab :
+    stability_tab
 
 
     Returns
@@ -4195,20 +4211,22 @@ def drift_stability_ind(
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
-<p>master_path :
-Path containing the input files.
-label_col :
-Label column.
-ds_ind :
-Drift stability indicator in list form.
-id_col :
-ID column.
-iv_threshold :
-IV threshold beyond which attributes can be called as significant.
-corr_threshold :
-Correlation threshold beyond which attributes can be categorized under correlated.
-print_report :
-Printing option flexibility. Default value is kept as False.</p>
+<dl>
+<dt><strong><code>master_path</code></strong></dt>
+<dd>Path containing the input files.</dd>
+<dt><strong><code>label_col</code></strong></dt>
+<dd>Label column.</dd>
+<dt><strong><code>ds_ind</code></strong></dt>
+<dd>Drift stability indicator in list form.</dd>
+<dt><strong><code>id_col</code></strong></dt>
+<dd>ID column.</dd>
+<dt><strong><code>iv_threshold</code></strong></dt>
+<dd>IV threshold beyond which attributes can be called as significant.</dd>
+<dt><strong><code>corr_threshold</code></strong></dt>
+<dd>Correlation threshold beyond which attributes can be categorized under correlated.</dd>
+<dt><strong><code>print_report</code></strong></dt>
+<dd>Printing option flexibility. Default value is kept as False.</dd>
+</dl>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -4229,19 +4247,19 @@ def executive_summary_gen(
 
     Parameters
     ----------
-    master_path :
+    master_path
         Path containing the input files.
-    label_col :
+    label_col
         Label column.
-    ds_ind :
+    ds_ind
         Drift stability indicator in list form.
-    id_col :
+    id_col
         ID column.
-    iv_threshold :
+    iv_threshold
         IV threshold beyond which attributes can be called as significant.
-    corr_threshold :
+    corr_threshold
         Correlation threshold beyond which attributes can be categorized under correlated.
-    print_report :
+    print_report
         Printing option flexibility. Default value is kept as False.
 
     Returns
@@ -4636,12 +4654,14 @@ def executive_summary_gen(
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
-<p>df1 :
-Analysis dataframe pertaining to summarized stability metrics
-df2 :
-Analysis dataframe pertaining to historical data
-col :
-Analysis column</p>
+<dl>
+<dt><strong><code>df1</code></strong></dt>
+<dd>Analysis dataframe pertaining to summarized stability metrics</dd>
+<dt><strong><code>df2</code></strong></dt>
+<dd>Analysis dataframe pertaining to historical data</dd>
+<dt><strong><code>col</code></strong></dt>
+<dd>Analysis column</dd>
+</dl>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -4654,11 +4674,11 @@ def line_chart_gen_stability(df1, df2, col):
 
     Parameters
     ----------
-    df1 :
+    df1
         Analysis dataframe pertaining to summarized stability metrics
-    df2 :
+    df2
         Analysis dataframe pertaining to historical data
-    col :
+    col
         Analysis column
 
     Returns
@@ -4671,7 +4691,7 @@ def line_chart_gen_stability(df1, df2, col):
 
         Parameters
         ----------
-        val :
+        val
 
 
         Returns
@@ -4781,18 +4801,20 @@ def line_chart_gen_stability(df1, df2, col):
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
-<p>master_path :
-Path containing the input files.
-QC_tabs :
-nullColumns_detection','IDness_detection','biasedness_detection','invalidEntries_detection','duplicate_detection','nullRows_detection','outlier_detection'
-avl_recs_QC :
-Available files from the QC_tabs (Quality Checker tabs)
-missing_recs_QC :
-Missing files from the QC_tabs (Quality Checker tabs)
-all_charts_num_3_ :
-Numerical charts (outlier charts) all collated in a list format supported as per datapane objects
-print_report :
-Printing option flexibility. Default value is kept as False.</p>
+<dl>
+<dt><strong><code>master_path</code></strong></dt>
+<dd>Path containing the input files.</dd>
+<dt><strong><code>QC_tabs</code></strong></dt>
+<dd>nullColumns_detection','IDness_detection','biasedness_detection','invalidEntries_detection','duplicate_detection','nullRows_detection','outlier_detection'</dd>
+<dt><strong><code>avl_recs_QC</code></strong></dt>
+<dd>Available files from the QC_tabs (Quality Checker tabs)</dd>
+<dt><strong><code>missing_recs_QC</code></strong></dt>
+<dd>Missing files from the QC_tabs (Quality Checker tabs)</dd>
+<dt><strong><code>all_charts_num_3_</code></strong></dt>
+<dd>Numerical charts (outlier charts) all collated in a list format supported as per datapane objects</dd>
+<dt><strong><code>print_report</code></strong></dt>
+<dd>Printing option flexibility. Default value is kept as False.</dd>
+</dl>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -4812,17 +4834,17 @@ def quality_check(
 
     Parameters
     ----------
-    master_path :
+    master_path
         Path containing the input files.
-    QC_tabs :
+    QC_tabs
         nullColumns_detection','IDness_detection','biasedness_detection','invalidEntries_detection','duplicate_detection','nullRows_detection','outlier_detection'
-    avl_recs_QC :
+    avl_recs_QC
         Available files from the QC_tabs (Quality Checker tabs)
-    missing_recs_QC :
+    missing_recs_QC
         Missing files from the QC_tabs (Quality Checker tabs)
-    all_charts_num_3_ :
+    all_charts_num_3_
         Numerical charts (outlier charts) all collated in a list format supported as per datapane objects
-    print_report :
+    print_report
         Printing option flexibility. Default value is kept as False.
 
     Returns
@@ -4972,8 +4994,10 @@ def quality_check(
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
-<p>col :
-Analysis column containing "_" present gets replaced along with upper case conversion</p>
+<dl>
+<dt><strong><code>col</code></strong></dt>
+<dd>Analysis column containing "_" present gets replaced along with upper case conversion</dd>
+</dl>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -4986,7 +5010,7 @@ def remove_u_score(col):
 
     Parameters
     ----------
-    col :
+    col
         Analysis column containing "_" present gets replaced along with upper case conversion
 
     Returns
@@ -5012,14 +5036,16 @@ def remove_u_score(col):
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
-<p>master_path :
-Path containing the input files.
-dataDict_path :
-Data dictionary path. Default value is kept as None.
-metricDict_path :
-Metric dictionary path. Default value is kept as None.
-print_report :
-Printing option flexibility. Default value is kept as False.</p>
+<dl>
+<dt><strong><code>master_path</code></strong></dt>
+<dd>Path containing the input files.</dd>
+<dt><strong><code>dataDict_path</code></strong></dt>
+<dd>Data dictionary path. Default value is kept as None.</dd>
+<dt><strong><code>metricDict_path</code></strong></dt>
+<dd>Metric dictionary path. Default value is kept as None.</dd>
+<dt><strong><code>print_report</code></strong></dt>
+<dd>Printing option flexibility. Default value is kept as False.</dd>
+</dl>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -5034,13 +5060,13 @@ def wiki_generator(
 
     Parameters
     ----------
-    master_path :
+    master_path
         Path containing the input files.
-    dataDict_path :
+    dataDict_path
         Data dictionary path. Default value is kept as None.
-    metricDict_path :
+    metricDict_path
         Metric dictionary path. Default value is kept as None.
-    print_report :
+    print_report
         Printing option flexibility. Default value is kept as False.
 
     Returns

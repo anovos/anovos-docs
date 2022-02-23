@@ -15,7 +15,7 @@ def camel_case_split(input):
 
     Parameters
     ----------
-    input :
+    input
         Input (string) which requires cleaning
 
     Returns
@@ -34,17 +34,20 @@ def recommendation_data_prep(df, name_column, desc_column):
 
     Parameters
     ----------
-    df :
+    df
         Input DataFrame
-    name_column :
+    name_column
         Column name of Input DataFrame attribute/ feature name (string)
-    desc_column :
+    desc_column
         Column name of Input DataFrame attribute/ feature description (string)
-        :return list_corpus: List of prepared data for Feature Recommender functions
-        :return df_prep: Processed DataFrame for Feature Recommender functions
+
 
     Returns
     -------
+    list_corpus
+        List of prepared data for Feature Recommender functions
+    return df_prep
+        Processed DataFrame for Feature Recommender functions
 
     """
     if not isinstance(df, pd.DataFrame):
@@ -100,8 +103,10 @@ list_embedding_train_fer = model_fer.encode(list_train_fer, convert_to_tensor=Tr
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
-<p>input :
-Input (string) which requires cleaning</p>
+<dl>
+<dt><strong><code>input</code></strong></dt>
+<dd>Input (string) which requires cleaning</dd>
+</dl>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -114,7 +119,7 @@ def camel_case_split(input):
 
     Parameters
     ----------
-    input :
+    input
         Input (string) which requires cleaning
 
     Returns
@@ -135,15 +140,21 @@ def camel_case_split(input):
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
-<p>df :
-Input DataFrame
-name_column :
-Column name of Input DataFrame attribute/ feature name (string)
-desc_column :
-Column name of Input DataFrame attribute/ feature description (string)
-:return list_corpus: List of prepared data for Feature Recommender functions
-:return df_prep: Processed DataFrame for Feature Recommender functions</p>
-<h2 id="returns">Returns</h2></div>
+<dl>
+<dt><strong><code>df</code></strong></dt>
+<dd>Input DataFrame</dd>
+<dt><strong><code>name_column</code></strong></dt>
+<dd>Column name of Input DataFrame attribute/ feature name (string)</dd>
+<dt><strong><code>desc_column</code></strong></dt>
+<dd>Column name of Input DataFrame attribute/ feature description (string)</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>list_corpus</code></dt>
+<dd>List of prepared data for Feature Recommender functions</dd>
+<dt><code>return df_prep</code></dt>
+<dd>Processed DataFrame for Feature Recommender functions</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -155,17 +166,20 @@ def recommendation_data_prep(df, name_column, desc_column):
 
     Parameters
     ----------
-    df :
+    df
         Input DataFrame
-    name_column :
+    name_column
         Column name of Input DataFrame attribute/ feature name (string)
-    desc_column :
+    desc_column
         Column name of Input DataFrame attribute/ feature description (string)
-        :return list_corpus: List of prepared data for Feature Recommender functions
-        :return df_prep: Processed DataFrame for Feature Recommender functions
+
 
     Returns
     -------
+    list_corpus
+        List of prepared data for Feature Recommender functions
+    return df_prep
+        Processed DataFrame for Feature Recommender functions
 
     """
     if not isinstance(df, pd.DataFrame):

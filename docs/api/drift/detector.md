@@ -103,84 +103,82 @@ def statistics(
 
     Parameters
     ----------
-    spark :
+    spark
         Spark Session
-    idf_target :
+    idf_target
         Input Dataframe
-    idf_source :
+    idf_source
         Baseline/Source Dataframe. This argument is ignored if pre_existing_source is True.
-    list_of_cols :
+    list_of_cols
         List of columns to check drift e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
         "all" can be passed to include all (non-array) columns for analysis.
         Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
         drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols.
-    drop_cols :
+    drop_cols
         List of columns to be dropped e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
-    method_type :
+    method_type
         PSI", "JSD", "HD", "KS","all".
         "all" can be passed to calculate all drift metrics.
         One or more methods can be passed in a form of list or string where different metrics are separated
         by pipe delimiter “|” e.g. ["PSI", "JSD"] or "PSI|JSD"
-    bin_method :
+    bin_method
         equal_frequency", "equal_range".
         In "equal_range" method, each bin is of equal size/width and in "equal_frequency", each bin
         has equal no. of rows, though the width of bins may vary.
-    bin_size :
+    bin_size
         Number of bins for creating histogram
-    threshold :
+    threshold
         A column is flagged if any drift metric is above the threshold.
-    pre_existing_source :
+    pre_existing_source
         Boolean argument – True or False. True if the drift_statistics folder (binning model &
         frequency counts for each attribute) exists already, False Otherwise.
-    source_path :
+    source_path
         If pre_existing_source is False, this argument can be used for saving the drift_statistics folder.
         The drift_statistics folder will have attribute_binning (binning model) & frequency_counts sub-folders.
         If pre_existing_source is True, this argument is path for referring the drift_statistics folder.
         Default "NA" for temporarily saving source dataset attribute_binning folder.
-    model_directory :
+    model_directory
         If pre_existing_source is False, this argument can be used for saving the drift stats to folder.
         The default drift statics directory is drift_statistics folder will have attribute_binning
         If pre_existing_source is True, this argument is model_directory for referring the drift statistics dir.
         Default "drift_statistics" for temporarily saving source dataset attribute_binning folder.
-    print_impact :
+    print_impact
         True, False
-    spark :
-        type spark: SparkSession :
-    idf_target :
-        type idf_target: DataFrame :
-    idf_source :
-        type idf_source: DataFrame :
-    spark: SparkSession :
+    spark
+        type spark: SparkSession
+    idf_target
+        type idf_target: DataFrame
+    idf_source
+        type idf_source: DataFrame
+    spark: SparkSession
 
-    idf_target: DataFrame :
+    idf_target: DataFrame
 
-    idf_source: DataFrame :
+    idf_source: DataFrame
 
-    * :
-
-    list_of_cols: list :
+    list_of_cols: list
          (Default value = "all")
-    drop_cols: list :
+    drop_cols: list
          (Default value = None)
-    method_type: str :
+    method_type: str
          (Default value = "PSI")
-    bin_method: str :
+    bin_method: str
          (Default value = "equal_range")
-    bin_size: int :
+    bin_size: int
          (Default value = 10)
-    threshold: float :
+    threshold: float
          (Default value = 0.1)
-    pre_existing_source: bool :
+    pre_existing_source: bool
          (Default value = False)
-    source_path: str :
+    source_path: str
          (Default value = "NA")
-    model_directory: str :
+    model_directory: str
          (Default value = "drift_statistics")
-    print_impact: bool :
+    print_impact: bool
          (Default value = False)
 
     Returns
@@ -413,43 +411,38 @@ def stability_index_computation(
 
     Parameters
     ----------
-    spark :
+    spark
         Spark Session
-    idfs :
+    idfs
         Variable number of input dataframes
-    list_of_cols :
+    list_of_cols
         List of numerical columns to check stability e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
         "all" can be passed to include all numerical columns for analysis.
         Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
         drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
-    drop_cols :
+    drop_cols
         List of columns to be dropped e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])
-    metric_weightages :
+    metric_weightages
         Takes input in dictionary format with keys being the metric name - "mean","stdev","kurtosis"
         and value being the weightage of the metric (between 0 and 1). Sum of all weightages must be 1.
          (Default value = {"mean": 0.5)
-    existing_metric_path :
+    existing_metric_path
         This argument is path for referring pre-existing metrics of historical datasets and is
         of schema [idx, attribute, mean, stdev, kurtosis].
         idx is index number of historical datasets assigned in chronological order. (Default value = "")
-    appended_metric_path :
+    appended_metric_path
         This argument is path for saving input dataframes metrics after appending to the
         historical datasets' metrics. (Default value = "")
-    threshold :
+    threshold
         A column is flagged if the stability index is below the threshold, which varies between 0 to 4.
         The following criteria can be used to classifiy stability_index (SI): very unstable: 0≤SI<1,
         unstable: 1≤SI<2, marginally stable: 2≤SI<3, stable: 3≤SI<3.5 and very stable: 3.5≤SI≤4. (Default value = 1)
-    print_impact :
+    print_impact
         True, False (Default value = False)
-    *idfs :
-
-    "stddev": 0.3 :
-
-    "kurtosis": 0.2} :
 
 
     Returns
@@ -554,22 +547,9 @@ def stability_index_computation(
 
         Parameters
         ----------
-        cv :
-            param thresholds: (Default value = [0.03)
-        0 :
-            1:
-        0 :
-            2:
-        0 :
-            5]:
-        thresholds :
-             (Default value = [0.03)
-        0.1 :
+        cv
 
-        0.2 :
-
-        0.5] :
-
+        thresholds
 
         Returns
         -------
@@ -635,30 +615,26 @@ def feature_stability_estimation(
 
     Parameters
     ----------
-    spark :
+    spark
         Spark Session
-    attribute_stats :
+    attribute_stats
         Spark dataframe. The intermediate dataframe saved by running function
         stabilityIndex_computation with schema [idx, attribute, mean, stddev, kurtosis].
         It should contain all the attributes used in argument attribute_transformation.
-    attribute_transformation :
+    attribute_transformation
         Takes input in dictionary format: each key-value combination represents one
         new feature. Each key is a string containing all the attributes involved in
         the new feature seperated by '|'. Each value is the transformation of the
         attributes in string. For example, {'X|Y|Z': 'X**2+Y/Z', 'A': 'log(A)'}
-    metric_weightages :
+    metric_weightages
         Takes input in dictionary format with keys being the metric name - "mean","stdev","kurtosis"
         and value being the weightage of the metric (between 0 and 1). Sum of all weightages must be 1. (Default value = {"mean": 0.5)
-    threshold :
+    threshold
         A column is flagged if the stability index is below the threshold, which varies between 0 to 4.
         The following criteria can be used to classifiy stability_index (SI): very unstable: 0≤SI<1,
         unstable: 1≤SI<2, marginally stable: 2≤SI<3, stable: 3≤SI<3.5 and very stable: 3.5≤SI≤4. (Default value = 1)
-    print_impact :
+    print_impact
         True, False (Default value = False)
-    "stddev": 0.3 :
-
-    "kurtosis": 0.2} :
-
 
     Returns
     -------
@@ -670,13 +646,13 @@ def feature_stability_estimation(
 
         Parameters
         ----------
-        attributes :
-            param transformation:
-        mean :
-            param stddev:
-        transformation :
+        attributes
 
-        stddev :
+        transformation
+
+        mean
+
+        stddev
 
 
         Returns
@@ -795,22 +771,9 @@ def feature_stability_estimation(
 
         Parameters
         ----------
-        cv :
-            param thresholds: (Default value = [0.03)
-        0 :
-            1:
-        0 :
-            2:
-        0 :
-            5]:
-        thresholds :
-             (Default value = [0.03)
-        0.1 :
+        cv
 
-        0.2 :
-
-        0.5] :
-
+        thresholds
 
         Returns
         -------
@@ -886,28 +849,28 @@ def feature_stability_estimation(
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
-<p>spark :
-Spark Session
-attribute_stats :
-Spark dataframe. The intermediate dataframe saved by running function
+<dl>
+<dt><strong><code>spark</code></strong></dt>
+<dd>Spark Session</dd>
+<dt><strong><code>attribute_stats</code></strong></dt>
+<dd>Spark dataframe. The intermediate dataframe saved by running function
 stabilityIndex_computation with schema [idx, attribute, mean, stddev, kurtosis].
-It should contain all the attributes used in argument attribute_transformation.
-attribute_transformation :
-Takes input in dictionary format: each key-value combination represents one
+It should contain all the attributes used in argument attribute_transformation.</dd>
+<dt><strong><code>attribute_transformation</code></strong></dt>
+<dd>Takes input in dictionary format: each key-value combination represents one
 new feature. Each key is a string containing all the attributes involved in
 the new feature seperated by '|'. Each value is the transformation of the
-attributes in string. For example, {'X|Y|Z': 'X**2+Y/Z', 'A': 'log(A)'}
-metric_weightages :
-Takes input in dictionary format with keys being the metric name - "mean","stdev","kurtosis"
-and value being the weightage of the metric (between 0 and 1). Sum of all weightages must be 1. (Default value = {"mean": 0.5)
-threshold :
-A column is flagged if the stability index is below the threshold, which varies between 0 to 4.
+attributes in string. For example, {'X|Y|Z': 'X**2+Y/Z', 'A': 'log(A)'}</dd>
+<dt><strong><code>metric_weightages</code></strong></dt>
+<dd>Takes input in dictionary format with keys being the metric name - "mean","stdev","kurtosis"
+and value being the weightage of the metric (between 0 and 1). Sum of all weightages must be 1. (Default value = {"mean": 0.5)</dd>
+<dt><strong><code>threshold</code></strong></dt>
+<dd>A column is flagged if the stability index is below the threshold, which varies between 0 to 4.
 The following criteria can be used to classifiy stability_index (SI): very unstable: 0≤SI&lt;1,
-unstable: 1≤SI&lt;2, marginally stable: 2≤SI&lt;3, stable: 3≤SI&lt;3.5 and very stable: 3.5≤SI≤4. (Default value = 1)
-print_impact :
-True, False (Default value = False)
-"stddev": 0.3 :</p>
-<p>"kurtosis": 0.2} :</p>
+unstable: 1≤SI&lt;2, marginally stable: 2≤SI&lt;3, stable: 3≤SI&lt;3.5 and very stable: 3.5≤SI≤4. (Default value = 1)</dd>
+<dt><strong><code>print_impact</code></strong></dt>
+<dd>True, False (Default value = False)</dd>
+</dl>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -927,30 +890,26 @@ def feature_stability_estimation(
 
     Parameters
     ----------
-    spark :
+    spark
         Spark Session
-    attribute_stats :
+    attribute_stats
         Spark dataframe. The intermediate dataframe saved by running function
         stabilityIndex_computation with schema [idx, attribute, mean, stddev, kurtosis].
         It should contain all the attributes used in argument attribute_transformation.
-    attribute_transformation :
+    attribute_transformation
         Takes input in dictionary format: each key-value combination represents one
         new feature. Each key is a string containing all the attributes involved in
         the new feature seperated by '|'. Each value is the transformation of the
         attributes in string. For example, {'X|Y|Z': 'X**2+Y/Z', 'A': 'log(A)'}
-    metric_weightages :
+    metric_weightages
         Takes input in dictionary format with keys being the metric name - "mean","stdev","kurtosis"
         and value being the weightage of the metric (between 0 and 1). Sum of all weightages must be 1. (Default value = {"mean": 0.5)
-    threshold :
+    threshold
         A column is flagged if the stability index is below the threshold, which varies between 0 to 4.
         The following criteria can be used to classifiy stability_index (SI): very unstable: 0≤SI<1,
         unstable: 1≤SI<2, marginally stable: 2≤SI<3, stable: 3≤SI<3.5 and very stable: 3.5≤SI≤4. (Default value = 1)
-    print_impact :
+    print_impact
         True, False (Default value = False)
-    "stddev": 0.3 :
-
-    "kurtosis": 0.2} :
-
 
     Returns
     -------
@@ -962,13 +921,13 @@ def feature_stability_estimation(
 
         Parameters
         ----------
-        attributes :
-            param transformation:
-        mean :
-            param stddev:
-        transformation :
+        attributes
 
-        stddev :
+        transformation
+
+        mean
+
+        stddev
 
 
         Returns
@@ -1087,22 +1046,9 @@ def feature_stability_estimation(
 
         Parameters
         ----------
-        cv :
-            param thresholds: (Default value = [0.03)
-        0 :
-            1:
-        0 :
-            2:
-        0 :
-            5]:
-        thresholds :
-             (Default value = [0.03)
-        0.1 :
+        cv
 
-        0.2 :
-
-        0.5] :
-
+        thresholds
 
         Returns
         -------
@@ -1339,41 +1285,40 @@ chronological order - <em>appended_metric_path</em>: this argument is path for s
 appending to the historical datasets' metrics. - <em>threshold</em>: To flag unstable attributes meeting the threshold</li>
 </ul>
 <h2 id="parameters">Parameters</h2>
-<p>spark :
-Spark Session
-idfs :
-Variable number of input dataframes
-list_of_cols :
-List of numerical columns to check stability e.g., ["col1","col2"].
+<dl>
+<dt><strong><code>spark</code></strong></dt>
+<dd>Spark Session</dd>
+<dt><strong><code>idfs</code></strong></dt>
+<dd>Variable number of input dataframes</dd>
+<dt><strong><code>list_of_cols</code></strong></dt>
+<dd>List of numerical columns to check stability e.g., ["col1","col2"].
 Alternatively, columns can be specified in a string format,
 where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
 "all" can be passed to include all numerical columns for analysis.
 Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
-drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
-drop_cols :
-List of columns to be dropped e.g., ["col1","col2"].
+drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")</dd>
+<dt><strong><code>drop_cols</code></strong></dt>
+<dd>List of columns to be dropped e.g., ["col1","col2"].
 Alternatively, columns can be specified in a string format,
-where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])
-metric_weightages :
-Takes input in dictionary format with keys being the metric name - "mean","stdev","kurtosis"
+where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])</dd>
+<dt><strong><code>metric_weightages</code></strong></dt>
+<dd>Takes input in dictionary format with keys being the metric name - "mean","stdev","kurtosis"
 and value being the weightage of the metric (between 0 and 1). Sum of all weightages must be 1.
-(Default value = {"mean": 0.5)
-existing_metric_path :
-This argument is path for referring pre-existing metrics of historical datasets and is
+(Default value = {"mean": 0.5)</dd>
+<dt><strong><code>existing_metric_path</code></strong></dt>
+<dd>This argument is path for referring pre-existing metrics of historical datasets and is
 of schema [idx, attribute, mean, stdev, kurtosis].
-idx is index number of historical datasets assigned in chronological order. (Default value = "")
-appended_metric_path :
-This argument is path for saving input dataframes metrics after appending to the
-historical datasets' metrics. (Default value = "")
-threshold :
-A column is flagged if the stability index is below the threshold, which varies between 0 to 4.
+idx is index number of historical datasets assigned in chronological order. (Default value = "")</dd>
+<dt><strong><code>appended_metric_path</code></strong></dt>
+<dd>This argument is path for saving input dataframes metrics after appending to the
+historical datasets' metrics. (Default value = "")</dd>
+<dt><strong><code>threshold</code></strong></dt>
+<dd>A column is flagged if the stability index is below the threshold, which varies between 0 to 4.
 The following criteria can be used to classifiy stability_index (SI): very unstable: 0≤SI&lt;1,
-unstable: 1≤SI&lt;2, marginally stable: 2≤SI&lt;3, stable: 3≤SI&lt;3.5 and very stable: 3.5≤SI≤4. (Default value = 1)
-print_impact :
-True, False (Default value = False)
-*idfs :</p>
-<p>"stddev": 0.3 :</p>
-<p>"kurtosis": 0.2} :</p>
+unstable: 1≤SI&lt;2, marginally stable: 2≤SI&lt;3, stable: 3≤SI&lt;3.5 and very stable: 3.5≤SI≤4. (Default value = 1)</dd>
+<dt><strong><code>print_impact</code></strong></dt>
+<dd>True, False (Default value = False)</dd>
+</dl>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -1505,43 +1450,38 @@ def stability_index_computation(
 
     Parameters
     ----------
-    spark :
+    spark
         Spark Session
-    idfs :
+    idfs
         Variable number of input dataframes
-    list_of_cols :
+    list_of_cols
         List of numerical columns to check stability e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
         "all" can be passed to include all numerical columns for analysis.
         Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
         drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
-    drop_cols :
+    drop_cols
         List of columns to be dropped e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])
-    metric_weightages :
+    metric_weightages
         Takes input in dictionary format with keys being the metric name - "mean","stdev","kurtosis"
         and value being the weightage of the metric (between 0 and 1). Sum of all weightages must be 1.
          (Default value = {"mean": 0.5)
-    existing_metric_path :
+    existing_metric_path
         This argument is path for referring pre-existing metrics of historical datasets and is
         of schema [idx, attribute, mean, stdev, kurtosis].
         idx is index number of historical datasets assigned in chronological order. (Default value = "")
-    appended_metric_path :
+    appended_metric_path
         This argument is path for saving input dataframes metrics after appending to the
         historical datasets' metrics. (Default value = "")
-    threshold :
+    threshold
         A column is flagged if the stability index is below the threshold, which varies between 0 to 4.
         The following criteria can be used to classifiy stability_index (SI): very unstable: 0≤SI<1,
         unstable: 1≤SI<2, marginally stable: 2≤SI<3, stable: 3≤SI<3.5 and very stable: 3.5≤SI≤4. (Default value = 1)
-    print_impact :
+    print_impact
         True, False (Default value = False)
-    *idfs :
-
-    "stddev": 0.3 :
-
-    "kurtosis": 0.2} :
 
 
     Returns
@@ -1646,22 +1586,9 @@ def stability_index_computation(
 
         Parameters
         ----------
-        cv :
-            param thresholds: (Default value = [0.03)
-        0 :
-            1:
-        0 :
-            2:
-        0 :
-            5]:
-        thresholds :
-             (Default value = [0.03)
-        0.1 :
+        cv
 
-        0.2 :
-
-        0.5] :
-
+        thresholds
 
         Returns
         -------
@@ -1772,87 +1699,82 @@ for saving the details. Default "NA" for temporarily saving source dataset attri
 </ul>
 <h2 id="parameters">Parameters</h2>
 <dl>
-<dt>spark :</dt>
-<dt>Spark Session</dt>
-<dt>idf_target :</dt>
-<dt>Input Dataframe</dt>
-<dt>idf_source :</dt>
-<dt>Baseline/Source Dataframe. This argument is ignored if pre_existing_source is True.</dt>
-<dt>list_of_cols :</dt>
-<dt>List of columns to check drift e.g., ["col1","col2"].</dt>
-<dt>Alternatively, columns can be specified in a string format,</dt>
-<dt>where different column names are separated by pipe delimiter “|” e.g., "col1|col2".</dt>
-<dt>"all" can be passed to include all (non-array) columns for analysis.</dt>
-<dt>Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in</dt>
-<dt>drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols.</dt>
-<dt>drop_cols :</dt>
-<dt>List of columns to be dropped e.g., ["col1","col2"].</dt>
-<dt>Alternatively, columns can be specified in a string format,</dt>
-<dt>where different column names are separated by pipe delimiter “|” e.g., "col1|col2".</dt>
-<dt>method_type :</dt>
-<dt>PSI", "JSD", "HD", "KS","all".</dt>
-<dt>"all" can be passed to calculate all drift metrics.</dt>
-<dt>One or more methods can be passed in a form of list or string where different metrics are separated</dt>
-<dt>by pipe delimiter “|” e.g. ["PSI", "JSD"] or "PSI|JSD"</dt>
-<dt>bin_method :</dt>
-<dt>equal_frequency", "equal_range".</dt>
-<dt>In "equal_range" method, each bin is of equal size/width and in "equal_frequency", each bin</dt>
-<dt>has equal no. of rows, though the width of bins may vary.</dt>
-<dt>bin_size :</dt>
-<dt>Number of bins for creating histogram</dt>
-<dt>threshold :</dt>
-<dt>A column is flagged if any drift metric is above the threshold.</dt>
-<dt>pre_existing_source :</dt>
-<dt>Boolean argument – True or False. True if the drift_statistics folder (binning model &amp;</dt>
-<dt>frequency counts for each attribute) exists already, False Otherwise.</dt>
-<dt>source_path :</dt>
-<dt>If pre_existing_source is False, this argument can be used for saving the drift_statistics folder.</dt>
-<dt>The drift_statistics folder will have attribute_binning (binning model) &amp; frequency_counts sub-folders.</dt>
-<dt>If pre_existing_source is True, this argument is path for referring the drift_statistics folder.</dt>
-<dt>Default "NA" for temporarily saving source dataset attribute_binning folder.</dt>
-<dt>model_directory :</dt>
-<dt>If pre_existing_source is False, this argument can be used for saving the drift stats to folder.</dt>
-<dt>The default drift statics directory is drift_statistics folder will have attribute_binning</dt>
-<dt>If pre_existing_source is True, this argument is model_directory for referring the drift statistics dir.</dt>
-<dt>Default "drift_statistics" for temporarily saving source dataset attribute_binning folder.</dt>
-<dt>print_impact :</dt>
-<dt>True, False</dt>
-<dt>spark :</dt>
-<dt>type spark: SparkSession :</dt>
-<dt>idf_target :</dt>
-<dt>type idf_target: DataFrame :</dt>
-<dt>idf_source :</dt>
-<dt>type idf_source: DataFrame :</dt>
-<dt><strong><code>spark</code></strong> :&ensp;<code>SparkSession :</code></dt>
+<dt><strong><code>spark</code></strong></dt>
+<dd>Spark Session</dd>
+<dt><strong><code>idf_target</code></strong></dt>
+<dd>Input Dataframe</dd>
+<dt><strong><code>idf_source</code></strong></dt>
+<dd>Baseline/Source Dataframe. This argument is ignored if pre_existing_source is True.</dd>
+<dt><strong><code>list_of_cols</code></strong></dt>
+<dd>List of columns to check drift e.g., ["col1","col2"].
+Alternatively, columns can be specified in a string format,
+where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
+"all" can be passed to include all (non-array) columns for analysis.
+Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
+drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols.</dd>
+<dt><strong><code>drop_cols</code></strong></dt>
+<dd>List of columns to be dropped e.g., ["col1","col2"].
+Alternatively, columns can be specified in a string format,
+where different column names are separated by pipe delimiter “|” e.g., "col1|col2".</dd>
+<dt><strong><code>method_type</code></strong></dt>
+<dd>PSI", "JSD", "HD", "KS","all".
+"all" can be passed to calculate all drift metrics.
+One or more methods can be passed in a form of list or string where different metrics are separated
+by pipe delimiter “|” e.g. ["PSI", "JSD"] or "PSI|JSD"</dd>
+<dt><strong><code>bin_method</code></strong></dt>
+<dd>equal_frequency", "equal_range".
+In "equal_range" method, each bin is of equal size/width and in "equal_frequency", each bin
+has equal no. of rows, though the width of bins may vary.</dd>
+<dt><strong><code>bin_size</code></strong></dt>
+<dd>Number of bins for creating histogram</dd>
+<dt><strong><code>threshold</code></strong></dt>
+<dd>A column is flagged if any drift metric is above the threshold.</dd>
+<dt><strong><code>pre_existing_source</code></strong></dt>
+<dd>Boolean argument – True or False. True if the drift_statistics folder (binning model &amp;
+frequency counts for each attribute) exists already, False Otherwise.</dd>
+<dt><strong><code>source_path</code></strong></dt>
+<dd>If pre_existing_source is False, this argument can be used for saving the drift_statistics folder.
+The drift_statistics folder will have attribute_binning (binning model) &amp; frequency_counts sub-folders.
+If pre_existing_source is True, this argument is path for referring the drift_statistics folder.
+Default "NA" for temporarily saving source dataset attribute_binning folder.</dd>
+<dt><strong><code>model_directory</code></strong></dt>
+<dd>If pre_existing_source is False, this argument can be used for saving the drift stats to folder.
+The default drift statics directory is drift_statistics folder will have attribute_binning
+If pre_existing_source is True, this argument is model_directory for referring the drift statistics dir.
+Default "drift_statistics" for temporarily saving source dataset attribute_binning folder.</dd>
+<dt><strong><code>print_impact</code></strong></dt>
+<dd>True, False</dd>
+<dt><strong><code>spark</code></strong></dt>
+<dd>type spark: SparkSession</dd>
+<dt><strong><code>idf_target</code></strong></dt>
+<dd>type idf_target: DataFrame</dd>
+<dt><strong><code>idf_source</code></strong></dt>
+<dd>type idf_source: DataFrame</dd>
+<dt><strong><code>spark</code></strong> :&ensp;<code>SparkSession</code></dt>
 <dd>&nbsp;</dd>
-<dt><strong><code>idf_target</code></strong> :&ensp;<code>DataFrame :</code></dt>
+<dt><strong><code>idf_target</code></strong> :&ensp;<code>DataFrame</code></dt>
 <dd>&nbsp;</dd>
-<dt><strong><code>idf_source</code></strong> :&ensp;<code>DataFrame :</code></dt>
+<dt><strong><code>idf_source</code></strong> :&ensp;<code>DataFrame</code></dt>
 <dd>&nbsp;</dd>
-</dl>
-<ul>
-<li>:</li>
-</ul>
-<dl>
-<dt><strong><code>list_of_cols</code></strong> :&ensp;<code>list :</code></dt>
+<dt><strong><code>list_of_cols</code></strong> :&ensp;<code>list</code></dt>
 <dd>(Default value = "all")</dd>
-<dt><strong><code>drop_cols</code></strong> :&ensp;<code>list :</code></dt>
+<dt><strong><code>drop_cols</code></strong> :&ensp;<code>list</code></dt>
 <dd>(Default value = None)</dd>
-<dt><strong><code>method_type</code></strong> :&ensp;<code>str :</code></dt>
+<dt><strong><code>method_type</code></strong> :&ensp;<code>str</code></dt>
 <dd>(Default value = "PSI")</dd>
-<dt><strong><code>bin_method</code></strong> :&ensp;<code>str :</code></dt>
+<dt><strong><code>bin_method</code></strong> :&ensp;<code>str</code></dt>
 <dd>(Default value = "equal_range")</dd>
-<dt><strong><code>bin_size</code></strong> :&ensp;<code>int :</code></dt>
+<dt><strong><code>bin_size</code></strong> :&ensp;<code>int</code></dt>
 <dd>(Default value = 10)</dd>
-<dt><strong><code>threshold</code></strong> :&ensp;<code>float :</code></dt>
+<dt><strong><code>threshold</code></strong> :&ensp;<code>float</code></dt>
 <dd>(Default value = 0.1)</dd>
-<dt><strong><code>pre_existing_source</code></strong> :&ensp;<code>bool :</code></dt>
+<dt><strong><code>pre_existing_source</code></strong> :&ensp;<code>bool</code></dt>
 <dd>(Default value = False)</dd>
-<dt><strong><code>source_path</code></strong> :&ensp;<code>str :</code></dt>
+<dt><strong><code>source_path</code></strong> :&ensp;<code>str</code></dt>
 <dd>(Default value = "NA")</dd>
-<dt><strong><code>model_directory</code></strong> :&ensp;<code>str :</code></dt>
+<dt><strong><code>model_directory</code></strong> :&ensp;<code>str</code></dt>
 <dd>(Default value = "drift_statistics")</dd>
-<dt><strong><code>print_impact</code></strong> :&ensp;<code>bool :</code></dt>
+<dt><strong><code>print_impact</code></strong> :&ensp;<code>bool</code></dt>
 <dd>(Default value = False)</dd>
 </dl>
 <h2 id="returns">Returns</h2></div>
@@ -1939,84 +1861,82 @@ def statistics(
 
     Parameters
     ----------
-    spark :
+    spark
         Spark Session
-    idf_target :
+    idf_target
         Input Dataframe
-    idf_source :
+    idf_source
         Baseline/Source Dataframe. This argument is ignored if pre_existing_source is True.
-    list_of_cols :
+    list_of_cols
         List of columns to check drift e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
         "all" can be passed to include all (non-array) columns for analysis.
         Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
         drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols.
-    drop_cols :
+    drop_cols
         List of columns to be dropped e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
-    method_type :
+    method_type
         PSI", "JSD", "HD", "KS","all".
         "all" can be passed to calculate all drift metrics.
         One or more methods can be passed in a form of list or string where different metrics are separated
         by pipe delimiter “|” e.g. ["PSI", "JSD"] or "PSI|JSD"
-    bin_method :
+    bin_method
         equal_frequency", "equal_range".
         In "equal_range" method, each bin is of equal size/width and in "equal_frequency", each bin
         has equal no. of rows, though the width of bins may vary.
-    bin_size :
+    bin_size
         Number of bins for creating histogram
-    threshold :
+    threshold
         A column is flagged if any drift metric is above the threshold.
-    pre_existing_source :
+    pre_existing_source
         Boolean argument – True or False. True if the drift_statistics folder (binning model &
         frequency counts for each attribute) exists already, False Otherwise.
-    source_path :
+    source_path
         If pre_existing_source is False, this argument can be used for saving the drift_statistics folder.
         The drift_statistics folder will have attribute_binning (binning model) & frequency_counts sub-folders.
         If pre_existing_source is True, this argument is path for referring the drift_statistics folder.
         Default "NA" for temporarily saving source dataset attribute_binning folder.
-    model_directory :
+    model_directory
         If pre_existing_source is False, this argument can be used for saving the drift stats to folder.
         The default drift statics directory is drift_statistics folder will have attribute_binning
         If pre_existing_source is True, this argument is model_directory for referring the drift statistics dir.
         Default "drift_statistics" for temporarily saving source dataset attribute_binning folder.
-    print_impact :
+    print_impact
         True, False
-    spark :
-        type spark: SparkSession :
-    idf_target :
-        type idf_target: DataFrame :
-    idf_source :
-        type idf_source: DataFrame :
-    spark: SparkSession :
+    spark
+        type spark: SparkSession
+    idf_target
+        type idf_target: DataFrame
+    idf_source
+        type idf_source: DataFrame
+    spark: SparkSession
 
-    idf_target: DataFrame :
+    idf_target: DataFrame
 
-    idf_source: DataFrame :
+    idf_source: DataFrame
 
-    * :
-
-    list_of_cols: list :
+    list_of_cols: list
          (Default value = "all")
-    drop_cols: list :
+    drop_cols: list
          (Default value = None)
-    method_type: str :
+    method_type: str
          (Default value = "PSI")
-    bin_method: str :
+    bin_method: str
          (Default value = "equal_range")
-    bin_size: int :
+    bin_size: int
          (Default value = 10)
-    threshold: float :
+    threshold: float
          (Default value = 0.1)
-    pre_existing_source: bool :
+    pre_existing_source: bool
          (Default value = False)
-    source_path: str :
+    source_path: str
          (Default value = "NA")
-    model_directory: str :
+    model_directory: str
          (Default value = "drift_statistics")
-    print_impact: bool :
+    print_impact: bool
          (Default value = False)
 
     Returns

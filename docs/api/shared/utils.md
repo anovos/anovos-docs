@@ -15,9 +15,9 @@ def flatten_dataframe(idf, fixed_cols):
 
     Parameters
     ----------
-    idf :
+    idf
         Input Dataframe
-    fixed_cols :
+    fixed_cols
         All columns except in this list will be melted/unpivoted
 
     Returns
@@ -37,9 +37,9 @@ def transpose_dataframe(idf, fixed_col):
 
     Parameters
     ----------
-    idf :
+    idf
         Input Dataframe
-    fixed_col :
+    fixed_col
         Values in this column will be converted into columns as header.
         Ideally all values should be unique
 
@@ -57,7 +57,7 @@ def attributeType_segregation(idf):
 
     Parameters
     ----------
-    idf :
+    idf
         Input Dataframe
 
     Returns
@@ -85,9 +85,9 @@ def get_dtype(idf, col):
 
     Parameters
     ----------
-    idf :
+    idf
         Input Dataframe
-    col :
+    col
         Column Name for datatype detection
 
     Returns
@@ -102,9 +102,9 @@ def ends_with(string, end_str="/"):
 
     Parameters
     ----------
-    string :
+    string
         s3:mw-bucket"
-    end_str :
+    end_str
         return: "s3:mw-bucket/" (Default value = "/")
 
     Returns
@@ -122,9 +122,9 @@ def pairwise_reduce(op, x):
 
     Parameters
     ----------
-    op :
+    op
         param x:
-    x :
+    x
 
 
     Returns
@@ -147,8 +147,10 @@ def pairwise_reduce(op, x):
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
-<p>idf :
-Input Dataframe</p>
+<dl>
+<dt><strong><code>idf</code></strong></dt>
+<dd>Input Dataframe</dd>
+</dl>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -161,7 +163,7 @@ def attributeType_segregation(idf):
 
     Parameters
     ----------
-    idf :
+    idf
         Input Dataframe
 
     Returns
@@ -191,10 +193,12 @@ def attributeType_segregation(idf):
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
-<p>string :
-s3:mw-bucket"
-end_str :
-return: "s3:mw-bucket/" (Default value = "/")</p>
+<dl>
+<dt><strong><code>string</code></strong></dt>
+<dd>s3:mw-bucket"</dd>
+<dt><strong><code>end_str</code></strong></dt>
+<dd>return: "s3:mw-bucket/" (Default value = "/")</dd>
+</dl>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -207,9 +211,9 @@ def ends_with(string, end_str="/"):
 
     Parameters
     ----------
-    string :
+    string
         s3:mw-bucket"
-    end_str :
+    end_str
         return: "s3:mw-bucket/" (Default value = "/")
 
     Returns
@@ -229,10 +233,12 @@ def ends_with(string, end_str="/"):
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
-<p>idf :
-Input Dataframe
-fixed_cols :
-All columns except in this list will be melted/unpivoted</p>
+<dl>
+<dt><strong><code>idf</code></strong></dt>
+<dd>Input Dataframe</dd>
+<dt><strong><code>fixed_cols</code></strong></dt>
+<dd>All columns except in this list will be melted/unpivoted</dd>
+</dl>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -245,9 +251,9 @@ def flatten_dataframe(idf, fixed_cols):
 
     Parameters
     ----------
-    idf :
+    idf
         Input Dataframe
-    fixed_cols :
+    fixed_cols
         All columns except in this list will be melted/unpivoted
 
     Returns
@@ -269,10 +275,12 @@ def flatten_dataframe(idf, fixed_cols):
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
-<p>idf :
-Input Dataframe
-col :
-Column Name for datatype detection</p>
+<dl>
+<dt><strong><code>idf</code></strong></dt>
+<dd>Input Dataframe</dd>
+<dt><strong><code>col</code></strong></dt>
+<dd>Column Name for datatype detection</dd>
+</dl>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -285,9 +293,9 @@ def get_dtype(idf, col):
 
     Parameters
     ----------
-    idf :
+    idf
         Input Dataframe
-    col :
+    col
         Column Name for datatype detection
 
     Returns
@@ -304,9 +312,12 @@ def get_dtype(idf, col):
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
-<p>op :
-param x:
-x :</p>
+<dl>
+<dt><strong><code>op</code></strong></dt>
+<dd>param x:</dd>
+<dt><strong><code>x</code></strong></dt>
+<dd>&nbsp;</dd>
+</dl>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -319,9 +330,9 @@ def pairwise_reduce(op, x):
 
     Parameters
     ----------
-    op :
+    op
         param x:
-    x :
+    x
 
 
     Returns
@@ -343,11 +354,13 @@ def pairwise_reduce(op, x):
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
-<p>idf :
-Input Dataframe
-fixed_col :
-Values in this column will be converted into columns as header.
-Ideally all values should be unique</p>
+<dl>
+<dt><strong><code>idf</code></strong></dt>
+<dd>Input Dataframe</dd>
+<dt><strong><code>fixed_col</code></strong></dt>
+<dd>Values in this column will be converted into columns as header.
+Ideally all values should be unique</dd>
+</dl>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -360,9 +373,9 @@ def transpose_dataframe(idf, fixed_col):
 
     Parameters
     ----------
-    idf :
+    idf
         Input Dataframe
-    fixed_col :
+    fixed_col
         Values in this column will be converted into columns as header.
         Ideally all values should be unique
 

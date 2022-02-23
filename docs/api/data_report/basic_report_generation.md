@@ -61,9 +61,9 @@ def stats_args(path, func):
 
     Parameters
     ----------
-    path :
+    path
         param func:
-    func :
+    func
 
 
     Returns
@@ -109,23 +109,23 @@ def anovos_basic_report(
 
     Parameters
     ----------
-    spark :
+    spark
         Spark Session
-    idf :
+    idf
         Input Dataframe
-    id_col :
+    id_col
         ID column (Default value = "")
-    label_col :
+    label_col
         Label/Target column (Default value = "")
-    event_label :
+    event_label
         Value of (positive) event (i.e label 1) (Default value = "")
-    output_path :
+    output_path
         File Path for saving metrics and basic report (Default value = ".")
-    run_type :
+    run_type
         local" (default), "emr", "databricks"
         "emr" if the files are read from or written in AWS s3
         "databricks" if the files are read from or written in dbfs in azure databricks
-    print_impact :
+    print_impact
         True, False.
         :return None (Default value = True)
 
@@ -162,7 +162,7 @@ def anovos_basic_report(
 
         Parameters
         ----------
-        output_path :
+        output_path
 
 
         Returns
@@ -230,7 +230,7 @@ def anovos_basic_report(
 
         Parameters
         ----------
-        col :
+        col
 
 
         Returns
@@ -570,25 +570,27 @@ def anovos_basic_report(
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
-<p>spark :
-Spark Session
-idf :
-Input Dataframe
-id_col :
-ID column (Default value = "")
-label_col :
-Label/Target column (Default value = "")
-event_label :
-Value of (positive) event (i.e label 1) (Default value = "")
-output_path :
-File Path for saving metrics and basic report (Default value = ".")
-run_type :
-local" (default), "emr", "databricks"
+<dl>
+<dt><strong><code>spark</code></strong></dt>
+<dd>Spark Session</dd>
+<dt><strong><code>idf</code></strong></dt>
+<dd>Input Dataframe</dd>
+<dt><strong><code>id_col</code></strong></dt>
+<dd>ID column (Default value = "")</dd>
+<dt><strong><code>label_col</code></strong></dt>
+<dd>Label/Target column (Default value = "")</dd>
+<dt><strong><code>event_label</code></strong></dt>
+<dd>Value of (positive) event (i.e label 1) (Default value = "")</dd>
+<dt><strong><code>output_path</code></strong></dt>
+<dd>File Path for saving metrics and basic report (Default value = ".")</dd>
+<dt><strong><code>run_type</code></strong></dt>
+<dd>local" (default), "emr", "databricks"
 "emr" if the files are read from or written in AWS s3
-"databricks" if the files are read from or written in dbfs in azure databricks
-print_impact :
-True, False.
-:return None (Default value = True)</p>
+"databricks" if the files are read from or written in dbfs in azure databricks</dd>
+<dt><strong><code>print_impact</code></strong></dt>
+<dd>True, False.
+:return None (Default value = True)</dd>
+</dl>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -610,23 +612,23 @@ def anovos_basic_report(
 
     Parameters
     ----------
-    spark :
+    spark
         Spark Session
-    idf :
+    idf
         Input Dataframe
-    id_col :
+    id_col
         ID column (Default value = "")
-    label_col :
+    label_col
         Label/Target column (Default value = "")
-    event_label :
+    event_label
         Value of (positive) event (i.e label 1) (Default value = "")
-    output_path :
+    output_path
         File Path for saving metrics and basic report (Default value = ".")
-    run_type :
+    run_type
         local" (default), "emr", "databricks"
         "emr" if the files are read from or written in AWS s3
         "databricks" if the files are read from or written in dbfs in azure databricks
-    print_impact :
+    print_impact
         True, False.
         :return None (Default value = True)
 
@@ -663,7 +665,7 @@ def anovos_basic_report(
 
         Parameters
         ----------
-        output_path :
+        output_path
 
 
         Returns
@@ -731,7 +733,7 @@ def anovos_basic_report(
 
         Parameters
         ----------
-        col :
+        col
 
 
         Returns
@@ -1070,9 +1072,12 @@ def anovos_basic_report(
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
-<p>path :
-param func:
-func :</p>
+<dl>
+<dt><strong><code>path</code></strong></dt>
+<dd>param func:</dd>
+<dt><strong><code>func</code></strong></dt>
+<dd>&nbsp;</dd>
+</dl>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -1085,9 +1090,9 @@ def stats_args(path, func):
 
     Parameters
     ----------
-    path :
+    path
         param func:
-    func :
+    func
 
 
     Returns

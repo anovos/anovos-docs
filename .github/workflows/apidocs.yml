@@ -72,5 +72,5 @@ jobs:
           title: Update API Docs
           body: Automatically created via GitHub Actions
           commit-message: Update API docs (${{ github.run_id}})
-          branch: update-api-docs
+          branch: update-api-docs-${{ github.run_id}}
           delete-branch: true

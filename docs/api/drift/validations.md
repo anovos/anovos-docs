@@ -23,27 +23,27 @@ def check_list_of_columns(
 
     Parameters
     ----------
-    func :
+    func
         Default value = None)
-    columns :
+    columns
         Default value = "list_of_cols")
-    target_idx : int :
+    target_idx : int
         Default value = 1)
-    target : str :
+    target : str
         Default value = "idf_target")
-    drop :
+    drop
         Default value = "drop_cols")
-    target_idx : int :
+    target_idx : int
         Default value = 1)
-    target : str :
+    target : str
         Default value = "idf_target")
-    target_idx :
+    target_idx
         int:  (Default value = 1)
-    target :
+    target
         str:  (Default value = "idf_target")
-    target_idx: int :
+    target_idx: int
          (Default value = 1)
-    target: str :
+    target: str
          (Default value = "idf_target")
 
     Returns
@@ -59,9 +59,9 @@ def check_list_of_columns(
 
         Parameters
         ----------
-        *args :
+        *args
 
-        **kwargs :
+        **kwargs
 
 
         Returns
@@ -122,10 +122,10 @@ def check_distance_method(func=None, param="method_type"):
 
     Parameters
     ----------
-    func :
-        Default value = None)
-    param :
-        Default value = "method_type")
+    func
+        (Default value = None)
+    param : str
+        (Default value = "method_type")
 
     Returns
     -------
@@ -140,9 +140,9 @@ def check_distance_method(func=None, param="method_type"):
 
         Parameters
         ----------
-        *args :
+        *args
 
-        **kwargs :
+        **kwargs
 
 
         Returns
@@ -177,10 +177,12 @@ def check_distance_method(func=None, param="method_type"):
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
-<p>func :
-Default value = None)
-param :
-Default value = "method_type")</p>
+<dl>
+<dt><strong><code>func</code></strong></dt>
+<dd>(Default value = None)</dd>
+<dt><strong><code>param</code></strong> :&ensp;<code>str</code></dt>
+<dd>(Default value = "method_type")</dd>
+</dl>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -193,10 +195,10 @@ def check_distance_method(func=None, param="method_type"):
 
     Parameters
     ----------
-    func :
-        Default value = None)
-    param :
-        Default value = "method_type")
+    func
+        (Default value = None)
+    param : str
+        (Default value = "method_type")
 
     Returns
     -------
@@ -211,9 +213,9 @@ def check_distance_method(func=None, param="method_type"):
 
         Parameters
         ----------
-        *args :
+        *args
 
-        **kwargs :
+        **kwargs
 
 
         Returns
@@ -248,29 +250,29 @@ def check_distance_method(func=None, param="method_type"):
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
 <dl>
-<dt>func :</dt>
-<dt>Default value = None)</dt>
-<dt>columns :</dt>
-<dt>Default value = "list_of_cols")</dt>
-<dt><strong><code>target_idx</code></strong> :&ensp;<code>int :</code></dt>
+<dt><strong><code>func</code></strong></dt>
+<dd>Default value = None)</dd>
+<dt><strong><code>columns</code></strong></dt>
+<dd>Default value = "list_of_cols")</dd>
+<dt><strong><code>target_idx</code></strong> :&ensp;<code>int</code></dt>
 <dd>Default value = 1)</dd>
-<dt><strong><code>target</code></strong> :&ensp;<code>str :</code></dt>
+<dt><strong><code>target</code></strong> :&ensp;<code>str</code></dt>
 <dd>Default value = "idf_target")</dd>
-<dt>drop :</dt>
-<dt>Default value = "drop_cols")</dt>
-<dt><strong><code>target_idx</code></strong> :&ensp;<code>int :</code></dt>
+<dt><strong><code>drop</code></strong></dt>
+<dd>Default value = "drop_cols")</dd>
+<dt><strong><code>target_idx</code></strong> :&ensp;<code>int</code></dt>
 <dd>Default value = 1)</dd>
-<dt><strong><code>target</code></strong> :&ensp;<code>str :</code></dt>
+<dt><strong><code>target</code></strong> :&ensp;<code>str</code></dt>
 <dd>Default value = "idf_target")</dd>
-<dt>target_idx :</dt>
-<dt>int:
-(Default value = 1)</dt>
-<dt>target :</dt>
-<dt>str:
-(Default value = "idf_target")</dt>
-<dt><strong><code>target_idx</code></strong> :&ensp;<code>int :</code></dt>
+<dt><strong><code>target_idx</code></strong></dt>
+<dd>int:
+(Default value = 1)</dd>
+<dt><strong><code>target</code></strong></dt>
+<dd>str:
+(Default value = "idf_target")</dd>
+<dt><strong><code>target_idx</code></strong> :&ensp;<code>int</code></dt>
 <dd>(Default value = 1)</dd>
-<dt><strong><code>target</code></strong> :&ensp;<code>str :</code></dt>
+<dt><strong><code>target</code></strong> :&ensp;<code>str</code></dt>
 <dd>(Default value = "idf_target")</dd>
 </dl>
 <h2 id="returns">Returns</h2></div>
@@ -291,27 +293,27 @@ def check_list_of_columns(
 
     Parameters
     ----------
-    func :
+    func
         Default value = None)
-    columns :
+    columns
         Default value = "list_of_cols")
-    target_idx : int :
+    target_idx : int
         Default value = 1)
-    target : str :
+    target : str
         Default value = "idf_target")
-    drop :
+    drop
         Default value = "drop_cols")
-    target_idx : int :
+    target_idx : int
         Default value = 1)
-    target : str :
+    target : str
         Default value = "idf_target")
-    target_idx :
+    target_idx
         int:  (Default value = 1)
-    target :
+    target
         str:  (Default value = "idf_target")
-    target_idx: int :
+    target_idx: int
          (Default value = 1)
-    target: str :
+    target: str
          (Default value = "idf_target")
 
     Returns
@@ -327,9 +329,9 @@ def check_list_of_columns(
 
         Parameters
         ----------
-        *args :
+        *args
 
-        **kwargs :
+        **kwargs
 
 
         Returns

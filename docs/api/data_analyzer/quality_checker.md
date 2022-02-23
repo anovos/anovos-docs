@@ -97,24 +97,24 @@ def duplicate_detection(
 
     Parameters
     ----------
-    spark :
+    spark
         Spark Session
-    idf :
+    idf
         Input Dataframe
-    list_of_cols :
+    list_of_cols
         List of columns to inspect e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
         "all" can be passed to include all columns for analysis.
         Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
         drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
-    drop_cols :
+    drop_cols
         List of columns to be dropped e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])
-    treatment :
+    treatment
         Boolean argument – True or False. If True, duplicate rows are removed from the input dataframe. (Default value = False)
-    print_impact :
+    print_impact
         True, False (Default value = False)
 
     Returns
@@ -192,30 +192,30 @@ def nullRows_detection(
 
     Parameters
     ----------
-    spark :
+    spark
         Spark Session
-    idf :
+    idf
         Input Dataframe
-    list_of_cols :
+    list_of_cols
         List of columns to inspect e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
         "all" can be passed to include all columns for analysis.
         Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
         drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
-    drop_cols :
+    drop_cols
         List of columns to be dropped e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])
-    treatment :
+    treatment
         Boolean argument – True or False. If True, rows with high no. of null columns (defined by
         treatment_threshold argument) are removed from the input dataframe. (Default value = False)
-    treatment_threshold :
+    treatment_threshold
         Defines % of columns allowed to be Null per row and takes value between 0 to 1.
         If % of null columns is above the threshold for a row, it is removed from the dataframe.
         There is no row removal if the threshold is 1.0. And if the threshold is 0, all rows with
         null value are removed. (Default value = 0.8)
-    print_impact :
+    print_impact
         True, False. (Default value = False)
 
     Returns
@@ -252,7 +252,7 @@ def nullRows_detection(
 
         Parameters
         ----------
-        *cols :
+        *cols
 
 
         Returns
@@ -325,11 +325,11 @@ def nullColumns_detection(
 
     Parameters
     ----------
-    spark :
+    spark
         Spark Session
-    idf :
+    idf
         Input Dataframe
-    list_of_cols :
+    list_of_cols
         List of columns to inspect e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
@@ -340,20 +340,20 @@ def nullColumns_detection(
         dataset but missing values may possibly appear in the prediction dataset.
         Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
         drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols.
-    drop_cols :
+    drop_cols
         List of columns to be dropped e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])
-    treatment :
+    treatment
         Boolean argument – True or False. If True, missing values are treated as per treatment_method argument. (Default value = False)
-    treatment_method :
+    treatment_method
         MMM", "row_removal", "column_removal", "KNN", "regression", "MF", "auto".
         MMM (Mean Median Mode) replaces null value by the measure of central tendency (mode for
         categorical features and mean or median for numerical features).
         row_removal removes all rows with any missing value.
         column_removal remove a column if % of rows with missing value is above a threshold (defined
         by key "treatment_threshold" under treatment_configs argument). (Default value = "row_removal")
-    treatment_configs :
+    treatment_configs
         Takes input in dictionary format.
         For column_removal treatment, key ‘treatment_threshold’ is provided with a value between 0 to 1.
         For row_removal, this argument can be skipped.
@@ -367,19 +367,19 @@ def nullColumns_detection(
         where each key is an argument from imputation_matrixFactorization function.
         For auto, arguments corresponding to auto_imputation function (transformer module) are provided,
         where each key is an argument from auto_imputation function. (Default value = {})
-    stats_missing :
+    stats_missing
         Takes arguments for read_dataset (data_ingest module) function in a dictionary format
         to read pre-saved statistics on missing count/pct i.e. if measures_of_counts or
         missingCount_computation (data_analyzer.stats_generator module) has been computed & saved before. (Default value = {})
-    stats_unique :
+    stats_unique
         Takes arguments for read_dataset (data_ingest module) function in a dictionary format
         to read pre-saved statistics on unique value count i.e. if measures_of_cardinality or
         uniqueCount_computation (data_analyzer.stats_generator module) has been computed & saved before. (Default value = {})
-    stats_mode :
+    stats_mode
         Takes arguments for read_dataset (data_ingest module) function in a dictionary format
         to read pre-saved statistics on most frequently seen values i.e. if measures_of_centralTendency or
         mode_computation (data_analyzer.stats_generator module) has been computed & saved before. (Default value = {})
-    print_impact :
+    print_impact
         Default value = False)
 
     Returns
@@ -600,26 +600,26 @@ def outlier_detection(
 
     Parameters
     ----------
-    spark :
+    spark
         Spark Session
-    idf :
+    idf
         Input Dataframe
-    list_of_cols :
+    list_of_cols
         List of numerical columns to inspect e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
         "all" can be passed to include all numerical columns for analysis.
         Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
         drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
-    drop_cols :
+    drop_cols
         List of columns to be dropped e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])
-    detection_side :
+    detection_side
         upper", "lower", "both".
         "lower" detects outliers in the lower spectrum of the column range, whereas "upper" detects
         in the upper spectrum. "Both" detects in both upper and lower end of the spectrum. (Default value = "upper")
-    detection_configs :
+    detection_configs
         Takes input in dictionary format with keys representing upper & lower parameter for
         three outlier detection methodologies.
         a) Percentile Method: In this methodology, a value higher than a certain (default 0.95)
@@ -634,44 +634,44 @@ def outlier_detection(
         If an attribute value is less (more) than its derived lower (upper) bound value,
         it is considered as outlier by a methodology. A attribute value is considered as outlier
         if it is declared as outlier by atleast 'min_validation' methodologies (default 2).
-    treatment :
+    treatment
         Boolean argument – True or False. If True, outliers are treated as per treatment_method argument. (Default value = False)
-    treatment_method :
+    treatment_method
         null_replacement", "row_removal", "value_replacement".
         In "null_replacement", outlier values are replaced by null so that it can be imputed by a
         reliable imputation methodology. In "value_replacement", outlier values are replaced by
         maximum or minimum permissible value by above methodologies. Lastly in "row_removal", rows
         are removed if it is found with any outlier. (Default value = "value_replacement")
-    pre_existing_model :
+    pre_existing_model
         Boolean argument – True or False. True if the model with upper/lower permissible values
         for each attribute exists already to be used, False otherwise. (Default value = False)
-    model_path :
+    model_path
         If pre_existing_model is True, this argument is path for the pre-saved model.
         If pre_existing_model is False, this field can be used for saving the model.
         Default "NA" means there is neither pre-existing model nor there is a need to save one.
-    output_mode :
+    output_mode
         replace", "append".
         “replace” option replaces original columns with treated column. “append” option append treated
         column to the input dataset with a postfix "_outliered" e.g. column X is appended as X_outliered. (Default value = "replace")
-    stats_unique :
+    stats_unique
         Takes arguments for read_dataset (data_ingest module) function in a dictionary format
         to read pre-saved statistics on unique value count i.e. if measures_of_cardinality or
         uniqueCount_computation (data_analyzer.stats_generator module) has been computed & saved before. (Default value = {})
-    print_impact :
+    print_impact
         True, False. (Default value = False)
-    "pctile_upper": 0.95 :
+    "pctile_upper": 0.95
 
-    "stdev_lower": 3.0 :
+    "stdev_lower": 3.0
 
-    "stdev_upper": 3.0 :
+    "stdev_upper": 3.0
 
-    "IQR_lower": 1.5 :
+    "IQR_lower": 1.5
 
-    "IQR_upper": 1.5 :
+    "IQR_upper": 1.5
 
-    "min_validation": 2 :
+    "min_validation": 2
 
-    } :
+    }
 
 
     Returns
@@ -846,7 +846,7 @@ def outlier_detection(
 
         Parameters
         ----------
-        *v :
+        *v
 
 
         Returns
@@ -960,34 +960,34 @@ def IDness_detection(
 
     Parameters
     ----------
-    spark :
+    spark
         Spark Session
-    idf :
+    idf
         Input Dataframe
-    list_of_cols :
+    list_of_cols
         List of Discrete (Categorical + Integer) columns to inspect e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
         "all" can be passed to include all categorical columns for analysis.
         Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
         drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
-    drop_cols :
+    drop_cols
         List of columns to be dropped e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])
-    treatment :
+    treatment
         Boolean argument – True or False. If True, columns with high IDness (defined by
         treatment_threshold argument) are removed from the input dataframe. (Default value = False)
-    treatment_threshold :
+    treatment_threshold
         Defines acceptable level of IDness (calculated as no. of unique values divided by no. of
         non-null values) for a column and takes value between 0 to 1. Default threshold
         of 0.8 can be interpreted as remove column if its unique values count is more than
         80% of total rows (after excluding null values).
-    stats_unique :
+    stats_unique
         Takes arguments for read_dataset (data_ingest module) function in a dictionary format
         to read pre-saved statistics on unique value count i.e. if measures_of_cardinality or
         uniqueCount_computation (data_analyzer.stats_generator module) has been computed & saved before. (Default value = {})
-    print_impact :
+    print_impact
         True,False. (Default value = False)
 
     Returns
@@ -1088,34 +1088,34 @@ def biasedness_detection(
 
     Parameters
     ----------
-    spark :
+    spark
         Spark Session
-    idf :
+    idf
         Input Dataframe
-    list_of_cols :
+    list_of_cols
         List of Discrete (Categorical + Integer) columns to inspect e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
         "all" can be passed to include all discrete columns for analysis.
         Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
         drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
-    drop_cols :
+    drop_cols
         List of columns to be dropped e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])
-    treatment :
+    treatment
         Boolean argument – True or False. If True, columns with high biasedness (defined by
         treatment_threshold argument) are removed from the input dataframe. (Default value = False)
-    treatment_threshold :
+    treatment_threshold
         Defines acceptable level of biasedness (frequency of most-frequently seen value)for
         a column and takes value between 0 to 1. Default threshold of 0.8 can be interpreted as
         remove column if the number of rows with most-frequently seen value is more than 80%
         of total rows (after excluding null values).
-    stats_mode :
+    stats_mode
         Takes arguments for read_dataset (data_ingest module) function in a dictionary format
         to read pre-saved statistics on most frequently seen values i.e. if measures_of_centralTendency or
         mode_computation (data_analyzer.stats_generator module) has been computed & saved before. (Default value = {})
-    print_impact :
+    print_impact
         True, False (Default value = False)
 
     Returns
@@ -1256,63 +1256,63 @@ def invalidEntries_detection(
 
     Parameters
     ----------
-    spark :
+    spark
         Spark Session
-    idf :
+    idf
         Input Dataframe
-    list_of_cols :
+    list_of_cols
         List of Discrete (Categorical + Integer) columns to inspect e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
         "all" can be passed to include all discrete columns for analysis.
         Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
         drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
-    drop_cols :
+    drop_cols
         List of columns to be dropped e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])
-    detection_type :
+    detection_type
         auto","manual","both" (Default value = "auto")
-    invalid_entries :
+    invalid_entries
         List of values or regex patterns to be classified as invalid.
         Valid only for "auto" or "both" detection type. (Default value = [])
-    valid_entries :
+    valid_entries
         List of values or regex patterns such that a value will be classified as invalid if it
         does not match any value or regex pattern in it. Valid only for "auto" or "both" detection type. (Default value = [])
-    partial_match :
+    partial_match
         Boolean argument – True or False. If True, values with substring same as invalid_entries is declared invalid. (Default value = False)
-    treatment :
+    treatment
         Boolean argument – True or False. If True, invalid values are replaced by Null. (Default value = False)
-    treatment_method :
+    treatment_method
         MMM", "null_replacement", "column_removal" (more methods to be added soon).
         MMM (Mean Median Mode) replaces invalid value by the measure of central tendency (mode for
         categorical features and mean or median for numerical features).
         null_replacement removes all values with any invalid values as null.
         column_removal remove a column if % of rows with invalid value is above a threshold (defined
         by key "treatment_threshold" under treatment_configs argument). (Default value = "null_replacement")
-    treatment_configs :
+    treatment_configs
         Takes input in dictionary format.
         For column_removal treatment, key ‘treatment_threshold’ is provided with a value between 0 to 1.
         For value replacement, by MMM, arguments corresponding to imputation_MMM function (transformer module) are provided,
         where each key is an argument from imputation_MMM function.
         For null_replacement, this argument can be skipped. (Default value = {})
-    stats_missing :
+    stats_missing
         Takes arguments for read_dataset (data_ingest module) function in a dictionary format
         to read pre-saved statistics on missing count/pct i.e. if measures_of_counts or
         missingCount_computation (data_analyzer.stats_generator module) has been computed & saved before. (Default value = {})
-    stats_unique :
+    stats_unique
         Takes arguments for read_dataset (data_ingest module) function in a dictionary format
         to read pre-saved statistics on unique value count i.e. if measures_of_cardinality or
         uniqueCount_computation (data_analyzer.stats_generator module) has been computed & saved before. (Default value = {})
-    stats_mode :
+    stats_mode
         Takes arguments for read_dataset (data_ingest module) function in a dictionary format
         to read pre-saved statistics on most frequently seen values i.e. if measures_of_centralTendency or
         mode_computation (data_analyzer.stats_generator module) has been computed & saved before. (Default value = {})
-    output_mode :
+    output_mode
         replace", "append".
         “replace” option replaces original columns with treated column. “append” option append treated
         column to the input dataset with a postfix "_invalid" e.g. column X is appended as X_invalid. (Default value = "replace")
-    print_impact :
+    print_impact
         True, False. (Default value = False)
 
     Returns
@@ -1409,7 +1409,7 @@ def invalidEntries_detection(
 
         Parameters
         ----------
-        *v :
+        *v
 
 
         Returns
@@ -1604,35 +1604,37 @@ threshold. Such columns can be deleted from the modelling analysis if directed f
 columns (the original dataset if no treatment) and
 2nd dataframe is of schema – attribute, , unique_values, IDness.</p>
 <h2 id="parameters">Parameters</h2>
-<p>spark :
-Spark Session
-idf :
-Input Dataframe
-list_of_cols :
-List of Discrete (Categorical + Integer) columns to inspect e.g., ["col1","col2"].
+<dl>
+<dt><strong><code>spark</code></strong></dt>
+<dd>Spark Session</dd>
+<dt><strong><code>idf</code></strong></dt>
+<dd>Input Dataframe</dd>
+<dt><strong><code>list_of_cols</code></strong></dt>
+<dd>List of Discrete (Categorical + Integer) columns to inspect e.g., ["col1","col2"].
 Alternatively, columns can be specified in a string format,
 where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
 "all" can be passed to include all categorical columns for analysis.
 Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
-drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
-drop_cols :
-List of columns to be dropped e.g., ["col1","col2"].
+drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")</dd>
+<dt><strong><code>drop_cols</code></strong></dt>
+<dd>List of columns to be dropped e.g., ["col1","col2"].
 Alternatively, columns can be specified in a string format,
-where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])
-treatment :
-Boolean argument – True or False. If True, columns with high IDness (defined by
-treatment_threshold argument) are removed from the input dataframe. (Default value = False)
-treatment_threshold :
-Defines acceptable level of IDness (calculated as no. of unique values divided by no. of
+where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])</dd>
+<dt><strong><code>treatment</code></strong></dt>
+<dd>Boolean argument – True or False. If True, columns with high IDness (defined by
+treatment_threshold argument) are removed from the input dataframe. (Default value = False)</dd>
+<dt><strong><code>treatment_threshold</code></strong></dt>
+<dd>Defines acceptable level of IDness (calculated as no. of unique values divided by no. of
 non-null values) for a column and takes value between 0 to 1. Default threshold
 of 0.8 can be interpreted as remove column if its unique values count is more than
-80% of total rows (after excluding null values).
-stats_unique :
-Takes arguments for read_dataset (data_ingest module) function in a dictionary format
+80% of total rows (after excluding null values).</dd>
+<dt><strong><code>stats_unique</code></strong></dt>
+<dd>Takes arguments for read_dataset (data_ingest module) function in a dictionary format
 to read pre-saved statistics on unique value count i.e. if measures_of_cardinality or
-uniqueCount_computation (data_analyzer.stats_generator module) has been computed &amp; saved before. (Default value = {})
-print_impact :
-True,False. (Default value = False)</p>
+uniqueCount_computation (data_analyzer.stats_generator module) has been computed &amp; saved before. (Default value = {})</dd>
+<dt><strong><code>print_impact</code></strong></dt>
+<dd>True,False. (Default value = False)</dd>
+</dl>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -1661,34 +1663,34 @@ def IDness_detection(
 
     Parameters
     ----------
-    spark :
+    spark
         Spark Session
-    idf :
+    idf
         Input Dataframe
-    list_of_cols :
+    list_of_cols
         List of Discrete (Categorical + Integer) columns to inspect e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
         "all" can be passed to include all categorical columns for analysis.
         Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
         drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
-    drop_cols :
+    drop_cols
         List of columns to be dropped e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])
-    treatment :
+    treatment
         Boolean argument – True or False. If True, columns with high IDness (defined by
         treatment_threshold argument) are removed from the input dataframe. (Default value = False)
-    treatment_threshold :
+    treatment_threshold
         Defines acceptable level of IDness (calculated as no. of unique values divided by no. of
         non-null values) for a column and takes value between 0 to 1. Default threshold
         of 0.8 can be interpreted as remove column if its unique values count is more than
         80% of total rows (after excluding null values).
-    stats_unique :
+    stats_unique
         Takes arguments for read_dataset (data_ingest module) function in a dictionary format
         to read pre-saved statistics on unique value count i.e. if measures_of_cardinality or
         uniqueCount_computation (data_analyzer.stats_generator module) has been computed & saved before. (Default value = {})
-    print_impact :
+    print_impact
         True,False. (Default value = False)
 
     Returns
@@ -1782,35 +1784,37 @@ threshold. Such columns can be deleted from the modelling analysis, if required.
 columns (the original dataset if no treatment) and
 2nd dataframe is of schema – attribute, mode, mode_pct.</p>
 <h2 id="parameters">Parameters</h2>
-<p>spark :
-Spark Session
-idf :
-Input Dataframe
-list_of_cols :
-List of Discrete (Categorical + Integer) columns to inspect e.g., ["col1","col2"].
+<dl>
+<dt><strong><code>spark</code></strong></dt>
+<dd>Spark Session</dd>
+<dt><strong><code>idf</code></strong></dt>
+<dd>Input Dataframe</dd>
+<dt><strong><code>list_of_cols</code></strong></dt>
+<dd>List of Discrete (Categorical + Integer) columns to inspect e.g., ["col1","col2"].
 Alternatively, columns can be specified in a string format,
 where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
 "all" can be passed to include all discrete columns for analysis.
 Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
-drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
-drop_cols :
-List of columns to be dropped e.g., ["col1","col2"].
+drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")</dd>
+<dt><strong><code>drop_cols</code></strong></dt>
+<dd>List of columns to be dropped e.g., ["col1","col2"].
 Alternatively, columns can be specified in a string format,
-where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])
-treatment :
-Boolean argument – True or False. If True, columns with high biasedness (defined by
-treatment_threshold argument) are removed from the input dataframe. (Default value = False)
-treatment_threshold :
-Defines acceptable level of biasedness (frequency of most-frequently seen value)for
+where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])</dd>
+<dt><strong><code>treatment</code></strong></dt>
+<dd>Boolean argument – True or False. If True, columns with high biasedness (defined by
+treatment_threshold argument) are removed from the input dataframe. (Default value = False)</dd>
+<dt><strong><code>treatment_threshold</code></strong></dt>
+<dd>Defines acceptable level of biasedness (frequency of most-frequently seen value)for
 a column and takes value between 0 to 1. Default threshold of 0.8 can be interpreted as
 remove column if the number of rows with most-frequently seen value is more than 80%
-of total rows (after excluding null values).
-stats_mode :
-Takes arguments for read_dataset (data_ingest module) function in a dictionary format
+of total rows (after excluding null values).</dd>
+<dt><strong><code>stats_mode</code></strong></dt>
+<dd>Takes arguments for read_dataset (data_ingest module) function in a dictionary format
 to read pre-saved statistics on most frequently seen values i.e. if measures_of_centralTendency or
-mode_computation (data_analyzer.stats_generator module) has been computed &amp; saved before. (Default value = {})
-print_impact :
-True, False (Default value = False)</p>
+mode_computation (data_analyzer.stats_generator module) has been computed &amp; saved before. (Default value = {})</dd>
+<dt><strong><code>print_impact</code></strong></dt>
+<dd>True, False (Default value = False)</dd>
+</dl>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -1840,34 +1844,34 @@ def biasedness_detection(
 
     Parameters
     ----------
-    spark :
+    spark
         Spark Session
-    idf :
+    idf
         Input Dataframe
-    list_of_cols :
+    list_of_cols
         List of Discrete (Categorical + Integer) columns to inspect e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
         "all" can be passed to include all discrete columns for analysis.
         Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
         drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
-    drop_cols :
+    drop_cols
         List of columns to be dropped e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])
-    treatment :
+    treatment
         Boolean argument – True or False. If True, columns with high biasedness (defined by
         treatment_threshold argument) are removed from the input dataframe. (Default value = False)
-    treatment_threshold :
+    treatment_threshold
         Defines acceptable level of biasedness (frequency of most-frequently seen value)for
         a column and takes value between 0 to 1. Default threshold of 0.8 can be interpreted as
         remove column if the number of rows with most-frequently seen value is more than 80%
         of total rows (after excluding null values).
-    stats_mode :
+    stats_mode
         Takes arguments for read_dataset (data_ingest module) function in a dictionary format
         to read pre-saved statistics on most frequently seen values i.e. if measures_of_centralTendency or
         mode_computation (data_analyzer.stats_generator module) has been computed & saved before. (Default value = {})
-    print_impact :
+    print_impact
         True, False (Default value = False)
 
     Returns
@@ -1978,25 +1982,27 @@ tuple format; the 1st dataframe is the input dataset after deduplication (if tre
 The 2nd dataframe is of
 schema – metric, value and contains the total number of rows and number of unique rows.</p>
 <h2 id="parameters">Parameters</h2>
-<p>spark :
-Spark Session
-idf :
-Input Dataframe
-list_of_cols :
-List of columns to inspect e.g., ["col1","col2"].
+<dl>
+<dt><strong><code>spark</code></strong></dt>
+<dd>Spark Session</dd>
+<dt><strong><code>idf</code></strong></dt>
+<dd>Input Dataframe</dd>
+<dt><strong><code>list_of_cols</code></strong></dt>
+<dd>List of columns to inspect e.g., ["col1","col2"].
 Alternatively, columns can be specified in a string format,
 where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
 "all" can be passed to include all columns for analysis.
 Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
-drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
-drop_cols :
-List of columns to be dropped e.g., ["col1","col2"].
+drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")</dd>
+<dt><strong><code>drop_cols</code></strong></dt>
+<dd>List of columns to be dropped e.g., ["col1","col2"].
 Alternatively, columns can be specified in a string format,
-where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])
-treatment :
-Boolean argument – True or False. If True, duplicate rows are removed from the input dataframe. (Default value = False)
-print_impact :
-True, False (Default value = False)</p>
+where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])</dd>
+<dt><strong><code>treatment</code></strong></dt>
+<dd>Boolean argument – True or False. If True, duplicate rows are removed from the input dataframe. (Default value = False)</dd>
+<dt><strong><code>print_impact</code></strong></dt>
+<dd>True, False (Default value = False)</dd>
+</dl>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -2016,24 +2022,24 @@ def duplicate_detection(
 
     Parameters
     ----------
-    spark :
+    spark
         Spark Session
-    idf :
+    idf
         Input Dataframe
-    list_of_cols :
+    list_of_cols
         List of columns to inspect e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
         "all" can be passed to include all columns for analysis.
         Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
         drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
-    drop_cols :
+    drop_cols
         List of columns to be dropped e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])
-    treatment :
+    treatment
         Boolean argument – True or False. If True, duplicate rows are removed from the input dataframe. (Default value = False)
-    print_impact :
+    print_impact
         True, False (Default value = False)
 
     Returns
@@ -2116,64 +2122,66 @@ invalid_entries, invalid_count, invalid_pct. All potential invalid values (separ
 shown under invalid_entries column. Total number of rows impacted by these entries for each attribute is shown
 under invalid_count. invalid_pct is invalid_count divided by number of rows</p>
 <h2 id="parameters">Parameters</h2>
-<p>spark :
-Spark Session
-idf :
-Input Dataframe
-list_of_cols :
-List of Discrete (Categorical + Integer) columns to inspect e.g., ["col1","col2"].
+<dl>
+<dt><strong><code>spark</code></strong></dt>
+<dd>Spark Session</dd>
+<dt><strong><code>idf</code></strong></dt>
+<dd>Input Dataframe</dd>
+<dt><strong><code>list_of_cols</code></strong></dt>
+<dd>List of Discrete (Categorical + Integer) columns to inspect e.g., ["col1","col2"].
 Alternatively, columns can be specified in a string format,
 where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
 "all" can be passed to include all discrete columns for analysis.
 Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
-drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
-drop_cols :
-List of columns to be dropped e.g., ["col1","col2"].
+drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")</dd>
+<dt><strong><code>drop_cols</code></strong></dt>
+<dd>List of columns to be dropped e.g., ["col1","col2"].
 Alternatively, columns can be specified in a string format,
-where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])
-detection_type :
-auto","manual","both" (Default value = "auto")
-invalid_entries :
-List of values or regex patterns to be classified as invalid.
-Valid only for "auto" or "both" detection type. (Default value = [])
-valid_entries :
-List of values or regex patterns such that a value will be classified as invalid if it
-does not match any value or regex pattern in it. Valid only for "auto" or "both" detection type. (Default value = [])
-partial_match :
-Boolean argument – True or False. If True, values with substring same as invalid_entries is declared invalid. (Default value = False)
-treatment :
-Boolean argument – True or False. If True, invalid values are replaced by Null. (Default value = False)
-treatment_method :
-MMM", "null_replacement", "column_removal" (more methods to be added soon).
+where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])</dd>
+<dt><strong><code>detection_type</code></strong></dt>
+<dd>auto","manual","both" (Default value = "auto")</dd>
+<dt><strong><code>invalid_entries</code></strong></dt>
+<dd>List of values or regex patterns to be classified as invalid.
+Valid only for "auto" or "both" detection type. (Default value = [])</dd>
+<dt><strong><code>valid_entries</code></strong></dt>
+<dd>List of values or regex patterns such that a value will be classified as invalid if it
+does not match any value or regex pattern in it. Valid only for "auto" or "both" detection type. (Default value = [])</dd>
+<dt><strong><code>partial_match</code></strong></dt>
+<dd>Boolean argument – True or False. If True, values with substring same as invalid_entries is declared invalid. (Default value = False)</dd>
+<dt><strong><code>treatment</code></strong></dt>
+<dd>Boolean argument – True or False. If True, invalid values are replaced by Null. (Default value = False)</dd>
+<dt><strong><code>treatment_method</code></strong></dt>
+<dd>MMM", "null_replacement", "column_removal" (more methods to be added soon).
 MMM (Mean Median Mode) replaces invalid value by the measure of central tendency (mode for
 categorical features and mean or median for numerical features).
 null_replacement removes all values with any invalid values as null.
 column_removal remove a column if % of rows with invalid value is above a threshold (defined
-by key "treatment_threshold" under treatment_configs argument). (Default value = "null_replacement")
-treatment_configs :
-Takes input in dictionary format.
+by key "treatment_threshold" under treatment_configs argument). (Default value = "null_replacement")</dd>
+<dt><strong><code>treatment_configs</code></strong></dt>
+<dd>Takes input in dictionary format.
 For column_removal treatment, key ‘treatment_threshold’ is provided with a value between 0 to 1.
 For value replacement, by MMM, arguments corresponding to imputation_MMM function (transformer module) are provided,
 where each key is an argument from imputation_MMM function.
-For null_replacement, this argument can be skipped. (Default value = {})
-stats_missing :
-Takes arguments for read_dataset (data_ingest module) function in a dictionary format
+For null_replacement, this argument can be skipped. (Default value = {})</dd>
+<dt><strong><code>stats_missing</code></strong></dt>
+<dd>Takes arguments for read_dataset (data_ingest module) function in a dictionary format
 to read pre-saved statistics on missing count/pct i.e. if measures_of_counts or
-missingCount_computation (data_analyzer.stats_generator module) has been computed &amp; saved before. (Default value = {})
-stats_unique :
-Takes arguments for read_dataset (data_ingest module) function in a dictionary format
+missingCount_computation (data_analyzer.stats_generator module) has been computed &amp; saved before. (Default value = {})</dd>
+<dt><strong><code>stats_unique</code></strong></dt>
+<dd>Takes arguments for read_dataset (data_ingest module) function in a dictionary format
 to read pre-saved statistics on unique value count i.e. if measures_of_cardinality or
-uniqueCount_computation (data_analyzer.stats_generator module) has been computed &amp; saved before. (Default value = {})
-stats_mode :
-Takes arguments for read_dataset (data_ingest module) function in a dictionary format
+uniqueCount_computation (data_analyzer.stats_generator module) has been computed &amp; saved before. (Default value = {})</dd>
+<dt><strong><code>stats_mode</code></strong></dt>
+<dd>Takes arguments for read_dataset (data_ingest module) function in a dictionary format
 to read pre-saved statistics on most frequently seen values i.e. if measures_of_centralTendency or
-mode_computation (data_analyzer.stats_generator module) has been computed &amp; saved before. (Default value = {})
-output_mode :
-replace", "append".
+mode_computation (data_analyzer.stats_generator module) has been computed &amp; saved before. (Default value = {})</dd>
+<dt><strong><code>output_mode</code></strong></dt>
+<dd>replace", "append".
 “replace” option replaces original columns with treated column. “append” option append treated
-column to the input dataset with a postfix "_invalid" e.g. column X is appended as X_invalid. (Default value = "replace")
-print_impact :
-True, False. (Default value = False)</p>
+column to the input dataset with a postfix "_invalid" e.g. column X is appended as X_invalid. (Default value = "replace")</dd>
+<dt><strong><code>print_impact</code></strong></dt>
+<dd>True, False. (Default value = False)</dd>
+</dl>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -2224,63 +2232,63 @@ def invalidEntries_detection(
 
     Parameters
     ----------
-    spark :
+    spark
         Spark Session
-    idf :
+    idf
         Input Dataframe
-    list_of_cols :
+    list_of_cols
         List of Discrete (Categorical + Integer) columns to inspect e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
         "all" can be passed to include all discrete columns for analysis.
         Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
         drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
-    drop_cols :
+    drop_cols
         List of columns to be dropped e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])
-    detection_type :
+    detection_type
         auto","manual","both" (Default value = "auto")
-    invalid_entries :
+    invalid_entries
         List of values or regex patterns to be classified as invalid.
         Valid only for "auto" or "both" detection type. (Default value = [])
-    valid_entries :
+    valid_entries
         List of values or regex patterns such that a value will be classified as invalid if it
         does not match any value or regex pattern in it. Valid only for "auto" or "both" detection type. (Default value = [])
-    partial_match :
+    partial_match
         Boolean argument – True or False. If True, values with substring same as invalid_entries is declared invalid. (Default value = False)
-    treatment :
+    treatment
         Boolean argument – True or False. If True, invalid values are replaced by Null. (Default value = False)
-    treatment_method :
+    treatment_method
         MMM", "null_replacement", "column_removal" (more methods to be added soon).
         MMM (Mean Median Mode) replaces invalid value by the measure of central tendency (mode for
         categorical features and mean or median for numerical features).
         null_replacement removes all values with any invalid values as null.
         column_removal remove a column if % of rows with invalid value is above a threshold (defined
         by key "treatment_threshold" under treatment_configs argument). (Default value = "null_replacement")
-    treatment_configs :
+    treatment_configs
         Takes input in dictionary format.
         For column_removal treatment, key ‘treatment_threshold’ is provided with a value between 0 to 1.
         For value replacement, by MMM, arguments corresponding to imputation_MMM function (transformer module) are provided,
         where each key is an argument from imputation_MMM function.
         For null_replacement, this argument can be skipped. (Default value = {})
-    stats_missing :
+    stats_missing
         Takes arguments for read_dataset (data_ingest module) function in a dictionary format
         to read pre-saved statistics on missing count/pct i.e. if measures_of_counts or
         missingCount_computation (data_analyzer.stats_generator module) has been computed & saved before. (Default value = {})
-    stats_unique :
+    stats_unique
         Takes arguments for read_dataset (data_ingest module) function in a dictionary format
         to read pre-saved statistics on unique value count i.e. if measures_of_cardinality or
         uniqueCount_computation (data_analyzer.stats_generator module) has been computed & saved before. (Default value = {})
-    stats_mode :
+    stats_mode
         Takes arguments for read_dataset (data_ingest module) function in a dictionary format
         to read pre-saved statistics on most frequently seen values i.e. if measures_of_centralTendency or
         mode_computation (data_analyzer.stats_generator module) has been computed & saved before. (Default value = {})
-    output_mode :
+    output_mode
         replace", "append".
         “replace” option replaces original columns with treated column. “append” option append treated
         column to the input dataset with a postfix "_invalid" e.g. column X is appended as X_invalid. (Default value = "replace")
-    print_impact :
+    print_impact
         True, False. (Default value = False)
 
     Returns
@@ -2377,7 +2385,7 @@ def invalidEntries_detection(
 
         Parameters
         ----------
-        *v :
+        *v
 
 
         Returns
@@ -2574,12 +2582,13 @@ column if %rows with a missing value is above treatment_threshold.</p>
 treated else the original dataset) and
 2nd dataframe is of schema – attribute, missing_count, missing_pct.</p>
 <h2 id="parameters">Parameters</h2>
-<p>spark :
-Spark Session
-idf :
-Input Dataframe
-list_of_cols :
-List of columns to inspect e.g., ["col1","col2"].
+<dl>
+<dt><strong><code>spark</code></strong></dt>
+<dd>Spark Session</dd>
+<dt><strong><code>idf</code></strong></dt>
+<dd>Input Dataframe</dd>
+<dt><strong><code>list_of_cols</code></strong></dt>
+<dd>List of columns to inspect e.g., ["col1","col2"].
 Alternatively, columns can be specified in a string format,
 where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
 "all" can be passed to include all (non-array) columns for analysis.
@@ -2588,22 +2597,22 @@ One of the usecases where "all" may be preferable over "missing" is when the use
 the imputation model for the future use e.g. a column may not have missing value in the training
 dataset but missing values may possibly appear in the prediction dataset.
 Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
-drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols.
-drop_cols :
-List of columns to be dropped e.g., ["col1","col2"].
+drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols.</dd>
+<dt><strong><code>drop_cols</code></strong></dt>
+<dd>List of columns to be dropped e.g., ["col1","col2"].
 Alternatively, columns can be specified in a string format,
-where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])
-treatment :
-Boolean argument – True or False. If True, missing values are treated as per treatment_method argument. (Default value = False)
-treatment_method :
-MMM", "row_removal", "column_removal", "KNN", "regression", "MF", "auto".
+where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])</dd>
+<dt><strong><code>treatment</code></strong></dt>
+<dd>Boolean argument – True or False. If True, missing values are treated as per treatment_method argument. (Default value = False)</dd>
+<dt><strong><code>treatment_method</code></strong></dt>
+<dd>MMM", "row_removal", "column_removal", "KNN", "regression", "MF", "auto".
 MMM (Mean Median Mode) replaces null value by the measure of central tendency (mode for
 categorical features and mean or median for numerical features).
 row_removal removes all rows with any missing value.
 column_removal remove a column if % of rows with missing value is above a threshold (defined
-by key "treatment_threshold" under treatment_configs argument). (Default value = "row_removal")
-treatment_configs :
-Takes input in dictionary format.
+by key "treatment_threshold" under treatment_configs argument). (Default value = "row_removal")</dd>
+<dt><strong><code>treatment_configs</code></strong></dt>
+<dd>Takes input in dictionary format.
 For column_removal treatment, key ‘treatment_threshold’ is provided with a value between 0 to 1.
 For row_removal, this argument can be skipped.
 For MMM, arguments corresponding to imputation_MMM function (transformer module) are provided,
@@ -2615,21 +2624,22 @@ where each key is an argument from imputation_sklearn function. method_type shou
 For MF, arguments corresponding to imputation_matrixFactorization function (transformer module) are provided,
 where each key is an argument from imputation_matrixFactorization function.
 For auto, arguments corresponding to auto_imputation function (transformer module) are provided,
-where each key is an argument from auto_imputation function. (Default value = {})
-stats_missing :
-Takes arguments for read_dataset (data_ingest module) function in a dictionary format
+where each key is an argument from auto_imputation function. (Default value = {})</dd>
+<dt><strong><code>stats_missing</code></strong></dt>
+<dd>Takes arguments for read_dataset (data_ingest module) function in a dictionary format
 to read pre-saved statistics on missing count/pct i.e. if measures_of_counts or
-missingCount_computation (data_analyzer.stats_generator module) has been computed &amp; saved before. (Default value = {})
-stats_unique :
-Takes arguments for read_dataset (data_ingest module) function in a dictionary format
+missingCount_computation (data_analyzer.stats_generator module) has been computed &amp; saved before. (Default value = {})</dd>
+<dt><strong><code>stats_unique</code></strong></dt>
+<dd>Takes arguments for read_dataset (data_ingest module) function in a dictionary format
 to read pre-saved statistics on unique value count i.e. if measures_of_cardinality or
-uniqueCount_computation (data_analyzer.stats_generator module) has been computed &amp; saved before. (Default value = {})
-stats_mode :
-Takes arguments for read_dataset (data_ingest module) function in a dictionary format
+uniqueCount_computation (data_analyzer.stats_generator module) has been computed &amp; saved before. (Default value = {})</dd>
+<dt><strong><code>stats_mode</code></strong></dt>
+<dd>Takes arguments for read_dataset (data_ingest module) function in a dictionary format
 to read pre-saved statistics on most frequently seen values i.e. if measures_of_centralTendency or
-mode_computation (data_analyzer.stats_generator module) has been computed &amp; saved before. (Default value = {})
-print_impact :
-Default value = False)</p>
+mode_computation (data_analyzer.stats_generator module) has been computed &amp; saved before. (Default value = {})</dd>
+<dt><strong><code>print_impact</code></strong></dt>
+<dd>Default value = False)</dd>
+</dl>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -2666,11 +2676,11 @@ def nullColumns_detection(
 
     Parameters
     ----------
-    spark :
+    spark
         Spark Session
-    idf :
+    idf
         Input Dataframe
-    list_of_cols :
+    list_of_cols
         List of columns to inspect e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
@@ -2681,20 +2691,20 @@ def nullColumns_detection(
         dataset but missing values may possibly appear in the prediction dataset.
         Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
         drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols.
-    drop_cols :
+    drop_cols
         List of columns to be dropped e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])
-    treatment :
+    treatment
         Boolean argument – True or False. If True, missing values are treated as per treatment_method argument. (Default value = False)
-    treatment_method :
+    treatment_method
         MMM", "row_removal", "column_removal", "KNN", "regression", "MF", "auto".
         MMM (Mean Median Mode) replaces null value by the measure of central tendency (mode for
         categorical features and mean or median for numerical features).
         row_removal removes all rows with any missing value.
         column_removal remove a column if % of rows with missing value is above a threshold (defined
         by key "treatment_threshold" under treatment_configs argument). (Default value = "row_removal")
-    treatment_configs :
+    treatment_configs
         Takes input in dictionary format.
         For column_removal treatment, key ‘treatment_threshold’ is provided with a value between 0 to 1.
         For row_removal, this argument can be skipped.
@@ -2708,19 +2718,19 @@ def nullColumns_detection(
         where each key is an argument from imputation_matrixFactorization function.
         For auto, arguments corresponding to auto_imputation function (transformer module) are provided,
         where each key is an argument from auto_imputation function. (Default value = {})
-    stats_missing :
+    stats_missing
         Takes arguments for read_dataset (data_ingest module) function in a dictionary format
         to read pre-saved statistics on missing count/pct i.e. if measures_of_counts or
         missingCount_computation (data_analyzer.stats_generator module) has been computed & saved before. (Default value = {})
-    stats_unique :
+    stats_unique
         Takes arguments for read_dataset (data_ingest module) function in a dictionary format
         to read pre-saved statistics on unique value count i.e. if measures_of_cardinality or
         uniqueCount_computation (data_analyzer.stats_generator module) has been computed & saved before. (Default value = {})
-    stats_mode :
+    stats_mode
         Takes arguments for read_dataset (data_ingest module) function in a dictionary format
         to read pre-saved statistics on most frequently seen values i.e. if measures_of_centralTendency or
         mode_computation (data_analyzer.stats_generator module) has been computed & saved before. (Default value = {})
-    print_impact :
+    print_impact
         Default value = False)
 
     Returns
@@ -2926,31 +2936,33 @@ null_cols_count, row_count, row_pct, flagged.</p>
 <p>Interpretation: 1306 rows (4.01% of total rows) have 7 missing columns and flagged for are removal because
 null_cols_count is above the threshold.</p>
 <h2 id="parameters">Parameters</h2>
-<p>spark :
-Spark Session
-idf :
-Input Dataframe
-list_of_cols :
-List of columns to inspect e.g., ["col1","col2"].
+<dl>
+<dt><strong><code>spark</code></strong></dt>
+<dd>Spark Session</dd>
+<dt><strong><code>idf</code></strong></dt>
+<dd>Input Dataframe</dd>
+<dt><strong><code>list_of_cols</code></strong></dt>
+<dd>List of columns to inspect e.g., ["col1","col2"].
 Alternatively, columns can be specified in a string format,
 where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
 "all" can be passed to include all columns for analysis.
 Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
-drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
-drop_cols :
-List of columns to be dropped e.g., ["col1","col2"].
+drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")</dd>
+<dt><strong><code>drop_cols</code></strong></dt>
+<dd>List of columns to be dropped e.g., ["col1","col2"].
 Alternatively, columns can be specified in a string format,
-where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])
-treatment :
-Boolean argument – True or False. If True, rows with high no. of null columns (defined by
-treatment_threshold argument) are removed from the input dataframe. (Default value = False)
-treatment_threshold :
-Defines % of columns allowed to be Null per row and takes value between 0 to 1.
+where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])</dd>
+<dt><strong><code>treatment</code></strong></dt>
+<dd>Boolean argument – True or False. If True, rows with high no. of null columns (defined by
+treatment_threshold argument) are removed from the input dataframe. (Default value = False)</dd>
+<dt><strong><code>treatment_threshold</code></strong></dt>
+<dd>Defines % of columns allowed to be Null per row and takes value between 0 to 1.
 If % of null columns is above the threshold for a row, it is removed from the dataframe.
 There is no row removal if the threshold is 1.0. And if the threshold is 0, all rows with
-null value are removed. (Default value = 0.8)
-print_impact :
-True, False. (Default value = False)</p>
+null value are removed. (Default value = 0.8)</dd>
+<dt><strong><code>print_impact</code></strong></dt>
+<dd>True, False. (Default value = False)</dd>
+</dl>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -2986,30 +2998,30 @@ def nullRows_detection(
 
     Parameters
     ----------
-    spark :
+    spark
         Spark Session
-    idf :
+    idf
         Input Dataframe
-    list_of_cols :
+    list_of_cols
         List of columns to inspect e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
         "all" can be passed to include all columns for analysis.
         Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
         drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
-    drop_cols :
+    drop_cols
         List of columns to be dropped e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])
-    treatment :
+    treatment
         Boolean argument – True or False. If True, rows with high no. of null columns (defined by
         treatment_threshold argument) are removed from the input dataframe. (Default value = False)
-    treatment_threshold :
+    treatment_threshold
         Defines % of columns allowed to be Null per row and takes value between 0 to 1.
         If % of null columns is above the threshold for a row, it is removed from the dataframe.
         There is no row removal if the threshold is 1.0. And if the threshold is 0, all rows with
         null value are removed. (Default value = 0.8)
-    print_impact :
+    print_impact
         True, False. (Default value = False)
 
     Returns
@@ -3046,7 +3058,7 @@ def nullRows_detection(
 
         Parameters
         ----------
-        *cols :
+        *cols
 
 
         Returns
@@ -3129,27 +3141,28 @@ original dataset if no treatment) and
 outliers are checked only for upper end, then lower_outliers column will be shown all zero. Similarly if checked
 only for lower end, then upper_outliers will be zero for all attributes.</p>
 <h2 id="parameters">Parameters</h2>
-<p>spark :
-Spark Session
-idf :
-Input Dataframe
-list_of_cols :
-List of numerical columns to inspect e.g., ["col1","col2"].
+<dl>
+<dt><strong><code>spark</code></strong></dt>
+<dd>Spark Session</dd>
+<dt><strong><code>idf</code></strong></dt>
+<dd>Input Dataframe</dd>
+<dt><strong><code>list_of_cols</code></strong></dt>
+<dd>List of numerical columns to inspect e.g., ["col1","col2"].
 Alternatively, columns can be specified in a string format,
 where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
 "all" can be passed to include all numerical columns for analysis.
 Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
-drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
-drop_cols :
-List of columns to be dropped e.g., ["col1","col2"].
+drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")</dd>
+<dt><strong><code>drop_cols</code></strong></dt>
+<dd>List of columns to be dropped e.g., ["col1","col2"].
 Alternatively, columns can be specified in a string format,
-where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])
-detection_side :
-upper", "lower", "both".
+where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])</dd>
+<dt><strong><code>detection_side</code></strong></dt>
+<dd>upper", "lower", "both".
 "lower" detects outliers in the lower spectrum of the column range, whereas "upper" detects
-in the upper spectrum. "Both" detects in both upper and lower end of the spectrum. (Default value = "upper")
-detection_configs :
-Takes input in dictionary format with keys representing upper &amp; lower parameter for
+in the upper spectrum. "Both" detects in both upper and lower end of the spectrum. (Default value = "upper")</dd>
+<dt><strong><code>detection_configs</code></strong></dt>
+<dd>Takes input in dictionary format with keys representing upper &amp; lower parameter for
 three outlier detection methodologies.
 a) Percentile Method: In this methodology, a value higher than a certain (default 0.95)
 percentile value is considered as an outlier. Similarly, a value lower than a certain
@@ -3162,39 +3175,40 @@ above Q3 + k * IQR (default k is 1.5) are identified as outliers, where Q1 is fi
 third quartile &amp; first quartile.
 If an attribute value is less (more) than its derived lower (upper) bound value,
 it is considered as outlier by a methodology. A attribute value is considered as outlier
-if it is declared as outlier by atleast 'min_validation' methodologies (default 2).
-treatment :
-Boolean argument – True or False. If True, outliers are treated as per treatment_method argument. (Default value = False)
-treatment_method :
-null_replacement", "row_removal", "value_replacement".
+if it is declared as outlier by atleast 'min_validation' methodologies (default 2).</dd>
+<dt><strong><code>treatment</code></strong></dt>
+<dd>Boolean argument – True or False. If True, outliers are treated as per treatment_method argument. (Default value = False)</dd>
+<dt><strong><code>treatment_method</code></strong></dt>
+<dd>null_replacement", "row_removal", "value_replacement".
 In "null_replacement", outlier values are replaced by null so that it can be imputed by a
 reliable imputation methodology. In "value_replacement", outlier values are replaced by
 maximum or minimum permissible value by above methodologies. Lastly in "row_removal", rows
-are removed if it is found with any outlier. (Default value = "value_replacement")
-pre_existing_model :
-Boolean argument – True or False. True if the model with upper/lower permissible values
-for each attribute exists already to be used, False otherwise. (Default value = False)
-model_path :
-If pre_existing_model is True, this argument is path for the pre-saved model.
+are removed if it is found with any outlier. (Default value = "value_replacement")</dd>
+<dt><strong><code>pre_existing_model</code></strong></dt>
+<dd>Boolean argument – True or False. True if the model with upper/lower permissible values
+for each attribute exists already to be used, False otherwise. (Default value = False)</dd>
+<dt><strong><code>model_path</code></strong></dt>
+<dd>If pre_existing_model is True, this argument is path for the pre-saved model.
 If pre_existing_model is False, this field can be used for saving the model.
-Default "NA" means there is neither pre-existing model nor there is a need to save one.
-output_mode :
-replace", "append".
+Default "NA" means there is neither pre-existing model nor there is a need to save one.</dd>
+<dt><strong><code>output_mode</code></strong></dt>
+<dd>replace", "append".
 “replace” option replaces original columns with treated column. “append” option append treated
-column to the input dataset with a postfix "_outliered" e.g. column X is appended as X_outliered. (Default value = "replace")
-stats_unique :
-Takes arguments for read_dataset (data_ingest module) function in a dictionary format
+column to the input dataset with a postfix "_outliered" e.g. column X is appended as X_outliered. (Default value = "replace")</dd>
+<dt><strong><code>stats_unique</code></strong></dt>
+<dd>Takes arguments for read_dataset (data_ingest module) function in a dictionary format
 to read pre-saved statistics on unique value count i.e. if measures_of_cardinality or
-uniqueCount_computation (data_analyzer.stats_generator module) has been computed &amp; saved before. (Default value = {})
-print_impact :
-True, False. (Default value = False)
-"pctile_upper": 0.95 :</p>
-<p>"stdev_lower": 3.0 :</p>
-<p>"stdev_upper": 3.0 :</p>
-<p>"IQR_lower": 1.5 :</p>
-<p>"IQR_upper": 1.5 :</p>
-<p>"min_validation": 2 :</p>
-<p>} :</p>
+uniqueCount_computation (data_analyzer.stats_generator module) has been computed &amp; saved before. (Default value = {})</dd>
+<dt><strong><code>print_impact</code></strong></dt>
+<dd>True, False. (Default value = False)</dd>
+</dl>
+<p>"pctile_upper": 0.95</p>
+<p>"stdev_lower": 3.0</p>
+<p>"stdev_upper": 3.0</p>
+<p>"IQR_lower": 1.5</p>
+<p>"IQR_upper": 1.5</p>
+<p>"min_validation": 2</p>
+<p>}</p>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
@@ -3257,26 +3271,26 @@ def outlier_detection(
 
     Parameters
     ----------
-    spark :
+    spark
         Spark Session
-    idf :
+    idf
         Input Dataframe
-    list_of_cols :
+    list_of_cols
         List of numerical columns to inspect e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
         "all" can be passed to include all numerical columns for analysis.
         Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
         drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
-    drop_cols :
+    drop_cols
         List of columns to be dropped e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])
-    detection_side :
+    detection_side
         upper", "lower", "both".
         "lower" detects outliers in the lower spectrum of the column range, whereas "upper" detects
         in the upper spectrum. "Both" detects in both upper and lower end of the spectrum. (Default value = "upper")
-    detection_configs :
+    detection_configs
         Takes input in dictionary format with keys representing upper & lower parameter for
         three outlier detection methodologies.
         a) Percentile Method: In this methodology, a value higher than a certain (default 0.95)
@@ -3291,44 +3305,44 @@ def outlier_detection(
         If an attribute value is less (more) than its derived lower (upper) bound value,
         it is considered as outlier by a methodology. A attribute value is considered as outlier
         if it is declared as outlier by atleast 'min_validation' methodologies (default 2).
-    treatment :
+    treatment
         Boolean argument – True or False. If True, outliers are treated as per treatment_method argument. (Default value = False)
-    treatment_method :
+    treatment_method
         null_replacement", "row_removal", "value_replacement".
         In "null_replacement", outlier values are replaced by null so that it can be imputed by a
         reliable imputation methodology. In "value_replacement", outlier values are replaced by
         maximum or minimum permissible value by above methodologies. Lastly in "row_removal", rows
         are removed if it is found with any outlier. (Default value = "value_replacement")
-    pre_existing_model :
+    pre_existing_model
         Boolean argument – True or False. True if the model with upper/lower permissible values
         for each attribute exists already to be used, False otherwise. (Default value = False)
-    model_path :
+    model_path
         If pre_existing_model is True, this argument is path for the pre-saved model.
         If pre_existing_model is False, this field can be used for saving the model.
         Default "NA" means there is neither pre-existing model nor there is a need to save one.
-    output_mode :
+    output_mode
         replace", "append".
         “replace” option replaces original columns with treated column. “append” option append treated
         column to the input dataset with a postfix "_outliered" e.g. column X is appended as X_outliered. (Default value = "replace")
-    stats_unique :
+    stats_unique
         Takes arguments for read_dataset (data_ingest module) function in a dictionary format
         to read pre-saved statistics on unique value count i.e. if measures_of_cardinality or
         uniqueCount_computation (data_analyzer.stats_generator module) has been computed & saved before. (Default value = {})
-    print_impact :
+    print_impact
         True, False. (Default value = False)
-    "pctile_upper": 0.95 :
+    "pctile_upper": 0.95
 
-    "stdev_lower": 3.0 :
+    "stdev_lower": 3.0
 
-    "stdev_upper": 3.0 :
+    "stdev_upper": 3.0
 
-    "IQR_lower": 1.5 :
+    "IQR_lower": 1.5
 
-    "IQR_upper": 1.5 :
+    "IQR_upper": 1.5
 
-    "min_validation": 2 :
+    "min_validation": 2
 
-    } :
+    }
 
 
     Returns
@@ -3503,7 +3517,7 @@ def outlier_detection(
 
         Parameters
         ----------
-        *v :
+        *v
 
 
         Returns
