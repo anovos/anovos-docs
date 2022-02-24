@@ -18,8 +18,8 @@ In this module, we use [all-mpnet-base-v2](https://huggingface.co/sentence-trans
 
 Our solution consists of 3 main steps:
 
-- Using the pretrained model, convert texual data into tensors (Text Embedding Technique)
-- Compute similarity scores of each input attribute name & description across both corpuses (Anovos Feature Corpus & User Data Dictionary)
+- Using the pretrained model, convert textual data into tensors (Text Embedding Technique)
+- Compute similarity scores of each input attribute name & description across both corpora (Anovos Feature Corpus & User Data Dictionary Corpus)
 - Sort the results and get the matches for each input feature based on their scores
 
 See below for the solution workflow of FER for further understanding of our solution.
