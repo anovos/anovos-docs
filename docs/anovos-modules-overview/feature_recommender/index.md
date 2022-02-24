@@ -24,7 +24,7 @@ Our solution consists of 3 main steps:
 
 See below for the solution workflow of FER for further understanding of our solution.
 
-// Solution Details Diagram 
+![Solution Details Diagram](https://github.com/anovos/anovos-docs/blob/feature_recommender_docs/docs/assets/Feature_Recommender_Workflow.png)
 
 As mentioned earlier, our solution design consists of 2 sub-modules in it, namely Feature Explorer & Feature Recommender. Below we detail the list of functions supported under each module.
 
