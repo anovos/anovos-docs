@@ -58,9 +58,10 @@ nav:
       - Contributing: community/contributing.md
       - Communication: community/communication.md
       - Code of Conduct: community/code-of-conduct.md
-  - License: license.md
   - API Docs:
-      - api
+    - api
+  - License: license.md
+
 
 extra:
   social:
