@@ -521,13 +521,13 @@ to be selected for further processing.
 
 - `iv_threshold`: The threshold beyond which the attributes are found to be significant in terms of model. It takes value between 0 to 1.
 
-    |**Information Value**|   **Variable Predictiveness**|
-    |--- | ---|
-    |Less than 0.02    |      Not useful for prediction|
-    |0.02 to 0.1       |     Weak predictive Power|
-    |0.1 to 0.3        |      Medium predictive Power|
-    |0.3 to 0.5        |      Strong predictive Power|
-    |>0.5              |    Suspicious Predictive Power|
+| Information Value | Variable Predictiveness              |
+|-------------------|--------------------------------------|
+| < 0.02            | Not useful for prediction            |
+| 0.02 to 0.1       | Weak predictive power                |
+| 0.1 to 0.3        | Medium predictive power              |
+| 0.3 to 0.5        | Strong predictive power              |
+| > 0.5             | Suspiciously strong predictive power |
 
 - `drift_threshold_model`: The threshold beyond which the attribute can be flagged as 1 or drifted as measured across different drift metrices specified by the user. It takes value between 0 to 1.
 
