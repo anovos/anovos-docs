@@ -234,6 +234,20 @@ to be selected for further processing.
 
 *Attaching the documentation link of data ingest module to understand more about above operations(read, delete, select, join, concatenate, etc): [Data Ingest](https://github.com/anovos/anovos-docs/blob/main/docs/anovos-modules-overview/data-ingest/index.md)*
 
+## `timeseries_analyzer`
+
+- `auto_detection`:
+
+- `id_col`:
+
+- `tz_offset`:
+
+- `inspection`:
+
+- `analysis_level`
+
+- `max_days`
+
 
 ## `anovos_basic_report`
 
@@ -390,11 +404,11 @@ Note: Any attribute with single value or all null values are not subjected to ou
 
 - `Drop_cols`: (list format or string of col names separated by `|`). It is used to specify the columns that need to be dropped from list_of_cols before variable clustering.
 
-# `drift_detector`
+## `drift_detector`
 
-## `drift_statistics`
+### `drift_statistics`
 
-### `configs`
+#### `configs`
 
 - `list_of_cols`: List of columns to check drift (list or string of col names separated by `|`). Use `all` - to include all non-array columns (excluding drop_cols).
 
@@ -412,9 +426,9 @@ Note: Any attribute with single value or all null values are not subjected to ou
 
 - `source_path`: If pre_existing_source is True, this is path for the source dataset details - drift_statistics folder. drift_statistics folder must contain attribute_binning & frequency_counts folders. If pre_existing_source is False, this can be used for saving the details. Default "NA" for temporarily saving source dataset attribute_binning folder
 
-### `source_dataset`
+#### `source_dataset`
 
-#### `read_dataset`
+##### `read_dataset`
 
 - `file_path`: The file (or directory) path to read the source dataset from.
    It can be a local path, an [S3 path](https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-bucket-intro.html)
@@ -431,17 +445,17 @@ Note: Any attribute with single value or all null values are not subjected to ou
 - `file_configs` (optional): Options to pass to the respective Spark file reader,
    e.g., delimiters, schemas, headers.
 
-#### `delete_column`
+##### `delete_column`
 
 List of column names (list of strings or string of column names separated by `|`)
 to be deleted from the loaded input data.
 
-#### `select_column`
+##### `select_column`
 
 List of column names (list of strings or string of column names separated by `|`)
 to be selected for further processing.
 
-#### `rename_column`
+##### `rename_column`
 
 - `list_of_cols`: List of the names of columns (list of strings or string of column names separated by `|`)
   to be renamed.
@@ -449,7 +463,7 @@ to be selected for further processing.
 - `list_of_newcols`: The new column names. The first element in `list_of_cols` will be renamed
   to the first name in `list_of_newcols` and so on.
 
-#### `recast_column`
+##### `recast_column`
 
 - `list_of_cols`: List of the names of columns (list of strings or string of column names separated by `|`)
   to be cast to a different type.
@@ -460,7 +474,7 @@ to be selected for further processing.
   for a list of valid datatypes.
   Note that this field is case-insensitive.
 
-## `stabilityIndex_compuation`
+## `stability_index`
 
 ### `configs`
 
@@ -472,9 +486,9 @@ to be selected for further processing.
 
 - `threshold`: To flag unstable attributes meeting the threshold.
 
-### dataset1
+### `dataset1`
 
-#### read_dataset
+#### `read_dataset`
 
 - `file_path`: file (or directory) path where the historical dataset is saved.
 
@@ -521,13 +535,13 @@ to be selected for further processing.
 
 - `iv_threshold`: The threshold beyond which the attributes are found to be significant in terms of model. It takes value between 0 to 1.
 
-| Information Value | Variable Predictiveness              |
-|-------------------|--------------------------------------|
-| < 0.02            | Not useful for prediction            |
-| 0.02 to 0.1       | Weak predictive power                |
-| 0.1 to 0.3        | Medium predictive power              |
-| 0.3 to 0.5        | Strong predictive power              |
-| > 0.5             | Suspiciously strong predictive power |
+    |**Information Value**|   **Variable Predictiveness**|
+    |--- | ---|
+    |Less than 0.02    |      Not useful for prediction|
+    |0.02 to 0.1       |     Weak predictive Power|
+    |0.1 to 0.3        |      Medium predictive Power|
+    |0.3 to 0.5        |      Strong predictive Power|
+    |>0.5              |    Suspicious Predictive Power|
 
 - `drift_threshold_model`: The threshold beyond which the attribute can be flagged as 1 or drifted as measured across different drift metrices specified by the user. It takes value between 0 to 1.
 
@@ -536,6 +550,155 @@ to be selected for further processing.
 - `metricDict_path`: Path of metric dictionary.
 
 - `final_report_path`: Path where final report will be saved. File path can be a local path or s3 path (when running with AWS cloud services), azure dbfs or azure blob storage (when running with Azure databricks). Note: azure dbfs path should be like "/dbfs/directory_name" and For azure blob storage path should be like "/dbfs/mnt/directory_name" beacause in report generation all the operations happen in python.
+
+# `transformers`:
+
+## `numerical_mathops`:
+
+### `feature_transformation`:
+
+- `list_of_cols`: List of numerical columns to encode e.g., ["col1","col2"]. "all" can be passed to include all numerical columns for analysis.
+
+- `drop_cols`: List of columns to be dropped e.g., ["col1","col2"].
+
+- `method_type`: "ln", "log10", "log2", "exp", "powOf2" (2^x), "powOf10" (10^x), "powOfN" (N^x), "sqrt" (square root), "cbrt" (cube root), "sq" (square), "cb" (cube), "toPowerN" (x^N), "sin", "cos", "tan", "asin", "acos", "atan", "radians", "remainderDivByN" (x%N), "factorial" (x!), "mul_inv" (1/x), "floor", "ceil", "roundN" (round to N decimal places) (Default value = "sqrt")
+
+- `N`: None by default. If method_type is "powOfN", "toPowerN", "remainderDivByN" or "roundN", N will be used as the required constant.
+
+### `boxcox_transformation`:
+
+- `list_of_cols`: List of numerical columns to encode e.g., ["col1","col2"].
+
+- `drop_cols`: List of columns to be dropped e.g., ["col1","col2"].
+
+- `boxcox_lambda`: Lambda value for box_cox transormation.
+  If boxcox_lambda is not None, it will be directly used for the transformation. It can be a
+    1. `list`: each element represents a lambda value for an attribute and the length of the list must be the same as the number of columns to transform.
+    2. `int/float`: all attributes will be assigned the same lambda value.
+    Else, search for the best lambda among [1,-1,0.5,-0.5,2,-2,0.25,-0.25,3,-3,4,-4,5,-5] for each column and apply the transformation (Default value = None)
+
+## `numerical_binning`
+
+### `attribute_binning`
+
+- `list_of_cols`: List of numerical columns to transform e.g., ["col1","col2"]
+
+- `drop_cols`: List of columns to be dropped e.g., ["col1","col2"]
+
+- `method_type`: equal_frequency", "equal_range". In "equal_range" method, each bin is of equal size/width and in "equal_frequency", each bin has equal no. of rows, though the width of bins may vary. (Default value = "equal_range")
+
+- `bin_size`: Number of bins. (Default value = 10)
+
+- `bin_dtype`: "numerical", "categorical". With "numerical" option, original value is replaced with an Integer (1,2,…) and with "categorical" option, original replaced with a string describing min and max value allowed in the bin ("minval-maxval"). (Default value = "numerical")
+
+## `numerical_expression`:
+
+### `expression_parser`
+
+- `list_of_expr`: List of expressions to evaluate as new features e.g., ["expr1","expr2"]. Alternatively, expressions can be specified in a string format, where different expressions are separated by pipe delimiter “|” e.g., "expr1|expr2".
+
+- `postfix`: postfix for new feature name.Naming convention "f" + expression_index + postfix e.g. with postfix of "new", new added features are named as f0new, f1new etc. (Default value = "")
+
+## `categorical_outliers`
+
+### `outlier_categories`
+
+- `list_of_cols`: List of categorical columns to transform e.g., ["col1","col2"].
+
+- `drop_cols`: List of columns to be dropped e.g., ["col1","col2"]
+
+- `coverage`: Defines the minimum % of rows that will be mapped to actual category name and the rest to be mapped to others and takes value between 0 to 1. Coverage of 0.8 can be interpreted as top frequently seen categories are considered till it covers minimum 80% of rows and rest lesser seen values are mapped to others. (Default value = 1.0)
+
+- `max_category`: Even if coverage is less, only (max_category - 1) categories will be mapped to actual name and rest to others. Caveat is when multiple categories have same rank, then #categories can be more than max_category. (Default value = 50)
+
+## `categorical_encoding`
+
+### `cat_to_num_unsupervised`
+
+- `list_of_cols`: List of categorical columns to transform e.g., ["col1","col2"]
+
+- `drop_cols`: List of columns to be dropped e.g., ["col1","col2"].
+
+- `method_type`: 1 for Label Encoding or 0 for One hot encoding. 
+  In label encoding, each categorical value is assigned a unique integer based on alphabetical or frequency ordering (both ascending & descending options are available that can be selected by index_order argument). 
+
+  In one-hot encoding, every unique value in the column will be added in a form of dummy/binary column. (Default value = 1)
+
+- `index_order`: frequencyDesc", "frequencyAsc", "alphabetDesc", "alphabetAsc". Valid only for Label Encoding method_type. (Default value = "frequencyDesc")
+
+- `cardinality_threshold`: Defines threshold to skip columns with higher cardinality values from encoding. Default value is 100.
+
+### `cat_to_num_supervised`
+
+- `list_of_cols`: List of catigorical columns to transform e.g., ["col1","col2"].
+
+- `drop_cols`: List of columns to be dropped e.g., ["col1","col2"].
+
+- `label_col`: Label/Target column (Default value = "label")
+
+- `event_label`: Value of (positive) event (i.e label 1) (Default value = 1)
+
+## `numerical_rescaling`
+
+### `normalization`
+
+- `list_of_cols`: List of numerical columns to transform e.g., ["col1","col2"]. "all" can be passed to include all numerical columns for analysis.
+
+- `drop_cols`: List of columns to be dropped e.g., ["col1","col2"].
+
+### `z_standarization`
+
+- `list_of_cols`: List of numerical columns to transform e.g., ["col1","col2"]. "all" can be passed to include all numerical columns for analysis.
+
+- `drop_cols`: List of columns to be dropped e.g., ["col1","col2"].
+
+### `IQR_standarization`
+
+- `list_of_cols`: List of numerical columns to transform e.g., ["col1","col2"].
+
+- `drop_cols`: List of columns to be dropped e.g., ["col1","col2"].
+
+## `numerical_latentFeatures`
+
+### `PCA_latentFeatures`
+
+- `list_of_cols`: List of numerical columns to encode e.g., ["col1","col2"]. "all" can be passed to include all numerical columns for analysis.
+
+- `drop_cols`: List of columns to be dropped e.g., ["col1","col2"].
+
+- `explained_variance_cutoff`: Determines the number of encoded columns in the output. If N is the smallest integer such that top N encoded columns explain more than explained_variance_cutoff variance, these N columns will be selected. (Default value = 0.95)
+
+- `standardization`:  Boolean argument – True or False. True, if the standardization required. (Default value = True)
+
+- `imputation`: Boolean argument – True or False. True, if the imputation required. (Default value = False)
+
+- `imputation_configs`: Takes input in dictionary format. Imputation function name is provided with key "imputation_name". optional arguments pertaining to that imputation function can be provided with argument name as key. (Default value = {"imputation_function": "imputation_MMM"})
+
+- `stats_missing`: Takes arguments for read_dataset (data_ingest module) function in a dictionary format to read pre-saved statistics on missing count/pct i.e. if measures_of_counts or missingCount_computation (data_analyzer.stats_generator module) has been computed & saved before. (Default value = {})
+
+### `autoencoder_latentFeatures`
+
+- `list_of_cols`:  List of numerical columns to encode e.g., ["col1","col2"]. "all" can be passed to include all numerical columns for analysis.
+
+- `drop_cols`: List of columns to be dropped e.g., ["col1","col2"].
+
+- `reduction_params`: Determines the number of encoded features in the result. If reduction_params < 1, int(reduction_params * (number of columns)) columns will be generated. Else, reduction_params columns will be generated. (Default value = 0.5)
+
+- `sample_size`: Maximum rows for training the autoencoder model using tensorflow. (Default value = 500000)
+
+- `epochs`: Integer - number of epochs to train the tensorflow model. (Default value = 100)
+
+- `batch_size`: Integer - number of samples per gradient update when fitting the tensorflow model. (Default value = 256)
+
+- `standardization`: Boolean argument – True or False. True, if the standardization required. (Default value = True)
+
+- `standardization_configs`: z_standardization function arguments in dictionary format. (Default value = {"pre_existing_model": False)
+
+- `imputation`: Boolean argument – True or False. True, if the imputation required. (Default value = False)
+
+- `imputation_configs`: Takes input in dictionary format. Imputation function name is provided with key "imputation_name". optional arguments pertaining to that imputation function can be provided with argument name as key. (Default value = {"imputation_function": "imputation_MMM"})
+
+- `stats_missing`: Takes arguments for read_dataset (data_ingest module) function in a dictionary format to read pre-saved statistics on missing count/pct i.e. if measures_of_counts or missingCount_computation (data_analyzer.stats_generator module) has been computed & saved before. (Default value = {})
 
 ## `write_intermediate`
 
