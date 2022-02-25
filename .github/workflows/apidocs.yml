@@ -69,7 +69,8 @@ jobs:
         with:
           add-paths: |
             docs/api/**
-          title: Update API Docs
+            docs/license.md
+          title: Update API Docs & License Information
           body: Automatically created via GitHub Actions
           commit-message: Update API docs (${{ github.run_id}})
           branch: update-api-docs-${{ github.run_id}}
