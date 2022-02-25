@@ -384,7 +384,7 @@ Note: Any attribute with single value or all null values are not subjected to ou
 
 - `Event_lable`: Value of event (label 1) in the label column
 
-`Encoding_configs`: It takes input in dictionary format with keys related to binning operation - `bin_method` (default 'equal_frequency'), `bin_size` (default 10) and `monotonicity_check` (default 0). monotonicity_check of 1 will dynamically calculate the bin_size ensuring monotonic nature and can be expensive operation.
+- `Encoding_configs`: It takes input in dictionary format with keys related to binning operation - `bin_method` (default 'equal_frequency'), `bin_size` (default 10) and `monotonicity_check` (default 0). monotonicity_check of 1 will dynamically calculate the bin_size ensuring monotonic nature and can be expensive operation.
 
 ### `IG_calculation`
 
@@ -551,11 +551,11 @@ to be selected for further processing.
 
 - `final_report_path`: Path where final report will be saved. File path can be a local path or s3 path (when running with AWS cloud services), azure dbfs or azure blob storage (when running with Azure databricks). Note: azure dbfs path should be like "/dbfs/directory_name" and For azure blob storage path should be like "/dbfs/mnt/directory_name" beacause in report generation all the operations happen in python.
 
-# `transformers`:
+## `transformers`:
 
-## `numerical_mathops`:
+### `numerical_mathops`:
 
-### `feature_transformation`:
+#### `feature_transformation`:
 
 - `list_of_cols`: List of numerical columns to encode e.g., ["col1","col2"]. "all" can be passed to include all numerical columns for analysis.
 
@@ -565,7 +565,7 @@ to be selected for further processing.
 
 - `N`: None by default. If method_type is "powOfN", "toPowerN", "remainderDivByN" or "roundN", N will be used as the required constant.
 
-### `boxcox_transformation`:
+#### `boxcox_transformation`:
 
 - `list_of_cols`: List of numerical columns to encode e.g., ["col1","col2"].
 
@@ -577,9 +577,9 @@ to be selected for further processing.
     2. `int/float`: all attributes will be assigned the same lambda value.
     Else, search for the best lambda among [1,-1,0.5,-0.5,2,-2,0.25,-0.25,3,-3,4,-4,5,-5] for each column and apply the transformation (Default value = None)
 
-## `numerical_binning`
+### `numerical_binning`
 
-### `attribute_binning`
+#### `attribute_binning`
 
 - `list_of_cols`: List of numerical columns to transform e.g., ["col1","col2"]
 
@@ -591,17 +591,17 @@ to be selected for further processing.
 
 - `bin_dtype`: "numerical", "categorical". With "numerical" option, original value is replaced with an Integer (1,2,…) and with "categorical" option, original replaced with a string describing min and max value allowed in the bin ("minval-maxval"). (Default value = "numerical")
 
-## `numerical_expression`:
+### `numerical_expression`:
 
-### `expression_parser`
+#### `expression_parser`
 
 - `list_of_expr`: List of expressions to evaluate as new features e.g., ["expr1","expr2"]. Alternatively, expressions can be specified in a string format, where different expressions are separated by pipe delimiter “|” e.g., "expr1|expr2".
 
 - `postfix`: postfix for new feature name.Naming convention "f" + expression_index + postfix e.g. with postfix of "new", new added features are named as f0new, f1new etc. (Default value = "")
 
-## `categorical_outliers`
+### `categorical_outliers`
 
-### `outlier_categories`
+#### `outlier_categories`
 
 - `list_of_cols`: List of categorical columns to transform e.g., ["col1","col2"].
 
@@ -611,9 +611,9 @@ to be selected for further processing.
 
 - `max_category`: Even if coverage is less, only (max_category - 1) categories will be mapped to actual name and rest to others. Caveat is when multiple categories have same rank, then #categories can be more than max_category. (Default value = 50)
 
-## `categorical_encoding`
+### `categorical_encoding`
 
-### `cat_to_num_unsupervised`
+#### `cat_to_num_unsupervised`
 
 - `list_of_cols`: List of categorical columns to transform e.g., ["col1","col2"]
 
@@ -628,7 +628,7 @@ to be selected for further processing.
 
 - `cardinality_threshold`: Defines threshold to skip columns with higher cardinality values from encoding. Default value is 100.
 
-### `cat_to_num_supervised`
+#### `cat_to_num_supervised`
 
 - `list_of_cols`: List of catigorical columns to transform e.g., ["col1","col2"].
 
@@ -638,29 +638,29 @@ to be selected for further processing.
 
 - `event_label`: Value of (positive) event (i.e label 1) (Default value = 1)
 
-## `numerical_rescaling`
+### `numerical_rescaling`
 
-### `normalization`
-
-- `list_of_cols`: List of numerical columns to transform e.g., ["col1","col2"]. "all" can be passed to include all numerical columns for analysis.
-
-- `drop_cols`: List of columns to be dropped e.g., ["col1","col2"].
-
-### `z_standarization`
+#### `normalization`
 
 - `list_of_cols`: List of numerical columns to transform e.g., ["col1","col2"]. "all" can be passed to include all numerical columns for analysis.
 
 - `drop_cols`: List of columns to be dropped e.g., ["col1","col2"].
 
-### `IQR_standarization`
+#### `z_standarization`
+
+- `list_of_cols`: List of numerical columns to transform e.g., ["col1","col2"]. "all" can be passed to include all numerical columns for analysis.
+
+- `drop_cols`: List of columns to be dropped e.g., ["col1","col2"].
+
+#### `IQR_standarization`
 
 - `list_of_cols`: List of numerical columns to transform e.g., ["col1","col2"].
 
 - `drop_cols`: List of columns to be dropped e.g., ["col1","col2"].
 
-## `numerical_latentFeatures`
+### `numerical_latentFeatures`
 
-### `PCA_latentFeatures`
+#### `PCA_latentFeatures`
 
 - `list_of_cols`: List of numerical columns to encode e.g., ["col1","col2"]. "all" can be passed to include all numerical columns for analysis.
 
@@ -676,7 +676,7 @@ to be selected for further processing.
 
 - `stats_missing`: Takes arguments for read_dataset (data_ingest module) function in a dictionary format to read pre-saved statistics on missing count/pct i.e. if measures_of_counts or missingCount_computation (data_analyzer.stats_generator module) has been computed & saved before. (Default value = {})
 
-### `autoencoder_latentFeatures`
+#### `autoencoder_latentFeatures`
 
 - `list_of_cols`:  List of numerical columns to encode e.g., ["col1","col2"]. "all" can be passed to include all numerical columns for analysis.
 
