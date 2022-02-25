@@ -6,7 +6,7 @@ in time for version 1.0. To learn more about what's on the horizon, check out ou
 ## 🔣 Data
 - _Anovos_ currently only supports numerical and categorical columns.
   We plan to add support for additional data types such as dates, time stamps, (struct) arrays etc.
-in the future.
+  in the future.
 
 - Geospatial columns like geohash or lat/long can only be analysed as categorical (geohash)
   or numerical (lat/long). Functionalities specific to geospatial features will be supported later releases.
