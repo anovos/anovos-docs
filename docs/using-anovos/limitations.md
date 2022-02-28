@@ -6,7 +6,7 @@ in time for version 1.0. To learn more about what's on the horizon, check out ou
 ## 🔣 Data
 - _Anovos_ currently only supports numerical and categorical columns.
   We plan to add support for additional data types such as dates, time stamps, (struct) arrays etc.
-in the future.
+  in the future.
 
 - Geospatial columns like geohash or lat/long can only be analysed as categorical (geohash)
   or numerical (lat/long). Functionalities specific to geospatial features will be supported later releases.
@@ -30,7 +30,7 @@ in the future.
   Also, this function may yield false positives. Hence, be cautious when using the inbuilt treatment option.
 
 ## 🔩 Other
-- The [stability index](../api/data_drift/drift_detector.md#stabilityindex_computation)
+- The [stability index](../api/drift/detector.md#stabilityindex_computation)
   can currently only be calculated for numerical columns.
 
 - The exception and error handling is at times inconsistent. Please don't hesitate to

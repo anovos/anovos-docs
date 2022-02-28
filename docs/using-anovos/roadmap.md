@@ -3,9 +3,9 @@
 _Anovos_ is built and released as an open source project based on our experience using massive data sets
 to produce predictive features. At [Mobilewalla](https://www.mobilewalla.com), we process terabytes of 
 mobile engagement signals daily to mine consumer behavior and use features from that data to build distributed
-machine learning models to solve the respective business problems.
+machine learning models to solve a wide range of business problems.
 
-In this journey, we faced lots of challenges by not having a comprehensive and scalable library.
+On this journey, we faced lots of challenges due to the lack of a comprehensive and scalable library.
 After realizing the unavailability of such libraries, we designed and implemented _Anovos_ as an
 open source library for every data scientists’ use. 
 
@@ -14,10 +14,10 @@ open source library for every data scientists’ use.
 ## 🛣 The Roadmap
 We plan to bring fully functional _Anovos_ over the course of three major releases: Alpha, Beta, and version 1.0.
 
-### Alpha Release
+### Alpha Release (November 2021)
 
-The Alpha release of _Anovos_ has all the essential data ingestion and comprehensive data analysis functionalities,
-as well as the data pre-processing and cleaning mechanisms. It also has some key differentiating functionalities,
+The Alpha release of _Anovos_ had all the essential data ingestion and comprehensive data analysis functionalities,
+as well as the data pre-processing and cleaning mechanisms. It also included some key differentiating functionalities,
 like data drift and stability computations, which are crucial in deciding the need for model refresh/tweak
 options. Another benefit of _Anovos_ is a dynamic visualization component configured based on data ingestion pipelines.
 Every data metric computed from the _Anovos_ ingestion process can be visualized and utilized for CXO level decision-making.
@@ -54,7 +54,8 @@ Every data metric computed from the _Anovos_ ingestion process can be visualized
           - Quality Checker
           - Attribute association
           - Data drift & stability
-### Beta Release
+
+### Beta Release (March 2022)
 
 In the Beta release of _Anovos_, the library will support ingesting from cloud service providers
 like MS Azure and will have mechanisms to read/write different file formats such as Avro and nested Json.
@@ -95,7 +96,8 @@ The Beta release will also have another capability named as Feature Stability es
     - Compatibility with Spark versions 2.4.x, 3.1.x, and 3.2.x 
 - **Runtime Environment support**
     - Microsoft Azure 
-### Version 1.0
+
+### Version 1.0 (Summer of 2022)
 
 We'll release version 1.0 of _Anovos_ in June 2022 with the functionalities to support an end-to-end
 machine learning workflow. It will be able to store the generated features in an open source feature store,
