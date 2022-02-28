@@ -264,17 +264,17 @@ Note: There can be multiple joining datasets, for loading the other datasets, it
 
 ## `timeseries_analyzer`
 
-- `auto_detection`:
+- `auto_detection`: This takes Boolean type input -- `True` or `False`. If True, it will help produce the output containing a transformation through auto timestamp / date detection by reading the ingested dataframe from source.
 
-- `id_col`:
+- `id_col`: 'id_column'
 
-- `tz_offset`:
+- `tz_offset`: Timezone offset (Option to chose between options like Local, GMT, UTC, etc.). Default option is set as "Local".
 
-- `inspection`:
+- `inspection`: This takes Boolean type input -- `True` or `False`.
 
-- `analysis_level`
+- `analysis_level`: Option to choose between "Daily" or "Weekly" or "Hourly". Daily is chosen as default. If "Daily" is selected as the output type, the daily view is populated ; If it's "Hourly", the view is shown at a Day part level. However, if it's "Weekly", then the display it per individual week days (1-7) as captured.
 
-- `max_days`
+- `max_days`: Max days upto which the data will be aggregated. If we've a dataset containing a timestamp / date field with very high number of unique dates (Let's say beyond 20 years worth of daily data), a maximum days value chosen basis which the latest output is displayed.
 
 _Example:_
 ```yaml
