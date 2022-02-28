@@ -68,7 +68,7 @@ modules:
     !make clean build
     
 **Note**: Anovos directory is present under Files/content/ in notebook. 
-The above articles "Google Colab Tutorial for Data Scientists" will brief about Working with data from various sources.This part will describe about Cloning a GitHub repo into Colab instance and after cloning where the directory is present in notebooks. Sharing the images also for reference.
+The above articles [Google Colab Tutorial for Data Scientists](https://www.datacamp.com/community/tutorials/tutorial-google-colab-for-data-scientists?utm_source=adwords_ppc&utm_medium=cpc&utm_campaignid=1455363063&utm_adgroupid=65083631748&utm_device=c&utm_keyword=&utm_matchtype=&utm_network=g&utm_adpostion=&utm_creative=332602034358&utm_targetid=aud-299261629574:dsa-429603003980&utm_loc_interest_ms=&utm_loc_physical_ms=9061848&gclid=Cj0KCQiA3-yQBhD3ARIsAHuHT64SOfn_qff9_FDLEdg40qL4YDdBjJUJI6mApoxPcns96oLIwGaeSBAaArgkEALw_wcB) will brief about Working with data from various sources.This part will describe about Cloning a GitHub repo into Colab instance and after cloning where the directory is present in notebooks. Sharing the images also for reference.
 ![https://github.com/anovos/anovos-docs/blob/google_colab_notebook_docs/docs/assets/google_colab_notebook_images/image1_colab.png](https://github.com/anovos/anovos-docs/blob/google_colab_notebook_docs/docs/assets/google_colab_notebook_images/image1_colab.png)
 
 Further install the anovos related dependencies using command:
