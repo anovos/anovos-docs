@@ -23,13 +23,14 @@ ii)  Installing spark using command:
     !wget -q <https://archive.apache.org/dist/spark/spark-2.4.7/spark-2.4.7-bin-hadoop2.7.tgz>
 
 **Note**: Used java8 and spark 2.4.7 version (change the version as per compatibility if needed)
+   
    To use Anovos, you need compatible versions of Apache Spark, Java and Python.
 
    Currently, we officially support the following combinations:
 
-   Apache Spark 2.4.x on Java 8 with Python 3.7.x
-   Apache Spark 3.1.x on Java 11 with Python 3.9.x or python 3.8.x
-   Apache Spark 3.2.x on Java 11 with Python 3.9.x
+       Apache Spark 2.4.x on Java 8 with Python 3.7.x
+       Apache Spark 3.1.x on Java 11 with Python 3.9.x or python 3.8.x
+       Apache Spark 3.2.x on Java 11 with Python 3.9.x
 
 iii)  Unzip the spark file to the current folder using command:
     
@@ -81,6 +82,7 @@ Go inside dist folder(ie, present under Files/content/anovos/dist/) in the noteb
 **Note**:Firstly download the required below files in local machine which needs to be updated and then update it according to need and use case.we can download files like this way:
 ![https://github.com/anovos/anovos-docs/blob/google_colab_notebook_docs/docs/assets/google_colab_notebook_images/image2_colab.png](https://github.com/anovos/anovos-docs/blob/google_colab_notebook_docs/docs/assets/google_colab_notebook_images/image2_colab.png)
 
+
 And then finally again upload updated files inside dist folder like this way:
 
 ![https://github.com/anovos/anovos-docs/blob/google_colab_notebook_docs/docs/assets/google_colab_notebook_images/image3_colab.png](https://github.com/anovos/anovos-docs/blob/google_colab_notebook_docs/docs/assets/google_colab_notebook_images/image3_colab.png)
@@ -90,7 +92,7 @@ And then finally again upload updated files inside dist folder like this way:
     > the data set. You might also want to adapt the threshold settings
     > to your needs.
     
-    **Note**Attaching config file description link to get more information about updating input,output path and threshold settings according to use case.
+    **Note:** Attaching config file description link to get more information about updating input,output path and threshold settings according to use case.
     [config_file_description](https://github.com/anovos/anovos-docs/blob/anovos_config_file_desc/docs/using-anovos/config_file.md)
 
   - > Adapt the main.py sample script. It demonstrates how different
