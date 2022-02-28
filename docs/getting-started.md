@@ -23,4 +23,4 @@ Anovos_ guide is a good place to begin your journey.
 You can find it in the `/guides` folder within the Jupyter environment.
 
 For more detailed instructions on how to install Docker and how to troubleshoot potential
-issues, see the [examples README](/examples/README.md).
+issues, see the [examples README](https://github.com/anovos/anovos/blob/main/examples/README.md).
