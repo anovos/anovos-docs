@@ -8,4 +8,4 @@ The organization can incorporate additional components by a simple API call for 
 
 The following workflow diagram shows the potential ways use Anovos in an end-to-end workflow settings:
 
-![Diagram of Anovos Workflows](assets/workflow.png)
+![Diagram of Anovos Workflows](../assets/workflow.png)
