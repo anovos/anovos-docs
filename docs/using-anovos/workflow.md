@@ -6,6 +6,6 @@ Teams can use _Anovos_ either as the foundation of their entire workflow or use 
 For example, an organization might have an end-to-end workflow that lacks components offered by _Anovos_.
 The organization can incorporate additional components by a simple API call for a function from _Anovos_.
 
-The following workflow diagram shows the potential ways for using Anovos in an end-to-end workflow settings:
+The following workflow diagram shows the potential ways use Anovos in an end-to-end workflow settings:
 
-![Diagram of Anovos Workflows](https://anovos.github.io/anovos-docs/assets/potential-workflow.png)
+![Diagram of Anovos Workflows](https://anovos.github.io/anovos-docs/assets/workflow.png)
