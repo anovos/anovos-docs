@@ -57,14 +57,16 @@ Every data metric computed from the _Anovos_ ingestion process can be visualized
 
 ### V0.2 Release (March 2022)
 
-In the Beta release of _Anovos_, the library will support ingesting from cloud service providers
-like MS Azure and will have mechanisms to read/write different file formats such as Avro and nested Json.
+In this release of _Anovos_, the library will support ingesting from cloud service providers
+like MS Azure and will also have mechanisms to read/write different file formats such as Avro and nested Json.
 It will also enable ingesting various data types (see the above figure for the details).
 
 The key differentiating functionality of this release is that “Feature Explorer & Feature Recommender” for data scientists
 and end-users to resolve their cold-start problems, which will immensely reduce their literature review time. 
 
-The V0.2 release will also have another capability named as Feature Stability estimator based on the composition of a given feature using set of attribute/s. This will greatly benefit data scientists to understand the potential feature instabilities which could harm the resillency of a ML model.
+The V0.2 release will also have another important capability named as Feature Stability estimator based on the composition of a given feature using set of attribute/s. This will greatly benefit data scientists to understand the potential feature instabilities which could harm the resillency of a ML model.
+
+With the V0.2 release Anovos can be used in day to day practices of any Data Scientists or Data Analysts 
 
 #### Details
 
@@ -83,7 +85,7 @@ The V0.2 release will also have another capability named as Feature Stability es
     - Auto encoders
     - Dimension reduction
     - Date/Time related transformations
-- **Feature Explorer / Feature recommender (Semantic enabled)**
+- **Feature Explorer / Feature recommender (Semantic search enabled)**
   To recommend potential features based on the industry, use case, and the ingested data dictionary
     - Industry specific use cases and respective features
         - Telco
@@ -95,11 +97,14 @@ The V0.2 release will also have another capability named as Feature Stability es
     - Recommendations are enabled by Semantic search capability
     - Supported by pre-compiled feature corpus 
 - **Feature Stability**
-    - This will be an extension of the attribute stability capabilities of the Alpha release
-- **Spark support**
-    - Compatibility with Spark versions 2.4.x, 3.1.x, and 3.2.x 
+    - This will be an extension of the attribute stability capabilities of the V0.1 release
+- **Extended Spark & Python support**
+    - Compatibility with different Spark & Python versions
+    - Apache Spark 2.4.x on Java 8 with Python 3.7.x
+    - Apache Spark 3.1.x on Java 11 with Python 3.9.x
+    - Apache Spark 3.2.x on Java 11 with Python 3.9.x
 - **Runtime Environment support**
-    - Microsoft Azure 
+    - Microsoft Azure Databricks
 
 ### Version 1.0 (Summer of 2022)
 
