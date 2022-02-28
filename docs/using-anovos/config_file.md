@@ -114,9 +114,17 @@ recast_column:
 
 ## `concatenate_dataset`
 
+This configuration block describes how to combines multiple dataframes into a single dataframe.
+There can be varying number of input dataframes that can be concatenated and for loading other concatenating input datasets, we need to write its subsequent operations separately  for each datasets like dataset1, dataset2, dataset3, ..., etc.
+
 ### `method`
 
 `index` or `name`. This needs to be entered as a keyword argument. The "index" method involves concatenating the dataframes by the column index. IF the sequence of column is not fixed among the dataframe, this method should be avoided. The "name" method involves concatenating by columns names. The 1st dataframe passed under idfs will define the final columns in the concatenated dataframe. It will throw an error if any column in the 1st dataframe is not available in any of other dataframes.
+
+_Example:_
+```yaml
+method: name
+```
 
 ### `dataset1`
 
@@ -166,19 +174,37 @@ to be selected for further processing.
   for a list of valid datatypes.
   Note that this field is case-insensitive.
 
+```
+Note: There can be multiple concatenating datasets, for loading the other datasets, it's configuration should be written in same as dataset1
+```
+
 ### `dataset2`
 
   same configuration as dataset1
 
 ## `join_dataset`
 
+ This configuration block describes how to joins multiple dataframes into a single dataframe by a joining key column.
+
+ There can be varying number of input dataframes that can be joined and for loading other joining input datasets, we need to write its subsequent operations separately  for each datasets like dataset1, dataset2, dataset3, ..., etc.
+
 ### `Join_cols`
 
   Key column(s) to join all dataframes together. In case of multiple columns to join, they can be passed in a list format or a single text format where different column names are separated by pipe delimiter `|`
 
+_Example:_
+```yaml
+join_cols: id_column
+```
+
 ### `Join_type`
 
   'inner, 'full', 'left', 'right', 'left_semi', 'left_anti'
+
+_Example:_
+```yaml
+join_type: inner
+```
 
 ### `dataset1`
 
@@ -228,11 +254,13 @@ to be selected for further processing.
   for a list of valid datatypes.
   Note that this field is case-insensitive.
 
+```
+Note: There can be multiple joining datasets, for loading the other datasets, it's configuration should be written in same as dataset1
+```
+
 ### `dataset2`
 
   same configuration as dataset1
-
-*Attaching the documentation link of data ingest module to understand more about above operations(read, delete, select, join, concatenate, etc): [Data Ingest](https://github.com/anovos/anovos-docs/blob/main/docs/anovos-modules-overview/data-ingest/index.md)*
 
 ## `timeseries_analyzer`
 
@@ -248,17 +276,25 @@ to be selected for further processing.
 
 - `max_days`
 
+_Example:_
+```yaml
+auto_detection: True
+id_col: 'id_column'
+tz_offset: 'local'
+inspection: True
+analysis_level: 'daily'
+max_days: 3600
+```
 
 ## `anovos_basic_report`
 
-### `Basic_report`
+Anovos basic report consists of basic report which is generated after completion of data analyzer, association evaluator and quality checker modules. See the [Data Report Doc](https://github.com/anovos/anovos-docs/tree/main/docs/using-anovos/data-reports) for more details. In this basic report user will get basic descriptive stats and count  like descriptive statistics(global_summary, measures_of_count, measures_of_centralTendency, measures_of_cardinality, measures_of_dispersion, measures_of_percentiles, measures_of_shape), quality checker(nullRows_detection, nullColumns_detection, duplicate_detection, IDness_detection, biasedness_detection, invalidEntries_detection, outlier_detection), attribute association (correlation_matrix, IV_calculation, IG_calculation, variable_clustering). If user does not want basic report to be generated, they can keep basic report equals to False. 
 
-This takes Boolean type input -- True or False. If True, basic report is generated after completion of data analyzer, association evaluator and quality checker modules which have descriptive statistics(global_summary, measures_of_count, measures_of_centralTendency, measures_of_cardinality, measures_of_dispersion, measures_of_percentiles, measures_of_shape), quality checker(nullRows_detection, nullColumns_detection, duplicate_detection, IDness_detection, biasedness_detection, invalidEntries_detection, outlier_detection), attribute association (correlation_matrix, IV_calculation, IG_calculation, variable_clustering).
+### `basic_report`
 
+This takes Boolean type input -- `True` or `False`. If True, basic report is generated after completion of data analyzer, association evaluator and quality checker modules. If False, basic report is not generated after completion of data analyzer, association evaluator and quality checker modules. But all the stats and counts are avaialble in final report independent of the basic report option.
 
-*Attaching the documentation link of modules to get better idea what these modules actually do and thier output: [Data Analyzer](https://github.com/anovos/anovos-docs/blob/main/docs/anovos-modules-overview/data-analyzer/index.md), [Quality Checker](https://github.com/anovos/anovos-docs/blob/main/docs/anovos-modules-overview/quality-checker/index.md), [Association Evaluator](https://github.com/anovos/anovos-docs/blob/main/docs/anovos-modules-overview/association-evaluator/index.md), [Data Drift and Stability Index](https://github.com/anovos/anovos-docs/blob/main/docs/anovos-modules-overview/data_drift_and_stability_index/index.md)* 
-
-### `Report_args`
+### `report_args`
 
 - `Id_col`: Name of Id column in the input dataset
 
@@ -268,11 +304,28 @@ This takes Boolean type input -- True or False. If True, basic report is generat
 
 - `Output_path`: Path where basic report is saved. File path can be a local path or s3 path (when running with AWS cloud services)
 
+_Example:_
+```yaml
+report_args:
+  id_col: id_column
+  label_col: label_col
+  event_label: 'class1'
+  output_path: report_stats
+```
+
 ## `stats_generator`
 
+This module generates all the descriptive statistics related to the ingested data. Descriptive statistics are split into different metric types, and each function corresponds to one metric type. - global_summary - measures_of_counts - measures_of_centralTendency - measures_of_cardinality - measures_of_dispersion - measures_of_percentiles - measures_of_shape. See the 
+[Stats Generator Doc](https://github.com/anovos/anovos-docs/blob/main/docs/api/data_analyzer/stats_generator.md) for understanding its functions in detail.
 ### `Metric`
 
 list of different metrics used to generate descriptive statistics [global_summary, measures_of_count, measures_of_centralTendency, measures_of_cardinality, measures_of_dispersion, measures_of_percentiles, measures_of_shape]
+
+_Example:_
+```yaml
+metric: ['global_summary','measures_of_counts','measures_of_centralTendency','measures_of_cardinality'
+            ,'measures_of_percentiles','measures_of_dispersion','measures_of_shape']
+```
 
 ### `Metric_args`
 
@@ -280,8 +333,17 @@ list of different metrics used to generate descriptive statistics [global_summar
 
 - `Drop_cols`: (list format or string of col names separated by `|`). It is used to specify the columns that need to be dropped from list_of_cols. It is most useful when coupled with the `all` value of list_of_cols, when we need to consider all columns except a few handful of them.
 
+_Example:_
+```yaml
+metric_args:
+  list_of_cols: all
+  drop_cols: ['id_column']
+```
+
 ## `quality_checker`
 
+This submodule focuses on assessing the data quality at both row-level and column-level and also provides an appropriate treatment option to fix quality issues. see the
+[Quality Checker Dic](https://github.com/anovos/anovos-docs/blob/main/docs/api/data_analyzer/quality_checker.md) for understanding its functions in detail.
 ### `duplicate_detection`
 
 - `list_of_cols`: (list format or string of col names separated by `|`). It is used to specify the columns which are subjected to the duplicate detection
@@ -289,6 +351,14 @@ list of different metrics used to generate descriptive statistics [global_summar
 - `drop_cols`: (list format or string of col names separated by `|`). It is used to specify the columns that need to be dropped from list_of_cols before duplicate detection
 
 - `treatment`: It takes Boolean type input -- `True` or `False`. If true, duplicate rows are removed from the input dataset.
+
+_Example:_
+```yaml
+duplicate_detection:
+  list_of_cols: all
+  drop_cols: ['id_column']
+  treatment: True
+```
 
 ### `nullRows_detection`
 
@@ -300,6 +370,15 @@ list of different metrics used to generate descriptive statistics [global_summar
 
 - `treatment_threshold`: It takes a value between `0` to `1` with default 0.8, which means 80% of columns are allowed to be Null per row. If it is more than the threshold, then it is flagged and if treatment is True, then affected rows are removed. If the threshold is 0, it means rows with any missing value will be flagged. If the threshold is 1, it means rows with all missing values will be flagged.
 
+_Example:_
+```yaml
+nullRows_detection:
+  list_of_cols: all
+  drop_cols: []
+  treatment: True
+  treatment_threshold: 0.75
+```
+
 ### `invalidEntries_detection`
 
 - `list_of_cols`: (list format or string of col names separated by `|`). It is used to specify the columns which are subjected to the invalid entries' detection
@@ -309,6 +388,15 @@ list of different metrics used to generate descriptive statistics [global_summar
 - `treatment`: This takes Boolean type input -- `True` or `False`. If true, invalid values are replaced as null and treated as missing.
 
 - `output_mode`: `replace` or `append`. "replace" option replaces original columns with treated column, whereas "append" option append treated column to the input dataset. All treated columns are appended with the naming convention `{original.column.name}_cleaned`
+
+_Example:_
+```yaml
+invalidEntries_detection:
+  list_of_cols: all
+  drop_cols: ['id_column']
+  treatment: True
+  output_mode: replace
+```
 
 ### `IDness_detection`
 
@@ -320,6 +408,15 @@ list of different metrics used to generate descriptive statistics [global_summar
 
 - `Treatment_threshold`: This takes value between `0` to `1` with default 1.0.
 
+_Example:_
+```yaml
+IDness_detection:
+  list_of_cols: all
+  drop_cols: ['id_column']
+  treatment: True
+  treatment_threshold: 0.9
+```
+
 ### `Biasedness_detection`
 
 - `List_of_cols`: (list format or string of col names separated by `|`). It is used to specify the columns which are subjected to the biasedness detection
@@ -329,6 +426,15 @@ list of different metrics used to generate descriptive statistics [global_summar
 - `Treatment`: This takes Boolean type input -- `True` or `False`. If true, columns above biasedness threshold are removed.
 
 - `Treatment_threshold`: This takes value between `0` to `1` with default 1.0.
+
+_Example:_
+```yaml
+biasedness_detection:
+  list_of_cols: all
+  drop_cols: ['label_col']
+  treatment: True
+  treatment_threshold: 0.98
+```
 
 ### `Outlier_detection`
 
@@ -354,6 +460,27 @@ Note: Any attribute with single value or all null values are not subjected to ou
 
 - `Output_mode`: `replace` or `append`. "replace" option replaces original columns with treated column, whereas "append" option append treated column to the input dataset. All treated columns are appended with the naming convention - `{original.column.name}_outliered`.
 
+_Example:_
+```yaml
+outlier_detection:
+  list_of_cols: all
+  drop_cols: ['id_column','label_col']
+  detection_side: upper
+  detection_configs:
+    pctile_lower: 0.05
+    pctile_upper: 0.90
+    stdev_lower: 3.0
+    stdev_upper: 3.0
+    IQR_lower: 1.5
+    IQR_upper: 1.5
+    min_validation: 2
+  treatment: True
+  treatment_method: value_replacement
+  pre_existing_model: False
+  model_path: NA
+  output_mode: replace
+```
+
 ### `nullColumns_detection`
 
 - `list_of_cols`: `all` can be passed to include all (non-array) columns for analysis. `missing` (default) can be passed to include only those columns with missing values. One of the use cases where "all" may be preferable over "missing" is when the user wants to save the imputation model for future use e.g. a column may not have missing value in the training dataset. Still, missing values may possibly appear in the prediction dataset.
@@ -366,13 +493,37 @@ Note: Any attribute with single value or all null values are not subjected to ou
 
 - `treatment_configs`: It takes input in dictionary format with keys `treatment_threshold` for column_removal treatment, or all arguments corresponding to imputation_MMM function.
 
+_Example:_
+```yaml
+nullColumns_detection:
+  list_of_cols: all
+  drop_cols: ['id_column','label_col']
+  treatment: True
+  treatment_method: MMM
+  treatment_configs:
+    method_type: median
+    pre_existing_model: False
+    model_path: NA
+    output_mode: replace
+```
+
 ## `association_evaluator`
+
+This submodule focuses on understanding the interaction between different attributes and/or the relationship between an attribute & the binary target variable. see the 
+[Association Evaluator Doc](https://github.com/anovos/anovos-docs/blob/main/docs/api/data_analyzer/association_evaluator.md) for understanding its functions.
 
 ### `correlation_matrix`
 
 - `list_of_cols`: (list format or string of col names separated by `|`). It is used to specify the columns which are subjected for generating correlation matrix. The user can also use `all` as an input to this argument to consider all columns. This is super useful instead of specifying all column names manually.
 
 - `drop_cols`: (list format or string of col names separated by `|`). It is used to specify the columns which needs to be dropped from list_of_cols. It is most useful when used coupled with `all` value of list_of_cols, when we need to consider all columns except few handful of them.
+
+_Example:_
+```yaml
+correlation_matrix:
+  list_of_cols: all
+  drop_cols: ['id_column']
+```
 
 ### `IV_calculation`
 
@@ -386,6 +537,19 @@ Note: Any attribute with single value or all null values are not subjected to ou
 
 - `Encoding_configs`: It takes input in dictionary format with keys related to binning operation - `bin_method` (default 'equal_frequency'), `bin_size` (default 10) and `monotonicity_check` (default 0). monotonicity_check of 1 will dynamically calculate the bin_size ensuring monotonic nature and can be expensive operation.
 
+_Example:_
+```yaml
+IV_calculation:
+  list_of_cols: all
+  drop_cols: id_column
+  label_col: label_col
+  event_label: 'class1'
+  encoding_configs:
+    bin_method: equal_frequency
+    bin_size: 10
+    monotonicity_check: 0
+```
+
 ### `IG_calculation`
 
 - `List_of_cols`: (list format or string of col names separated by `|`). It is used to specify the columns which are subjected to IG calculation
@@ -398,11 +562,31 @@ Note: Any attribute with single value or all null values are not subjected to ou
 
 - `Encoding_configs`: It takes input in dictionary format with keys related to binning operation - 'bin_method' (default 'equal_frequency'), 'bin_size' (default 10) and 'monotonicity_check' (default 0). monotonicity_check of 1 will dynamically calculate the bin_size ensuring monotonic nature and can be expensive operation.
 
+_Example:_
+```yaml
+IG_calculation:
+  list_of_cols: all
+  drop_cols: id_column
+  label_col: label_col
+  event_label: 'class1'
+  encoding_configs:
+    bin_method: equal_frequency
+    bin_size: 10
+    monotonicity_check: 0
+```
+
 ### `Variable_clustering`
 
 - `List_of_cols`: (list format or string of col names separated by `|`). It is used to specify the columns which are subjected to variable clustering
 
 - `Drop_cols`: (list format or string of col names separated by `|`). It is used to specify the columns that need to be dropped from list_of_cols before variable clustering.
+
+_Example:_
+```yaml
+variable_clustering:
+  list_of_cols: all
+  drop_cols: id_column|label_col
+```
 
 ## `drift_detector`
 
@@ -424,7 +608,20 @@ Note: Any attribute with single value or all null values are not subjected to ou
 
 - `pre_existing_source`: True if binning model & frequency counts/attribute exists already, False Otherwise.
 
-- `source_path`: If pre_existing_source is True, this is path for the source dataset details - drift_statistics folder. drift_statistics folder must contain attribute_binning & frequency_counts folders. If pre_existing_source is False, this can be used for saving the details. Default "NA" for temporarily saving source dataset attribute_binning folder
+- `source_path`: If pre_existing_source is True, this is path for the source dataset details - drift_statistics folder. drift_statistics folder must contain attribute_binning & frequency_counts folders. If pre_existing_source is False, this can be used for saving the details. Default "NA" for temporarily saving source dataset attribute_binning folder.
+
+_Example:_
+```yaml
+configs:
+  list_of_cols: all
+  drop_cols: ['id_column','label_col']
+  method_type: all
+  threshold: 0.1
+  bin_method: equal_range
+  bin_size: 10
+  pre_existing_source: False
+  source_path: NA
+```
 
 #### `source_dataset`
 
@@ -474,9 +671,9 @@ to be selected for further processing.
   for a list of valid datatypes.
   Note that this field is case-insensitive.
 
-## `stability_index`
+### `stability_index`
 
-### `configs`
+#### `configs`
 
 - `metric_weightages`: A dictionary with key being the metric name (mean, stdev, kurtosis) and value being the weightage of the metric (between 0 and 1). Sum of all weightages must be 1.
 
@@ -486,9 +683,21 @@ to be selected for further processing.
 
 - `threshold`: To flag unstable attributes meeting the threshold.
 
-### `dataset1`
+_Example:_
+```yaml
+configs:
+  metric_weightages:
+    mean: 0.5
+    stddev: 0.3
+    kurtosis: 0.2 
+  existing_metric_path: ''
+  appended_metric_path: 'si_metrics'
+  threshold: 2
+```
 
-#### `read_dataset`
+#### `dataset1`
+
+##### `read_dataset`
 
 - `file_path`: file (or directory) path where the historical dataset is saved.
 
@@ -497,15 +706,26 @@ to be selected for further processing.
 - `file_configs` (optional): Options to pass to the respective Spark file reader,
    e.g., delimiters, schemas, headers.
 
-### `dataset2`
+```
+Note: There can be multiple historical datasets, for loading the other datasets, it's configuration should be written in same as dataset1
+```
+
+#### `dataset2`
   
   same configuration as dataset1
 
 ## `report_preprocessing`
 
+This section largely covers the data pre–processing. The primary function which is used to address all the subsequent modules is charts_to_objects. It precisely helps in saving the chart data in form of objects, which is eventually read by the final report generation script. The objects saved are specifically used at the modules shown at the Report based on the user input. See the [Intermediate Report Doc](https://github.com/anovos/anovos-docs/blob/main/docs/using-anovos/data-reports/intermediate_report.md) for more details.
+
 ### `master_path` 
 
   Path where all modules output is saved
+
+_Example:_
+```yaml
+master_path: 'report_stats'
+```
 
 ### `charts_to_objects`
 
@@ -525,7 +745,23 @@ to be selected for further processing.
 
 - `source_path`: The source data path which is needed for drift analysis. If it's not computed / out of scope, the default value of "NA" is considered.
 
+_Example:_
+```yaml
+charts_to_objects:
+  list_of_cols: all
+  drop_cols: id_column
+  label_col: label_col
+  event_label: 'class1'
+  bin_method: equal_frequency
+  bin_size: 10
+  drift_detector: True
+  outlier_charts: False
+  source_path: "NA"
+```
+
 ## `report_generation`
+
+This section covers the final execution part where primarily the output generated by the previous step is being fetched upon and structured in the desirable UI layout. See the [Final report generation Doc](https://github.com/anovos/anovos-docs/blob/main/docs/using-anovos/data-reports/final_report.md) for more details.
 
 - `master_path`: The path which contains the data of intermediate output in terms of json chart objects, csv file (pandas df).
 
@@ -551,9 +787,28 @@ to be selected for further processing.
 
 - `final_report_path`: Path where final report will be saved. File path can be a local path or s3 path (when running with AWS cloud services), azure dbfs or azure blob storage (when running with Azure databricks). Note: azure dbfs path should be like "/dbfs/directory_name" and For azure blob storage path should be like "/dbfs/mnt/directory_name" beacause in report generation all the operations happen in python.
 
+_Example:_
+```yaml
+master_path: 'report_stats'
+id_col: 'id_column'
+label_col: 'label_col'
+corr_threshold: 0.4
+iv_threshold: 0.02
+drift_threshold_model: 0.1
+dataDict_path: 'data/income_dataset/data_dictionary.csv'
+metricDict_path: 'data/metric_dictionary.csv'
+final_report_path: 'report_stats'
+```
+
 ## `transformers`:
 
-### `numerical_mathops`:
+The data transformer module supports selected pre-processing & transformation functions, such as binning, encoding, scaling, imputation, to name a few, which are required for statistics generation and quality checks. See the
+[Transformers Doc](https://github.com/anovos/anovos-docs/blob/main/docs/api/data_transformer/transformers.md) for understanding its functions in detail.
+
+### `numerical_mathops`
+
+This group of functions used to perform mathematical transformation over numerical attributes. Users must use only one function at a time and section of other function should be commented like if user want to use feature transformation then all Section of boxcox transformation should be commented.
+
 
 #### `feature_transformation`:
 
@@ -564,6 +819,14 @@ to be selected for further processing.
 - `method_type`: "ln", "log10", "log2", "exp", "powOf2" (2^x), "powOf10" (10^x), "powOfN" (N^x), "sqrt" (square root), "cbrt" (cube root), "sq" (square), "cb" (cube), "toPowerN" (x^N), "sin", "cos", "tan", "asin", "acos", "atan", "radians", "remainderDivByN" (x%N), "factorial" (x!), "mul_inv" (1/x), "floor", "ceil", "roundN" (round to N decimal places) (Default value = "sqrt")
 
 - `N`: None by default. If method_type is "powOfN", "toPowerN", "remainderDivByN" or "roundN", N will be used as the required constant.
+
+_Example:_
+```yaml
+feature_transformation:
+  list_of_cols: all
+  drop_cols: []
+  method_type: sqrt
+```
 
 #### `boxcox_transformation`:
 
@@ -577,7 +840,15 @@ to be selected for further processing.
     2. `int/float`: all attributes will be assigned the same lambda value.
     Else, search for the best lambda among [1,-1,0.5,-0.5,2,-2,0.25,-0.25,3,-3,4,-4,5,-5] for each column and apply the transformation (Default value = None)
 
+_Example:_
+```yaml
+list_of_cols: num_feature1|num_feature2
+drop_cols: []
+```
+
 ### `numerical_binning`
+
+This group of functions used to tranform the numerical attribute into discrete (integer or categorical values) attribute. Users must use only one function at a time and section of other function should be commented like if user want to use attribute binning method then all Section of monotonic binning method should be commented.
 
 #### `attribute_binning`
 
@@ -589,7 +860,42 @@ to be selected for further processing.
 
 - `bin_size`: Number of bins. (Default value = 10)
 
-- `bin_dtype`: "numerical", "categorical". With "numerical" option, original value is replaced with an Integer (1,2,…) and with "categorical" option, original replaced with a string describing min and max value allowed in the bin ("minval-maxval"). (Default value = "numerical")
+- `bin_dtype`: "numerical", "categorical". With "numerical" option, original value is replaced with an Integer (1,2,…) and with "categorical" option, original replaced with a string describing min and max value allowed in the bin ("minval-maxval"). (Default value = "numerical").
+
+_Example:_
+```yaml
+attribute_binning:
+  list_of_cols: num_feature1|num_feature2
+  drop_cols: []
+  method_type: equal_frequency
+  bin_size: 10
+  bin_dtype: numerical
+```
+
+#### `monotonic_binning`
+
+- `list_of_cols`: List of numerical columns to transform e.g., ["col1","col2"]
+
+- `drop_cols`: List of columns to be dropped e.g., ["col1","col2"]
+
+- `method_type`: equal_frequency", "equal_range". In "equal_range" method, each bin is of equal size/width and in "equal_frequency", each bin has equal no. of rows, though the width of bins may vary. (Default value = "equal_range")
+
+- `bin_size`: Number of bins. (Default value = 10)
+
+- `bin_dtype`: "numerical", "categorical". With "numerical" option, original value is replaced with an Integer (1,2,…) and with "categorical" option, original replaced with a string describing min and max value allowed in the bin ("minval-maxval"). (Default value = "numerical").
+
+_Example:_
+```yaml
+attribute_binning:
+  list_of_cols: num_feature1|num_feature2
+  drop_cols: []
+  label_col: ["label_col"]
+  event_label: ["class1"]
+  method_type: equal_frequency
+  bin_size: 10
+  bin_dtype: numerical
+```
+
 
 ### `numerical_expression`:
 
@@ -597,9 +903,17 @@ to be selected for further processing.
 
 - `list_of_expr`: List of expressions to evaluate as new features e.g., ["expr1","expr2"]. Alternatively, expressions can be specified in a string format, where different expressions are separated by pipe delimiter “|” e.g., "expr1|expr2".
 
-- `postfix`: postfix for new feature name.Naming convention "f" + expression_index + postfix e.g. with postfix of "new", new added features are named as f0new, f1new etc. (Default value = "")
+- `postfix`: postfix for new feature name.Naming convention "f" + expression_index + postfix e.g. with postfix of "new", new added features are named as f0new, f1new etc. (Default value = "").
+
+_Example:_
+```yaml
+expression_parser:
+  list_of_expr: 'log(age) + 1.5|sin(capital-gain)+cos(capital-loss)'
+```
 
 ### `categorical_outliers`
+
+This function replaces less frequently seen values (called as outlier values in the current context) in a categorical column by 'others'.
 
 #### `outlier_categories`
 
@@ -609,9 +923,20 @@ to be selected for further processing.
 
 - `coverage`: Defines the minimum % of rows that will be mapped to actual category name and the rest to be mapped to others and takes value between 0 to 1. Coverage of 0.8 can be interpreted as top frequently seen categories are considered till it covers minimum 80% of rows and rest lesser seen values are mapped to others. (Default value = 1.0)
 
-- `max_category`: Even if coverage is less, only (max_category - 1) categories will be mapped to actual name and rest to others. Caveat is when multiple categories have same rank, then #categories can be more than max_category. (Default value = 50)
+- `max_category`: Even if coverage is less, only (max_category - 1) categories will be mapped to actual name and rest to others. Caveat is when multiple categories have same rank, then #categories can be more than max_category. (Default value = 50).
+
+_Example:_
+```yaml
+outlier_categories:
+  list_of_cols: ["cat_feature1","cat_feature2"]
+  drop_cols: ['id_column','label_col']
+  coverage: 0.9
+  max_category: 20
+```
 
 ### `categorical_encoding`
+
+This group of transformers functions used to converting a categorical attribute into numerical attribute(s). Users should use only one function at a time and section of other function should be commented like if user want to use categorical to numerical conversion using unsupervised method then all Section of categorical to numerical conversion using supervised method should be commented.
 
 #### `cat_to_num_unsupervised`
 
@@ -628,6 +953,15 @@ to be selected for further processing.
 
 - `cardinality_threshold`: Defines threshold to skip columns with higher cardinality values from encoding. Default value is 100.
 
+_Example:_
+```yaml
+cat_to_num_unsupervised:
+  list_of_cols: ["cat_feature1","cat_feature2"]
+  drop_cols: ['id_column']
+  method_type: 0
+  cardinality_threshold: 110
+```
+
 #### `cat_to_num_supervised`
 
 - `list_of_cols`: List of catigorical columns to transform e.g., ["col1","col2"].
@@ -636,9 +970,20 @@ to be selected for further processing.
 
 - `label_col`: Label/Target column (Default value = "label")
 
-- `event_label`: Value of (positive) event (i.e label 1) (Default value = 1)
+- `event_label`: Value of (positive) event (i.e label 1) (Default value = 1).
+
+_Example:_
+```yaml
+cat_to_num_supervised:
+  list_of_cols: cat_feature1 | cat_feature2
+  drop_cols: ['id_column']
+  label_col: income
+  event_label: '>50K'
+```
 
 ### `numerical_rescaling`
+
+This group of transformers functions used to rescale attribute(s). Users should use only one function at a time and section of other functions should be commented like if user want to use normalization method then all Sections of Z-standarization and IQR-standarization should be commented.
 
 #### `normalization`
 
@@ -646,11 +991,25 @@ to be selected for further processing.
 
 - `drop_cols`: List of columns to be dropped e.g., ["col1","col2"].
 
+_Example:_
+```yaml
+normalization:
+  list_of_cols: ["num_feature1","num_feature2"]
+  drop_cols: []
+```
+
 #### `z_standarization`
 
 - `list_of_cols`: List of numerical columns to transform e.g., ["col1","col2"]. "all" can be passed to include all numerical columns for analysis.
 
 - `drop_cols`: List of columns to be dropped e.g., ["col1","col2"].
+
+_Example:_
+```yaml
+z_standardization:
+  list_of_cols: ["num_feature1","num_feature2"]
+  drop_cols: []
+```
 
 #### `IQR_standarization`
 
@@ -658,7 +1017,16 @@ to be selected for further processing.
 
 - `drop_cols`: List of columns to be dropped e.g., ["col1","col2"].
 
+_Example:_
+```yaml
+IQR_standardization:
+  list_of_cols: ["num_feature1","num_feature2","num_feature3"]
+  drop_cols: []
+```
+
 ### `numerical_latentFeatures`
+
+This group of transformer functions used to generate latent features which reduces the dimensionality of the input dataframe. Users should use only one function at a time and section of other function should be commented like if user want to use PCA method then all Section of AutoEncoder method should be commented.
 
 #### `PCA_latentFeatures`
 
@@ -674,7 +1042,16 @@ to be selected for further processing.
 
 - `imputation_configs`: Takes input in dictionary format. Imputation function name is provided with key "imputation_name". optional arguments pertaining to that imputation function can be provided with argument name as key. (Default value = {"imputation_function": "imputation_MMM"})
 
-- `stats_missing`: Takes arguments for read_dataset (data_ingest module) function in a dictionary format to read pre-saved statistics on missing count/pct i.e. if measures_of_counts or missingCount_computation (data_analyzer.stats_generator module) has been computed & saved before. (Default value = {})
+- `stats_missing`: Takes arguments for read_dataset (data_ingest module) function in a dictionary format to read pre-saved statistics on missing count/pct i.e. if measures_of_counts or missingCount_computation (data_analyzer.stats_generator module) has been computed & saved before. (Default value = {}).
+
+_Example:_
+```yaml
+PCA_latentFeatures:
+  list_of_cols: ["num_feature1","num_feature2","num_feature3"]
+  explained_variance_cutoff: 0.95
+  standardization: False
+  imputation: True
+```
 
 #### `autoencoder_latentFeatures`
 
@@ -699,6 +1076,16 @@ to be selected for further processing.
 - `imputation_configs`: Takes input in dictionary format. Imputation function name is provided with key "imputation_name". optional arguments pertaining to that imputation function can be provided with argument name as key. (Default value = {"imputation_function": "imputation_MMM"})
 
 - `stats_missing`: Takes arguments for read_dataset (data_ingest module) function in a dictionary format to read pre-saved statistics on missing count/pct i.e. if measures_of_counts or missingCount_computation (data_analyzer.stats_generator module) has been computed & saved before. (Default value = {})
+
+_Example:_
+```yaml
+autoencoder_latentFeatures:
+  list_of_cols: ["num_feature1","num_feature2","num_feature3"]
+  reduction_params: 0.5
+  sample_size: 10000 
+  epochs: 20
+  batch_size: 256
+```
 
 ## `write_intermediate`
 
