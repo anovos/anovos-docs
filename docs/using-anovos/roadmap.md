@@ -1,6 +1,6 @@
 # Anovos Product Roadmap
 
-_Anovos_ is built and released as an open source project based on our experience using massive data sets
+_Anovos_ is built and released as an open source project based on our experience in handling massive data sets
 to produce predictive features. At [Mobilewalla](https://www.mobilewalla.com), we process terabytes of 
 mobile engagement signals daily to mine consumer behavior and use features from that data to build distributed
 machine learning models to solve a wide range of business problems.
@@ -12,11 +12,11 @@ open source library for every data scientists’ use.
 ![https://anovos.github.io/anovos-docs/assets/roadmap.png](https://anovos.github.io/anovos-docs/assets/roadmap.png)
 
 ## 🛣 The Roadmap
-We plan to bring fully functional _Anovos_ over the course of three major releases: Alpha, Beta, and version 1.0.
+We plan to bring fully functional _Anovos_ over the course of three major releases: V0.1,V0.2 and version 1.0.
 
-### Alpha Release (November 2021)
+### V0.1 (November 2021)
 
-The Alpha release of _Anovos_ had all the essential data ingestion and comprehensive data analysis functionalities,
+The V0.1 release of _Anovos_ had all the essential data ingestion and comprehensive data analysis functionalities,
 as well as the data pre-processing and cleaning mechanisms. It also included some key differentiating functionalities,
 like data drift and stability computations, which are crucial in deciding the need for model refresh/tweak
 options. Another benefit of _Anovos_ is a dynamic visualization component configured based on data ingestion pipelines.
@@ -55,16 +55,18 @@ Every data metric computed from the _Anovos_ ingestion process can be visualized
           - Attribute association
           - Data drift & stability
 
-### Beta Release (March 2022)
+### V0.2 Release (March 2022)
 
-In the Beta release of _Anovos_, the library will support ingesting from cloud service providers
-like MS Azure and will have mechanisms to read/write different file formats such as Avro and nested Json.
+In this release of _Anovos_, the library will support ingesting from cloud service providers
+like MS Azure and will also have mechanisms to read/write different file formats such as Avro and nested Json.
 It will also enable ingesting various data types (see the above figure for the details).
 
-The key differentiating functionality of beta release would be the “Feature Wiki/ Feature Recommender” for data scientists
-and end-users to resolve their cold-start problems, which will immensely reduce their literature review time.
+The key differentiating functionality of this release is that “Feature Explorer & Feature Recommender” for data scientists
+and end-users to resolve their cold-start problems, which will immensely reduce their literature review time. 
 
-The Beta release will also have another capability named as Feature Stability estimator based on the composition of a given feature using set of attribute/s
+The V0.2 release will also have another important capability named as Feature Stability estimator based on the composition of a given feature using set of attribute/s. This will greatly benefit data scientists to understand the potential feature instabilities which could harm the resillency of a ML model.
+
+With the V0.2 release Anovos can be used in day to day practices of any Data Scientists or Data Analysts 
 
 #### Details
 
@@ -72,6 +74,7 @@ The Beta release will also have another capability named as Feature Stability es
     - Microsoft Azure Blob Storage integration
     - Support for Avro and nested JSON files
     - Support for additional data types: Time stamps columns 
+    - Support for Timeseries data ingestion
 - **Data Cleaning and Transformation**
     - Parsing
     - Merging
@@ -81,8 +84,9 @@ The Beta release will also have another capability named as Feature Stability es
     - Imputations
     - Auto encoders
     - Dimension reduction
-- **Feature Wiki / Feature recommender**
-  to recommend potential features based on the industry, use case, and the ingested data dictionary
+    - Date/Time related transformations
+- **Feature Explorer / Feature recommender (Semantic search enabled)**
+  To recommend potential features based on the industry, use case, and the ingested data dictionary
     - Industry specific use cases and respective features
         - Telco
         - BFSI
@@ -90,12 +94,17 @@ The Beta release will also have another capability named as Feature Stability es
         - Healthcare
         - Transportation
         - Supply chain
+    - Recommendations are enabled by Semantic search capability
+    - Supported by pre-compiled feature corpus 
 - **Feature Stability**
-    - This will be an extension of the attribute stability capabilities of the Alpha release
-- **Spark support**
-    - Compatibility with Spark versions 2.4.x, 3.1.x, and 3.2.x 
+    - This will be an extension of the attribute stability capabilities of the V0.1 release
+- **Extended Spark & Python support**
+    - Compatibility with different Spark & Python versions
+    - Apache Spark 2.4.x on Java 8 with Python 3.7.x
+    - Apache Spark 3.1.x on Java 11 with Python 3.9.x
+    - Apache Spark 3.2.x on Java 11 with Python 3.9.x
 - **Runtime Environment support**
-    - Microsoft Azure 
+    - Microsoft Azure Databricks
 
 ### Version 1.0 (Summer of 2022)
 
