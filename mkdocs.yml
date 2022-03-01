@@ -51,6 +51,7 @@ nav:
           - Intermediate Report: using-anovos/data-reports/intermediate_report.md
           - Final Report: using-anovos/data-reports/final_report.md
           - HTML Report: using-anovos/data-reports/html_report.md
+      - Feature Recommender: using-anovos/feature_recommender.md
       - Scaling Up: using-anovos/scaling.md
       - Limitations: using-anovos/limitations.md
       - Roadmap: using-anovos/roadmap.md
