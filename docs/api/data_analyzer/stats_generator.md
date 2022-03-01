@@ -1,20 +1,21 @@
 # <code>stats_generator</code>
 <p>This module generates all the descriptive statistics related to the ingested data. Descriptive statistics are
-split into different metric types, and each function corresponds to one metric type. - global_summary -
-measures_of_counts - measures_of_centralTendency - measures_of_cardinality - measures_of_dispersion -
-measures_of_percentiles - measures_of_shape</p>
-<p>Columns subjected to this analysis can be controlled by the right combination of arguments - list_of_cols and
-drop_cols. All the above functions require the following arguments:</p>
+split into different metric types, and each function below corresponds to one metric type:</p>
 <ul>
-<li><strong>idf</strong>: Input dataframe - <strong>list_of_cols</strong>: This argument, in a list format, is used to specify the columns which
-are subjected to the analysis in the input dataframe. Alternatively, instead of list, columns can be specified in a
-single text format where different column names are separated by pipe delimiter “|”. The user can also use “all” as
-an input to this argument to consider all columns. This is super useful instead of specifying all column names
-manually. - <strong>drop_cols</strong>: In a list format, this argument is used to specify the columns that need to be dropped
-from list_of_cols. Instead of a list, columns can be specified in a single text format where different column names
-are separated by pipe delimiter “|”. It is most useful when coupled with the “all” value of list_of_cols,
-when we need to consider all columns except a few handful of them. - <strong>print_impact</strong>: This argument is to print out
-the statistics.</li>
+<li>global_summary </li>
+<li>measures_of_counts </li>
+<li>measures_of_centralTendency </li>
+<li>measures_of_cardinality </li>
+<li>measures_of_dispersion </li>
+<li>measures_of_percentiles </li>
+<li>measures_of_shape</li>
+</ul>
+<p>Above primary functions are supported by below functions, which can be used independently as well:</p>
+<ul>
+<li>missingCount_computation</li>
+<li>nonzeroCount_computation</li>
+<li>mode_computation</li>
+<li>uniqueCount_computation</li>
 </ul>
 <details class="source">
 <summary>
@@ -23,38 +24,40 @@ the statistics.</li>
 <pre>
 ```python
 # coding=utf-8
-"""This module generates all the descriptive statistics related to the ingested data. Descriptive statistics are
-split into different metric types, and each function corresponds to one metric type. - global_summary -
-measures_of_counts - measures_of_centralTendency - measures_of_cardinality - measures_of_dispersion -
-measures_of_percentiles - measures_of_shape
+"""
+This module generates all the descriptive statistics related to the ingested data. Descriptive statistics are
+split into different metric types, and each function below corresponds to one metric type:
 
-Columns subjected to this analysis can be controlled by the right combination of arguments - list_of_cols and
-drop_cols. All the above functions require the following arguments:
+- global_summary 
+- measures_of_counts 
+- measures_of_centralTendency 
+- measures_of_cardinality 
+- measures_of_dispersion 
+- measures_of_percentiles 
+- measures_of_shape
 
-- **idf**: Input dataframe - **list_of_cols**: This argument, in a list format, is used to specify the columns which
-are subjected to the analysis in the input dataframe. Alternatively, instead of list, columns can be specified in a
-single text format where different column names are separated by pipe delimiter “|”. The user can also use “all” as
-an input to this argument to consider all columns. This is super useful instead of specifying all column names
-manually. - **drop_cols**: In a list format, this argument is used to specify the columns that need to be dropped
-from list_of_cols. Instead of a list, columns can be specified in a single text format where different column names
-are separated by pipe delimiter “|”. It is most useful when coupled with the “all” value of list_of_cols,
-when we need to consider all columns except a few handful of them. - **print_impact**: This argument is to print out
-the statistics. """
+Above primary functions are supported by below functions, which can be used independently as well:
+
+- missingCount_computation
+- nonzeroCount_computation
+- mode_computation
+- uniqueCount_computation
+ 
+"""
 import warnings
-
 from pyspark.mllib.linalg import Vectors
 from pyspark.mllib.stat import Statistics
 from pyspark.sql import functions as F
 from pyspark.sql import types as T
-
 from anovos.shared.utils import transpose_dataframe, attributeType_segregation
 
 
-def global_summary(spark, idf, list_of_cols="all", drop_cols=[], print_impact=True):
-    """The global summary function computes the following universal statistics/metrics and returns a Spark DataFrame
-    with schema – metric, value. - No. of rows - No. of columns - No. of categorical columns along with column names
-    - No. of numerical columns along with the column names - No. of non-numerical non-categorical columns such as
-    date type, array type etc. along with column names
+def global_summary(spark, idf, list_of_cols="all", drop_cols=[], print_impact=False):
+    """
+    The global summary function computes the universal statistics/metrics and returns a Spark DataFrame
+    with schema – metric, value. The metrics computed in this function - No. of rows, No. of columns, No. of categorical columns
+    along with column names, No. of numerical columns along with the column names, No. of non-numerical non-categorical columns
+    such as date type, array type etc. along with column names.
 
     Parameters
     ----------
@@ -66,19 +69,23 @@ def global_summary(spark, idf, list_of_cols="all", drop_cols=[], print_impact=Tr
         List of columns to analyse e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
-        "all" can be passed to include all columns for analysis.
-        Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
-        drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols.
-        (Default value = "all")
+        "all" can be passed to include all columns for analysis. This is super useful instead of specifying all column names manually.
+        Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in drop_cols argument
+        is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
     drop_cols
         List of columns to be dropped e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
-        where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])
+        where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
+        It is most useful when coupled with the “all” value of list_of_cols, when we need to consider all columns except
+        a few handful of them. (Default value = [])
     print_impact
-        True, False (Default value = True)
+        True, False
+        This argument is to print out the statistics.(Default value = False)
 
     Returns
     -------
+    DataFrame
+        [metric, value]
 
     """
     if list_of_cols == "all":
@@ -143,18 +150,23 @@ def missingCount_computation(
         List of columns to analyse e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
-        "all" can be passed to include all columns for analysis.
-        Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
-        drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
+        "all" can be passed to include all columns for analysis. This is super useful instead of specifying all column names manually.
+        Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in drop_cols argument
+        is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
     drop_cols
         List of columns to be dropped e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
-        where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])
+        where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
+        It is most useful when coupled with the “all” value of list_of_cols, when we need to consider all columns except
+        a few handful of them. (Default value = [])
     print_impact
-        True, False (Default value = False)
+        True, False
+        This argument is to print out the statistics.(Default value = False)
 
     Returns
     -------
+    DataFrame
+        [attribute, missing_count, missing_pct]
 
     """
     if list_of_cols == "all":
@@ -201,18 +213,23 @@ def nonzeroCount_computation(
         List of numerical columns to analyse e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
-        "all" can be passed to include all numerical columns for analysis.
-        Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
-        drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
+        "all" can be passed to include all numerical columns for analysis. This is super useful instead of specifying all column names manually.
+        Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in drop_cols argument
+        is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
     drop_cols
         List of columns to be dropped e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
-        where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])
+        where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
+        It is most useful when coupled with the “all” value of list_of_cols, when we need to consider all columns except
+        a few handful of them. (Default value = [])
     print_impact
-        True, False (Default value = False)
+        True, False
+        This argument is to print out the statistics.(Default value = False)
 
     Returns
     -------
+    DataFrame
+        [attribute, nonzero_count, nonzero_pct]
 
     """
     num_cols = attributeType_segregation(idf)[0]
@@ -256,16 +273,17 @@ def nonzeroCount_computation(
 def measures_of_counts(
     spark, idf, list_of_cols="all", drop_cols=[], print_impact=False
 ):
-    """The Measures of Counts function computes different count metrics for each column (interchangeably called an
-    attribute in the document). It returns a Spark DataFrame with schema – attribute, fill_count, fill_pct,
-    missing_count, missing_pct, nonzero_count, nonzero_pct. - Fill Count/Rate is defined as number of rows with
-    non-null values in a column both in terms of absolute count and its proportion to row count. It leverages count
-    statistic from summary functionality of Spark SQL. - Missing Count/Rate is defined as null (or missing) values
-    seen in a column both in terms of absolute count and its proportion to row count. It is directly derivable from
-    Fill Count/Rate. - Non Zero Count/Rate is defined as non-zero values seen in a numerical column both in terms of
-    absolute count and its proportion to row count. For categorical column, it will show null value. Also,
-    it uses a subfunction nonzeroCount_computation, which is later called under measures_of_counts. Under the hood,
-    it leverage Multivariate Statistical Summary of Spark MLlib.
+    """
+    The Measures of Counts function computes different count metrics for each column.  It returns a Spark DataFrame
+    with schema – attribute, fill_count, fill_pct, missing_count, missing_pct, nonzero_count, nonzero_pct.
+
+    - Fill Count/Rate is defined as number of rows with non-null values in a column both in terms of absolute count
+      and its proportion to row count. It leverages count statistic from summary functionality of Spark SQL.
+    - Missing Count/Rate is defined as null (or missing) values seen in a column both in terms of absolute count and
+      its proportion to row count. It is directly derivable from Fill Count/Rate.
+    - Non Zero Count/Rate is defined as non-zero values seen in a numerical column both in terms of absolute count and
+      its proportion to row count. For categorical column, it will show null value. Also, it uses a supporting function
+      nonzeroCount_computation. Under the hood, it leverage Multivariate Statistical Summary of Spark MLlib.
 
     Parameters
     ----------
@@ -277,18 +295,23 @@ def measures_of_counts(
         List of columns to analyse e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
-        "all" can be passed to include all columns for analysis.
-        Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
-        drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
+        "all" can be passed to include all columns for analysis. This is super useful instead of specifying all column names manually.
+        Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in drop_cols argument
+        is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
     drop_cols
         List of columns to be dropped e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
-        where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])
+        where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
+        It is most useful when coupled with the “all” value of list_of_cols, when we need to consider all columns except
+        a few handful of them. (Default value = [])
     print_impact
-        True, False (Default value = False)
+        True, False
+        This argument is to print out the statistics.(Default value = False)
 
     Returns
     -------
+    DataFrame
+        [attribute, fill_count, fill_pct, missing_count, missing_pct, nonzero_count, nonzero_pct]
 
     """
     if list_of_cols == "all":
@@ -337,18 +360,24 @@ def mode_computation(spark, idf, list_of_cols="all", drop_cols=[], print_impact=
         List of Discrete (Categorical + Integer) columns to analyse e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
-        "all" can be passed to include all discrete columns for analysis.
-        Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
-        drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
+        "all" can be passed to include all discrete columns for analysis. This is super useful instead of specifying all column names manually.
+        Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in drop_cols argument
+        is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
     drop_cols
         List of columns to be dropped e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
-        where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])
+        where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
+        It is most useful when coupled with the “all” value of list_of_cols, when we need to consider all columns except
+        a few handful of them. (Default value = [])
     print_impact
-        True, False (Default value = False)
+        True, False
+        This argument is to print out the statistics.(Default value = False)
 
     Returns
     -------
+    DataFrame
+        [attribute, mode, mode_rows]
+        In case there is tie between multiple values, one value is randomly picked as mode.
 
     """
     if list_of_cols == "all":
@@ -409,15 +438,18 @@ def mode_computation(spark, idf, list_of_cols="all", drop_cols=[], print_impact=
 def measures_of_centralTendency(
     spark, idf, list_of_cols="all", drop_cols=[], print_impact=False
 ):
-    """The Measures of Central Tendency function provides summary statistics that represents the centre point or most
-    likely value of an attribute. It returns a Spark DataFrame with schema – attribute, mean, median, mode, mode_pct.
+    """
+    The Measures of Central Tendency function provides summary statistics that represents the centre point or most
+    likely value of an attribute. It returns a Spark DataFrame with schema – attribute, mean, median, mode, mode_rows, mode_pct.
 
     - Mean is arithmetic average of a column i.e. sum of all values seen in the column divided by the number of rows.
-    It leverage mean statistic from summary functionality of Spark SQL. - Median is 50th percentile or middle value
-    in a column when the values are arranged in ascending or descending order. It leverage ‘50%’ statistic from
-    summary functionality of Spark SQL. - Mode is most frequently seen value in a column. Mode is calculated only for
-    discrete columns (categorical + Integer/Long columns) - Mode Pct is defined as % of rows seen with Mode value.
-    Mode Pct is calculated only for discrete columns (categorical + Integer/Long columns)
+      It leverage mean statistic from summary functionality of Spark SQL. Mean is calculated only for numerical columns.
+    - Median is 50th percentile or middle value in a column when the values are arranged in ascending or descending order.
+      It leverage ‘50%’ statistic from summary functionality of Spark SQL. Median is calculated only for numerical columns.
+    - Mode is most frequently seen value in a column. Mode is calculated only for discrete columns (categorical + Integer/Long columns).
+    - Mode Rows is the numer of rows seen with Mode value. Mode Rows is calculated only for discrete columns (categorical + Integer/Long columns).
+    - Mode Pct is defined as Mode Rows divided by non-null values seen in a column.
+      Mode Pct is calculated only for discrete columns (categorical + Integer/Long columns).
 
     Parameters
     ----------
@@ -429,18 +461,23 @@ def measures_of_centralTendency(
         List of columns to analyse e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
-        "all" can be passed to include all columns for analysis.
-        Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
-        drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
+        "all" can be passed to include all columns for analysis. This is super useful instead of specifying all column names manually.
+        Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in drop_cols argument
+        is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
     drop_cols
         List of columns to be dropped e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
-        where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])
+        where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
+        It is most useful when coupled with the “all” value of list_of_cols, when we need to consider all columns except
+        a few handful of them. (Default value = [])
     print_impact
-        True, False (Default value = False)
+        True, False
+        This argument is to print out the statistics.(Default value = False)
 
     Returns
     -------
+    DataFrame
+        [attribute, mean, median, mode, mode_rows, mode_pct]
 
     """
 
@@ -504,18 +541,23 @@ def uniqueCount_computation(
         List of Discrete (Categorical + Integer) columns to analyse e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
-        "all" can be passed to include all discrete columns for analysis.
-        Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
-        drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
+        "all" can be passed to include all discrete columns for analysis. This is super useful instead of specifying all column names manually.
+        Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in drop_cols argument
+        is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
     drop_cols
         List of columns to be dropped e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
-        where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])
+        where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
+        It is most useful when coupled with the “all” value of list_of_cols, when we need to consider all columns except
+        a few handful of them. (Default value = [])
     print_impact
-        True, False (Default value = False)
+        True, False
+        This argument is to print out the statistics.(Default value = False)
 
     Returns
     -------
+    DataFrame
+        [attribute, unique_values]
 
     """
     if list_of_cols == "all":
@@ -559,15 +601,16 @@ def uniqueCount_computation(
 def measures_of_cardinality(
     spark, idf, list_of_cols="all", drop_cols=[], print_impact=False
 ):
-    """The Measures of Cardinality function provides statistics that are related to unique values seen in an
+    """
+    The Measures of Cardinality function provides statistics that are related to unique values seen in an
     attribute. These statistics are calculated only for discrete columns (categorical + Integer/Long columns). It
     returns a Spark Dataframe with schema – attribute, unique_values, IDness.
 
-    - Unique Value is defined as a distinct value count of a column. It relies on a subfunction
-    uniqueCount_computation for its computation and leverages the countDistinct functionality of Spark SQL. - IDness
-    is calculated as Unique Values divided by non-null values seen in a column. Non-null values count is used instead
-    of total count because too many null values can give misleading results even if the column have all unique values
-    (except null). It uses subfunctions - uniqueCount_computation and missingCount_computation.
+    - Unique Value is defined as a distinct value count of a column. It relies on a supporting function uniqueCount_computation
+      for its computation and leverages the countDistinct functionality of Spark SQL.
+    - IDness is calculated as Unique Values divided by non-null values seen in a column. Non-null values count is used instead
+      of total count because too many null values can give misleading results even if the column have all unique values
+      (except null). It uses supporting functions - uniqueCount_computation and missingCount_computation.
 
     Parameters
     ----------
@@ -579,18 +622,23 @@ def measures_of_cardinality(
         List of Discrete (Categorical + Integer) columns to analyse e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
-        "all" can be passed to include all discrete columns for analysis.
-        Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
-        drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
+        "all" can be passed to include all discrete columns for analysis. This is super useful instead of specifying all column names manually.
+        Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in drop_cols argument
+        is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
     drop_cols
         List of columns to be dropped e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
-        where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])
+        where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
+        It is most useful when coupled with the “all” value of list_of_cols, when we need to consider all columns except
+        a few handful of them. (Default value = [])
     print_impact
-        True, False (Default value = False)
+        True, False
+        This argument is to print out the statistics.(Default value = False)
 
     Returns
     -------
+    DataFrame
+        [attribute, unique_values, IDness]
 
     """
     if list_of_cols == "all":
@@ -644,28 +692,21 @@ def measures_of_cardinality(
 def measures_of_dispersion(
     spark, idf, list_of_cols="all", drop_cols=[], print_impact=False
 ):
-    """The Measures of Dispersion function provides statistics that describe the spread of a numerical attribute.
+    """
+    The Measures of Dispersion function provides statistics that describe the spread of a numerical attribute.
     Alternatively, these statistics are also known as measures of spread. It returns a Spark DataFrame with schema –
     attribute, stddev, variance, cov, IQR, range.
 
-    - Standard Deviation (stddev) measures how concentrated an attribute is around the mean or average and
-    mathematically computed as  below. It leverages ‘stddev’ statistic from summary functionality of Spark SQL.
-
-            s= X- X2n -1
-
-            where:
-
-            ` `X is an attribute value
-            X is attribute mean
-            n is no. of rows
-
-    - Variance is the squared value of Standard Deviation. - Coefficient of Variance (cov) is computed as ratio of
-    Standard Deviation & Mean. It leverages ‘stddev’ and ‘mean’ statistic from the summary functionality of Spark
-    SQL. - Interquartile Range (IQR): It describes the difference between the third quartile (75th percentile) and
-    the first quartile (25th percentile), telling us about the range where middle half values are seen. It leverage
-    ‘25%’ and ‘75%’ statistics from the summary functionality of Spark SQL. - Range is simply the difference between
-    the maximum value and the minimum value. It leverage ‘min’ and ‘max’ statistics from the summary functionality of
-    Spark
+    - Standard Deviation (stddev) measures how concentrated an attribute is around the mean or average.
+      It leverages ‘stddev’ statistic from summary functionality of Spark SQL.
+    - Variance is the squared value of Standard Deviation.
+    - Coefficient of Variance (cov) is computed as ratio of Standard Deviation & Mean.
+      It leverages ‘stddev’ and ‘mean’ statistic from the summary functionality of Spark SQL.
+    - Interquartile Range (IQR): It describes the difference between the third quartile (75th percentile)
+      and the first quartile  (25th percentile), telling us about the range where middle half values are seen.
+      It leverage ‘25%’ and ‘75%’ statistics from the summary functionality of Spark SQL.
+    - Range is simply the difference between the maximum value and the minimum value.
+      It leverage ‘min’ and ‘max’ statistics from the summary functionality of Spark
 
     Parameters
     ----------
@@ -677,18 +718,23 @@ def measures_of_dispersion(
         List of numerical columns to analyse e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
-        "all" can be passed to include all numerical columns for analysis.
-        Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
-        drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
+        "all" can be passed to include all numerical columns for analysis. This is super useful instead of specifying all column names manually.
+        Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in drop_cols argument
+        is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
     drop_cols
         List of columns to be dropped e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
-        where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])
+        where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
+        It is most useful when coupled with the “all” value of list_of_cols, when we need to consider all columns except
+        a few handful of them. (Default value = [])
     print_impact
-        True, False (Default value = False)
+        True, False
+        This argument is to print out the statistics.(Default value = False)
 
     Returns
     -------
+    DataFrame
+        [attribute, stddev, variance, cov, IQR, range]
 
     """
     num_cols = attributeType_segregation(idf)[0]
@@ -742,7 +788,8 @@ def measures_of_dispersion(
 def measures_of_percentiles(
     spark, idf, list_of_cols="all", drop_cols=[], print_impact=False
 ):
-    """The Measures of Percentiles function provides statistics at different percentiles. Nth percentile can be
+    """
+    The Measures of Percentiles function provides statistics at different percentiles. Nth percentile can be
     interpreted as N% of rows having values lesser than or equal to Nth percentile value. It is prominently used for
     quick detection of skewness or outlier. Alternatively, these statistics are also known as measures of position.
     These statistics are computed only for numerical attributes.
@@ -760,18 +807,23 @@ def measures_of_percentiles(
         List of numerical columns to analyse e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
-        "all" can be passed to include all numerical columns for analysis.
-        Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
-        drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
+        "all" can be passed to include all numerical columns for analysis. This is super useful instead of specifying all column names manually.
+        Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in drop_cols argument
+        is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
     drop_cols
         List of columns to be dropped e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
-        where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])
+        where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
+        It is most useful when coupled with the “all” value of list_of_cols, when we need to consider all columns except
+        a few handful of them. (Default value = [])
     print_impact
-        True, False (Default value = False)
+        True, False
+        This argument is to print out the statistics.(Default value = False)
 
     Returns
     -------
+    DataFrame
+        [attribute, min, 1%, 5%, 10%, 25%, 50%, 75%, 90%, 95%, 99%, max]
 
     """
     num_cols = attributeType_segregation(idf)[0]
@@ -821,42 +873,50 @@ def measures_of_percentiles(
 
 
 def measures_of_shape(spark, idf, list_of_cols="all", drop_cols=[], print_impact=False):
-    """The Measures of Shapes function provides statistics related to the shape of an attribute's distribution.
+    """
+    The Measures of Shapes function provides statistics related to the shape of an attribute's distribution.
     Alternatively, these statistics are also known as measures of the moment and are computed only for numerical
     attributes. It returns a Spark Dataframe with schema – attribute, skewness, kurtosis.
 
     - Skewness describes how much-skewed values are relative to a perfect bell curve observed in normal distribution
-    and the direction of skew. If the majority of the values are at the left and the right tail is longer,
-    we say that the distribution is skewed right or positively skewed; if the peak is toward the right and the left
-    tail is longer, we say that the distribution is skewed left or negatively skewed. It leverage skewness
-    functionality of Spark SQL. - (Excess) Kurtosis describes how tall and sharp the central peak is relative to a
-    perfect bell curve observed in the normal distribution. The reference standard is a normal distribution,
-    which has a kurtosis of 3. In token of this, often, the excess kurtosis is presented: excess kurtosis is simply
-    kurtosis−3. Higher (positive) values indicate a higher, sharper peak; lower (negative) values indicate a less
-    distinct peak. It leverages kurtosis functionality of Spark SQL.
+      and the direction of skew. If the majority of the values are at the left and the right tail is longer,
+      we say that the distribution is skewed right or positively skewed; if the peak is toward the right and the left
+      tail is longer, we say that the distribution is skewed left or negatively skewed. It leverage skewness
+      functionality of Spark SQL.
+    - (Excess) Kurtosis describes how tall and sharp the central peak is relative to a
+      perfect bell curve observed in the normal distribution. The reference standard is a normal distribution,
+      which has a kurtosis of 3. In token of this, often, the excess kurtosis is presented: excess kurtosis is simply
+      kurtosis−3. Higher (positive) values indicate a higher, sharper peak; lower (negative) values indicate a less
+      distinct peak. It leverages kurtosis functionality of Spark SQL.
 
     Parameters
     ----------
+    spark
+        Spark Session
     idf
         Input Dataframe
     list_of_cols
         List of numerical columns to analyse e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
-        "all" can be passed to include all numerical columns for analysis.
-        Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
-        drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
+        "all" can be passed to include all numerical columns for analysis. This is super useful instead of specifying all column names manually.
+        Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in drop_cols argument
+        is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
     drop_cols
         List of columns to be dropped e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
-        where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])
+        where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
+        It is most useful when coupled with the “all” value of list_of_cols, when we need to consider all columns except
+        a few handful of them. (Default value = [])
     print_impact
-        True, False (Default value = False)
-    spark
+        True, False
+        This argument is to print out the statistics.(Default value = False)
 
 
     Returns
     -------
+    DataFrame
+        [attribute, skewness, kurtosis]
 
     """
 
@@ -904,13 +964,13 @@ def measures_of_shape(spark, idf, list_of_cols="all", drop_cols=[], print_impact
 ## Functions
 <dl>
 <dt id="anovos.data_analyzer.stats_generator.global_summary"><code class="name flex hljs csharp">
-<span class="k">def</span> <span class="nf"><span class="ident">global_summary</span></span>(<span class="n">spark, idf, list_of_cols='all', drop_cols=[], print_impact=True)</span>
+<span class="k">def</span> <span class="nf"><span class="ident">global_summary</span></span>(<span class="n">spark, idf, list_of_cols='all', drop_cols=[], print_impact=False)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>The global summary function computes the following universal statistics/metrics and returns a Spark DataFrame
-with schema – metric, value. - No. of rows - No. of columns - No. of categorical columns along with column names
-- No. of numerical columns along with the column names - No. of non-numerical non-categorical columns such as
-date type, array type etc. along with column names</p>
+<div class="desc"><p>The global summary function computes the universal statistics/metrics and returns a Spark DataFrame
+with schema – metric, value. The metrics computed in this function - No. of rows, No. of columns, No. of categorical columns
+along with column names, No. of numerical columns along with the column names, No. of non-numerical non-categorical columns
+such as date type, array type etc. along with column names.</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>spark</code></strong></dt>
@@ -921,29 +981,36 @@ date type, array type etc. along with column names</p>
 <dd>List of columns to analyse e.g., ["col1","col2"].
 Alternatively, columns can be specified in a string format,
 where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
-"all" can be passed to include all columns for analysis.
-Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
-drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols.
-(Default value = "all")</dd>
+"all" can be passed to include all columns for analysis. This is super useful instead of specifying all column names manually.
+Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in drop_cols argument
+is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")</dd>
 <dt><strong><code>drop_cols</code></strong></dt>
 <dd>List of columns to be dropped e.g., ["col1","col2"].
 Alternatively, columns can be specified in a string format,
-where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])</dd>
+where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
+It is most useful when coupled with the “all” value of list_of_cols, when we need to consider all columns except
+a few handful of them. (Default value = [])</dd>
 <dt><strong><code>print_impact</code></strong></dt>
-<dd>True, False (Default value = True)</dd>
+<dd>True, False
+This argument is to print out the statistics.(Default value = False)</dd>
 </dl>
-<h2 id="returns">Returns</h2></div>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>DataFrame</code></dt>
+<dd>[metric, value]</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre>
 ```python
-def global_summary(spark, idf, list_of_cols="all", drop_cols=[], print_impact=True):
-    """The global summary function computes the following universal statistics/metrics and returns a Spark DataFrame
-    with schema – metric, value. - No. of rows - No. of columns - No. of categorical columns along with column names
-    - No. of numerical columns along with the column names - No. of non-numerical non-categorical columns such as
-    date type, array type etc. along with column names
+def global_summary(spark, idf, list_of_cols="all", drop_cols=[], print_impact=False):
+    """
+    The global summary function computes the universal statistics/metrics and returns a Spark DataFrame
+    with schema – metric, value. The metrics computed in this function - No. of rows, No. of columns, No. of categorical columns
+    along with column names, No. of numerical columns along with the column names, No. of non-numerical non-categorical columns
+    such as date type, array type etc. along with column names.
 
     Parameters
     ----------
@@ -955,19 +1022,23 @@ def global_summary(spark, idf, list_of_cols="all", drop_cols=[], print_impact=Tr
         List of columns to analyse e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
-        "all" can be passed to include all columns for analysis.
-        Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
-        drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols.
-        (Default value = "all")
+        "all" can be passed to include all columns for analysis. This is super useful instead of specifying all column names manually.
+        Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in drop_cols argument
+        is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
     drop_cols
         List of columns to be dropped e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
-        where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])
+        where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
+        It is most useful when coupled with the “all” value of list_of_cols, when we need to consider all columns except
+        a few handful of them. (Default value = [])
     print_impact
-        True, False (Default value = True)
+        True, False
+        This argument is to print out the statistics.(Default value = False)
 
     Returns
     -------
+    DataFrame
+        [metric, value]
 
     """
     if list_of_cols == "all":
@@ -1027,11 +1098,11 @@ def global_summary(spark, idf, list_of_cols="all", drop_cols=[], print_impact=Tr
 attribute. These statistics are calculated only for discrete columns (categorical + Integer/Long columns). It
 returns a Spark Dataframe with schema – attribute, unique_values, IDness.</p>
 <ul>
-<li>Unique Value is defined as a distinct value count of a column. It relies on a subfunction
-uniqueCount_computation for its computation and leverages the countDistinct functionality of Spark SQL. - IDness
-is calculated as Unique Values divided by non-null values seen in a column. Non-null values count is used instead
+<li>Unique Value is defined as a distinct value count of a column. It relies on a supporting function uniqueCount_computation
+for its computation and leverages the countDistinct functionality of Spark SQL.</li>
+<li>IDness is calculated as Unique Values divided by non-null values seen in a column. Non-null values count is used instead
 of total count because too many null values can give misleading results even if the column have all unique values
-(except null). It uses subfunctions - uniqueCount_computation and missingCount_computation.</li>
+(except null). It uses supporting functions - uniqueCount_computation and missingCount_computation.</li>
 </ul>
 <h2 id="parameters">Parameters</h2>
 <dl>
@@ -1043,17 +1114,24 @@ of total count because too many null values can give misleading results even if 
 <dd>List of Discrete (Categorical + Integer) columns to analyse e.g., ["col1","col2"].
 Alternatively, columns can be specified in a string format,
 where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
-"all" can be passed to include all discrete columns for analysis.
-Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
-drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")</dd>
+"all" can be passed to include all discrete columns for analysis. This is super useful instead of specifying all column names manually.
+Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in drop_cols argument
+is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")</dd>
 <dt><strong><code>drop_cols</code></strong></dt>
 <dd>List of columns to be dropped e.g., ["col1","col2"].
 Alternatively, columns can be specified in a string format,
-where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])</dd>
+where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
+It is most useful when coupled with the “all” value of list_of_cols, when we need to consider all columns except
+a few handful of them. (Default value = [])</dd>
 <dt><strong><code>print_impact</code></strong></dt>
-<dd>True, False (Default value = False)</dd>
+<dd>True, False
+This argument is to print out the statistics.(Default value = False)</dd>
 </dl>
-<h2 id="returns">Returns</h2></div>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>DataFrame</code></dt>
+<dd>[attribute, unique_values, IDness]</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1063,15 +1141,16 @@ where different column names are separated by pipe delimiter “|” e.g., "col1
 def measures_of_cardinality(
     spark, idf, list_of_cols="all", drop_cols=[], print_impact=False
 ):
-    """The Measures of Cardinality function provides statistics that are related to unique values seen in an
+    """
+    The Measures of Cardinality function provides statistics that are related to unique values seen in an
     attribute. These statistics are calculated only for discrete columns (categorical + Integer/Long columns). It
     returns a Spark Dataframe with schema – attribute, unique_values, IDness.
 
-    - Unique Value is defined as a distinct value count of a column. It relies on a subfunction
-    uniqueCount_computation for its computation and leverages the countDistinct functionality of Spark SQL. - IDness
-    is calculated as Unique Values divided by non-null values seen in a column. Non-null values count is used instead
-    of total count because too many null values can give misleading results even if the column have all unique values
-    (except null). It uses subfunctions - uniqueCount_computation and missingCount_computation.
+    - Unique Value is defined as a distinct value count of a column. It relies on a supporting function uniqueCount_computation
+      for its computation and leverages the countDistinct functionality of Spark SQL.
+    - IDness is calculated as Unique Values divided by non-null values seen in a column. Non-null values count is used instead
+      of total count because too many null values can give misleading results even if the column have all unique values
+      (except null). It uses supporting functions - uniqueCount_computation and missingCount_computation.
 
     Parameters
     ----------
@@ -1083,18 +1162,23 @@ def measures_of_cardinality(
         List of Discrete (Categorical + Integer) columns to analyse e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
-        "all" can be passed to include all discrete columns for analysis.
-        Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
-        drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
+        "all" can be passed to include all discrete columns for analysis. This is super useful instead of specifying all column names manually.
+        Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in drop_cols argument
+        is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
     drop_cols
         List of columns to be dropped e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
-        where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])
+        where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
+        It is most useful when coupled with the “all” value of list_of_cols, when we need to consider all columns except
+        a few handful of them. (Default value = [])
     print_impact
-        True, False (Default value = False)
+        True, False
+        This argument is to print out the statistics.(Default value = False)
 
     Returns
     -------
+    DataFrame
+        [attribute, unique_values, IDness]
 
     """
     if list_of_cols == "all":
@@ -1152,14 +1236,16 @@ def measures_of_cardinality(
 </code></dt>
 <dd>
 <div class="desc"><p>The Measures of Central Tendency function provides summary statistics that represents the centre point or most
-likely value of an attribute. It returns a Spark DataFrame with schema – attribute, mean, median, mode, mode_pct.</p>
+likely value of an attribute. It returns a Spark DataFrame with schema – attribute, mean, median, mode, mode_rows, mode_pct.</p>
 <ul>
 <li>Mean is arithmetic average of a column i.e. sum of all values seen in the column divided by the number of rows.
-It leverage mean statistic from summary functionality of Spark SQL. - Median is 50th percentile or middle value
-in a column when the values are arranged in ascending or descending order. It leverage ‘50%’ statistic from
-summary functionality of Spark SQL. - Mode is most frequently seen value in a column. Mode is calculated only for
-discrete columns (categorical + Integer/Long columns) - Mode Pct is defined as % of rows seen with Mode value.
-Mode Pct is calculated only for discrete columns (categorical + Integer/Long columns)</li>
+It leverage mean statistic from summary functionality of Spark SQL. Mean is calculated only for numerical columns.</li>
+<li>Median is 50th percentile or middle value in a column when the values are arranged in ascending or descending order.
+It leverage ‘50%’ statistic from summary functionality of Spark SQL. Median is calculated only for numerical columns.</li>
+<li>Mode is most frequently seen value in a column. Mode is calculated only for discrete columns (categorical + Integer/Long columns).</li>
+<li>Mode Rows is the numer of rows seen with Mode value. Mode Rows is calculated only for discrete columns (categorical + Integer/Long columns).</li>
+<li>Mode Pct is defined as Mode Rows divided by non-null values seen in a column.
+Mode Pct is calculated only for discrete columns (categorical + Integer/Long columns).</li>
 </ul>
 <h2 id="parameters">Parameters</h2>
 <dl>
@@ -1171,17 +1257,24 @@ Mode Pct is calculated only for discrete columns (categorical + Integer/Long col
 <dd>List of columns to analyse e.g., ["col1","col2"].
 Alternatively, columns can be specified in a string format,
 where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
-"all" can be passed to include all columns for analysis.
-Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
-drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")</dd>
+"all" can be passed to include all columns for analysis. This is super useful instead of specifying all column names manually.
+Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in drop_cols argument
+is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")</dd>
 <dt><strong><code>drop_cols</code></strong></dt>
 <dd>List of columns to be dropped e.g., ["col1","col2"].
 Alternatively, columns can be specified in a string format,
-where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])</dd>
+where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
+It is most useful when coupled with the “all” value of list_of_cols, when we need to consider all columns except
+a few handful of them. (Default value = [])</dd>
 <dt><strong><code>print_impact</code></strong></dt>
-<dd>True, False (Default value = False)</dd>
+<dd>True, False
+This argument is to print out the statistics.(Default value = False)</dd>
 </dl>
-<h2 id="returns">Returns</h2></div>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>DataFrame</code></dt>
+<dd>[attribute, mean, median, mode, mode_rows, mode_pct]</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1191,15 +1284,18 @@ where different column names are separated by pipe delimiter “|” e.g., "col1
 def measures_of_centralTendency(
     spark, idf, list_of_cols="all", drop_cols=[], print_impact=False
 ):
-    """The Measures of Central Tendency function provides summary statistics that represents the centre point or most
-    likely value of an attribute. It returns a Spark DataFrame with schema – attribute, mean, median, mode, mode_pct.
+    """
+    The Measures of Central Tendency function provides summary statistics that represents the centre point or most
+    likely value of an attribute. It returns a Spark DataFrame with schema – attribute, mean, median, mode, mode_rows, mode_pct.
 
     - Mean is arithmetic average of a column i.e. sum of all values seen in the column divided by the number of rows.
-    It leverage mean statistic from summary functionality of Spark SQL. - Median is 50th percentile or middle value
-    in a column when the values are arranged in ascending or descending order. It leverage ‘50%’ statistic from
-    summary functionality of Spark SQL. - Mode is most frequently seen value in a column. Mode is calculated only for
-    discrete columns (categorical + Integer/Long columns) - Mode Pct is defined as % of rows seen with Mode value.
-    Mode Pct is calculated only for discrete columns (categorical + Integer/Long columns)
+      It leverage mean statistic from summary functionality of Spark SQL. Mean is calculated only for numerical columns.
+    - Median is 50th percentile or middle value in a column when the values are arranged in ascending or descending order.
+      It leverage ‘50%’ statistic from summary functionality of Spark SQL. Median is calculated only for numerical columns.
+    - Mode is most frequently seen value in a column. Mode is calculated only for discrete columns (categorical + Integer/Long columns).
+    - Mode Rows is the numer of rows seen with Mode value. Mode Rows is calculated only for discrete columns (categorical + Integer/Long columns).
+    - Mode Pct is defined as Mode Rows divided by non-null values seen in a column.
+      Mode Pct is calculated only for discrete columns (categorical + Integer/Long columns).
 
     Parameters
     ----------
@@ -1211,18 +1307,23 @@ def measures_of_centralTendency(
         List of columns to analyse e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
-        "all" can be passed to include all columns for analysis.
-        Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
-        drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
+        "all" can be passed to include all columns for analysis. This is super useful instead of specifying all column names manually.
+        Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in drop_cols argument
+        is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
     drop_cols
         List of columns to be dropped e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
-        where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])
+        where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
+        It is most useful when coupled with the “all” value of list_of_cols, when we need to consider all columns except
+        a few handful of them. (Default value = [])
     print_impact
-        True, False (Default value = False)
+        True, False
+        This argument is to print out the statistics.(Default value = False)
 
     Returns
     -------
+    DataFrame
+        [attribute, mean, median, mode, mode_rows, mode_pct]
 
     """
 
@@ -1277,16 +1378,18 @@ def measures_of_centralTendency(
 <span class="k">def</span> <span class="nf"><span class="ident">measures_of_counts</span></span>(<span class="n">spark, idf, list_of_cols='all', drop_cols=[], print_impact=False)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>The Measures of Counts function computes different count metrics for each column (interchangeably called an
-attribute in the document). It returns a Spark DataFrame with schema – attribute, fill_count, fill_pct,
-missing_count, missing_pct, nonzero_count, nonzero_pct. - Fill Count/Rate is defined as number of rows with
-non-null values in a column both in terms of absolute count and its proportion to row count. It leverages count
-statistic from summary functionality of Spark SQL. - Missing Count/Rate is defined as null (or missing) values
-seen in a column both in terms of absolute count and its proportion to row count. It is directly derivable from
-Fill Count/Rate. - Non Zero Count/Rate is defined as non-zero values seen in a numerical column both in terms of
-absolute count and its proportion to row count. For categorical column, it will show null value. Also,
-it uses a subfunction nonzeroCount_computation, which is later called under measures_of_counts. Under the hood,
-it leverage Multivariate Statistical Summary of Spark MLlib.</p>
+<div class="desc"><p>The Measures of Counts function computes different count metrics for each column.
+It returns a Spark DataFrame
+with schema – attribute, fill_count, fill_pct, missing_count, missing_pct, nonzero_count, nonzero_pct.</p>
+<ul>
+<li>Fill Count/Rate is defined as number of rows with non-null values in a column both in terms of absolute count
+and its proportion to row count. It leverages count statistic from summary functionality of Spark SQL.</li>
+<li>Missing Count/Rate is defined as null (or missing) values seen in a column both in terms of absolute count and
+its proportion to row count. It is directly derivable from Fill Count/Rate.</li>
+<li>Non Zero Count/Rate is defined as non-zero values seen in a numerical column both in terms of absolute count and
+its proportion to row count. For categorical column, it will show null value. Also, it uses a supporting function
+nonzeroCount_computation. Under the hood, it leverage Multivariate Statistical Summary of Spark MLlib.</li>
+</ul>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>spark</code></strong></dt>
@@ -1297,17 +1400,24 @@ it leverage Multivariate Statistical Summary of Spark MLlib.</p>
 <dd>List of columns to analyse e.g., ["col1","col2"].
 Alternatively, columns can be specified in a string format,
 where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
-"all" can be passed to include all columns for analysis.
-Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
-drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")</dd>
+"all" can be passed to include all columns for analysis. This is super useful instead of specifying all column names manually.
+Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in drop_cols argument
+is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")</dd>
 <dt><strong><code>drop_cols</code></strong></dt>
 <dd>List of columns to be dropped e.g., ["col1","col2"].
 Alternatively, columns can be specified in a string format,
-where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])</dd>
+where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
+It is most useful when coupled with the “all” value of list_of_cols, when we need to consider all columns except
+a few handful of them. (Default value = [])</dd>
 <dt><strong><code>print_impact</code></strong></dt>
-<dd>True, False (Default value = False)</dd>
+<dd>True, False
+This argument is to print out the statistics.(Default value = False)</dd>
 </dl>
-<h2 id="returns">Returns</h2></div>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>DataFrame</code></dt>
+<dd>[attribute, fill_count, fill_pct, missing_count, missing_pct, nonzero_count, nonzero_pct]</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1317,16 +1427,17 @@ where different column names are separated by pipe delimiter “|” e.g., "col1
 def measures_of_counts(
     spark, idf, list_of_cols="all", drop_cols=[], print_impact=False
 ):
-    """The Measures of Counts function computes different count metrics for each column (interchangeably called an
-    attribute in the document). It returns a Spark DataFrame with schema – attribute, fill_count, fill_pct,
-    missing_count, missing_pct, nonzero_count, nonzero_pct. - Fill Count/Rate is defined as number of rows with
-    non-null values in a column both in terms of absolute count and its proportion to row count. It leverages count
-    statistic from summary functionality of Spark SQL. - Missing Count/Rate is defined as null (or missing) values
-    seen in a column both in terms of absolute count and its proportion to row count. It is directly derivable from
-    Fill Count/Rate. - Non Zero Count/Rate is defined as non-zero values seen in a numerical column both in terms of
-    absolute count and its proportion to row count. For categorical column, it will show null value. Also,
-    it uses a subfunction nonzeroCount_computation, which is later called under measures_of_counts. Under the hood,
-    it leverage Multivariate Statistical Summary of Spark MLlib.
+    """
+    The Measures of Counts function computes different count metrics for each column.  It returns a Spark DataFrame
+    with schema – attribute, fill_count, fill_pct, missing_count, missing_pct, nonzero_count, nonzero_pct.
+
+    - Fill Count/Rate is defined as number of rows with non-null values in a column both in terms of absolute count
+      and its proportion to row count. It leverages count statistic from summary functionality of Spark SQL.
+    - Missing Count/Rate is defined as null (or missing) values seen in a column both in terms of absolute count and
+      its proportion to row count. It is directly derivable from Fill Count/Rate.
+    - Non Zero Count/Rate is defined as non-zero values seen in a numerical column both in terms of absolute count and
+      its proportion to row count. For categorical column, it will show null value. Also, it uses a supporting function
+      nonzeroCount_computation. Under the hood, it leverage Multivariate Statistical Summary of Spark MLlib.
 
     Parameters
     ----------
@@ -1338,18 +1449,23 @@ def measures_of_counts(
         List of columns to analyse e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
-        "all" can be passed to include all columns for analysis.
-        Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
-        drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
+        "all" can be passed to include all columns for analysis. This is super useful instead of specifying all column names manually.
+        Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in drop_cols argument
+        is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
     drop_cols
         List of columns to be dropped e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
-        where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])
+        where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
+        It is most useful when coupled with the “all” value of list_of_cols, when we need to consider all columns except
+        a few handful of them. (Default value = [])
     print_impact
-        True, False (Default value = False)
+        True, False
+        This argument is to print out the statistics.(Default value = False)
 
     Returns
     -------
+    DataFrame
+        [attribute, fill_count, fill_pct, missing_count, missing_pct, nonzero_count, nonzero_pct]
 
     """
     if list_of_cols == "all":
@@ -1395,28 +1511,17 @@ def measures_of_counts(
 Alternatively, these statistics are also known as measures of spread. It returns a Spark DataFrame with schema –
 attribute, stddev, variance, cov, IQR, range.</p>
 <ul>
-<li>
-<p>Standard Deviation (stddev) measures how concentrated an attribute is around the mean or average and
-mathematically computed as
-below. It leverages ‘stddev’ statistic from summary functionality of Spark SQL.</p>
-<pre><code>s= X- X2n -1
-
-where:
-
-&lt;code&gt; &lt;/code&gt;X is an attribute value
-X is attribute mean
-n is no. of rows
-</code></pre>
-</li>
-<li>
-<p>Variance is the squared value of Standard Deviation. - Coefficient of Variance (cov) is computed as ratio of
-Standard Deviation &amp; Mean. It leverages ‘stddev’ and ‘mean’ statistic from the summary functionality of Spark
-SQL. - Interquartile Range (IQR): It describes the difference between the third quartile (75th percentile) and
-the first quartile (25th percentile), telling us about the range where middle half values are seen. It leverage
-‘25%’ and ‘75%’ statistics from the summary functionality of Spark SQL. - Range is simply the difference between
-the maximum value and the minimum value. It leverage ‘min’ and ‘max’ statistics from the summary functionality of
-Spark</p>
-</li>
+<li>Standard Deviation (stddev) measures how concentrated an attribute is around the mean or average.
+It leverages ‘stddev’ statistic from summary functionality of Spark SQL.</li>
+<li>Variance is the squared value of Standard Deviation.</li>
+<li>Coefficient of Variance (cov) is computed as ratio of Standard Deviation &amp; Mean.
+It leverages ‘stddev’ and ‘mean’ statistic from the summary functionality of Spark SQL.</li>
+<li>Interquartile Range (IQR): It describes the difference between the third quartile (75th percentile)
+and the first quartile
+(25th percentile), telling us about the range where middle half values are seen.
+It leverage ‘25%’ and ‘75%’ statistics from the summary functionality of Spark SQL.</li>
+<li>Range is simply the difference between the maximum value and the minimum value.
+It leverage ‘min’ and ‘max’ statistics from the summary functionality of Spark</li>
 </ul>
 <h2 id="parameters">Parameters</h2>
 <dl>
@@ -1428,17 +1533,24 @@ Spark</p>
 <dd>List of numerical columns to analyse e.g., ["col1","col2"].
 Alternatively, columns can be specified in a string format,
 where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
-"all" can be passed to include all numerical columns for analysis.
-Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
-drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")</dd>
+"all" can be passed to include all numerical columns for analysis. This is super useful instead of specifying all column names manually.
+Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in drop_cols argument
+is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")</dd>
 <dt><strong><code>drop_cols</code></strong></dt>
 <dd>List of columns to be dropped e.g., ["col1","col2"].
 Alternatively, columns can be specified in a string format,
-where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])</dd>
+where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
+It is most useful when coupled with the “all” value of list_of_cols, when we need to consider all columns except
+a few handful of them. (Default value = [])</dd>
 <dt><strong><code>print_impact</code></strong></dt>
-<dd>True, False (Default value = False)</dd>
+<dd>True, False
+This argument is to print out the statistics.(Default value = False)</dd>
 </dl>
-<h2 id="returns">Returns</h2></div>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>DataFrame</code></dt>
+<dd>[attribute, stddev, variance, cov, IQR, range]</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1448,28 +1560,21 @@ where different column names are separated by pipe delimiter “|” e.g., "col1
 def measures_of_dispersion(
     spark, idf, list_of_cols="all", drop_cols=[], print_impact=False
 ):
-    """The Measures of Dispersion function provides statistics that describe the spread of a numerical attribute.
+    """
+    The Measures of Dispersion function provides statistics that describe the spread of a numerical attribute.
     Alternatively, these statistics are also known as measures of spread. It returns a Spark DataFrame with schema –
     attribute, stddev, variance, cov, IQR, range.
 
-    - Standard Deviation (stddev) measures how concentrated an attribute is around the mean or average and
-    mathematically computed as  below. It leverages ‘stddev’ statistic from summary functionality of Spark SQL.
-
-            s= X- X2n -1
-
-            where:
-
-            ` `X is an attribute value
-            X is attribute mean
-            n is no. of rows
-
-    - Variance is the squared value of Standard Deviation. - Coefficient of Variance (cov) is computed as ratio of
-    Standard Deviation & Mean. It leverages ‘stddev’ and ‘mean’ statistic from the summary functionality of Spark
-    SQL. - Interquartile Range (IQR): It describes the difference between the third quartile (75th percentile) and
-    the first quartile (25th percentile), telling us about the range where middle half values are seen. It leverage
-    ‘25%’ and ‘75%’ statistics from the summary functionality of Spark SQL. - Range is simply the difference between
-    the maximum value and the minimum value. It leverage ‘min’ and ‘max’ statistics from the summary functionality of
-    Spark
+    - Standard Deviation (stddev) measures how concentrated an attribute is around the mean or average.
+      It leverages ‘stddev’ statistic from summary functionality of Spark SQL.
+    - Variance is the squared value of Standard Deviation.
+    - Coefficient of Variance (cov) is computed as ratio of Standard Deviation & Mean.
+      It leverages ‘stddev’ and ‘mean’ statistic from the summary functionality of Spark SQL.
+    - Interquartile Range (IQR): It describes the difference between the third quartile (75th percentile)
+      and the first quartile  (25th percentile), telling us about the range where middle half values are seen.
+      It leverage ‘25%’ and ‘75%’ statistics from the summary functionality of Spark SQL.
+    - Range is simply the difference between the maximum value and the minimum value.
+      It leverage ‘min’ and ‘max’ statistics from the summary functionality of Spark
 
     Parameters
     ----------
@@ -1481,18 +1586,23 @@ def measures_of_dispersion(
         List of numerical columns to analyse e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
-        "all" can be passed to include all numerical columns for analysis.
-        Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
-        drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
+        "all" can be passed to include all numerical columns for analysis. This is super useful instead of specifying all column names manually.
+        Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in drop_cols argument
+        is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
     drop_cols
         List of columns to be dropped e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
-        where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])
+        where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
+        It is most useful when coupled with the “all” value of list_of_cols, when we need to consider all columns except
+        a few handful of them. (Default value = [])
     print_impact
-        True, False (Default value = False)
+        True, False
+        This argument is to print out the statistics.(Default value = False)
 
     Returns
     -------
+    DataFrame
+        [attribute, stddev, variance, cov, IQR, range]
 
     """
     num_cols = attributeType_segregation(idf)[0]
@@ -1565,17 +1675,24 @@ max. It leverage ‘N%’ statistics from summary functionality of Spark SQL whe
 <dd>List of numerical columns to analyse e.g., ["col1","col2"].
 Alternatively, columns can be specified in a string format,
 where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
-"all" can be passed to include all numerical columns for analysis.
-Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
-drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")</dd>
+"all" can be passed to include all numerical columns for analysis. This is super useful instead of specifying all column names manually.
+Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in drop_cols argument
+is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")</dd>
 <dt><strong><code>drop_cols</code></strong></dt>
 <dd>List of columns to be dropped e.g., ["col1","col2"].
 Alternatively, columns can be specified in a string format,
-where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])</dd>
+where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
+It is most useful when coupled with the “all” value of list_of_cols, when we need to consider all columns except
+a few handful of them. (Default value = [])</dd>
 <dt><strong><code>print_impact</code></strong></dt>
-<dd>True, False (Default value = False)</dd>
+<dd>True, False
+This argument is to print out the statistics.(Default value = False)</dd>
 </dl>
-<h2 id="returns">Returns</h2></div>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>DataFrame</code></dt>
+<dd>[attribute, min, 1%, 5%, 10%, 25%, 50%, 75%, 90%, 95%, 99%, max]</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1585,7 +1702,8 @@ where different column names are separated by pipe delimiter “|” e.g., "col1
 def measures_of_percentiles(
     spark, idf, list_of_cols="all", drop_cols=[], print_impact=False
 ):
-    """The Measures of Percentiles function provides statistics at different percentiles. Nth percentile can be
+    """
+    The Measures of Percentiles function provides statistics at different percentiles. Nth percentile can be
     interpreted as N% of rows having values lesser than or equal to Nth percentile value. It is prominently used for
     quick detection of skewness or outlier. Alternatively, these statistics are also known as measures of position.
     These statistics are computed only for numerical attributes.
@@ -1603,18 +1721,23 @@ def measures_of_percentiles(
         List of numerical columns to analyse e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
-        "all" can be passed to include all numerical columns for analysis.
-        Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
-        drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
+        "all" can be passed to include all numerical columns for analysis. This is super useful instead of specifying all column names manually.
+        Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in drop_cols argument
+        is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
     drop_cols
         List of columns to be dropped e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
-        where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])
+        where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
+        It is most useful when coupled with the “all” value of list_of_cols, when we need to consider all columns except
+        a few handful of them. (Default value = [])
     print_impact
-        True, False (Default value = False)
+        True, False
+        This argument is to print out the statistics.(Default value = False)
 
     Returns
     -------
+    DataFrame
+        [attribute, min, 1%, 5%, 10%, 25%, 50%, 75%, 90%, 95%, 99%, max]
 
     """
     num_cols = attributeType_segregation(idf)[0]
@@ -1677,7 +1800,8 @@ attributes. It returns a Spark Dataframe with schema – attribute, skewness, ku
 and the direction of skew. If the majority of the values are at the left and the right tail is longer,
 we say that the distribution is skewed right or positively skewed; if the peak is toward the right and the left
 tail is longer, we say that the distribution is skewed left or negatively skewed. It leverage skewness
-functionality of Spark SQL. - (Excess) Kurtosis describes how tall and sharp the central peak is relative to a
+functionality of Spark SQL.</li>
+<li>(Excess) Kurtosis describes how tall and sharp the central peak is relative to a
 perfect bell curve observed in the normal distribution. The reference standard is a normal distribution,
 which has a kurtosis of 3. In token of this, often, the excess kurtosis is presented: excess kurtosis is simply
 kurtosis−3. Higher (positive) values indicate a higher, sharper peak; lower (negative) values indicate a less
@@ -1685,25 +1809,32 @@ distinct peak. It leverages kurtosis functionality of Spark SQL.</li>
 </ul>
 <h2 id="parameters">Parameters</h2>
 <dl>
+<dt><strong><code>spark</code></strong></dt>
+<dd>Spark Session</dd>
 <dt><strong><code>idf</code></strong></dt>
 <dd>Input Dataframe</dd>
 <dt><strong><code>list_of_cols</code></strong></dt>
 <dd>List of numerical columns to analyse e.g., ["col1","col2"].
 Alternatively, columns can be specified in a string format,
 where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
-"all" can be passed to include all numerical columns for analysis.
-Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
-drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")</dd>
+"all" can be passed to include all numerical columns for analysis. This is super useful instead of specifying all column names manually.
+Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in drop_cols argument
+is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")</dd>
 <dt><strong><code>drop_cols</code></strong></dt>
 <dd>List of columns to be dropped e.g., ["col1","col2"].
 Alternatively, columns can be specified in a string format,
-where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])</dd>
+where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
+It is most useful when coupled with the “all” value of list_of_cols, when we need to consider all columns except
+a few handful of them. (Default value = [])</dd>
 <dt><strong><code>print_impact</code></strong></dt>
-<dd>True, False (Default value = False)</dd>
-<dt><strong><code>spark</code></strong></dt>
-<dd>&nbsp;</dd>
+<dd>True, False
+This argument is to print out the statistics.(Default value = False)</dd>
 </dl>
-<h2 id="returns">Returns</h2></div>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>DataFrame</code></dt>
+<dd>[attribute, skewness, kurtosis]</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1711,42 +1842,50 @@ where different column names are separated by pipe delimiter “|” e.g., "col1
 <pre>
 ```python
 def measures_of_shape(spark, idf, list_of_cols="all", drop_cols=[], print_impact=False):
-    """The Measures of Shapes function provides statistics related to the shape of an attribute's distribution.
+    """
+    The Measures of Shapes function provides statistics related to the shape of an attribute's distribution.
     Alternatively, these statistics are also known as measures of the moment and are computed only for numerical
     attributes. It returns a Spark Dataframe with schema – attribute, skewness, kurtosis.
 
     - Skewness describes how much-skewed values are relative to a perfect bell curve observed in normal distribution
-    and the direction of skew. If the majority of the values are at the left and the right tail is longer,
-    we say that the distribution is skewed right or positively skewed; if the peak is toward the right and the left
-    tail is longer, we say that the distribution is skewed left or negatively skewed. It leverage skewness
-    functionality of Spark SQL. - (Excess) Kurtosis describes how tall and sharp the central peak is relative to a
-    perfect bell curve observed in the normal distribution. The reference standard is a normal distribution,
-    which has a kurtosis of 3. In token of this, often, the excess kurtosis is presented: excess kurtosis is simply
-    kurtosis−3. Higher (positive) values indicate a higher, sharper peak; lower (negative) values indicate a less
-    distinct peak. It leverages kurtosis functionality of Spark SQL.
+      and the direction of skew. If the majority of the values are at the left and the right tail is longer,
+      we say that the distribution is skewed right or positively skewed; if the peak is toward the right and the left
+      tail is longer, we say that the distribution is skewed left or negatively skewed. It leverage skewness
+      functionality of Spark SQL.
+    - (Excess) Kurtosis describes how tall and sharp the central peak is relative to a
+      perfect bell curve observed in the normal distribution. The reference standard is a normal distribution,
+      which has a kurtosis of 3. In token of this, often, the excess kurtosis is presented: excess kurtosis is simply
+      kurtosis−3. Higher (positive) values indicate a higher, sharper peak; lower (negative) values indicate a less
+      distinct peak. It leverages kurtosis functionality of Spark SQL.
 
     Parameters
     ----------
+    spark
+        Spark Session
     idf
         Input Dataframe
     list_of_cols
         List of numerical columns to analyse e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
-        "all" can be passed to include all numerical columns for analysis.
-        Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
-        drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
+        "all" can be passed to include all numerical columns for analysis. This is super useful instead of specifying all column names manually.
+        Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in drop_cols argument
+        is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
     drop_cols
         List of columns to be dropped e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
-        where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])
+        where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
+        It is most useful when coupled with the “all” value of list_of_cols, when we need to consider all columns except
+        a few handful of them. (Default value = [])
     print_impact
-        True, False (Default value = False)
-    spark
+        True, False
+        This argument is to print out the statistics.(Default value = False)
 
 
     Returns
     -------
+    DataFrame
+        [attribute, skewness, kurtosis]
 
     """
 
@@ -1806,17 +1945,24 @@ def measures_of_shape(spark, idf, list_of_cols="all", drop_cols=[], print_impact
 <dd>List of columns to analyse e.g., ["col1","col2"].
 Alternatively, columns can be specified in a string format,
 where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
-"all" can be passed to include all columns for analysis.
-Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
-drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")</dd>
+"all" can be passed to include all columns for analysis. This is super useful instead of specifying all column names manually.
+Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in drop_cols argument
+is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")</dd>
 <dt><strong><code>drop_cols</code></strong></dt>
 <dd>List of columns to be dropped e.g., ["col1","col2"].
 Alternatively, columns can be specified in a string format,
-where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])</dd>
+where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
+It is most useful when coupled with the “all” value of list_of_cols, when we need to consider all columns except
+a few handful of them. (Default value = [])</dd>
 <dt><strong><code>print_impact</code></strong></dt>
-<dd>True, False (Default value = False)</dd>
+<dd>True, False
+This argument is to print out the statistics.(Default value = False)</dd>
 </dl>
-<h2 id="returns">Returns</h2></div>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>DataFrame</code></dt>
+<dd>[attribute, missing_count, missing_pct]</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1838,18 +1984,23 @@ def missingCount_computation(
         List of columns to analyse e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
-        "all" can be passed to include all columns for analysis.
-        Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
-        drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
+        "all" can be passed to include all columns for analysis. This is super useful instead of specifying all column names manually.
+        Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in drop_cols argument
+        is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
     drop_cols
         List of columns to be dropped e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
-        where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])
+        where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
+        It is most useful when coupled with the “all” value of list_of_cols, when we need to consider all columns except
+        a few handful of them. (Default value = [])
     print_impact
-        True, False (Default value = False)
+        True, False
+        This argument is to print out the statistics.(Default value = False)
 
     Returns
     -------
+    DataFrame
+        [attribute, missing_count, missing_pct]
 
     """
     if list_of_cols == "all":
@@ -1897,17 +2048,25 @@ def missingCount_computation(
 <dd>List of Discrete (Categorical + Integer) columns to analyse e.g., ["col1","col2"].
 Alternatively, columns can be specified in a string format,
 where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
-"all" can be passed to include all discrete columns for analysis.
-Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
-drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")</dd>
+"all" can be passed to include all discrete columns for analysis. This is super useful instead of specifying all column names manually.
+Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in drop_cols argument
+is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")</dd>
 <dt><strong><code>drop_cols</code></strong></dt>
 <dd>List of columns to be dropped e.g., ["col1","col2"].
 Alternatively, columns can be specified in a string format,
-where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])</dd>
+where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
+It is most useful when coupled with the “all” value of list_of_cols, when we need to consider all columns except
+a few handful of them. (Default value = [])</dd>
 <dt><strong><code>print_impact</code></strong></dt>
-<dd>True, False (Default value = False)</dd>
+<dd>True, False
+This argument is to print out the statistics.(Default value = False)</dd>
 </dl>
-<h2 id="returns">Returns</h2></div>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>DataFrame</code></dt>
+<dd>[attribute, mode, mode_rows]
+In case there is tie between multiple values, one value is randomly picked as mode.</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1927,18 +2086,24 @@ def mode_computation(spark, idf, list_of_cols="all", drop_cols=[], print_impact=
         List of Discrete (Categorical + Integer) columns to analyse e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
-        "all" can be passed to include all discrete columns for analysis.
-        Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
-        drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
+        "all" can be passed to include all discrete columns for analysis. This is super useful instead of specifying all column names manually.
+        Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in drop_cols argument
+        is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
     drop_cols
         List of columns to be dropped e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
-        where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])
+        where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
+        It is most useful when coupled with the “all” value of list_of_cols, when we need to consider all columns except
+        a few handful of them. (Default value = [])
     print_impact
-        True, False (Default value = False)
+        True, False
+        This argument is to print out the statistics.(Default value = False)
 
     Returns
     -------
+    DataFrame
+        [attribute, mode, mode_rows]
+        In case there is tie between multiple values, one value is randomly picked as mode.
 
     """
     if list_of_cols == "all":
@@ -2012,17 +2177,24 @@ def mode_computation(spark, idf, list_of_cols="all", drop_cols=[], print_impact=
 <dd>List of numerical columns to analyse e.g., ["col1","col2"].
 Alternatively, columns can be specified in a string format,
 where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
-"all" can be passed to include all numerical columns for analysis.
-Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
-drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")</dd>
+"all" can be passed to include all numerical columns for analysis. This is super useful instead of specifying all column names manually.
+Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in drop_cols argument
+is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")</dd>
 <dt><strong><code>drop_cols</code></strong></dt>
 <dd>List of columns to be dropped e.g., ["col1","col2"].
 Alternatively, columns can be specified in a string format,
-where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])</dd>
+where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
+It is most useful when coupled with the “all” value of list_of_cols, when we need to consider all columns except
+a few handful of them. (Default value = [])</dd>
 <dt><strong><code>print_impact</code></strong></dt>
-<dd>True, False (Default value = False)</dd>
+<dd>True, False
+This argument is to print out the statistics.(Default value = False)</dd>
 </dl>
-<h2 id="returns">Returns</h2></div>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>DataFrame</code></dt>
+<dd>[attribute, nonzero_count, nonzero_pct]</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2044,18 +2216,23 @@ def nonzeroCount_computation(
         List of numerical columns to analyse e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
-        "all" can be passed to include all numerical columns for analysis.
-        Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
-        drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
+        "all" can be passed to include all numerical columns for analysis. This is super useful instead of specifying all column names manually.
+        Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in drop_cols argument
+        is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
     drop_cols
         List of columns to be dropped e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
-        where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])
+        where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
+        It is most useful when coupled with the “all” value of list_of_cols, when we need to consider all columns except
+        a few handful of them. (Default value = [])
     print_impact
-        True, False (Default value = False)
+        True, False
+        This argument is to print out the statistics.(Default value = False)
 
     Returns
     -------
+    DataFrame
+        [attribute, nonzero_count, nonzero_pct]
 
     """
     num_cols = attributeType_segregation(idf)[0]
@@ -2112,17 +2289,24 @@ def nonzeroCount_computation(
 <dd>List of Discrete (Categorical + Integer) columns to analyse e.g., ["col1","col2"].
 Alternatively, columns can be specified in a string format,
 where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
-"all" can be passed to include all discrete columns for analysis.
-Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
-drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")</dd>
+"all" can be passed to include all discrete columns for analysis. This is super useful instead of specifying all column names manually.
+Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in drop_cols argument
+is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")</dd>
 <dt><strong><code>drop_cols</code></strong></dt>
 <dd>List of columns to be dropped e.g., ["col1","col2"].
 Alternatively, columns can be specified in a string format,
-where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])</dd>
+where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
+It is most useful when coupled with the “all” value of list_of_cols, when we need to consider all columns except
+a few handful of them. (Default value = [])</dd>
 <dt><strong><code>print_impact</code></strong></dt>
-<dd>True, False (Default value = False)</dd>
+<dd>True, False
+This argument is to print out the statistics.(Default value = False)</dd>
 </dl>
-<h2 id="returns">Returns</h2></div>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>DataFrame</code></dt>
+<dd>[attribute, unique_values]</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2144,18 +2328,23 @@ def uniqueCount_computation(
         List of Discrete (Categorical + Integer) columns to analyse e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
-        "all" can be passed to include all discrete columns for analysis.
-        Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
-        drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
+        "all" can be passed to include all discrete columns for analysis. This is super useful instead of specifying all column names manually.
+        Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in drop_cols argument
+        is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
     drop_cols
         List of columns to be dropped e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
-        where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = [])
+        where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
+        It is most useful when coupled with the “all” value of list_of_cols, when we need to consider all columns except
+        a few handful of them. (Default value = [])
     print_impact
-        True, False (Default value = False)
+        True, False
+        This argument is to print out the statistics.(Default value = False)
 
     Returns
     -------
+    DataFrame
+        [attribute, unique_values]
 
     """
     if list_of_cols == "all":

@@ -50,11 +50,13 @@ def statistics(
     Data drift mainly includes the following manifestations:
 
     - Covariate shift: training and test data follow different distributions. For example, An algorithm predicting
-    income that is trained on younger population but tested on older population. - Prior probability shift: change of
-    prior probability. For example in a spam classification problem, the proportion of spam emails changes from 0.2
-    in training data to 0.6 in testing data. - Concept shift: the distribution of the target variable changes given
-    fixed input values. For example in the same spam classification problem, emails tagged as spam in training data
-    are more likely to be tagged as non-spam in testing data.
+    income that is trained on younger population but tested on older population.
+    - Prior probability shift: change of prior probability. For example in a spam classification problem,
+    the proportion of spam emails changes from 0.2
+    in training data to 0.6 in testing data.
+    - Concept shift: the distribution of the target variable changes given fixed input values. For example in
+    the same spam classification problem, emails tagged as spam in training data are more likely to be tagged
+    as non-spam in testing data.
 
     In our module, we mainly focus on covariate shift detection.
 
@@ -83,23 +85,10 @@ def statistics(
     This function can be used in many scenarios. For example:
 
     1. Attribute level data drift can be analysed together with the attribute importance of a machine learning model.
-    The more important an attribute is, the more attention it needs to be given if drift presents. 2. To analyse data
-    drift over time, one can treat one dataset as the source / baseline dataset and multiple datasets as the target
-    datasets. Drift analysis can be performed between the source dataset and each of the target dataset to quantify
-    the drift over time.
-
-    ---------
-
-    - *idf_target*: Input target Dataframe - *idf_source*: Input source Dataframe - *list_of_cols*: List of columns
-    to check drift (list or string of col names separated by |). Use ‘all’ - to include all non-array columns (
-    excluding drop_cols). - *drop_cols*: List of columns to be dropped (list or string of col names separated by |) -
-    method: PSI, JSD, HD, KS (list or string of methods separated by |). Use ‘all’ - to calculate all metrics. -
-    *bin_method*: equal_frequency or equal_range - *bin_size*: 10 - 20 (recommended for PSI), >100 (other method
-    types) - *threshold*: To flag attributes meeting drift threshold - *pre_existing_source*: True if binning model &
-    frequency counts/attribute exists already, False Otherwise. - *source_path*: If pre_existing_source is True,
-    this argument is path for the source dataset details - drift_statistics folder. drift_statistics folder must
-    contain attribute_binning & frequency_counts folders. If pre_existing_source is False, this argument can be used
-    for saving the details. Default "NA" for temporarily saving source dataset attribute_binning folder
+    The more important an attribute is, the more attention it needs to be given if drift presents.
+    2. To analyse data drift over time, one can treat one dataset as the source / baseline dataset and multiple
+    datasets as the target datasets. Drift analysis can be performed between the source dataset and each of the
+    target dataset to quantify the drift over time.
 
     Parameters
     ----------
@@ -183,6 +172,9 @@ def statistics(
 
     Returns
     -------
+    DataFrame
+        [attribute, *metric, flagged]
+        Number of columns will be dependent on method argument. There will be one column for each drift method/metric.
 
     """
     drop_cols = drop_cols or []
@@ -336,7 +328,7 @@ def stability_index_computation(
 
 
     Finally, the attribute stability index (SI) is a weighted sum of 3 metric stability indexes, where we assign 50%
-    for mean, 30% for standard deviation and 20% for kurtosis. The final output is a float between 0 and 4 and an
+    for mean, 30% for standard deviation and 20% for kurtosis by default. The final output is a float between 0 and 4 and an
     attribute can be classified as one of the following categories: very unstable (0≤SI<1), unstable (1≤SI<2),
     marginally stable (2≤SI<3), stable (3≤SI<3.5) and very stable (3.5≤SI≤4).
 
@@ -397,18 +389,6 @@ def stability_index_computation(
     - Limitation of CV: CV may not work well when 0 appears in the array or the array contains both positive and
     negative values.
 
-    ------
-
-    - *idfs*: Input Dataframes (flexible) - *list_of_cols*: Numerical columns (in list format or string separated by
-    |). Use ‘all’ - to include all numerical columns (excluding drop_cols). - *drop_cols*: List of columns to be
-    dropped (list or string of col names separated by |) - *metric_weightages*: A dictionary with key being the
-    metric name (mean,stdev,kurtosis) and value being the weightage of the metric (between 0 and 1). Sum of all
-    weightages must be 1. - *existing_metric_path*: this argument is path for pre-existing metrics of historical
-    datasets  <idx,attribute,mean,stdev,kurtosis>. idx is index number of historical datasets assigned in
-    chronological order - *appended_metric_path*: this argument is path for saving input dataframes metrics after
-    appending to the historical datasets' metrics. - *threshold*: To flag unstable attributes meeting the threshold
-
-
     Parameters
     ----------
     spark
@@ -447,6 +427,10 @@ def stability_index_computation(
 
     Returns
     -------
+    DataFrame
+        [attribute, mean_si, stddev_si, kurtosis_si, mean_cv, stddev_cv, kurtosis_cv, stability_index].
+        *_cv is coefficient of variation for each metric. *_si is stability index for each metric.
+        stability_index is net weighted stability index based on the individual metrics' stability index.
 
     """
 
@@ -612,6 +596,33 @@ def feature_stability_estimation(
     print_impact=False,
 ):
     """
+    This function is able to estimate the stability index of a new feature composed of certain attributes whose
+    stability metrics are known. For example, the new feature F can be expressed as F = g(X1, X2, …, Xn),
+    where X1, X2, …, Xn represent different attributes and g represents the transformation function.
+    The most straightforward way is to generate the new feature for all periods and calculate its stability index.
+    However, it requires reading all historical data again which can be unrealistic for large datasets.
+    Thus, the objective of this function is to estimate feature stability index without reading historical data.
+
+    One example can be the following scenario: we have attributes A and B, we have their respective stability
+    statistics from T1 to T7. At T7 we realise we need to generate a new feature: A/B, but we don’t have
+    statistics metrics of A/B from T1 to T6 and this is where this function can be applied to generate an
+    estimation without reading datasets from T1 to T6.
+
+    The estimation can be broken down into 3 steps.
+    1. Estimate mean and stddev for the new feature based on attribute metrics (no existing resource found to
+    estimate Feature kurtosis). Estimated mean and stddev are generated for each time period using the
+    formula below according to [1]:
+    ![feature_stability_formulae.png](https://raw.githubusercontent.com/anovos/anovos-docs/main/docs/assets/feature_stability_formulae.png)
+    2. Calculate Coefficient of variation (CV) for estimated feature mean and stddev. Each CV can be then mapped
+    to an integer between 0 and 4 to generate the metric stability index.
+    3. Similar to the attribute stability index, each metric is assigned a weightage between 0 and 1, where the
+    default values are 50 for mean, 30% for standard deviation and 20% for kurtosis. Because we are unable to
+    generate kurtosis stability index, its minimum and maximum possible values (0 and 4) are used to output a
+    range for global stability index (GSI):
+        * Lower bound of GSI = 0.5∗mean stability index + 0.3∗stddev stability index + 0.2 ∗ 𝟎
+        * Upper bound of GSI = 0.5∗mean stability index + 0.3∗stddev stability index + 0.2 ∗ 𝟒
+
+    [1] Benaroya, H., Han, S. M., & Nagurka, M. (2005). Probability models in engineering and science (Vol. 192, pp. 168-169). CRC press.
 
     Parameters
     ----------
@@ -630,14 +641,21 @@ def feature_stability_estimation(
         Takes input in dictionary format with keys being the metric name - "mean","stdev","kurtosis"
         and value being the weightage of the metric (between 0 and 1). Sum of all weightages must be 1. (Default value = {"mean": 0.5)
     threshold
-        A column is flagged if the stability index is below the threshold, which varies between 0 to 4.
-        The following criteria can be used to classifiy stability_index (SI): very unstable: 0≤SI<1,
+        A column is flagged if the stability index is below the threshold, which varies between 0 and 4.
+        The following criteria can be used to classify stability_index (SI): very unstable: 0≤SI<1,
         unstable: 1≤SI<2, marginally stable: 2≤SI<3, stable: 3≤SI<3.5 and very stable: 3.5≤SI≤4. (Default value = 1)
     print_impact
         True, False (Default value = False)
 
     Returns
     -------
+    DataFrame
+        [feature_formula, mean_cv, stddev_cv, mean_si, stddev_si, stability_index_lower_bound,
+        stability_index_upper_bound, flagged_lower, flagged_upper].
+        *_cv is coefficient of variation for each metric. *_si is stability index for each metric.
+        stability_index_lower_bound and stability_index_upper_bound form a range for estimated stability index.
+        flagged_lower and flagged_upper indicate whether the feature is potentially unstable based on the lower
+        and upper bounds for stability index.
 
     """
 
@@ -848,7 +866,31 @@ def feature_stability_estimation(
 <span class="k">def</span> <span class="nf"><span class="ident">feature_stability_estimation</span></span>(<span class="n">spark, attribute_stats, attribute_transformation, metric_weightages={'mean': 0.5, 'stddev': 0.3, 'kurtosis': 0.2}, threshold=1, print_impact=False)</span>
 </code></dt>
 <dd>
-<div class="desc"><h2 id="parameters">Parameters</h2>
+<div class="desc"><p>This function is able to estimate the stability index of a new feature composed of certain attributes whose
+stability metrics are known. For example, the new feature F can be expressed as F = g(X1, X2, …, Xn),
+where X1, X2, …, Xn represent different attributes and g represents the transformation function.
+The most straightforward way is to generate the new feature for all periods and calculate its stability index.
+However, it requires reading all historical data again which can be unrealistic for large datasets.
+Thus, the objective of this function is to estimate feature stability index without reading historical data.</p>
+<p>One example can be the following scenario: we have attributes A and B, we have their respective stability
+statistics from T1 to T7. At T7 we realise we need to generate a new feature: A/B, but we don’t have
+statistics metrics of A/B from T1 to T6 and this is where this function can be applied to generate an
+estimation without reading datasets from T1 to T6.</p>
+<p>The estimation can be broken down into 3 steps.
+1. Estimate mean and stddev for the new feature based on attribute metrics (no existing resource found to
+estimate Feature kurtosis). Estimated mean and stddev are generated for each time period using the
+formula below according to [1]:
+<img alt="feature_stability_formulae.png" src="https://raw.githubusercontent.com/anovos/anovos-docs/main/docs/assets/feature_stability_formulae.png">
+2. Calculate Coefficient of variation (CV) for estimated feature mean and stddev. Each CV can be then mapped
+to an integer between 0 and 4 to generate the metric stability index.
+3. Similar to the attribute stability index, each metric is assigned a weightage between 0 and 1, where the
+default values are 50 for mean, 30% for standard deviation and 20% for kurtosis. Because we are unable to
+generate kurtosis stability index, its minimum and maximum possible values (0 and 4) are used to output a
+range for global stability index (GSI):
+* Lower bound of GSI = 0.5∗mean stability index + 0.3∗stddev stability index + 0.2 ∗ 𝟎
+* Upper bound of GSI = 0.5∗mean stability index + 0.3∗stddev stability index + 0.2 ∗ 𝟒</p>
+<p>[1] Benaroya, H., Han, S. M., &amp; Nagurka, M. (2005). Probability models in engineering and science (Vol. 192, pp. 168-169). CRC press.</p>
+<h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>spark</code></strong></dt>
 <dd>Spark Session</dd>
@@ -865,13 +907,22 @@ attributes in string. For example, {'X|Y|Z': 'X**2+Y/Z', 'A': 'log(A)'}</dd>
 <dd>Takes input in dictionary format with keys being the metric name - "mean","stdev","kurtosis"
 and value being the weightage of the metric (between 0 and 1). Sum of all weightages must be 1. (Default value = {"mean": 0.5)</dd>
 <dt><strong><code>threshold</code></strong></dt>
-<dd>A column is flagged if the stability index is below the threshold, which varies between 0 to 4.
-The following criteria can be used to classifiy stability_index (SI): very unstable: 0≤SI&lt;1,
+<dd>A column is flagged if the stability index is below the threshold, which varies between 0 and 4.
+The following criteria can be used to classify stability_index (SI): very unstable: 0≤SI&lt;1,
 unstable: 1≤SI&lt;2, marginally stable: 2≤SI&lt;3, stable: 3≤SI&lt;3.5 and very stable: 3.5≤SI≤4. (Default value = 1)</dd>
 <dt><strong><code>print_impact</code></strong></dt>
 <dd>True, False (Default value = False)</dd>
 </dl>
-<h2 id="returns">Returns</h2></div>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>DataFrame</code></dt>
+<dd>[feature_formula, mean_cv, stddev_cv, mean_si, stddev_si, stability_index_lower_bound,
+stability_index_upper_bound, flagged_lower, flagged_upper].
+<em>_cv is coefficient of variation for each metric. </em>_si is stability index for each metric.
+stability_index_lower_bound and stability_index_upper_bound form a range for estimated stability index.
+flagged_lower and flagged_upper indicate whether the feature is potentially unstable based on the lower
+and upper bounds for stability index.</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -887,6 +938,33 @@ def feature_stability_estimation(
     print_impact=False,
 ):
     """
+    This function is able to estimate the stability index of a new feature composed of certain attributes whose
+    stability metrics are known. For example, the new feature F can be expressed as F = g(X1, X2, …, Xn),
+    where X1, X2, …, Xn represent different attributes and g represents the transformation function.
+    The most straightforward way is to generate the new feature for all periods and calculate its stability index.
+    However, it requires reading all historical data again which can be unrealistic for large datasets.
+    Thus, the objective of this function is to estimate feature stability index without reading historical data.
+
+    One example can be the following scenario: we have attributes A and B, we have their respective stability
+    statistics from T1 to T7. At T7 we realise we need to generate a new feature: A/B, but we don’t have
+    statistics metrics of A/B from T1 to T6 and this is where this function can be applied to generate an
+    estimation without reading datasets from T1 to T6.
+
+    The estimation can be broken down into 3 steps.
+    1. Estimate mean and stddev for the new feature based on attribute metrics (no existing resource found to
+    estimate Feature kurtosis). Estimated mean and stddev are generated for each time period using the
+    formula below according to [1]:
+    ![feature_stability_formulae.png](https://raw.githubusercontent.com/anovos/anovos-docs/main/docs/assets/feature_stability_formulae.png)
+    2. Calculate Coefficient of variation (CV) for estimated feature mean and stddev. Each CV can be then mapped
+    to an integer between 0 and 4 to generate the metric stability index.
+    3. Similar to the attribute stability index, each metric is assigned a weightage between 0 and 1, where the
+    default values are 50 for mean, 30% for standard deviation and 20% for kurtosis. Because we are unable to
+    generate kurtosis stability index, its minimum and maximum possible values (0 and 4) are used to output a
+    range for global stability index (GSI):
+        * Lower bound of GSI = 0.5∗mean stability index + 0.3∗stddev stability index + 0.2 ∗ 𝟎
+        * Upper bound of GSI = 0.5∗mean stability index + 0.3∗stddev stability index + 0.2 ∗ 𝟒
+
+    [1] Benaroya, H., Han, S. M., & Nagurka, M. (2005). Probability models in engineering and science (Vol. 192, pp. 168-169). CRC press.
 
     Parameters
     ----------
@@ -905,14 +983,21 @@ def feature_stability_estimation(
         Takes input in dictionary format with keys being the metric name - "mean","stdev","kurtosis"
         and value being the weightage of the metric (between 0 and 1). Sum of all weightages must be 1. (Default value = {"mean": 0.5)
     threshold
-        A column is flagged if the stability index is below the threshold, which varies between 0 to 4.
-        The following criteria can be used to classifiy stability_index (SI): very unstable: 0≤SI<1,
+        A column is flagged if the stability index is below the threshold, which varies between 0 and 4.
+        The following criteria can be used to classify stability_index (SI): very unstable: 0≤SI<1,
         unstable: 1≤SI<2, marginally stable: 2≤SI<3, stable: 3≤SI<3.5 and very stable: 3.5≤SI≤4. (Default value = 1)
     print_impact
         True, False (Default value = False)
 
     Returns
     -------
+    DataFrame
+        [feature_formula, mean_cv, stddev_cv, mean_si, stddev_si, stability_index_lower_bound,
+        stability_index_upper_bound, flagged_lower, flagged_upper].
+        *_cv is coefficient of variation for each metric. *_si is stability index for each metric.
+        stability_index_lower_bound and stability_index_upper_bound form a range for estimated stability index.
+        flagged_lower and flagged_upper indicate whether the feature is potentially unstable based on the lower
+        and upper bounds for stability index.
 
     """
 
@@ -1175,7 +1260,7 @@ stable. We call this integer a metric stability index.</p>
 </tbody>
 </table>
 <p>Finally, the attribute stability index (SI) is a weighted sum of 3 metric stability indexes, where we assign 50%
-for mean, 30% for standard deviation and 20% for kurtosis. The final output is a float between 0 and 4 and an
+for mean, 30% for standard deviation and 20% for kurtosis by default. The final output is a float between 0 and 4 and an
 attribute can be classified as one of the following categories: very unstable (0≤SI&lt;1), unstable (1≤SI&lt;2),
 marginally stable (2≤SI&lt;3), stable (3≤SI&lt;3.5) and very stable (3.5≤SI≤4).</p>
 <p>For example, there are 6 samples of attribute X from T1 to T6. For each sample, we have computed the statistical
@@ -1272,18 +1357,6 @@ when mean of attribute X is always zero for all datasets, its stability index wo
 <li>Limitation of CV: CV may not work well when 0 appears in the array or the array contains both positive and
 negative values.</li>
 </ul>
-<hr>
-<ul>
-<li><em>idfs</em>: Input Dataframes (flexible) - <em>list_of_cols</em>: Numerical columns (in list format or string separated by
-|). Use ‘all’ - to include all numerical columns (excluding drop_cols). - <em>drop_cols</em>: List of columns to be
-dropped (list or string of col names separated by |) - <em>metric_weightages</em>: A dictionary with key being the
-metric name (mean,stdev,kurtosis) and value being the weightage of the metric (between 0 and 1). Sum of all
-weightages must be 1. - <em>existing_metric_path</em>: this argument is path for pre-existing metrics of historical
-datasets
-<idx,attribute,mean,stdev,kurtosis>. idx is index number of historical datasets assigned in
-chronological order - <em>appended_metric_path</em>: this argument is path for saving input dataframes metrics after
-appending to the historical datasets' metrics. - <em>threshold</em>: To flag unstable attributes meeting the threshold</li>
-</ul>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>spark</code></strong></dt>
@@ -1319,7 +1392,13 @@ unstable: 1≤SI&lt;2, marginally stable: 2≤SI&lt;3, stable: 3≤SI&lt;3.5 and
 <dt><strong><code>print_impact</code></strong></dt>
 <dd>True, False (Default value = False)</dd>
 </dl>
-<h2 id="returns">Returns</h2></div>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>DataFrame</code></dt>
+<dd>[attribute, mean_si, stddev_si, kurtosis_si, mean_cv, stddev_cv, kurtosis_cv, stability_index].
+<em>_cv is coefficient of variation for each metric. </em>_si is stability index for each metric.
+stability_index is net weighted stability index based on the individual metrics' stability index.</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1375,7 +1454,7 @@ def stability_index_computation(
 
 
     Finally, the attribute stability index (SI) is a weighted sum of 3 metric stability indexes, where we assign 50%
-    for mean, 30% for standard deviation and 20% for kurtosis. The final output is a float between 0 and 4 and an
+    for mean, 30% for standard deviation and 20% for kurtosis by default. The final output is a float between 0 and 4 and an
     attribute can be classified as one of the following categories: very unstable (0≤SI<1), unstable (1≤SI<2),
     marginally stable (2≤SI<3), stable (3≤SI<3.5) and very stable (3.5≤SI≤4).
 
@@ -1436,18 +1515,6 @@ def stability_index_computation(
     - Limitation of CV: CV may not work well when 0 appears in the array or the array contains both positive and
     negative values.
 
-    ------
-
-    - *idfs*: Input Dataframes (flexible) - *list_of_cols*: Numerical columns (in list format or string separated by
-    |). Use ‘all’ - to include all numerical columns (excluding drop_cols). - *drop_cols*: List of columns to be
-    dropped (list or string of col names separated by |) - *metric_weightages*: A dictionary with key being the
-    metric name (mean,stdev,kurtosis) and value being the weightage of the metric (between 0 and 1). Sum of all
-    weightages must be 1. - *existing_metric_path*: this argument is path for pre-existing metrics of historical
-    datasets  <idx,attribute,mean,stdev,kurtosis>. idx is index number of historical datasets assigned in
-    chronological order - *appended_metric_path*: this argument is path for saving input dataframes metrics after
-    appending to the historical datasets' metrics. - *threshold*: To flag unstable attributes meeting the threshold
-
-
     Parameters
     ----------
     spark
@@ -1486,6 +1553,10 @@ def stability_index_computation(
 
     Returns
     -------
+    DataFrame
+        [attribute, mean_si, stddev_si, kurtosis_si, mean_cv, stddev_cv, kurtosis_cv, stability_index].
+        *_cv is coefficient of variation for each metric. *_si is stability index for each metric.
+        stability_index is net weighted stability index based on the individual metrics' stability index.
 
     """
 
@@ -1653,11 +1724,13 @@ the data used in training and prediction are not following the same distribution
 <p>Data drift mainly includes the following manifestations:</p>
 <ul>
 <li>Covariate shift: training and test data follow different distributions. For example, An algorithm predicting
-income that is trained on younger population but tested on older population. - Prior probability shift: change of
-prior probability. For example in a spam classification problem, the proportion of spam emails changes from 0.2
-in training data to 0.6 in testing data. - Concept shift: the distribution of the target variable changes given
-fixed input values. For example in the same spam classification problem, emails tagged as spam in training data
-are more likely to be tagged as non-spam in testing data.</li>
+income that is trained on younger population but tested on older population.</li>
+<li>Prior probability shift: change of prior probability. For example in a spam classification problem,
+the proportion of spam emails changes from 0.2
+in training data to 0.6 in testing data.</li>
+<li>Concept shift: the distribution of the target variable changes given fixed input values. For example in
+the same spam classification problem, emails tagged as spam in training data are more likely to be tagged
+as non-spam in testing data.</li>
 </ul>
 <p>In our module, we mainly focus on covariate shift detection.</p>
 <p>In summary, given 2 datasets, source and target datasets, we would like to quantify the drift of some numerical
@@ -1679,24 +1752,11 @@ an attribute will be marked as drifted if any of its statistical metric is large
 <p>This function can be used in many scenarios. For example:</p>
 <ol>
 <li>Attribute level data drift can be analysed together with the attribute importance of a machine learning model.
-The more important an attribute is, the more attention it needs to be given if drift presents. 2. To analyse data
-drift over time, one can treat one dataset as the source / baseline dataset and multiple datasets as the target
-datasets. Drift analysis can be performed between the source dataset and each of the target dataset to quantify
-the drift over time.</li>
+The more important an attribute is, the more attention it needs to be given if drift presents.</li>
+<li>To analyse data drift over time, one can treat one dataset as the source / baseline dataset and multiple
+datasets as the target datasets. Drift analysis can be performed between the source dataset and each of the
+target dataset to quantify the drift over time.</li>
 </ol>
-<hr>
-<ul>
-<li><em>idf_target</em>: Input target Dataframe - <em>idf_source</em>: Input source Dataframe - <em>list_of_cols</em>: List of columns
-to check drift (list or string of col names separated by |). Use ‘all’ - to include all non-array columns (
-excluding drop_cols). - <em>drop_cols</em>: List of columns to be dropped (list or string of col names separated by |) -
-method: PSI, JSD, HD, KS (list or string of methods separated by |). Use ‘all’ - to calculate all metrics. -
-<em>bin_method</em>: equal_frequency or equal_range - <em>bin_size</em>: 10 - 20 (recommended for PSI), &gt;100 (other method
-types) - <em>threshold</em>: To flag attributes meeting drift threshold - <em>pre_existing_source</em>: True if binning model &amp;
-frequency counts/attribute exists already, False Otherwise. - <em>source_path</em>: If pre_existing_source is True,
-this argument is path for the source dataset details - drift_statistics folder. drift_statistics folder must
-contain attribute_binning &amp; frequency_counts folders. If pre_existing_source is False, this argument can be used
-for saving the details. Default "NA" for temporarily saving source dataset attribute_binning folder</li>
-</ul>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>spark</code></strong></dt>
@@ -1777,7 +1837,12 @@ Default "drift_statistics" for temporarily saving source dataset attribute_binni
 <dt><strong><code>print_impact</code></strong> :&ensp;<code>bool</code></dt>
 <dd>(Default value = False)</dd>
 </dl>
-<h2 id="returns">Returns</h2></div>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>DataFrame</code></dt>
+<dd>[attribute, *metric, flagged]
+Number of columns will be dependent on method argument. There will be one column for each drift method/metric.</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1808,11 +1873,13 @@ def statistics(
     Data drift mainly includes the following manifestations:
 
     - Covariate shift: training and test data follow different distributions. For example, An algorithm predicting
-    income that is trained on younger population but tested on older population. - Prior probability shift: change of
-    prior probability. For example in a spam classification problem, the proportion of spam emails changes from 0.2
-    in training data to 0.6 in testing data. - Concept shift: the distribution of the target variable changes given
-    fixed input values. For example in the same spam classification problem, emails tagged as spam in training data
-    are more likely to be tagged as non-spam in testing data.
+    income that is trained on younger population but tested on older population.
+    - Prior probability shift: change of prior probability. For example in a spam classification problem,
+    the proportion of spam emails changes from 0.2
+    in training data to 0.6 in testing data.
+    - Concept shift: the distribution of the target variable changes given fixed input values. For example in
+    the same spam classification problem, emails tagged as spam in training data are more likely to be tagged
+    as non-spam in testing data.
 
     In our module, we mainly focus on covariate shift detection.
 
@@ -1841,23 +1908,10 @@ def statistics(
     This function can be used in many scenarios. For example:
 
     1. Attribute level data drift can be analysed together with the attribute importance of a machine learning model.
-    The more important an attribute is, the more attention it needs to be given if drift presents. 2. To analyse data
-    drift over time, one can treat one dataset as the source / baseline dataset and multiple datasets as the target
-    datasets. Drift analysis can be performed between the source dataset and each of the target dataset to quantify
-    the drift over time.
-
-    ---------
-
-    - *idf_target*: Input target Dataframe - *idf_source*: Input source Dataframe - *list_of_cols*: List of columns
-    to check drift (list or string of col names separated by |). Use ‘all’ - to include all non-array columns (
-    excluding drop_cols). - *drop_cols*: List of columns to be dropped (list or string of col names separated by |) -
-    method: PSI, JSD, HD, KS (list or string of methods separated by |). Use ‘all’ - to calculate all metrics. -
-    *bin_method*: equal_frequency or equal_range - *bin_size*: 10 - 20 (recommended for PSI), >100 (other method
-    types) - *threshold*: To flag attributes meeting drift threshold - *pre_existing_source*: True if binning model &
-    frequency counts/attribute exists already, False Otherwise. - *source_path*: If pre_existing_source is True,
-    this argument is path for the source dataset details - drift_statistics folder. drift_statistics folder must
-    contain attribute_binning & frequency_counts folders. If pre_existing_source is False, this argument can be used
-    for saving the details. Default "NA" for temporarily saving source dataset attribute_binning folder
+    The more important an attribute is, the more attention it needs to be given if drift presents.
+    2. To analyse data drift over time, one can treat one dataset as the source / baseline dataset and multiple
+    datasets as the target datasets. Drift analysis can be performed between the source dataset and each of the
+    target dataset to quantify the drift over time.
 
     Parameters
     ----------
@@ -1941,6 +1995,9 @@ def statistics(
 
     Returns
     -------
+    DataFrame
+        [attribute, *metric, flagged]
+        Number of columns will be dependent on method argument. There will be one column for each drift method/metric.
 
     """
     drop_cols = drop_cols or []

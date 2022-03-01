@@ -1,8 +1,14 @@
 # <code>data_ingest</code>
-<p>This module consists of functions to read the dataset as Spark DataFrame, concatenate/join with other functions (
-if required), and perform some basic ETL actions such as selecting, deleting, renaming and/or recasting columns. List
-of functions included in this module are: - read_dataset - write_dataset - concatenate_dataset - join_dataset -
-delete_column - select_column - rename_column - recast_column</p>
+<p>This module consists of functions to read the dataset as Spark DataFrame, concatenate/join with other functions (if required),
+and perform some basic ETL actions such as selecting, deleting, renaming and/or recasting columns. List of functions included in this module are:
+- read_dataset
+- write_dataset
+- concatenate_dataset
+- join_dataset
+- delete_column
+- select_column
+- rename_column
+- recast_column</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -10,26 +16,27 @@ delete_column - select_column - rename_column - recast_column</p>
 <pre>
 ```python
 # coding=utf-8
-"""This module consists of functions to read the dataset as Spark DataFrame, concatenate/join with other functions (
-if required), and perform some basic ETL actions such as selecting, deleting, renaming and/or recasting columns. List
-of functions included in this module are: - read_dataset - write_dataset - concatenate_dataset - join_dataset -
-delete_column - select_column - rename_column - recast_column """
+"""
+This module consists of functions to read the dataset as Spark DataFrame, concatenate/join with other functions (if required), 
+and perform some basic ETL actions such as selecting, deleting, renaming and/or recasting columns. List of functions included in this module are: 
+- read_dataset 
+- write_dataset 
+- concatenate_dataset 
+- join_dataset 
+- delete_column 
+- select_column 
+- rename_column 
+- recast_column 
+"""
 import pyspark.sql.functions as F
 from pyspark.sql import DataFrame
-
 from anovos.shared.utils import pairwise_reduce
 
 
 def read_dataset(spark, file_path, file_type, file_configs={}):
-    """This function reads the input data path and return a Spark DataFrame. Under the hood, this function is based
-    on generic Load functionality of Spark SQL.  It requires following arguments:
-
-    - **file_path**: file (or directory) path where the input data is saved. File path can be a local path or s3 path
-    (when running with AWS cloud services) - **file_type**: file format of the input data. Currently, we support CSV,
-    Parquet or Avro. Avro data source requires an external package to run, which can be configured with spark-submit
-    options (--packages org.apache.spark:spark-avro_2.11:2.4.0). - **file_configs** (optional): Rest of the valid
-    configurations can be passed through this argument in a dictionary format. All the key/value pairs written in
-    this argument are passed as options to DataFrameReader, which is created using SparkSession.read.
+    """
+    This function reads the input data path and return a Spark DataFrame. Under the hood, this function is based
+    on generic Load functionality of Spark SQL.
 
     Parameters
     ----------
@@ -39,17 +46,18 @@ def read_dataset(spark, file_path, file_type, file_configs={}):
         Path to input data (directory or filename).
         Compatible with local path and s3 path (when running in AWS environment).
     file_type
-        csv", "parquet", "avro".
-        Avro data source requires an external package to run, which can be configured with
-        spark-submit (--packages org.apache.spark:spark-avro_2.11:2.4.0).
+        "csv", "parquet", "avro", "json".
+        Avro data source requires an external package to run, which can be configured with spark-submit
+        (--packages org.apache.spark:spark-avro_2.11:2.4.0).
     file_configs
-        This argument is passed in a dictionary format as key/value pairs
+        This optional argument is passed in a dictionary format as key/value pairs
         e.g. {"header": "True","delimiter": "|","inferSchema": "True"} for csv files.
         All the key/value pairs in this argument are passed as options to DataFrameReader,
         which is created using SparkSession.read. (Default value = {})
 
     Returns
     -------
+    DataFrame
 
     """
     odf = spark.read.format(file_type).options(**file_configs).load(file_path)
@@ -57,32 +65,32 @@ def read_dataset(spark, file_path, file_type, file_configs={}):
 
 
 def write_dataset(idf, file_path, file_type, file_configs={}, column_order=[]):
-    """This function saves the Spark DataFrame in the user-provided output path. Like read_dataset, this function is
-    based on the generic Save functionality of Spark SQL.  It requires the following arguments:
+    """
+    This function saves the Spark DataFrame in the user-provided output path. Like read_dataset, this function is
+    based on the generic Save functionality of Spark SQL.
 
-    - **idf**: Spark DataFrame to be saved - **file_path**: file (or directory) path where the output data is to be
-    saved. File path can be a local path or s3 path (when running with AWS cloud services) - **file_type**: file
-    format of the output data. Currently, we support CSV, Parquet or Avro. The Avro data source requires an external
-    package to run, which can be configured with spark-submit options (--packages
-    org.apache.spark:spark-avro_2.11:2.4.0). - **file_configs** (optional): The rest of the valid configuration can
-    be passed through this argument in a dictionary format, e.g., repartition, mode, compression, header, delimiter,
-    etc. All the key/value pairs written in this argument are passed as options to DataFrameWriter is available using
-    Dataset.write operator. If the number of repartitions mentioned through this argument is less than the existing
-    DataFrame partitions, then the coalesce operation is used instead of the repartition operation to make the
-    execution work. This is because the coalesce operation doesn’t
-
-    Parameters ---------- idf : Input Dataframe file_path : Path to output data (directory or filename). Compatible
-    with local path and s3 path (when running in AWS environment). file_type : csv", "parquet", "avro". Avro data
-    source requires an external package to run, which can be configured with spark-submit (--packages
-    org.apache.spark:spark-avro_2.11:2.4.0). file_configs : This argument is passed in dictionary format as key/value
-    pairs. Some of the potential keys are header, delimiter, mode, compression, repartition. compression options -
-    uncompressed, gzip (doesn't work with avro), snappy (only valid for parquet) mode options - error (default),
-    overwrite, append repartition - None (automatic partitioning) or an integer value () e.g. {"header":"True",
-    "delimiter":",",'compression':'snappy','mode':'overwrite','repartition':'10'}. column_order : list of columns in
-    the order in which Dataframe is to be written. If None or [] is specified, then the default order is applied.
-
-    Returns
-    -------
+    Parameters
+    ----------
+    idf
+        Input Dataframe i.e. Spark DataFrame to be saved
+    file_path
+        Path to output data (directory or filename). Compatible with local path and s3 path (when running in AWS environment).
+    file_type
+        "csv", "parquet", "avro", "json".
+        Avro data source requires an external package to run, which can be configured with spark-submit
+        (--packages org.apache.spark:spark-avro_2.11:2.4.0).
+    file_configs
+        This argument is passed in dictionary format as key/value pairs. Some of the potential keys are header, delimiter,
+        mode, compression, repartition.
+        compression options - uncompressed, gzip (doesn't work with avro), snappy (only valid for parquet)
+        mode options - error (default), overwrite, append repartition - None (automatic partitioning) or an integer value ()
+        e.g. {"header":"True", "delimiter":",",'compression':'snappy','mode':'overwrite','repartition':'10'}.
+        All the key/value pairs (except repartition, mode) written in this argument are passed as options to DataFrameWriter is available using
+        Dataset.write operator. If the number of repartitions mentioned through this argument is less than the existing
+        DataFrame partitions, then the coalesce operation is used instead of the repartition operation to make the
+        execution work. This is because the coalesce operation doesn’t require any shuffling like repartition which is known to be an expensive step.
+    column_order
+        list of columns in the order in which Dataframe is to be written. If None or [] is specified, then the default order is applied.
 
     """
 
@@ -125,27 +133,27 @@ def write_dataset(idf, file_path, file_type, file_configs={}, column_order=[]):
 
 
 def concatenate_dataset(*idfs, method_type="name"):
-    """This function combines multiple dataframes into a single dataframe. A pairwise concatenation is performed on
+    """
+    This function combines multiple dataframes into a single dataframe. A pairwise concatenation is performed on
     the dataframes, instead of adding one dataframe at a time to the bigger dataframe. This function leverages union
-    functionality of Spark SQL. It requires the following arguments:
+    functionality of Spark SQL.
 
-    - ***idfs**: Varying number of dataframes to be concatenated - **method_type**: index or name. This argument
-    needs to be entered as a keyword argument. The “index” method involves concatenating the dataframes by the column
-    index. IF the sequence of column is not fixed among the dataframe, this method should be avoided. The “name”
-    method involves concatenating by columns names. The 1st dataframe passed under idfs will define the final columns
-    in the concatenated dataframe. It will throw an error if any column in the 1st dataframe is not available in any
-    of other dataframes.
-
-    Parameters ---------- dfs : All dataframes to be concatenated (with the first dataframe columns) method_type
-    index", "name". This argument needs to be passed as a keyword argument. "index" method concatenates by column
-    index positioning, without shuffling columns. "name" concatenates after shuffling and arranging columns as per
-    the first dataframe. First dataframe passed under idfs will define the final columns in the concatenated
-    dataframe, and will throw error if any column in first dataframe is not available in any of other dataframes. (
-    Default value = "name") *idfs
-
+    Parameters
+    ----------
+    *idfs
+        All dataframes to be concatenated (with the first dataframe columns)
+    method_type
+        "index", "name". This argument needs to be passed as a keyword argument.
+        The “index” method concatenates the dataframes by the column index (without shuffling columns).
+        If the sequence of column is not fixed among the dataframe, this method should be avoided.
+        The “name” method concatenates after shuffling and arranging columns as per the first dataframe order.
+        First dataframe passed under idfs will define the final columns in the concatenated dataframe, and
+        will throw error if any column in first dataframe is not available in any of other dataframes. (Default value = "name")
 
     Returns
     -------
+    DataFrame
+        Concatenated dataframe
 
     """
     if method_type not in ["index", "name"]:
@@ -160,14 +168,10 @@ def concatenate_dataset(*idfs, method_type="name"):
 
 
 def join_dataset(*idfs, join_cols, join_type):
-    """This function joins multiple dataframes into a single dataframe by a joining key column. Pairwise joining is
+    """
+    This function joins multiple dataframes into a single dataframe by joining key column(s). For optimization, Pairwise joining is
     done on the dataframes, instead of joining individual dataframes to the bigger dataframe. This function leverages
-    join functionality of Spark SQL. It requires the following arguments:
-
-    - ***idfs**: Varying number of all dataframes to be joined - **join_cols**: Key column(s) to join all dataframes
-    together. In case of multiple columns to join, they can be passed in a list format or a single text format where
-    different column names are separated by pipe delimiter “|” - **join_type**: “inner”, “full”, “left”, “right”,
-    “left_semi”, “left_anti”
+    join functionality of Spark SQL.
 
     Parameters
     ----------
@@ -175,15 +179,15 @@ def join_dataset(*idfs, join_cols, join_type):
         All dataframes to be joined
     join_cols
         Key column(s) to join all dataframes together.
-        In case of multiple columns to join, they can be passed in a list format or
-        a string format where different column names are separated by pipe delimiter “|”.
+        In case of multiple key columns to join, they can be passed in a list format or
+        a string format where different column names are separated by pipe delimiter “|” e.g. "col1|col2".
     join_type
-        inner", “full”, “left”, “right”, “left_semi”, “left_anti”
-    *idfs
-
+        "inner", “full”, “left”, “right”, “left_semi”, “left_anti”
 
     Returns
     -------
+    DataFrame
+        Joined dataframe
 
     """
     if isinstance(join_cols, str):
@@ -195,14 +199,10 @@ def join_dataset(*idfs, join_cols, join_type):
 
 
 def delete_column(idf, list_of_cols, print_impact=False):
-    """This function is used to delete specific columns from the input data. It is executed using drop functionality
+    """
+    This function is used to delete specific columns from the input data. It is executed using drop functionality
     of Spark SQL. It is advisable to use this function if the number of columns to delete is lesser than the number
-    of columns to select; otherwise, it is recommended to use select_column. It requires the following arguments:
-
-    - **idf**: Input dataframe - **list_of_cols**: This argument, in a list format, specifies the columns required to
-    be deleted from the input dataframe. Alternatively, instead of list, columns can be specified in a single text
-    format where different column names are separated by pipe delimiter “|” - **print_impact**: This argument is to
-    compare number of columns before and after the operation.
+    of columns to select; otherwise, it is recommended to use select_column.
 
     Parameters
     ----------
@@ -213,10 +213,13 @@ def delete_column(idf, list_of_cols, print_impact=False):
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
     print_impact
-        True, False (Default value = False)
+        True, False
+        This argument is to compare number of columns before and after the operation.(Default value = False)
 
     Returns
     -------
+    DataFrame
+        Dataframe after dropping columns
 
     """
     if isinstance(list_of_cols, str):
@@ -234,14 +237,10 @@ def delete_column(idf, list_of_cols, print_impact=False):
 
 
 def select_column(idf, list_of_cols, print_impact=False):
-    """This function is used to select specific columns from the input data. It is executed using select operation of
+    """
+    This function is used to select specific columns from the input data. It is executed using select operation of
     spark dataframe. It is advisable to use this function if the number of columns to select is lesser than the
-    number of columns to drop; otherwise, it is recommended to use delete_column. It requires the following arguments:
-
-    - **idf**: Input dataframe - **list_of_cols**: This argument, in a list format, specifies the columns required to
-    be selected from the input dataframe. Alternatively, instead of list, columns can be specified in a single text
-    format where different column names are separated by pipe delimiter “|” - **print_impact**: This argument is to
-    compare number of columns before and after the operation.
+    number of columns to drop; otherwise, it is recommended to use delete_column.
 
     Parameters
     ----------
@@ -252,10 +251,13 @@ def select_column(idf, list_of_cols, print_impact=False):
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
     print_impact
-        True, False (Default value = False)
+        True, False
+        This argument is to compare number of columns before and after the operation.(Default value = False)
 
     Returns
     -------
+    DataFrame
+        Dataframe with the selected columns
 
     """
     if isinstance(list_of_cols, str):
@@ -273,16 +275,10 @@ def select_column(idf, list_of_cols, print_impact=False):
 
 
 def rename_column(idf, list_of_cols, list_of_newcols, print_impact=False):
-    """This function is used to rename the columns of the input data. Multiple columns can be renamed; however,
+    """
+    This function is used to rename the columns of the input data. Multiple columns can be renamed; however,
     the sequence they passed as an argument is critical and must be consistent between list_of_cols and
-    list_of_newcols. It requires the following arguments:
-
-    - **idf**: Input dataframe - **list_of_cols**: This argument, in a list format, is used to specify the columns
-    required to be renamed in the input dataframe. Alternatively, instead of a list, columns can be specified in a
-    single text format where different column names are separated by pipe delimiter “|” - **list_of_newcols**: This
-    argument, in a list format, is used to specify the new column name, i.e. the first element in list_of_cols will
-    be the original column name, and the corresponding first column in list_of_newcols will be the new column name. -
-    **print_impact**: This argument is to compare column names before and after the operation.
+    list_of_newcols.
 
     Parameters
     ----------
@@ -296,13 +292,15 @@ def rename_column(idf, list_of_cols, list_of_newcols, print_impact=False):
         List of corresponding new column names e.g., ["newcol1","newcol2"].
         Alternatively, new column names can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "newcol1|newcol2".
-        First element in list_of_cols will be original column name,
-        and corresponding first column in list_of_newcols will be new column name.
+        First element in list_of_cols will be original column name, and corresponding first column in list_of_newcols will be new column name.
     print_impact
-        True, False (Default value = False)
+        True, False
+        This argument is to compare column names before and after the operation. (Default value = False)
 
     Returns
     -------
+    DataFrame
+        Dataframe with revised column names
 
     """
     if isinstance(list_of_cols, str):
@@ -322,19 +320,10 @@ def rename_column(idf, list_of_cols, list_of_newcols, print_impact=False):
 
 
 def recast_column(idf, list_of_cols, list_of_dtypes, print_impact=False):
-    """This function is used to modify the datatype of columns. Multiple columns can be cast; however,
-     the sequence they passed as argument is critical and needs to be consistent between list_of_cols and
-     list_of_dtypes.
-     It requires the following arguments:
-
-    - **idf**: Input dataframe
-    - **list_of_cols**: This argument, in a list format, is used to specify the columns required to be recast in the
-    input dataframe. Alternatively, instead of a list, columns can be specified in a single text format where different
-     column names are separated by pipe delimiter “|”
-    - **list_of_dtypes**: This argument, in a list format, is used to specify the datatype, i.e. the first element in
-    list_of_cols will column name, and the corresponding element in list_of_dtypes will be new datatype such as float,
-     integer, string, double, decimal, etc. (case insensitive).
-    - **print_impact**: This argument is to compare schema before and after the operation.
+    """
+    This function is used to modify the datatype of columns. Multiple columns can be cast; however,
+    the sequence they passed as argument is critical and needs to be consistent between list_of_cols and
+    list_of_dtypes.
 
     Parameters
     ----------
@@ -352,10 +341,13 @@ def recast_column(idf, list_of_cols, list_of_dtypes, print_impact=False):
         will be new datatypes such as "float", "integer", "long", "string", "double", decimal" etc.
         Datatypes are case insensitive e.g. float or Float are treated as same.
     print_impact
-        True, False (Default value = False)
+        True, False
+        This argument is to compare schema before and after the operation. (Default value = False)
 
     Returns
     -------
+    DataFrame
+        Dataframe with revised datatypes
 
     """
     if isinstance(list_of_cols, str):
@@ -384,22 +376,24 @@ def recast_column(idf, list_of_cols, list_of_dtypes, print_impact=False):
 <dd>
 <div class="desc"><p>This function combines multiple dataframes into a single dataframe. A pairwise concatenation is performed on
 the dataframes, instead of adding one dataframe at a time to the bigger dataframe. This function leverages union
-functionality of Spark SQL. It requires the following arguments:</p>
-<ul>
-<li><strong><em>idfs</em>*: Varying number of dataframes to be concatenated - </strong>method_type**: index or name. This argument
-needs to be entered as a keyword argument. The “index” method involves concatenating the dataframes by the column
-index. IF the sequence of column is not fixed among the dataframe, this method should be avoided. The “name”
-method involves concatenating by columns names. The 1st dataframe passed under idfs will define the final columns
-in the concatenated dataframe. It will throw an error if any column in the 1st dataframe is not available in any
-of other dataframes.</li>
-</ul>
-<p>Parameters ---------- dfs : All dataframes to be concatenated (with the first dataframe columns) method_type
-index", "name". This argument needs to be passed as a keyword argument. "index" method concatenates by column
-index positioning, without shuffling columns. "name" concatenates after shuffling and arranging columns as per
-the first dataframe. First dataframe passed under idfs will define the final columns in the concatenated
-dataframe, and will throw error if any column in first dataframe is not available in any of other dataframes. (
-Default value = "name") *idfs</p>
-<h2 id="returns">Returns</h2></div>
+functionality of Spark SQL.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>*idfs</code></strong></dt>
+<dd>All dataframes to be concatenated (with the first dataframe columns)</dd>
+<dt><strong><code>method_type</code></strong></dt>
+<dd>"index", "name". This argument needs to be passed as a keyword argument.
+The “index” method concatenates the dataframes by the column index (without shuffling columns).
+If the sequence of column is not fixed among the dataframe, this method should be avoided.
+The “name” method concatenates after shuffling and arranging columns as per the first dataframe order.
+First dataframe passed under idfs will define the final columns in the concatenated dataframe, and
+will throw error if any column in first dataframe is not available in any of other dataframes. (Default value = "name")</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>DataFrame</code></dt>
+<dd>Concatenated dataframe</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -407,27 +401,27 @@ Default value = "name") *idfs</p>
 <pre>
 ```python
 def concatenate_dataset(*idfs, method_type="name"):
-    """This function combines multiple dataframes into a single dataframe. A pairwise concatenation is performed on
+    """
+    This function combines multiple dataframes into a single dataframe. A pairwise concatenation is performed on
     the dataframes, instead of adding one dataframe at a time to the bigger dataframe. This function leverages union
-    functionality of Spark SQL. It requires the following arguments:
+    functionality of Spark SQL.
 
-    - ***idfs**: Varying number of dataframes to be concatenated - **method_type**: index or name. This argument
-    needs to be entered as a keyword argument. The “index” method involves concatenating the dataframes by the column
-    index. IF the sequence of column is not fixed among the dataframe, this method should be avoided. The “name”
-    method involves concatenating by columns names. The 1st dataframe passed under idfs will define the final columns
-    in the concatenated dataframe. It will throw an error if any column in the 1st dataframe is not available in any
-    of other dataframes.
-
-    Parameters ---------- dfs : All dataframes to be concatenated (with the first dataframe columns) method_type
-    index", "name". This argument needs to be passed as a keyword argument. "index" method concatenates by column
-    index positioning, without shuffling columns. "name" concatenates after shuffling and arranging columns as per
-    the first dataframe. First dataframe passed under idfs will define the final columns in the concatenated
-    dataframe, and will throw error if any column in first dataframe is not available in any of other dataframes. (
-    Default value = "name") *idfs
-
+    Parameters
+    ----------
+    *idfs
+        All dataframes to be concatenated (with the first dataframe columns)
+    method_type
+        "index", "name". This argument needs to be passed as a keyword argument.
+        The “index” method concatenates the dataframes by the column index (without shuffling columns).
+        If the sequence of column is not fixed among the dataframe, this method should be avoided.
+        The “name” method concatenates after shuffling and arranging columns as per the first dataframe order.
+        First dataframe passed under idfs will define the final columns in the concatenated dataframe, and
+        will throw error if any column in first dataframe is not available in any of other dataframes. (Default value = "name")
 
     Returns
     -------
+    DataFrame
+        Concatenated dataframe
 
     """
     if method_type not in ["index", "name"]:
@@ -449,13 +443,7 @@ def concatenate_dataset(*idfs, method_type="name"):
 <dd>
 <div class="desc"><p>This function is used to delete specific columns from the input data. It is executed using drop functionality
 of Spark SQL. It is advisable to use this function if the number of columns to delete is lesser than the number
-of columns to select; otherwise, it is recommended to use select_column. It requires the following arguments:</p>
-<ul>
-<li><strong>idf</strong>: Input dataframe - <strong>list_of_cols</strong>: This argument, in a list format, specifies the columns required to
-be deleted from the input dataframe. Alternatively, instead of list, columns can be specified in a single text
-format where different column names are separated by pipe delimiter “|” - <strong>print_impact</strong>: This argument is to
-compare number of columns before and after the operation.</li>
-</ul>
+of columns to select; otherwise, it is recommended to use select_column.</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>idf</code></strong></dt>
@@ -465,9 +453,14 @@ compare number of columns before and after the operation.</li>
 Alternatively, columns can be specified in a string format,
 where different column names are separated by pipe delimiter “|” e.g., "col1|col2".</dd>
 <dt><strong><code>print_impact</code></strong></dt>
-<dd>True, False (Default value = False)</dd>
+<dd>True, False
+This argument is to compare number of columns before and after the operation.(Default value = False)</dd>
 </dl>
-<h2 id="returns">Returns</h2></div>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>DataFrame</code></dt>
+<dd>Dataframe after dropping columns</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -475,14 +468,10 @@ where different column names are separated by pipe delimiter “|” e.g., "col1
 <pre>
 ```python
 def delete_column(idf, list_of_cols, print_impact=False):
-    """This function is used to delete specific columns from the input data. It is executed using drop functionality
+    """
+    This function is used to delete specific columns from the input data. It is executed using drop functionality
     of Spark SQL. It is advisable to use this function if the number of columns to delete is lesser than the number
-    of columns to select; otherwise, it is recommended to use select_column. It requires the following arguments:
-
-    - **idf**: Input dataframe - **list_of_cols**: This argument, in a list format, specifies the columns required to
-    be deleted from the input dataframe. Alternatively, instead of list, columns can be specified in a single text
-    format where different column names are separated by pipe delimiter “|” - **print_impact**: This argument is to
-    compare number of columns before and after the operation.
+    of columns to select; otherwise, it is recommended to use select_column.
 
     Parameters
     ----------
@@ -493,10 +482,13 @@ def delete_column(idf, list_of_cols, print_impact=False):
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
     print_impact
-        True, False (Default value = False)
+        True, False
+        This argument is to compare number of columns before and after the operation.(Default value = False)
 
     Returns
     -------
+    DataFrame
+        Dataframe after dropping columns
 
     """
     if isinstance(list_of_cols, str):
@@ -519,29 +511,25 @@ def delete_column(idf, list_of_cols, print_impact=False):
 <span class="k">def</span> <span class="nf"><span class="ident">join_dataset</span></span>(<span class="n">*idfs, join_cols, join_type)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>This function joins multiple dataframes into a single dataframe by a joining key column. Pairwise joining is
+<div class="desc"><p>This function joins multiple dataframes into a single dataframe by joining key column(s). For optimization, Pairwise joining is
 done on the dataframes, instead of joining individual dataframes to the bigger dataframe. This function leverages
-join functionality of Spark SQL. It requires the following arguments:</p>
-<ul>
-<li><strong><em>idfs</em>*: Varying number of all dataframes to be joined - </strong>join_cols<strong>: Key column(s) to join all dataframes
-together. In case of multiple columns to join, they can be passed in a list format or a single text format where
-different column names are separated by pipe delimiter “|” - </strong>join_type**: “inner”, “full”, “left”, “right”,
-“left_semi”, “left_anti”</li>
-</ul>
+join functionality of Spark SQL.</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>idfs</code></strong></dt>
 <dd>All dataframes to be joined</dd>
 <dt><strong><code>join_cols</code></strong></dt>
 <dd>Key column(s) to join all dataframes together.
-In case of multiple columns to join, they can be passed in a list format or
-a string format where different column names are separated by pipe delimiter “|”.</dd>
+In case of multiple key columns to join, they can be passed in a list format or
+a string format where different column names are separated by pipe delimiter “|” e.g. "col1|col2".</dd>
 <dt><strong><code>join_type</code></strong></dt>
-<dd>inner", “full”, “left”, “right”, “left_semi”, “left_anti”</dd>
-<dt><strong><code>*idfs</code></strong></dt>
-<dd>&nbsp;</dd>
+<dd>"inner", “full”, “left”, “right”, “left_semi”, “left_anti”</dd>
 </dl>
-<h2 id="returns">Returns</h2></div>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>DataFrame</code></dt>
+<dd>Joined dataframe</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -549,14 +537,10 @@ a string format where different column names are separated by pipe delimiter “
 <pre>
 ```python
 def join_dataset(*idfs, join_cols, join_type):
-    """This function joins multiple dataframes into a single dataframe by a joining key column. Pairwise joining is
+    """
+    This function joins multiple dataframes into a single dataframe by joining key column(s). For optimization, Pairwise joining is
     done on the dataframes, instead of joining individual dataframes to the bigger dataframe. This function leverages
-    join functionality of Spark SQL. It requires the following arguments:
-
-    - ***idfs**: Varying number of all dataframes to be joined - **join_cols**: Key column(s) to join all dataframes
-    together. In case of multiple columns to join, they can be passed in a list format or a single text format where
-    different column names are separated by pipe delimiter “|” - **join_type**: “inner”, “full”, “left”, “right”,
-    “left_semi”, “left_anti”
+    join functionality of Spark SQL.
 
     Parameters
     ----------
@@ -564,15 +548,15 @@ def join_dataset(*idfs, join_cols, join_type):
         All dataframes to be joined
     join_cols
         Key column(s) to join all dataframes together.
-        In case of multiple columns to join, they can be passed in a list format or
-        a string format where different column names are separated by pipe delimiter “|”.
+        In case of multiple key columns to join, they can be passed in a list format or
+        a string format where different column names are separated by pipe delimiter “|” e.g. "col1|col2".
     join_type
-        inner", “full”, “left”, “right”, “left_semi”, “left_anti”
-    *idfs
-
+        "inner", “full”, “left”, “right”, “left_semi”, “left_anti”
 
     Returns
     -------
+    DataFrame
+        Joined dataframe
 
     """
     if isinstance(join_cols, str):
@@ -590,16 +574,7 @@ def join_dataset(*idfs, join_cols, join_type):
 </code></dt>
 <dd>
 <div class="desc"><p>This function reads the input data path and return a Spark DataFrame. Under the hood, this function is based
-on generic Load functionality of Spark SQL.
-It requires following arguments:</p>
-<ul>
-<li><strong>file_path</strong>: file (or directory) path where the input data is saved. File path can be a local path or s3 path
-(when running with AWS cloud services) - <strong>file_type</strong>: file format of the input data. Currently, we support CSV,
-Parquet or Avro. Avro data source requires an external package to run, which can be configured with spark-submit
-options (&ndash;packages org.apache.spark:spark-avro_2.11:2.4.0). - <strong>file_configs</strong> (optional): Rest of the valid
-configurations can be passed through this argument in a dictionary format. All the key/value pairs written in
-this argument are passed as options to DataFrameReader, which is created using SparkSession.read.</li>
-</ul>
+on generic Load functionality of Spark SQL.</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>spark</code></strong></dt>
@@ -608,16 +583,20 @@ this argument are passed as options to DataFrameReader, which is created using S
 <dd>Path to input data (directory or filename).
 Compatible with local path and s3 path (when running in AWS environment).</dd>
 <dt><strong><code>file_type</code></strong></dt>
-<dd>csv", "parquet", "avro".
-Avro data source requires an external package to run, which can be configured with
-spark-submit (&ndash;packages org.apache.spark:spark-avro_2.11:2.4.0).</dd>
+<dd>"csv", "parquet", "avro", "json".
+Avro data source requires an external package to run, which can be configured with spark-submit
+(&ndash;packages org.apache.spark:spark-avro_2.11:2.4.0).</dd>
 <dt><strong><code>file_configs</code></strong></dt>
-<dd>This argument is passed in a dictionary format as key/value pairs
+<dd>This optional argument is passed in a dictionary format as key/value pairs
 e.g. {"header": "True","delimiter": "|","inferSchema": "True"} for csv files.
 All the key/value pairs in this argument are passed as options to DataFrameReader,
 which is created using SparkSession.read. (Default value = {})</dd>
 </dl>
-<h2 id="returns">Returns</h2></div>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>DataFrame</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -625,15 +604,9 @@ which is created using SparkSession.read. (Default value = {})</dd>
 <pre>
 ```python
 def read_dataset(spark, file_path, file_type, file_configs={}):
-    """This function reads the input data path and return a Spark DataFrame. Under the hood, this function is based
-    on generic Load functionality of Spark SQL.  It requires following arguments:
-
-    - **file_path**: file (or directory) path where the input data is saved. File path can be a local path or s3 path
-    (when running with AWS cloud services) - **file_type**: file format of the input data. Currently, we support CSV,
-    Parquet or Avro. Avro data source requires an external package to run, which can be configured with spark-submit
-    options (--packages org.apache.spark:spark-avro_2.11:2.4.0). - **file_configs** (optional): Rest of the valid
-    configurations can be passed through this argument in a dictionary format. All the key/value pairs written in
-    this argument are passed as options to DataFrameReader, which is created using SparkSession.read.
+    """
+    This function reads the input data path and return a Spark DataFrame. Under the hood, this function is based
+    on generic Load functionality of Spark SQL.
 
     Parameters
     ----------
@@ -643,17 +616,18 @@ def read_dataset(spark, file_path, file_type, file_configs={}):
         Path to input data (directory or filename).
         Compatible with local path and s3 path (when running in AWS environment).
     file_type
-        csv", "parquet", "avro".
-        Avro data source requires an external package to run, which can be configured with
-        spark-submit (--packages org.apache.spark:spark-avro_2.11:2.4.0).
+        "csv", "parquet", "avro", "json".
+        Avro data source requires an external package to run, which can be configured with spark-submit
+        (--packages org.apache.spark:spark-avro_2.11:2.4.0).
     file_configs
-        This argument is passed in a dictionary format as key/value pairs
+        This optional argument is passed in a dictionary format as key/value pairs
         e.g. {"header": "True","delimiter": "|","inferSchema": "True"} for csv files.
         All the key/value pairs in this argument are passed as options to DataFrameReader,
         which is created using SparkSession.read. (Default value = {})
 
     Returns
     -------
+    DataFrame
 
     """
     odf = spark.read.format(file_type).options(**file_configs).load(file_path)
@@ -668,18 +642,7 @@ def read_dataset(spark, file_path, file_type, file_configs={}):
 <dd>
 <div class="desc"><p>This function is used to modify the datatype of columns. Multiple columns can be cast; however,
 the sequence they passed as argument is critical and needs to be consistent between list_of_cols and
-list_of_dtypes.
-It requires the following arguments:</p>
-<ul>
-<li><strong>idf</strong>: Input dataframe</li>
-<li><strong>list_of_cols</strong>: This argument, in a list format, is used to specify the columns required to be recast in the
-input dataframe. Alternatively, instead of a list, columns can be specified in a single text format where different
-column names are separated by pipe delimiter “|”</li>
-<li><strong>list_of_dtypes</strong>: This argument, in a list format, is used to specify the datatype, i.e. the first element in
-list_of_cols will column name, and the corresponding element in list_of_dtypes will be new datatype such as float,
-integer, string, double, decimal, etc. (case insensitive).</li>
-<li><strong>print_impact</strong>: This argument is to compare schema before and after the operation.</li>
-</ul>
+list_of_dtypes.</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>idf</code></strong></dt>
@@ -696,9 +659,14 @@ First element in list_of_cols will column name and corresponding element in list
 will be new datatypes such as "float", "integer", "long", "string", "double", decimal" etc.
 Datatypes are case insensitive e.g. float or Float are treated as same.</dd>
 <dt><strong><code>print_impact</code></strong></dt>
-<dd>True, False (Default value = False)</dd>
+<dd>True, False
+This argument is to compare schema before and after the operation. (Default value = False)</dd>
 </dl>
-<h2 id="returns">Returns</h2></div>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>DataFrame</code></dt>
+<dd>Dataframe with revised datatypes</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -706,19 +674,10 @@ Datatypes are case insensitive e.g. float or Float are treated as same.</dd>
 <pre>
 ```python
 def recast_column(idf, list_of_cols, list_of_dtypes, print_impact=False):
-    """This function is used to modify the datatype of columns. Multiple columns can be cast; however,
-     the sequence they passed as argument is critical and needs to be consistent between list_of_cols and
-     list_of_dtypes.
-     It requires the following arguments:
-
-    - **idf**: Input dataframe
-    - **list_of_cols**: This argument, in a list format, is used to specify the columns required to be recast in the
-    input dataframe. Alternatively, instead of a list, columns can be specified in a single text format where different
-     column names are separated by pipe delimiter “|”
-    - **list_of_dtypes**: This argument, in a list format, is used to specify the datatype, i.e. the first element in
-    list_of_cols will column name, and the corresponding element in list_of_dtypes will be new datatype such as float,
-     integer, string, double, decimal, etc. (case insensitive).
-    - **print_impact**: This argument is to compare schema before and after the operation.
+    """
+    This function is used to modify the datatype of columns. Multiple columns can be cast; however,
+    the sequence they passed as argument is critical and needs to be consistent between list_of_cols and
+    list_of_dtypes.
 
     Parameters
     ----------
@@ -736,10 +695,13 @@ def recast_column(idf, list_of_cols, list_of_dtypes, print_impact=False):
         will be new datatypes such as "float", "integer", "long", "string", "double", decimal" etc.
         Datatypes are case insensitive e.g. float or Float are treated as same.
     print_impact
-        True, False (Default value = False)
+        True, False
+        This argument is to compare schema before and after the operation. (Default value = False)
 
     Returns
     -------
+    DataFrame
+        Dataframe with revised datatypes
 
     """
     if isinstance(list_of_cols, str):
@@ -767,15 +729,7 @@ def recast_column(idf, list_of_cols, list_of_dtypes, print_impact=False):
 <dd>
 <div class="desc"><p>This function is used to rename the columns of the input data. Multiple columns can be renamed; however,
 the sequence they passed as an argument is critical and must be consistent between list_of_cols and
-list_of_newcols. It requires the following arguments:</p>
-<ul>
-<li><strong>idf</strong>: Input dataframe - <strong>list_of_cols</strong>: This argument, in a list format, is used to specify the columns
-required to be renamed in the input dataframe. Alternatively, instead of a list, columns can be specified in a
-single text format where different column names are separated by pipe delimiter “|” - <strong>list_of_newcols</strong>: This
-argument, in a list format, is used to specify the new column name, i.e. the first element in list_of_cols will
-be the original column name, and the corresponding first column in list_of_newcols will be the new column name. -
-<strong>print_impact</strong>: This argument is to compare column names before and after the operation.</li>
-</ul>
+list_of_newcols.</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>idf</code></strong></dt>
@@ -788,12 +742,16 @@ where different column names are separated by pipe delimiter “|” e.g., "col1
 <dd>List of corresponding new column names e.g., ["newcol1","newcol2"].
 Alternatively, new column names can be specified in a string format,
 where different column names are separated by pipe delimiter “|” e.g., "newcol1|newcol2".
-First element in list_of_cols will be original column name,
-and corresponding first column in list_of_newcols will be new column name.</dd>
+First element in list_of_cols will be original column name, and corresponding first column in list_of_newcols will be new column name.</dd>
 <dt><strong><code>print_impact</code></strong></dt>
-<dd>True, False (Default value = False)</dd>
+<dd>True, False
+This argument is to compare column names before and after the operation. (Default value = False)</dd>
 </dl>
-<h2 id="returns">Returns</h2></div>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>DataFrame</code></dt>
+<dd>Dataframe with revised column names</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -801,16 +759,10 @@ and corresponding first column in list_of_newcols will be new column name.</dd>
 <pre>
 ```python
 def rename_column(idf, list_of_cols, list_of_newcols, print_impact=False):
-    """This function is used to rename the columns of the input data. Multiple columns can be renamed; however,
+    """
+    This function is used to rename the columns of the input data. Multiple columns can be renamed; however,
     the sequence they passed as an argument is critical and must be consistent between list_of_cols and
-    list_of_newcols. It requires the following arguments:
-
-    - **idf**: Input dataframe - **list_of_cols**: This argument, in a list format, is used to specify the columns
-    required to be renamed in the input dataframe. Alternatively, instead of a list, columns can be specified in a
-    single text format where different column names are separated by pipe delimiter “|” - **list_of_newcols**: This
-    argument, in a list format, is used to specify the new column name, i.e. the first element in list_of_cols will
-    be the original column name, and the corresponding first column in list_of_newcols will be the new column name. -
-    **print_impact**: This argument is to compare column names before and after the operation.
+    list_of_newcols.
 
     Parameters
     ----------
@@ -824,13 +776,15 @@ def rename_column(idf, list_of_cols, list_of_newcols, print_impact=False):
         List of corresponding new column names e.g., ["newcol1","newcol2"].
         Alternatively, new column names can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "newcol1|newcol2".
-        First element in list_of_cols will be original column name,
-        and corresponding first column in list_of_newcols will be new column name.
+        First element in list_of_cols will be original column name, and corresponding first column in list_of_newcols will be new column name.
     print_impact
-        True, False (Default value = False)
+        True, False
+        This argument is to compare column names before and after the operation. (Default value = False)
 
     Returns
     -------
+    DataFrame
+        Dataframe with revised column names
 
     """
     if isinstance(list_of_cols, str):
@@ -857,13 +811,7 @@ def rename_column(idf, list_of_cols, list_of_newcols, print_impact=False):
 <dd>
 <div class="desc"><p>This function is used to select specific columns from the input data. It is executed using select operation of
 spark dataframe. It is advisable to use this function if the number of columns to select is lesser than the
-number of columns to drop; otherwise, it is recommended to use delete_column. It requires the following arguments:</p>
-<ul>
-<li><strong>idf</strong>: Input dataframe - <strong>list_of_cols</strong>: This argument, in a list format, specifies the columns required to
-be selected from the input dataframe. Alternatively, instead of list, columns can be specified in a single text
-format where different column names are separated by pipe delimiter “|” - <strong>print_impact</strong>: This argument is to
-compare number of columns before and after the operation.</li>
-</ul>
+number of columns to drop; otherwise, it is recommended to use delete_column.</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>idf</code></strong></dt>
@@ -873,9 +821,14 @@ compare number of columns before and after the operation.</li>
 Alternatively, columns can be specified in a string format,
 where different column names are separated by pipe delimiter “|” e.g., "col1|col2".</dd>
 <dt><strong><code>print_impact</code></strong></dt>
-<dd>True, False (Default value = False)</dd>
+<dd>True, False
+This argument is to compare number of columns before and after the operation.(Default value = False)</dd>
 </dl>
-<h2 id="returns">Returns</h2></div>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>DataFrame</code></dt>
+<dd>Dataframe with the selected columns</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -883,14 +836,10 @@ where different column names are separated by pipe delimiter “|” e.g., "col1
 <pre>
 ```python
 def select_column(idf, list_of_cols, print_impact=False):
-    """This function is used to select specific columns from the input data. It is executed using select operation of
+    """
+    This function is used to select specific columns from the input data. It is executed using select operation of
     spark dataframe. It is advisable to use this function if the number of columns to select is lesser than the
-    number of columns to drop; otherwise, it is recommended to use delete_column. It requires the following arguments:
-
-    - **idf**: Input dataframe - **list_of_cols**: This argument, in a list format, specifies the columns required to
-    be selected from the input dataframe. Alternatively, instead of list, columns can be specified in a single text
-    format where different column names are separated by pipe delimiter “|” - **print_impact**: This argument is to
-    compare number of columns before and after the operation.
+    number of columns to drop; otherwise, it is recommended to use delete_column.
 
     Parameters
     ----------
@@ -901,10 +850,13 @@ def select_column(idf, list_of_cols, print_impact=False):
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
     print_impact
-        True, False (Default value = False)
+        True, False
+        This argument is to compare number of columns before and after the operation.(Default value = False)
 
     Returns
     -------
+    DataFrame
+        Dataframe with the selected columns
 
     """
     if isinstance(list_of_cols, str):
@@ -928,30 +880,30 @@ def select_column(idf, list_of_cols, print_impact=False):
 </code></dt>
 <dd>
 <div class="desc"><p>This function saves the Spark DataFrame in the user-provided output path. Like read_dataset, this function is
-based on the generic Save functionality of Spark SQL.
-It requires the following arguments:</p>
-<ul>
-<li><strong>idf</strong>: Spark DataFrame to be saved - <strong>file_path</strong>: file (or directory) path where the output data is to be
-saved. File path can be a local path or s3 path (when running with AWS cloud services) - <strong>file_type</strong>: file
-format of the output data. Currently, we support CSV, Parquet or Avro. The Avro data source requires an external
-package to run, which can be configured with spark-submit options (&ndash;packages
-org.apache.spark:spark-avro_2.11:2.4.0). - <strong>file_configs</strong> (optional): The rest of the valid configuration can
-be passed through this argument in a dictionary format, e.g., repartition, mode, compression, header, delimiter,
-etc. All the key/value pairs written in this argument are passed as options to DataFrameWriter is available using
+based on the generic Save functionality of Spark SQL.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>idf</code></strong></dt>
+<dd>Input Dataframe i.e. Spark DataFrame to be saved</dd>
+<dt><strong><code>file_path</code></strong></dt>
+<dd>Path to output data (directory or filename). Compatible with local path and s3 path (when running in AWS environment).</dd>
+<dt><strong><code>file_type</code></strong></dt>
+<dd>"csv", "parquet", "avro", "json".
+Avro data source requires an external package to run, which can be configured with spark-submit
+(&ndash;packages org.apache.spark:spark-avro_2.11:2.4.0).</dd>
+<dt><strong><code>file_configs</code></strong></dt>
+<dd>This argument is passed in dictionary format as key/value pairs. Some of the potential keys are header, delimiter,
+mode, compression, repartition.
+compression options - uncompressed, gzip (doesn't work with avro), snappy (only valid for parquet)
+mode options - error (default), overwrite, append repartition - None (automatic partitioning) or an integer value ()
+e.g. {"header":"True", "delimiter":",",'compression':'snappy','mode':'overwrite','repartition':'10'}.
+All the key/value pairs (except repartition, mode) written in this argument are passed as options to DataFrameWriter is available using
 Dataset.write operator. If the number of repartitions mentioned through this argument is less than the existing
 DataFrame partitions, then the coalesce operation is used instead of the repartition operation to make the
-execution work. This is because the coalesce operation doesn’t</li>
-</ul>
-<p>Parameters ---------- idf : Input Dataframe file_path : Path to output data (directory or filename). Compatible
-with local path and s3 path (when running in AWS environment). file_type : csv", "parquet", "avro". Avro data
-source requires an external package to run, which can be configured with spark-submit (&ndash;packages
-org.apache.spark:spark-avro_2.11:2.4.0). file_configs : This argument is passed in dictionary format as key/value
-pairs. Some of the potential keys are header, delimiter, mode, compression, repartition. compression options -
-uncompressed, gzip (doesn't work with avro), snappy (only valid for parquet) mode options - error (default),
-overwrite, append repartition - None (automatic partitioning) or an integer value () e.g. {"header":"True",
-"delimiter":",",'compression':'snappy','mode':'overwrite','repartition':'10'}. column_order : list of columns in
-the order in which Dataframe is to be written. If None or [] is specified, then the default order is applied.</p>
-<h2 id="returns">Returns</h2></div>
+execution work. This is because the coalesce operation doesn’t require any shuffling like repartition which is known to be an expensive step.</dd>
+<dt><strong><code>column_order</code></strong></dt>
+<dd>list of columns in the order in which Dataframe is to be written. If None or [] is specified, then the default order is applied.</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -959,32 +911,32 @@ the order in which Dataframe is to be written. If None or [] is specified, then 
 <pre>
 ```python
 def write_dataset(idf, file_path, file_type, file_configs={}, column_order=[]):
-    """This function saves the Spark DataFrame in the user-provided output path. Like read_dataset, this function is
-    based on the generic Save functionality of Spark SQL.  It requires the following arguments:
+    """
+    This function saves the Spark DataFrame in the user-provided output path. Like read_dataset, this function is
+    based on the generic Save functionality of Spark SQL.
 
-    - **idf**: Spark DataFrame to be saved - **file_path**: file (or directory) path where the output data is to be
-    saved. File path can be a local path or s3 path (when running with AWS cloud services) - **file_type**: file
-    format of the output data. Currently, we support CSV, Parquet or Avro. The Avro data source requires an external
-    package to run, which can be configured with spark-submit options (--packages
-    org.apache.spark:spark-avro_2.11:2.4.0). - **file_configs** (optional): The rest of the valid configuration can
-    be passed through this argument in a dictionary format, e.g., repartition, mode, compression, header, delimiter,
-    etc. All the key/value pairs written in this argument are passed as options to DataFrameWriter is available using
-    Dataset.write operator. If the number of repartitions mentioned through this argument is less than the existing
-    DataFrame partitions, then the coalesce operation is used instead of the repartition operation to make the
-    execution work. This is because the coalesce operation doesn’t
-
-    Parameters ---------- idf : Input Dataframe file_path : Path to output data (directory or filename). Compatible
-    with local path and s3 path (when running in AWS environment). file_type : csv", "parquet", "avro". Avro data
-    source requires an external package to run, which can be configured with spark-submit (--packages
-    org.apache.spark:spark-avro_2.11:2.4.0). file_configs : This argument is passed in dictionary format as key/value
-    pairs. Some of the potential keys are header, delimiter, mode, compression, repartition. compression options -
-    uncompressed, gzip (doesn't work with avro), snappy (only valid for parquet) mode options - error (default),
-    overwrite, append repartition - None (automatic partitioning) or an integer value () e.g. {"header":"True",
-    "delimiter":",",'compression':'snappy','mode':'overwrite','repartition':'10'}. column_order : list of columns in
-    the order in which Dataframe is to be written. If None or [] is specified, then the default order is applied.
-
-    Returns
-    -------
+    Parameters
+    ----------
+    idf
+        Input Dataframe i.e. Spark DataFrame to be saved
+    file_path
+        Path to output data (directory or filename). Compatible with local path and s3 path (when running in AWS environment).
+    file_type
+        "csv", "parquet", "avro", "json".
+        Avro data source requires an external package to run, which can be configured with spark-submit
+        (--packages org.apache.spark:spark-avro_2.11:2.4.0).
+    file_configs
+        This argument is passed in dictionary format as key/value pairs. Some of the potential keys are header, delimiter,
+        mode, compression, repartition.
+        compression options - uncompressed, gzip (doesn't work with avro), snappy (only valid for parquet)
+        mode options - error (default), overwrite, append repartition - None (automatic partitioning) or an integer value ()
+        e.g. {"header":"True", "delimiter":",",'compression':'snappy','mode':'overwrite','repartition':'10'}.
+        All the key/value pairs (except repartition, mode) written in this argument are passed as options to DataFrameWriter is available using
+        Dataset.write operator. If the number of repartitions mentioned through this argument is less than the existing
+        DataFrame partitions, then the coalesce operation is used instead of the repartition operation to make the
+        execution work. This is because the coalesce operation doesn’t require any shuffling like repartition which is known to be an expensive step.
+    column_order
+        list of columns in the order in which Dataframe is to be written. If None or [] is specified, then the default order is applied.
 
     """
 

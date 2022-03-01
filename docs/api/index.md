@@ -23,7 +23,7 @@
 </dd>
 <dt><code class="name"><a title="anovos.feature_recommender" href="feature_recommender/index.html">anovos.feature_recommender</a></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Feature engineering has always played a crucial role in solving any Machine learning (ML) related problems …</p></div>
 </dd>
 <dt><code class="name"><a title="anovos.shared" href="shared/index.html">anovos.shared</a></code></dt>
 <dd>
