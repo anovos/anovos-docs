@@ -323,8 +323,8 @@ list of different metrics used to generate descriptive statistics [global_summar
 
 _Example:_
 ```yaml
-metric: ['global_summary','measures_of_counts','measures_of_centralTendency','measures_of_cardinality'
-            ,'measures_of_percentiles','measures_of_dispersion','measures_of_shape']
+metric: ['global_summary','measures_of_counts','measures_of_centralTendency','measures_of_cardinality',
+          'measures_of_percentiles','measures_of_dispersion','measures_of_shape']
 ```
 
 ### `Metric_args`
@@ -769,15 +769,15 @@ This section covers the final execution part where primarily the output generate
 
 - `corr_threshold`: The threshold chosen beyond which the attributes are found to be redundant. It should be between 0 to 1.
 
-- `iv_threshold`: The threshold beyond which the attributes are found to be significant in terms of model. It takes value between 0 to 1.
+ `iv_threshold`: The threshold beyond which the attributes are found to be significant in terms of model. It takes value between 0 to 1.
 
-    |**Information Value**|   **Variable Predictiveness**|
-    |--- | ---|
-    |Less than 0.02    |      Not useful for prediction|
-    |0.02 to 0.1       |     Weak predictive Power|
-    |0.1 to 0.3        |      Medium predictive Power|
-    |0.3 to 0.5        |      Strong predictive Power|
-    |>0.5              |    Suspicious Predictive Power|
+| **Information Value**  | **Variable Predictiveness**  |
+|------------------------|------------------------------|
+| Less than 0.02         | Not useful for prediction    |
+| 0.02 to 0.1            | Weak predictive Power        |
+| 0.1 to 0.3             | Medium predictive Power      |
+| 0.3 to 0.5             | Strong predictive Power      |
+| >0.5                   | Suspicious Predictive Power  |
 
 - `drift_threshold_model`: The threshold beyond which the attribute can be flagged as 1 or drifted as measured across different drift metrices specified by the user. It takes value between 0 to 1.
 
