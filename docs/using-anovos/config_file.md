@@ -114,12 +114,20 @@ recast_column:
 
 ## `concatenate_dataset`
 
-This configuration block describes how to combines multiple dataframes into a single dataframe.
-There can be varying number of input dataframes that can be concatenated and for loading other concatenating input datasets, we need to write its subsequent operations separately  for each datasets like dataset1, dataset2, dataset3, ..., etc.
+This configuration block describes how to combine multiple dataframes into a single dataframe.
+There can be varying number of input dataframes that can be concatenated and for loading other
+concatenating input datasets, we need to write its subsequent operations separately 
+for each dataset like `dataset1`, `dataset2`, `dataset3` and so on.
 
 ### `method`
 
-`index` or `name`. This needs to be entered as a keyword argument. The "index" method involves concatenating the dataframes by the column index. IF the sequence of column is not fixed among the dataframe, this method should be avoided. The "name" method involves concatenating by columns names. The 1st dataframe passed under idfs will define the final columns in the concatenated dataframe. It will throw an error if any column in the 1st dataframe is not available in any of other dataframes.
+`index` or `name`. This needs to be entered as a keyword argument.
+The "index" method involves concatenating the dataframes by the column index.
+If the sequence of column is not fixed among the dataframe, this method should be avoided.
+The "name" method involves concatenating by column names.
+
+The first dataframe passed will define the final columns in the concatenated dataframe.
+It will throw an error if any column in the first dataframe is not available in any of other dataframes.
 
 _Example:_
 ```yaml
@@ -132,7 +140,7 @@ method: name
 
 - `file_path`: The file (or directory) path to read the other concatenating input dataset from.
    It can be a local path, an [S3 path](https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-bucket-intro.html)
-  (when running on AWS), a path to a file resource on Google Colab (see
+   (when running on AWS), a path to a file resource on Google Colab (see
    [this tutorial](https://neptune.ai/blog/google-colab-dealing-with-files)for
    an overview), or a path on the [Databricks File System](https://docs.microsoft.com/de-de/azure/databricks/data/databricks-file-system)
    (when running on Azure).
@@ -174,32 +182,34 @@ to be selected for further processing.
   for a list of valid datatypes.
   Note that this field is case-insensitive.
 
-```
-Note: There can be multiple concatenating datasets, for loading the other datasets, it's configuration should be written in same as dataset1
-```
 
-### `dataset2`
+### `dataset2`, `dataset3`, ...
 
-  same configuration as dataset1
+Additional datasets are configured in the same manner as `dataset1`.
 
 ## `join_dataset`
 
- This configuration block describes how to joins multiple dataframes into a single dataframe by a joining key column.
+This configuration block describes how multiple dataframes are joined into a single dataframe by a key column.
 
- There can be varying number of input dataframes that can be joined and for loading other joining input datasets, we need to write its subsequent operations separately  for each datasets like dataset1, dataset2, dataset3, ..., etc.
+There can be a varying number of input dataframes.
+Each dataset to be joined is configured separately as `dataset1`, `dataset2`, and so on.
 
 ### `Join_cols`
 
-  Key column(s) to join all dataframes together. In case of multiple columns to join, they can be passed in a list format or a single text format where different column names are separated by pipe delimiter `|`
+Key column(s) to join all dataframes together.
+In the case that the key consists of multiple columns, they can be passed as a list of strings or
+a single string where the column names are separated by `|`.
 
 _Example:_
 ```yaml
 join_cols: id_column
 ```
 
-### `Join_type`
+### `join_type`
 
-  'inner, 'full', 'left', 'right', 'left_semi', 'left_anti'
+The type of join: `inner`, `full`, `left`, `right`, `left_semi`, `left_anti`
+
+For an introduction, see [this tutorial](https://sparkbyexamples.com/spark/spark-sql-dataframe-join/).
 
 _Example:_
 ```yaml
@@ -254,13 +264,9 @@ to be selected for further processing.
   for a list of valid datatypes.
   Note that this field is case-insensitive.
 
-```
-Note: There can be multiple joining datasets, for loading the other datasets, it's configuration should be written in same as dataset1
-```
+### `dataset2`, `dataset3`, ...
 
-### `dataset2`
-
-  same configuration as dataset1
+Additional datasets are configured in the same manner as `dataset1`.
 
 ## `timeseries_analyzer`
 
