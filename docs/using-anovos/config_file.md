@@ -272,11 +272,11 @@ Additional datasets are configured in the same manner as `dataset1`.
 
 - `auto_detection`: This takes Boolean type input -- `True` or `False`. If True, it will help produce the output containing a transformation through auto timestamp / date detection by reading the ingested dataframe from source.
 
-- `id_col`: 'id_column'
+- `id_col`: Name of Id column in the input dataset
 
-- `tz_offset`: Timezone offset (Option to chose between options like Local, GMT, UTC, etc.). Default option is set as "Local".
+- `tz_offset`: Timezone offset (Option to chose between these three options `local`, `gmt`, `utc`). Default option is set as "Local".
 
-- `inspection`: This takes Boolean type input -- `True` or `False`.
+- `inspection`: This takes Boolean type input -- `True` or `False`. If True, time series elements undergo inspection.
 
 - `analysis_level`: Option to choose between "Daily" or "Weekly" or "Hourly". Daily is chosen as default. If "Daily" is selected as the output type, the daily view is populated ; If it's "Hourly", the view is shown at a Day part level. However, if it's "Weekly", then the display it per individual week days (1-7) as captured.
 
@@ -748,6 +748,8 @@ master_path: 'report_stats'
 - `bin_size`: 10 - 20 (recommended for PSI), >100 (other method types)
 
 - `drift_detector`: It takes Boolean type input -- `True` or `False`. It indicates whether the drift component is already analyzed or not. By default it is kept as False.
+
+- `outlier_charts`: It takes Boolean type input -- `True` or `False`. Outlier chart provides the flexibility to the user whether the user wants outlier charts or not. If True, outlier_chart will be generated.
 
 - `source_path`: The source data path which is needed for drift analysis. If it's not computed / out of scope, the default value of "NA" is considered.
 
