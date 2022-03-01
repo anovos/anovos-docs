@@ -1,18 +1,18 @@
-**Anovos on Azure Databricks Platform**
+# Anovos on Azure Databricks Platform 
 
 Azure Databricks is an implementation of Apache Spark on Microsoft Azure. It is a powerful chamber that handles big data workloads effortlessly and helps in both data wrangling and exploration. It lets you run large-scale Spark jobs from any Python, R, SQL, and Scala applications.
 
 Following links and video will brief about introduction about Azure Databricks and the usage of this platform and its benefits.
-[A beginner’s guide to Azure Databricks](https://www.sqlshack.com/a-beginners-guide-to-azure-databricks/)
-[Azure Databricks Hands-on](https://medium.com/@jcbaey/azure-databricks-hands-on-6ed8bed125c7)
-[Introducing Azure Databricks](https://databricks.com/introducing-azure-databricks)
+- [A beginner’s guide to Azure Databricks](https://www.sqlshack.com/a-beginners-guide-to-azure-databricks/)
+- [Azure Databricks Hands-on](https://medium.com/@jcbaey/azure-databricks-hands-on-6ed8bed125c7)
+- [Introducing Azure Databricks](https://databricks.com/introducing-azure-databricks)
 
 Currently we are supporting two ways of running Anovos on Azure Databricks Platform 
 
 1.	Anovos on Azure Databricks using DBFS
 2.	Anovos on Azure Databricks using Azure blob storage container by mounting to DBFS
 
-**1. Anovos on Azure Databricks using DBFS**
+## 1. Anovos on Azure Databricks using DBFS
 
 **Following are the steps required for running anovos on Azure Databricks using DBFS:**
 
@@ -188,9 +188,9 @@ automatically.
 
 Option for scheduling these jobs for running automatically are also available.
 
-**Note**Attaching links that will brief about creating jobs, running as well as scheduling jobs for reference.
-[Jobs](https://docs.microsoft.com/en-us/azure/databricks/jobs)
-[Jobs](https://docs.databricks.com/jobs.html)
+**Note:** Attaching links that will brief about creating jobs, running as well as scheduling jobs for reference.
+- [Jobs](https://docs.microsoft.com/en-us/azure/databricks/jobs)
+- [Jobs](https://docs.databricks.com/jobs.html)
 
 Once the job finishes successfully, users will be able to see their status as succeeded. we can see that in the above images.
 
@@ -200,7 +200,7 @@ configs.yaml file.
 
 
 
-**2.Anovos on Azure Databricks using Azure blob storage container by mounting to DBFS**
+## 2. Anovos on Azure Databricks using Azure blob storage container by mounting to DBFS
 
 **Following are the steps required for running end to end anovos on Azure Databricks Platform using Azure blob storage container by mounting to DBFS:**
 
@@ -237,37 +237,23 @@ machine**
 
 Copy the following files from local machine to Azureblob storage container directly from UI or from CLI commands:
 
-  - dist/income_dataset (optional)
-
-<!-- end list -->
+- dist/income_dataset (optional)
 
   - This folder contains our demo dataset.This is sample dataset that is shown for reference.Users can copy their own dataset.
 
-<!-- end list -->
-
-  - dist/main.py
-
-<!-- end list -->
+- dist/main.py
 
   - This is sample script to show how different functions from Anovos
     module can be stitched together to create a workflow.
 
   - This script takes input from a yaml configuration file
 
-<!-- end list -->
-
-  - dist/.whl file
-
-<!-- end list -->
+- dist/.whl file
 
   - This is wheel file that contains all the packages and required
     scripts that was built in step 2
 
-<!-- end list -->
-
-  - jars/.jar file
-
-<!-- end list -->
+- jars/.jar file
 
   - This is jar file used for installing histogram packages for running
     anovos
@@ -288,7 +274,8 @@ Note: we can copy directly from UI by clicking upload button on azure
 blob storage container or using command line.
 
 The syntax to upload a file using command line are as follows:
-azcopy copy " <SourceFile>" "<storage_account_name>.<blob>.core.windows.net/<containername>?<SAStoken>"
+
+azcopy copy " **SourceFile**" "**storage_account_name**.**blob**.core.windows.net/**containername**?**SAStoken**"
     
 Note: Attaching link that details about transfering data with AzCopy command line utility and file storage for reference.
 [Transfer data with AzCopy and file storage](https://docs.microsoft.com/en-us/azure/storage/common/storage-use-azcopy-files)
@@ -304,10 +291,10 @@ Mounting Azure blob storage container by executing the following commands in Azu
         extra_configs = {"fs.azure.account.key.<storage-account-name>.blob.core.windows.net":"<storage-account-key>"})
 
 here, 
-•<storage-account-name> is the name of your Azure Blob storage account.
-•<container-name> is the name of a container in your Azure Blob storage account.
-•<mount-name> is a DBFS path representing where the Blob storage container or a folder inside the container will be mounted in DBFS.
-•<storage-account-key> is the access key for that storage account
+- **storage-account-name:** is the name of your Azure Blob storage account.
+- **container-name:** is the name of a container in your Azure Blob storage account.
+- **mount-name:** is a DBFS path representing where the Blob storage container or a folder inside the container will be mounted in DBFS.
+- **storage-account-key:** is the access key for that storage account
 
 Attaching some links to get more information about mounting azure blob storage container in dbfs path.
 [Azure Blob storage](https://docs.microsoft.com/en-us/azure/databricks/data/data-sources/azure/azure-storage#:~:text=Mount%20Azure%20Blob%20storage%20containers%20to%20DBFS,-You%20can%20mount&text=All%20users%20have%20read%20and,immediately%20access%20the%20mount%20point)
@@ -329,13 +316,15 @@ Input and Output Path should be updated everywhere in config file that starts li
     For Python operations – "/dbfs/mnt/mount-name/folder_name/"
 
 **Example:**
+```yaml
   read_dataset:
     file_path: "dbfs:/mnt/anovos1/income_dataset/csv/"
     file_type: csv
+```
 
 here mount-name refers to anovos1 and income_dataset is the folder name that is present in azure blob storage container.
 
-**Note**Attaching config file description link to get more information about updating input,output path and threshold settings according to use case.
+**Note** Attaching config file description link to get more information about updating input,output path and threshold settings according to use case.
     [config_file_description](https://github.com/anovos/anovos-docs/blob/anovos_config_file_desc/docs/using-anovos/config_file.md)
 
 **Step6: Copy updated config file from local machine to azure blob storage container using UI or from azure command in similar way like in step 3 for other files.**
@@ -350,24 +339,32 @@ This is the sample yaml configuration file which sets the argument for all funct
 ![https://raw.githubusercontent.com/anovos/anovos-docs/azure_databricks_docs/docs/assets/azure_databricks_images/image7.png](https://raw.githubusercontent.com/anovos/anovos-docs/azure_databricks_docs/docs/assets/azure_databricks_images/image7.png)
 
 **a.Task Name** – Give any task name relevant to your project 
+
 **b.Type** – Python, DBFS mount path of main.py script file 
+
 **c.Cluster**
+
 **Note**Attaching link that describes all the information related to cluster configurations.
 [Configure clusters](https://docs.microsoft.com/en-us/azure/databricks/clusters/configure#cluster-configurations)
                                                 **Cluster Configurations**
                                                 
 ![https://raw.githubusercontent.com/anovos/anovos-docs/azure_databricks_docs/docs/assets/azure_databricks_images/image3.png](https://raw.githubusercontent.com/anovos/anovos-docs/azure_databricks_docs/docs/assets/azure_databricks_images/image3.png)                                               
-        **1.Cluster mode** – Standard
-        **2.Databricks run time version** – Select the spark and scala version for creating cluster
-            For running in python 3.7.x – scala 2.11, spark 2.x.x
-            For running in python 3.8.x – scala 2.12, spark 3.x.x
-        **3.Autopilot Options** – Enable autoscaling should be on 
-        **4.Worker Types** – General purpose (14GB Memory, 4 cores), min worker – 2, max worker-8
-        **5.Driver Types** - General purpose (14GB Memory, 4 cores)
-        **Notes** – Users can change this worker types and driver types configurations according to jobs complexity             **d.Parameters** – [ mounted DBFS path to config.yaml ,  run_type]
+- **Cluster mode** – Standard
+- **Databricks run time version** – Select the spark and scala version for creating cluster
+    For running in python 3.7.x – scala 2.11, spark 2.x.x
+    For running in python 3.8.x – scala 2.12, spark 3.x.x
+- **Autopilot Options** – Enable autoscaling should be on 
+- **Worker Types** – General purpose (14GB Memory, 4 cores), min worker – 2, max worker-8
+- **Driver Types** - General purpose (14GB Memory, 4 cores)
+
+**Notes** – Users can change this worker types and driver types configurations according to jobs complexity
+
+**d.Parameters** – [ mounted DBFS path to config.yaml ,  run_type]
       Eg. - ["/dbfs/mnt/anovos1/configs_income_mount.yaml","databricks"]
+      
 **e.Dependent libraries-**
 Provide mounted DBFS path of wheel file and jar file by clicking on DBFS/ADLS if required wheel file and jars are already         uploaded in the azure blob storage container that is required for running anovos
+
 **Example:**
 
       Wheel file path – dbfs:/mnt/anovos1/jars/anovos-0.1.1-py2.py3-none-any.whl
@@ -381,9 +378,9 @@ After setting all these required steps in task, click create and jobs will be cr
 For running these jobs, click on run now and then jobs will be triggered automatically.
 Option for scheduling these jobs for running automatically are also available.
 
-**Note**Attaching links that will brief about creating jobs, running as well as scheduling jobs for reference.
-[Jobs](https://docs.microsoft.com/en-us/azure/databricks/jobs)
-[Jobs](https://docs.databricks.com/jobs.html)
+**Note:** Attaching links that will brief about creating jobs, running as well as scheduling jobs for reference.
+- [Jobs](https://docs.microsoft.com/en-us/azure/databricks/jobs)
+- [Jobs](https://docs.databricks.com/jobs.html)
 
 Once the job finishes successfully, users will be able to see status as succeeded.we can see that in the below images.
 
