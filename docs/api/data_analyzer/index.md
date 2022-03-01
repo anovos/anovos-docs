@@ -16,4 +16,8 @@ appropriate treatment option to fix …</p></div>
 <div class="desc"><p>This module generates all the descriptive statistics related to the ingested data. Descriptive statistics are
 split into different metric types, and …</p></div>
 </dd>
+<dt><code class="name"><a title="anovos.data_analyzer.ts_analyzer" href="ts_analyzer.html">anovos.data_analyzer.ts_analyzer</a></code></dt>
+<dd>
+<div class="desc"><p>This module generates the intermediate output specific to the inspection of Time series analysis …</p></div>
+</dd>
 </dl>

@@ -1,15 +1,43 @@
 # <code>feature_recommendation</code>
+<p>Feature recommender recommends features based on ingested data dictionary by the user.</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre>
 ```python
-from anovos.feature_recommender.featrec_init import *
-import re
-import plotly.graph_objects as go
+"""Feature recommender recommends features based on ingested data dictionary by the user."""
+import copy
 import random
-import matplotlib.pyplot as plt
+import re
+
+import numpy as np
+import pandas as pd
+import plotly.graph_objects as go
+from sentence_transformers import util
+
+from anovos.feature_recommender.featrec_init import (
+    recommendation_data_prep,
+    model_fer,
+    camel_case_split,
+    feature_recommendation_prep,
+    get_column_name,
+    EmbeddingsTrainFer,
+)
+from anovos.feature_recommender.feature_exploration import (
+    list_usecase_by_industry,
+    process_industry,
+    process_usecase,
+)
+
+list_train_fer, df_rec_fer = feature_recommendation_prep()
+list_embedding_train_fer = EmbeddingsTrainFer(list_train_fer)
+(
+    feature_name_column,
+    feature_desc_column,
+    industry_column,
+    usecase_column,
+) = get_column_name(df_rec_fer)
 
 
 def feature_recommendation(
@@ -22,29 +50,40 @@ def feature_recommendation(
     top_n=2,
     threshold=0.3,
 ):
-    """
+    """Recommends features to users based on their input attributes, and their goal industry and/or use case
 
     Parameters
     ----------
-    df
+    df : DataFrame
         Input DataFrame - Users' Data dictionary. It is expected to consist of attribute name and/or attribute description
-    name_column
-        Input, column name of Attribute Name in Input DataFrame (string). Default is None.
-    desc_column
-        Input, column name of Attribute Description in Input DataFrame (string). Default is None.
-    suggested_industry
-        Input, Industry of interest to the user (if any) to be filtered out (string). Default is 'all', meaning all Industries available.
-    suggested_usecase
-        Input, Usecase of interest to the user (if any) to be filtered out (string). Default is 'all', meaning all Usecases available.
-    semantic
-        Input semantic (boolean) - Whether the input needs to go through semantic similarity or not. Default is True.
-    top_n
-        Number of features displayed (int). Default is 2
-    threshold
-        Input threshold value (float). Default is 0.3
+    name_column : str
+        Input, column name of Attribute Name in Input DataFrame. Default is None.
+    desc_column : str
+        Input, column name of Attribute Description in Input DataFrame. Default is None.
+    suggested_industry : str
+        Input, Industry of interest to the user (if any) to be filtered out. Default is 'all', meaning all Industries available.
+    suggested_usecase : str
+        Input, Usecase of interest to the user (if any) to be filtered out. Default is 'all', meaning all Usecases available.
+    semantic : bool
+        Input semantic - Whether the input needs to go through semantic similarity or not. Default is True.
+    top_n : int
+        Number of features displayed. Default is 2
+    threshold : float
+        Input threshold value. Default is 0.3
 
     Returns
     -------
+    DataFrame
+        Columns are:
+
+        - Input Attribute Name: Name of the input Attribute
+        - Input Attribute Description: Description of the input Attribute
+        - Recommended Feature Name: Name of the recommended Feature
+        - Recommended Feature Description: Description of the recommended Feature
+        - Feature Similarity Score: Semantic similarity score between input Attribute and recommended Feature
+        - Industry: Industry name of the recommended Feature
+        - Usecase: Usecase name of the recommended Feature
+        - Source: Source of the recommended Feature
 
     """
     if not isinstance(df, pd.DataFrame):
@@ -66,7 +105,7 @@ def feature_recommendation(
         df_rec_fr = df_rec_fer[df_rec_fer.iloc[:, 2].str.contains(suggested_industry)]
         list_keep = list(df_rec_fr.index)
         list_embedding_train_fr = [
-            list_embedding_train_fer.tolist()[x] for x in list_keep
+            list_embedding_train_fer.get().tolist()[x] for x in list_keep
         ]
         df_rec_fr = df_rec_fr.reset_index(drop=True)
     elif suggested_usecase != "all" and suggested_industry == "all":
@@ -74,7 +113,7 @@ def feature_recommendation(
         df_rec_fr = df_rec_fer[df_rec_fer.iloc[:, 3].str.contains(suggested_usecase)]
         list_keep = list(df_rec_fr.index)
         list_embedding_train_fr = [
-            list_embedding_train_fer.tolist()[x] for x in list_keep
+            list_embedding_train_fer.get().tolist()[x] for x in list_keep
         ]
         df_rec_fr = df_rec_fr.reset_index(drop=True)
     elif suggested_usecase != "all" and suggested_industry != "all":
@@ -87,7 +126,7 @@ def feature_recommendation(
         if len(df_rec_fr) > 0:
             list_keep = list(df_rec_fr.index)
             list_embedding_train_fr = [
-                list_embedding_train_fer.tolist()[x] for x in list_keep
+                list_embedding_train_fer.get().tolist()[x] for x in list_keep
             ]
             df_rec_fr = df_rec_fr.reset_index(drop=True)
         else:
@@ -100,16 +139,15 @@ def feature_recommendation(
                     "Feature_Similarity_Score",
                     "Industry",
                     "Usecase",
-                    "Source",
                 ]
             )
             print("Industry/Usecase pair does not exist.")
             return df_out
     else:
         df_rec_fr = df_rec_fer
-        list_embedding_train_fr = list_embedding_train_fer
+        list_embedding_train_fr = list_embedding_train_fer.get()
 
-    if name_column == None:
+    if name_column is None:
         df_out = pd.DataFrame(
             columns=[
                 "Input_Attribute_Description",
@@ -118,10 +156,9 @@ def feature_recommendation(
                 "Feature_Similarity_Score",
                 "Industry",
                 "Usecase",
-                "Source",
             ]
         )
-    elif desc_column == None:
+    elif desc_column is None:
         df_out = pd.DataFrame(
             columns=[
                 "Input_Attribute_Name",
@@ -130,7 +167,6 @@ def feature_recommendation(
                 "Feature_Similarity_Score",
                 "Industry",
                 "Usecase",
-                "Source",
             ]
         )
     else:
@@ -143,10 +179,9 @@ def feature_recommendation(
                 "Feature_Similarity_Score",
                 "Industry",
                 "Usecase",
-                "Source",
             ]
         )
-    list_embedding_user = model_fer.encode(list_user, convert_to_tensor=True)
+    list_embedding_user = model_fer.model.encode(list_user, convert_to_tensor=True)
     for i, feature in enumerate(list_user):
         cos_scores = util.pytorch_cos_sim(list_embedding_user, list_embedding_train_fr)[
             i
@@ -154,7 +189,7 @@ def feature_recommendation(
         top_results = np.argpartition(-cos_scores, range(top_n))[0:top_n]
         for idx in top_results[0:top_n]:
             single_score = "%.4f" % (cos_scores[idx])
-            if name_column == None:
+            if name_column is None:
                 if float(single_score) >= threshold:
                     df_append = pd.DataFrame(
                         [
@@ -165,7 +200,6 @@ def feature_recommendation(
                                 "%.4f" % (cos_scores[idx]),
                                 df_rec_fr[industry_column].iloc[int(idx)],
                                 df_rec_fr[usecase_column].iloc[int(idx)],
-                                df_rec_fr[source_column].iloc[int(idx)],
                             ]
                         ],
                         columns=[
@@ -175,7 +209,6 @@ def feature_recommendation(
                             "Feature_Similarity_Score",
                             "Industry",
                             "Usecase",
-                            "Source",
                         ],
                     )
                 else:
@@ -183,12 +216,11 @@ def feature_recommendation(
                         [
                             [
                                 df_user[desc_column].iloc[i],
-                                "Null",
-                                "Null",
-                                "Null",
-                                "Null",
-                                "Null",
-                                "Null",
+                                "N/A",
+                                "N/A",
+                                "N/A",
+                                "N/A",
+                                "N/A",
                             ]
                         ],
                         columns=[
@@ -198,10 +230,9 @@ def feature_recommendation(
                             "Feature_Similarity_Score",
                             "Industry",
                             "Usecase",
-                            "Source",
                         ],
                     )
-            elif desc_column == None:
+            elif desc_column is None:
                 if float(single_score) >= threshold:
                     df_append = pd.DataFrame(
                         [
@@ -212,7 +243,6 @@ def feature_recommendation(
                                 "%.4f" % (cos_scores[idx]),
                                 df_rec_fr[industry_column].iloc[int(idx)],
                                 df_rec_fr[usecase_column].iloc[int(idx)],
-                                df_rec_fr[source_column].iloc[int(idx)],
                             ]
                         ],
                         columns=[
@@ -222,20 +252,18 @@ def feature_recommendation(
                             "Feature_Similarity_Score",
                             "Industry",
                             "Usecase",
-                            "Source",
                         ],
                     )
                 else:
                     df_append = pd.DataFrame(
                         [
                             [
-                                df_user[desc_column].iloc[i],
-                                "Null",
-                                "Null",
-                                "Null",
-                                "Null",
-                                "Null",
-                                "Null",
+                                df_user[name_column].iloc[i],
+                                "N/A",
+                                "N/A",
+                                "N/A",
+                                "N/A",
+                                "N/A",
                             ]
                         ],
                         columns=[
@@ -245,7 +273,6 @@ def feature_recommendation(
                             "Feature_Similarity_Score",
                             "Industry",
                             "Usecase",
-                            "Source",
                         ],
                     )
             else:
@@ -260,7 +287,6 @@ def feature_recommendation(
                                 "%.4f" % (cos_scores[idx]),
                                 df_rec_fr[industry_column].iloc[int(idx)],
                                 df_rec_fr[usecase_column].iloc[int(idx)],
-                                df_rec_fr[source_column].iloc[int(idx)],
                             ]
                         ],
                         columns=[
@@ -271,7 +297,6 @@ def feature_recommendation(
                             "Feature_Similarity_Score",
                             "Industry",
                             "Usecase",
-                            "Source",
                         ],
                     )
                 else:
@@ -280,12 +305,11 @@ def feature_recommendation(
                             [
                                 df_user[name_column].iloc[i],
                                 df_user[desc_column].iloc[i],
-                                "Null",
-                                "Null",
-                                "Null",
-                                "Null",
-                                "Null",
-                                "Null",
+                                "N/A",
+                                "N/A",
+                                "N/A",
+                                "N/A",
+                                "N/A",
                             ]
                         ],
                         columns=[
@@ -296,33 +320,44 @@ def feature_recommendation(
                             "Feature_Similarity_Score",
                             "Industry",
                             "Usecase",
-                            "Source",
                         ],
                     )
-            df_out = df_out.append(df_append, ignore_index=True)
+            df_out = pd.concat(
+                [df_out, df_append], ignore_index=True, axis=0, join="outer"
+            )
     return df_out
 
 
 def find_attr_by_relevance(
     df, building_corpus, name_column=None, desc_column=None, threshold=0.3
 ):
-    """
+    """Provide a comprehensive mapping method from users&#39; input attributes to their own feature corpus,
+     and therefore, help with the process of creating features in cold-start problems
+
 
     Parameters
     ----------
-    df
+    df : DataFrame
         Input DataFrame - Users' Data dictionary. It is expected to consist of attribute name and/or attribute description
-    building_corpus
-        Input Feature Description (list)
-    name_column
-        Input, column name of Attribute Name in Input DataFrame (string). Default is None.
-    desc_column
-        Input, column name of Attribute Description in Input DataFrame (string). Default is None.
-    threshold
-        Input threshold value (float). Default is 0.3
+    building_corpus : list
+        Input Feature Description
+    name_column : str
+        Input, column name of Attribute Name in Input DataFrame. Default is None.
+    desc_column : str
+        Input, column name of Attribute Description in Input DataFrame. Default is None.
+    threshold : float
+        Input threshold value Default is 0.3
 
     Returns
     -------
+    DataFrame
+        Columns are:
+
+        - Input Feature Desc: Description of the input Feature
+        - Recommended Input Attribute Name: Name of the recommended Feature
+        - Recommended Input Attribute Description: Description of the recommended Feature
+        - Input Attribute Similarity Score: Semantic similarity score between input Attribute and recommended Feature
+
 
     """
     if not isinstance(df, pd.DataFrame):
@@ -341,7 +376,7 @@ def find_attr_by_relevance(
         building_corpus[i] = re.sub("[^A-Za-z0-9]+", " ", building_corpus[i])
         building_corpus[i] = camel_case_split(building_corpus[i])
         building_corpus[i] = building_corpus[i].lower().strip()
-    if name_column == None:
+    if name_column is None:
         df_out = pd.DataFrame(
             columns=[
                 "Input_Feature_Description",
@@ -349,7 +384,7 @@ def find_attr_by_relevance(
                 "Input_Attribute_Similarity_Score",
             ]
         )
-    elif desc_column == None:
+    elif desc_column is None:
         df_out = pd.DataFrame(
             columns=[
                 "Input_Feature_Description",
@@ -367,10 +402,12 @@ def find_attr_by_relevance(
             ]
         )
     list_user, df_user = recommendation_data_prep(df, name_column, desc_column)
-    list_embedding_user = model_fer.encode(list_user, convert_to_tensor=True)
-    list_embedding_building = model_fer.encode(building_corpus, convert_to_tensor=True)
+    list_embedding_user = model_fer.model.encode(list_user, convert_to_tensor=True)
+    list_embedding_building = model_fer.model.encode(
+        building_corpus, convert_to_tensor=True
+    )
     for i, feature in enumerate(building_corpus):
-        if name_column == None:
+        if name_column is None:
             df_append = pd.DataFrame(
                 columns=[
                     "Input_Feature_Description",
@@ -378,7 +415,7 @@ def find_attr_by_relevance(
                     "Input_Attribute_Similarity_Score",
                 ]
             )
-        elif desc_column == None:
+        elif desc_column is None:
             df_append = pd.DataFrame(
                 columns=[
                     "Input_Feature_Description",
@@ -404,89 +441,52 @@ def find_attr_by_relevance(
         for idx in top_results[0 : len(list_user)]:
             single_score = "%.4f" % (cos_scores[idx])
             if float(single_score) >= threshold:
-                if name_column == None:
-                    df_append = df_append.append(
-                        {
-                            "Input_Feature_Description": feature,
-                            "Recommended_Input_Attribute_Description": df_user[
-                                desc_column
-                            ].iloc[int(idx)],
-                            "Input_Attribute_Similarity_Score": single_score,
-                        },
-                        ignore_index=True,
-                    )
-                elif desc_column == None:
-                    df_append = df_append.append(
-                        {
-                            "Input_Feature_Description": feature,
-                            "Recommended_Input_Attribute_Name": df_user[
-                                name_column
-                            ].iloc[int(idx)],
-                            "Input_Attribute_Similarity_Score": single_score,
-                        },
-                        ignore_index=True,
-                    )
+                if name_column is None:
+                    df_append.loc[len(df_append.index)] = [
+                        feature,
+                        df_user[desc_column].iloc[int(idx)],
+                        single_score,
+                    ]
+                elif desc_column is None:
+                    df_append.loc[len(df_append.index)] = [
+                        feature,
+                        df_user[name_column].iloc[int(idx)],
+                        single_score,
+                    ]
                 else:
-                    df_append = df_append.append(
-                        {
-                            "Input_Feature_Description": feature,
-                            "Recommended_Input_Attribute_Name": df_user[
-                                name_column
-                            ].iloc[int(idx)],
-                            "Recommended_Input_Attribute_Description": df_user[
-                                desc_column
-                            ].iloc[int(idx)],
-                            "Input_Attribute_Similarity_Score": single_score,
-                        },
-                        ignore_index=True,
-                    )
+                    df_append.loc[len(df_append.index)] = [
+                        feature,
+                        df_user[name_column].iloc[int(idx)],
+                        df_user[desc_column].iloc[int(idx)],
+                        single_score,
+                    ]
         if len(df_append) == 0:
-            if name_column == None:
-                df_append = df_append.append(
-                    {
-                        "Input_Feature_Description": feature,
-                        "Recommended_Input_Attribute_Description": "Null",
-                        "Input_Attribute_Similarity_Score": "Null",
-                    },
-                    ignore_index=True,
-                )
-            elif desc_column == None:
-                df_append = df_append.append(
-                    {
-                        "Input_Feature_Description": feature,
-                        "Recommended_Input_Attribute_Name": "Null",
-                        "Input_Attribute_Similarity_Score": "Null",
-                    },
-                    ignore_index=True,
-                )
+            if name_column is None:
+                df_append.loc[len(df_append.index)] = [feature, "N/A", "N/A"]
+            elif desc_column is None:
+                df_append.loc[len(df_append.index)] = [feature, "N/A", "N/A"]
             else:
-                df_append = df_append.append(
-                    {
-                        "Input_Feature_Description": feature,
-                        "Recommended_Input_Attribute_Name": "Null",
-                        "Recommended_Input_Attribute_Description": "Null",
-                        "Input_Attribute_Similarity_Score": "Null",
-                    },
-                    ignore_index=True,
-                )
-        df_out = df_out.append(df_append, ignore_index=True)
+                df_append.loc[len(df_append.index)] = [feature, "N/A", "N/A", "N/A"]
+        df_out = pd.concat([df_out, df_append], ignore_index=True, axis=0, join="outer")
     return df_out
 
 
 def sankey_visualization(df, industry_included=False, usecase_included=False):
-    """
+    """Visualize Feature Recommendation functions through Sankey plots
 
     Parameters
     ----------
-    df
+    df : DataFrame
         Input DataFrame. This DataFrame needs to be output of feature_recommendation or find_attr_by_relevance, or in the same format.
-    industry_included
-        Whether the plot needs to include industry mapping or not (boolean). Default is False
-    usecase_included
-        Whether the plot needs to include usecase mapping or not (boolean). Default is False
+    industry_included : bool
+        Whether the plot needs to include industry mapping or not. Default is False
+    usecase_included : bool
+        Whether the plot needs to include usecase mapping or not. Default is False
 
     Returns
     -------
+    A `plotly` graph object.
+
 
     """
     fr_proper_col_list = [
@@ -495,7 +495,6 @@ def sankey_visualization(df, industry_included=False, usecase_included=False):
         "Feature_Similarity_Score",
         "Industry",
         "Usecase",
-        "Source",
     ]
     attr_proper_col_list = [
         "Input_Feature_Description",
@@ -527,7 +526,7 @@ def sankey_visualization(df, industry_included=False, usecase_included=False):
         else:
             name_target = "Recommended_Input_Attribute_Description"
         name_score = "Input_Attribute_Similarity_Score"
-        if industry_included != False or usecase_included != False:
+        if industry_included or usecase_included:
             print(
                 "Input is find_attr_by_relevance output DataFrame. There is no suggested Industry and/or Usecase."
             )
@@ -537,13 +536,13 @@ def sankey_visualization(df, industry_included=False, usecase_included=False):
     usecase_target = "Usecase"
     df_iter = copy.deepcopy(df)
     for i in range(len(df_iter)):
-        if str(df_iter[name_score][i]) == "Null":
+        if str(df_iter[name_score][i]) == "N/A":
             df = df.drop([i])
     df = df.reset_index(drop=True)
     source = []
     target = []
     value = []
-    if industry_included == False and usecase_included == False:
+    if not industry_included and not usecase_included:
         source_list = df[name_source].unique().tolist()
         target_list = df[name_target].unique().tolist()
         label = source_list + target_list
@@ -551,7 +550,7 @@ def sankey_visualization(df, industry_included=False, usecase_included=False):
             source.append(label.index(str(df[name_source][i])))
             target.append(label.index(str(df[name_target][i])))
             value.append(float(df[name_score][i]))
-    elif industry_included == False and usecase_included != False:
+    elif not industry_included and usecase_included:
         source_list = df[name_source].unique().tolist()
         target_list = df[name_target].unique().tolist()
         raw_usecase_list = df[usecase_target].unique().tolist()
@@ -573,7 +572,7 @@ def sankey_visualization(df, industry_included=False, usecase_included=False):
                 source.append(label.index(str(df[name_target][i])))
                 target.append(label.index(str(item)))
                 value.append(float(1))
-    elif industry_included != False and usecase_included == False:
+    elif industry_included and not usecase_included:
         source_list = df[name_source].unique().tolist()
         target_list = df[name_target].unique().tolist()
         raw_industry_list = df[industry_target].unique().tolist()
@@ -674,26 +673,43 @@ def sankey_visualization(df, industry_included=False, usecase_included=False):
 <span class="k">def</span> <span class="nf"><span class="ident">feature_recommendation</span></span>(<span class="n">df, name_column=None, desc_column=None, suggested_industry='all', suggested_usecase='all', semantic=True, top_n=2, threshold=0.3)</span>
 </code></dt>
 <dd>
-<div class="desc"><h2 id="parameters">Parameters</h2>
+<div class="desc"><p>Recommends features to users based on their input attributes, and their goal industry and/or use case</p>
+<h2 id="parameters">Parameters</h2>
 <dl>
-<dt><strong><code>df</code></strong></dt>
+<dt><strong><code>df</code></strong> :&ensp;<code>DataFrame</code></dt>
 <dd>Input DataFrame - Users' Data dictionary. It is expected to consist of attribute name and/or attribute description</dd>
-<dt><strong><code>name_column</code></strong></dt>
-<dd>Input, column name of Attribute Name in Input DataFrame (string). Default is None.</dd>
-<dt><strong><code>desc_column</code></strong></dt>
-<dd>Input, column name of Attribute Description in Input DataFrame (string). Default is None.</dd>
-<dt><strong><code>suggested_industry</code></strong></dt>
-<dd>Input, Industry of interest to the user (if any) to be filtered out (string). Default is 'all', meaning all Industries available.</dd>
-<dt><strong><code>suggested_usecase</code></strong></dt>
-<dd>Input, Usecase of interest to the user (if any) to be filtered out (string). Default is 'all', meaning all Usecases available.</dd>
-<dt><strong><code>semantic</code></strong></dt>
-<dd>Input semantic (boolean) - Whether the input needs to go through semantic similarity or not. Default is True.</dd>
-<dt><strong><code>top_n</code></strong></dt>
-<dd>Number of features displayed (int). Default is 2</dd>
-<dt><strong><code>threshold</code></strong></dt>
-<dd>Input threshold value (float). Default is 0.3</dd>
+<dt><strong><code>name_column</code></strong> :&ensp;<code>str</code></dt>
+<dd>Input, column name of Attribute Name in Input DataFrame. Default is None.</dd>
+<dt><strong><code>desc_column</code></strong> :&ensp;<code>str</code></dt>
+<dd>Input, column name of Attribute Description in Input DataFrame. Default is None.</dd>
+<dt><strong><code>suggested_industry</code></strong> :&ensp;<code>str</code></dt>
+<dd>Input, Industry of interest to the user (if any) to be filtered out. Default is 'all', meaning all Industries available.</dd>
+<dt><strong><code>suggested_usecase</code></strong> :&ensp;<code>str</code></dt>
+<dd>Input, Usecase of interest to the user (if any) to be filtered out. Default is 'all', meaning all Usecases available.</dd>
+<dt><strong><code>semantic</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Input semantic - Whether the input needs to go through semantic similarity or not. Default is True.</dd>
+<dt><strong><code>top_n</code></strong> :&ensp;<code>int</code></dt>
+<dd>Number of features displayed. Default is 2</dd>
+<dt><strong><code>threshold</code></strong> :&ensp;<code>float</code></dt>
+<dd>Input threshold value. Default is 0.3</dd>
 </dl>
-<h2 id="returns">Returns</h2></div>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>DataFrame</code></dt>
+<dd>
+<p>Columns are:</p>
+<ul>
+<li>Input Attribute Name: Name of the input Attribute</li>
+<li>Input Attribute Description: Description of the input Attribute</li>
+<li>Recommended Feature Name: Name of the recommended Feature</li>
+<li>Recommended Feature Description: Description of the recommended Feature</li>
+<li>Feature Similarity Score: Semantic similarity score between input Attribute and recommended Feature</li>
+<li>Industry: Industry name of the recommended Feature</li>
+<li>Usecase: Usecase name of the recommended Feature</li>
+<li>Source: Source of the recommended Feature</li>
+</ul>
+</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -710,29 +726,40 @@ def feature_recommendation(
     top_n=2,
     threshold=0.3,
 ):
-    """
+    """Recommends features to users based on their input attributes, and their goal industry and/or use case
 
     Parameters
     ----------
-    df
+    df : DataFrame
         Input DataFrame - Users' Data dictionary. It is expected to consist of attribute name and/or attribute description
-    name_column
-        Input, column name of Attribute Name in Input DataFrame (string). Default is None.
-    desc_column
-        Input, column name of Attribute Description in Input DataFrame (string). Default is None.
-    suggested_industry
-        Input, Industry of interest to the user (if any) to be filtered out (string). Default is 'all', meaning all Industries available.
-    suggested_usecase
-        Input, Usecase of interest to the user (if any) to be filtered out (string). Default is 'all', meaning all Usecases available.
-    semantic
-        Input semantic (boolean) - Whether the input needs to go through semantic similarity or not. Default is True.
-    top_n
-        Number of features displayed (int). Default is 2
-    threshold
-        Input threshold value (float). Default is 0.3
+    name_column : str
+        Input, column name of Attribute Name in Input DataFrame. Default is None.
+    desc_column : str
+        Input, column name of Attribute Description in Input DataFrame. Default is None.
+    suggested_industry : str
+        Input, Industry of interest to the user (if any) to be filtered out. Default is 'all', meaning all Industries available.
+    suggested_usecase : str
+        Input, Usecase of interest to the user (if any) to be filtered out. Default is 'all', meaning all Usecases available.
+    semantic : bool
+        Input semantic - Whether the input needs to go through semantic similarity or not. Default is True.
+    top_n : int
+        Number of features displayed. Default is 2
+    threshold : float
+        Input threshold value. Default is 0.3
 
     Returns
     -------
+    DataFrame
+        Columns are:
+
+        - Input Attribute Name: Name of the input Attribute
+        - Input Attribute Description: Description of the input Attribute
+        - Recommended Feature Name: Name of the recommended Feature
+        - Recommended Feature Description: Description of the recommended Feature
+        - Feature Similarity Score: Semantic similarity score between input Attribute and recommended Feature
+        - Industry: Industry name of the recommended Feature
+        - Usecase: Usecase name of the recommended Feature
+        - Source: Source of the recommended Feature
 
     """
     if not isinstance(df, pd.DataFrame):
@@ -754,7 +781,7 @@ def feature_recommendation(
         df_rec_fr = df_rec_fer[df_rec_fer.iloc[:, 2].str.contains(suggested_industry)]
         list_keep = list(df_rec_fr.index)
         list_embedding_train_fr = [
-            list_embedding_train_fer.tolist()[x] for x in list_keep
+            list_embedding_train_fer.get().tolist()[x] for x in list_keep
         ]
         df_rec_fr = df_rec_fr.reset_index(drop=True)
     elif suggested_usecase != "all" and suggested_industry == "all":
@@ -762,7 +789,7 @@ def feature_recommendation(
         df_rec_fr = df_rec_fer[df_rec_fer.iloc[:, 3].str.contains(suggested_usecase)]
         list_keep = list(df_rec_fr.index)
         list_embedding_train_fr = [
-            list_embedding_train_fer.tolist()[x] for x in list_keep
+            list_embedding_train_fer.get().tolist()[x] for x in list_keep
         ]
         df_rec_fr = df_rec_fr.reset_index(drop=True)
     elif suggested_usecase != "all" and suggested_industry != "all":
@@ -775,7 +802,7 @@ def feature_recommendation(
         if len(df_rec_fr) > 0:
             list_keep = list(df_rec_fr.index)
             list_embedding_train_fr = [
-                list_embedding_train_fer.tolist()[x] for x in list_keep
+                list_embedding_train_fer.get().tolist()[x] for x in list_keep
             ]
             df_rec_fr = df_rec_fr.reset_index(drop=True)
         else:
@@ -788,16 +815,15 @@ def feature_recommendation(
                     "Feature_Similarity_Score",
                     "Industry",
                     "Usecase",
-                    "Source",
                 ]
             )
             print("Industry/Usecase pair does not exist.")
             return df_out
     else:
         df_rec_fr = df_rec_fer
-        list_embedding_train_fr = list_embedding_train_fer
+        list_embedding_train_fr = list_embedding_train_fer.get()
 
-    if name_column == None:
+    if name_column is None:
         df_out = pd.DataFrame(
             columns=[
                 "Input_Attribute_Description",
@@ -806,10 +832,9 @@ def feature_recommendation(
                 "Feature_Similarity_Score",
                 "Industry",
                 "Usecase",
-                "Source",
             ]
         )
-    elif desc_column == None:
+    elif desc_column is None:
         df_out = pd.DataFrame(
             columns=[
                 "Input_Attribute_Name",
@@ -818,7 +843,6 @@ def feature_recommendation(
                 "Feature_Similarity_Score",
                 "Industry",
                 "Usecase",
-                "Source",
             ]
         )
     else:
@@ -831,10 +855,9 @@ def feature_recommendation(
                 "Feature_Similarity_Score",
                 "Industry",
                 "Usecase",
-                "Source",
             ]
         )
-    list_embedding_user = model_fer.encode(list_user, convert_to_tensor=True)
+    list_embedding_user = model_fer.model.encode(list_user, convert_to_tensor=True)
     for i, feature in enumerate(list_user):
         cos_scores = util.pytorch_cos_sim(list_embedding_user, list_embedding_train_fr)[
             i
@@ -842,7 +865,7 @@ def feature_recommendation(
         top_results = np.argpartition(-cos_scores, range(top_n))[0:top_n]
         for idx in top_results[0:top_n]:
             single_score = "%.4f" % (cos_scores[idx])
-            if name_column == None:
+            if name_column is None:
                 if float(single_score) >= threshold:
                     df_append = pd.DataFrame(
                         [
@@ -853,7 +876,6 @@ def feature_recommendation(
                                 "%.4f" % (cos_scores[idx]),
                                 df_rec_fr[industry_column].iloc[int(idx)],
                                 df_rec_fr[usecase_column].iloc[int(idx)],
-                                df_rec_fr[source_column].iloc[int(idx)],
                             ]
                         ],
                         columns=[
@@ -863,7 +885,6 @@ def feature_recommendation(
                             "Feature_Similarity_Score",
                             "Industry",
                             "Usecase",
-                            "Source",
                         ],
                     )
                 else:
@@ -871,12 +892,11 @@ def feature_recommendation(
                         [
                             [
                                 df_user[desc_column].iloc[i],
-                                "Null",
-                                "Null",
-                                "Null",
-                                "Null",
-                                "Null",
-                                "Null",
+                                "N/A",
+                                "N/A",
+                                "N/A",
+                                "N/A",
+                                "N/A",
                             ]
                         ],
                         columns=[
@@ -886,10 +906,9 @@ def feature_recommendation(
                             "Feature_Similarity_Score",
                             "Industry",
                             "Usecase",
-                            "Source",
                         ],
                     )
-            elif desc_column == None:
+            elif desc_column is None:
                 if float(single_score) >= threshold:
                     df_append = pd.DataFrame(
                         [
@@ -900,7 +919,6 @@ def feature_recommendation(
                                 "%.4f" % (cos_scores[idx]),
                                 df_rec_fr[industry_column].iloc[int(idx)],
                                 df_rec_fr[usecase_column].iloc[int(idx)],
-                                df_rec_fr[source_column].iloc[int(idx)],
                             ]
                         ],
                         columns=[
@@ -910,20 +928,18 @@ def feature_recommendation(
                             "Feature_Similarity_Score",
                             "Industry",
                             "Usecase",
-                            "Source",
                         ],
                     )
                 else:
                     df_append = pd.DataFrame(
                         [
                             [
-                                df_user[desc_column].iloc[i],
-                                "Null",
-                                "Null",
-                                "Null",
-                                "Null",
-                                "Null",
-                                "Null",
+                                df_user[name_column].iloc[i],
+                                "N/A",
+                                "N/A",
+                                "N/A",
+                                "N/A",
+                                "N/A",
                             ]
                         ],
                         columns=[
@@ -933,7 +949,6 @@ def feature_recommendation(
                             "Feature_Similarity_Score",
                             "Industry",
                             "Usecase",
-                            "Source",
                         ],
                     )
             else:
@@ -948,7 +963,6 @@ def feature_recommendation(
                                 "%.4f" % (cos_scores[idx]),
                                 df_rec_fr[industry_column].iloc[int(idx)],
                                 df_rec_fr[usecase_column].iloc[int(idx)],
-                                df_rec_fr[source_column].iloc[int(idx)],
                             ]
                         ],
                         columns=[
@@ -959,7 +973,6 @@ def feature_recommendation(
                             "Feature_Similarity_Score",
                             "Industry",
                             "Usecase",
-                            "Source",
                         ],
                     )
                 else:
@@ -968,12 +981,11 @@ def feature_recommendation(
                             [
                                 df_user[name_column].iloc[i],
                                 df_user[desc_column].iloc[i],
-                                "Null",
-                                "Null",
-                                "Null",
-                                "Null",
-                                "Null",
-                                "Null",
+                                "N/A",
+                                "N/A",
+                                "N/A",
+                                "N/A",
+                                "N/A",
                             ]
                         ],
                         columns=[
@@ -984,10 +996,11 @@ def feature_recommendation(
                             "Feature_Similarity_Score",
                             "Industry",
                             "Usecase",
-                            "Source",
                         ],
                     )
-            df_out = df_out.append(df_append, ignore_index=True)
+            df_out = pd.concat(
+                [df_out, df_append], ignore_index=True, axis=0, join="outer"
+            )
     return df_out
 ```
 </pre>
@@ -997,20 +1010,34 @@ def feature_recommendation(
 <span class="k">def</span> <span class="nf"><span class="ident">find_attr_by_relevance</span></span>(<span class="n">df, building_corpus, name_column=None, desc_column=None, threshold=0.3)</span>
 </code></dt>
 <dd>
-<div class="desc"><h2 id="parameters">Parameters</h2>
+<div class="desc"><p>Provide a comprehensive mapping method from users&#39; input attributes to their own feature corpus,
+and therefore, help with the process of creating features in cold-start problems</p>
+<h2 id="parameters">Parameters</h2>
 <dl>
-<dt><strong><code>df</code></strong></dt>
+<dt><strong><code>df</code></strong> :&ensp;<code>DataFrame</code></dt>
 <dd>Input DataFrame - Users' Data dictionary. It is expected to consist of attribute name and/or attribute description</dd>
-<dt><strong><code>building_corpus</code></strong></dt>
-<dd>Input Feature Description (list)</dd>
-<dt><strong><code>name_column</code></strong></dt>
-<dd>Input, column name of Attribute Name in Input DataFrame (string). Default is None.</dd>
-<dt><strong><code>desc_column</code></strong></dt>
-<dd>Input, column name of Attribute Description in Input DataFrame (string). Default is None.</dd>
-<dt><strong><code>threshold</code></strong></dt>
-<dd>Input threshold value (float). Default is 0.3</dd>
+<dt><strong><code>building_corpus</code></strong> :&ensp;<code>list</code></dt>
+<dd>Input Feature Description</dd>
+<dt><strong><code>name_column</code></strong> :&ensp;<code>str</code></dt>
+<dd>Input, column name of Attribute Name in Input DataFrame. Default is None.</dd>
+<dt><strong><code>desc_column</code></strong> :&ensp;<code>str</code></dt>
+<dd>Input, column name of Attribute Description in Input DataFrame. Default is None.</dd>
+<dt><strong><code>threshold</code></strong> :&ensp;<code>float</code></dt>
+<dd>Input threshold value Default is 0.3</dd>
 </dl>
-<h2 id="returns">Returns</h2></div>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>DataFrame</code></dt>
+<dd>
+<p>Columns are:</p>
+<ul>
+<li>Input Feature Desc: Description of the input Feature</li>
+<li>Recommended Input Attribute Name: Name of the recommended Feature</li>
+<li>Recommended Input Attribute Description: Description of the recommended Feature</li>
+<li>Input Attribute Similarity Score: Semantic similarity score between input Attribute and recommended Feature</li>
+</ul>
+</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1020,23 +1047,33 @@ def feature_recommendation(
 def find_attr_by_relevance(
     df, building_corpus, name_column=None, desc_column=None, threshold=0.3
 ):
-    """
+    """Provide a comprehensive mapping method from users&#39; input attributes to their own feature corpus,
+     and therefore, help with the process of creating features in cold-start problems
+
 
     Parameters
     ----------
-    df
+    df : DataFrame
         Input DataFrame - Users' Data dictionary. It is expected to consist of attribute name and/or attribute description
-    building_corpus
-        Input Feature Description (list)
-    name_column
-        Input, column name of Attribute Name in Input DataFrame (string). Default is None.
-    desc_column
-        Input, column name of Attribute Description in Input DataFrame (string). Default is None.
-    threshold
-        Input threshold value (float). Default is 0.3
+    building_corpus : list
+        Input Feature Description
+    name_column : str
+        Input, column name of Attribute Name in Input DataFrame. Default is None.
+    desc_column : str
+        Input, column name of Attribute Description in Input DataFrame. Default is None.
+    threshold : float
+        Input threshold value Default is 0.3
 
     Returns
     -------
+    DataFrame
+        Columns are:
+
+        - Input Feature Desc: Description of the input Feature
+        - Recommended Input Attribute Name: Name of the recommended Feature
+        - Recommended Input Attribute Description: Description of the recommended Feature
+        - Input Attribute Similarity Score: Semantic similarity score between input Attribute and recommended Feature
+
 
     """
     if not isinstance(df, pd.DataFrame):
@@ -1055,7 +1092,7 @@ def find_attr_by_relevance(
         building_corpus[i] = re.sub("[^A-Za-z0-9]+", " ", building_corpus[i])
         building_corpus[i] = camel_case_split(building_corpus[i])
         building_corpus[i] = building_corpus[i].lower().strip()
-    if name_column == None:
+    if name_column is None:
         df_out = pd.DataFrame(
             columns=[
                 "Input_Feature_Description",
@@ -1063,7 +1100,7 @@ def find_attr_by_relevance(
                 "Input_Attribute_Similarity_Score",
             ]
         )
-    elif desc_column == None:
+    elif desc_column is None:
         df_out = pd.DataFrame(
             columns=[
                 "Input_Feature_Description",
@@ -1081,10 +1118,12 @@ def find_attr_by_relevance(
             ]
         )
     list_user, df_user = recommendation_data_prep(df, name_column, desc_column)
-    list_embedding_user = model_fer.encode(list_user, convert_to_tensor=True)
-    list_embedding_building = model_fer.encode(building_corpus, convert_to_tensor=True)
+    list_embedding_user = model_fer.model.encode(list_user, convert_to_tensor=True)
+    list_embedding_building = model_fer.model.encode(
+        building_corpus, convert_to_tensor=True
+    )
     for i, feature in enumerate(building_corpus):
-        if name_column == None:
+        if name_column is None:
             df_append = pd.DataFrame(
                 columns=[
                     "Input_Feature_Description",
@@ -1092,7 +1131,7 @@ def find_attr_by_relevance(
                     "Input_Attribute_Similarity_Score",
                 ]
             )
-        elif desc_column == None:
+        elif desc_column is None:
             df_append = pd.DataFrame(
                 columns=[
                     "Input_Feature_Description",
@@ -1118,72 +1157,33 @@ def find_attr_by_relevance(
         for idx in top_results[0 : len(list_user)]:
             single_score = "%.4f" % (cos_scores[idx])
             if float(single_score) >= threshold:
-                if name_column == None:
-                    df_append = df_append.append(
-                        {
-                            "Input_Feature_Description": feature,
-                            "Recommended_Input_Attribute_Description": df_user[
-                                desc_column
-                            ].iloc[int(idx)],
-                            "Input_Attribute_Similarity_Score": single_score,
-                        },
-                        ignore_index=True,
-                    )
-                elif desc_column == None:
-                    df_append = df_append.append(
-                        {
-                            "Input_Feature_Description": feature,
-                            "Recommended_Input_Attribute_Name": df_user[
-                                name_column
-                            ].iloc[int(idx)],
-                            "Input_Attribute_Similarity_Score": single_score,
-                        },
-                        ignore_index=True,
-                    )
+                if name_column is None:
+                    df_append.loc[len(df_append.index)] = [
+                        feature,
+                        df_user[desc_column].iloc[int(idx)],
+                        single_score,
+                    ]
+                elif desc_column is None:
+                    df_append.loc[len(df_append.index)] = [
+                        feature,
+                        df_user[name_column].iloc[int(idx)],
+                        single_score,
+                    ]
                 else:
-                    df_append = df_append.append(
-                        {
-                            "Input_Feature_Description": feature,
-                            "Recommended_Input_Attribute_Name": df_user[
-                                name_column
-                            ].iloc[int(idx)],
-                            "Recommended_Input_Attribute_Description": df_user[
-                                desc_column
-                            ].iloc[int(idx)],
-                            "Input_Attribute_Similarity_Score": single_score,
-                        },
-                        ignore_index=True,
-                    )
+                    df_append.loc[len(df_append.index)] = [
+                        feature,
+                        df_user[name_column].iloc[int(idx)],
+                        df_user[desc_column].iloc[int(idx)],
+                        single_score,
+                    ]
         if len(df_append) == 0:
-            if name_column == None:
-                df_append = df_append.append(
-                    {
-                        "Input_Feature_Description": feature,
-                        "Recommended_Input_Attribute_Description": "Null",
-                        "Input_Attribute_Similarity_Score": "Null",
-                    },
-                    ignore_index=True,
-                )
-            elif desc_column == None:
-                df_append = df_append.append(
-                    {
-                        "Input_Feature_Description": feature,
-                        "Recommended_Input_Attribute_Name": "Null",
-                        "Input_Attribute_Similarity_Score": "Null",
-                    },
-                    ignore_index=True,
-                )
+            if name_column is None:
+                df_append.loc[len(df_append.index)] = [feature, "N/A", "N/A"]
+            elif desc_column is None:
+                df_append.loc[len(df_append.index)] = [feature, "N/A", "N/A"]
             else:
-                df_append = df_append.append(
-                    {
-                        "Input_Feature_Description": feature,
-                        "Recommended_Input_Attribute_Name": "Null",
-                        "Recommended_Input_Attribute_Description": "Null",
-                        "Input_Attribute_Similarity_Score": "Null",
-                    },
-                    ignore_index=True,
-                )
-        df_out = df_out.append(df_append, ignore_index=True)
+                df_append.loc[len(df_append.index)] = [feature, "N/A", "N/A", "N/A"]
+        df_out = pd.concat([df_out, df_append], ignore_index=True, axis=0, join="outer")
     return df_out
 ```
 </pre>
@@ -1193,16 +1193,18 @@ def find_attr_by_relevance(
 <span class="k">def</span> <span class="nf"><span class="ident">sankey_visualization</span></span>(<span class="n">df, industry_included=False, usecase_included=False)</span>
 </code></dt>
 <dd>
-<div class="desc"><h2 id="parameters">Parameters</h2>
+<div class="desc"><p>Visualize Feature Recommendation functions through Sankey plots</p>
+<h2 id="parameters">Parameters</h2>
 <dl>
-<dt><strong><code>df</code></strong></dt>
+<dt><strong><code>df</code></strong> :&ensp;<code>DataFrame</code></dt>
 <dd>Input DataFrame. This DataFrame needs to be output of feature_recommendation or find_attr_by_relevance, or in the same format.</dd>
-<dt><strong><code>industry_included</code></strong></dt>
-<dd>Whether the plot needs to include industry mapping or not (boolean). Default is False</dd>
-<dt><strong><code>usecase_included</code></strong></dt>
-<dd>Whether the plot needs to include usecase mapping or not (boolean). Default is False</dd>
+<dt><strong><code>industry_included</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Whether the plot needs to include industry mapping or not. Default is False</dd>
+<dt><strong><code>usecase_included</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Whether the plot needs to include usecase mapping or not. Default is False</dd>
 </dl>
-<h2 id="returns">Returns</h2></div>
+<h2 id="returns">Returns</h2>
+<p>A <code>plotly</code> graph object.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1210,19 +1212,21 @@ def find_attr_by_relevance(
 <pre>
 ```python
 def sankey_visualization(df, industry_included=False, usecase_included=False):
-    """
+    """Visualize Feature Recommendation functions through Sankey plots
 
     Parameters
     ----------
-    df
+    df : DataFrame
         Input DataFrame. This DataFrame needs to be output of feature_recommendation or find_attr_by_relevance, or in the same format.
-    industry_included
-        Whether the plot needs to include industry mapping or not (boolean). Default is False
-    usecase_included
-        Whether the plot needs to include usecase mapping or not (boolean). Default is False
+    industry_included : bool
+        Whether the plot needs to include industry mapping or not. Default is False
+    usecase_included : bool
+        Whether the plot needs to include usecase mapping or not. Default is False
 
     Returns
     -------
+    A `plotly` graph object.
+
 
     """
     fr_proper_col_list = [
@@ -1231,7 +1235,6 @@ def sankey_visualization(df, industry_included=False, usecase_included=False):
         "Feature_Similarity_Score",
         "Industry",
         "Usecase",
-        "Source",
     ]
     attr_proper_col_list = [
         "Input_Feature_Description",
@@ -1263,7 +1266,7 @@ def sankey_visualization(df, industry_included=False, usecase_included=False):
         else:
             name_target = "Recommended_Input_Attribute_Description"
         name_score = "Input_Attribute_Similarity_Score"
-        if industry_included != False or usecase_included != False:
+        if industry_included or usecase_included:
             print(
                 "Input is find_attr_by_relevance output DataFrame. There is no suggested Industry and/or Usecase."
             )
@@ -1273,13 +1276,13 @@ def sankey_visualization(df, industry_included=False, usecase_included=False):
     usecase_target = "Usecase"
     df_iter = copy.deepcopy(df)
     for i in range(len(df_iter)):
-        if str(df_iter[name_score][i]) == "Null":
+        if str(df_iter[name_score][i]) == "N/A":
             df = df.drop([i])
     df = df.reset_index(drop=True)
     source = []
     target = []
     value = []
-    if industry_included == False and usecase_included == False:
+    if not industry_included and not usecase_included:
         source_list = df[name_source].unique().tolist()
         target_list = df[name_target].unique().tolist()
         label = source_list + target_list
@@ -1287,7 +1290,7 @@ def sankey_visualization(df, industry_included=False, usecase_included=False):
             source.append(label.index(str(df[name_source][i])))
             target.append(label.index(str(df[name_target][i])))
             value.append(float(df[name_score][i]))
-    elif industry_included == False and usecase_included != False:
+    elif not industry_included and usecase_included:
         source_list = df[name_source].unique().tolist()
         target_list = df[name_target].unique().tolist()
         raw_usecase_list = df[usecase_target].unique().tolist()
@@ -1309,7 +1312,7 @@ def sankey_visualization(df, industry_included=False, usecase_included=False):
                 source.append(label.index(str(df[name_target][i])))
                 target.append(label.index(str(item)))
                 value.append(float(1))
-    elif industry_included != False and usecase_included == False:
+    elif industry_included and not usecase_included:
         source_list = df[name_source].unique().tolist()
         target_list = df[name_target].unique().tolist()
         raw_industry_list = df[industry_target].unique().tolist()

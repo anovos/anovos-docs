@@ -7,7 +7,6 @@
 ```python
 import subprocess
 from pathlib import Path
-
 import numpy as np
 import pandas as pd
 import plotly.express as px
@@ -26,6 +25,9 @@ from anovos.data_transformer.transformers import (
     attribute_binning,
 )
 from anovos.shared.utils import attributeType_segregation, ends_with
+import warnings
+
+warnings.filterwarnings("ignore")
 
 global_theme = px.colors.sequential.Plasma
 global_theme_r = px.colors.sequential.Plasma_r
@@ -460,6 +462,7 @@ def charts_to_objects(
     bin_size=10,
     coverage=1.0,
     drift_detector=False,
+    outlier_charts=False,
     source_path="NA",
     master_path=".",
     stats_unique={},
@@ -642,8 +645,9 @@ def charts_to_objects(
                     pass
 
         if col in num_cols:
-            f = plot_outlier(spark, idf, col, split_var=None)
-            f.write_json(ends_with(local_path) + "outlier_" + col)
+            if outlier_charts:
+                f = plot_outlier(spark, idf, col, split_var=None)
+                f.write_json(ends_with(local_path) + "outlier_" + col)
             f = plot_frequency(
                 spark,
                 idf_encoded.drop(col).withColumnRenamed(col + "_binned", col),
@@ -767,7 +771,7 @@ def binRange_to_binIdx(spark, col, cutoffs_path):
 </details>
 </dd>
 <dt id="anovos.data_report.report_preprocessing.charts_to_objects"><code class="name flex hljs csharp">
-<span class="k">def</span> <span class="nf"><span class="ident">charts_to_objects</span></span>(<span class="n">spark, idf, list_of_cols='all', drop_cols=[], label_col=None, event_label=1, bin_method='equal_range', bin_size=10, coverage=1.0, drift_detector=False, source_path='NA', master_path='.', stats_unique={}, run_type='local')</span>
+<span class="k">def</span> <span class="nf"><span class="ident">charts_to_objects</span></span>(<span class="n">spark, idf, list_of_cols='all', drop_cols=[], label_col=None, event_label=1, bin_method='equal_range', bin_size=10, coverage=1.0, drift_detector=False, outlier_charts=False, source_path='NA', master_path='.', stats_unique={}, run_type='local')</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
@@ -821,6 +825,7 @@ def charts_to_objects(
     bin_size=10,
     coverage=1.0,
     drift_detector=False,
+    outlier_charts=False,
     source_path="NA",
     master_path=".",
     stats_unique={},
@@ -1003,8 +1008,9 @@ def charts_to_objects(
                     pass
 
         if col in num_cols:
-            f = plot_outlier(spark, idf, col, split_var=None)
-            f.write_json(ends_with(local_path) + "outlier_" + col)
+            if outlier_charts:
+                f = plot_outlier(spark, idf, col, split_var=None)
+                f.write_json(ends_with(local_path) + "outlier_" + col)
             f = plot_frequency(
                 spark,
                 idf_encoded.drop(col).withColumnRenamed(col + "_binned", col),
