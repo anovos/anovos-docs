@@ -40,6 +40,7 @@ jobs:
         run: |
           cd anovos
           python -m pip install --upgrade pip
+          pip install wheel
           pip install -r requirements.txt
 
       - name: Install Python requirements for API docs generation
