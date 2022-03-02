@@ -19,55 +19,11 @@ def check_list_of_columns(
     target: str = "idf_target",
     drop="drop_cols",
 ):
-    """
-
-    Parameters
-    ----------
-    func
-        Default value = None)
-    columns
-        Default value = "list_of_cols")
-    target_idx : int
-        Default value = 1)
-    target : str
-        Default value = "idf_target")
-    drop
-        Default value = "drop_cols")
-    target_idx : int
-        Default value = 1)
-    target : str
-        Default value = "idf_target")
-    target_idx
-        int:  (Default value = 1)
-    target
-        str:  (Default value = "idf_target")
-    target_idx: int
-         (Default value = 1)
-    target: str
-         (Default value = "idf_target")
-
-    Returns
-    -------
-
-    """
     if func is None:
         return partial(check_list_of_columns, columns=columns, target=target, drop=drop)
 
     @wraps(func)
     def validate(*args, **kwargs):
-        """
-
-        Parameters
-        ----------
-        *args
-
-        **kwargs
-
-
-        Returns
-        -------
-
-        """
         logger.debug("check the list of columns")
 
         idf_target = kwargs.get(target, "") or args[target_idx]
@@ -118,37 +74,11 @@ def check_list_of_columns(
 
 
 def check_distance_method(func=None, param="method_type"):
-    """
-
-    Parameters
-    ----------
-    func
-        (Default value = None)
-    param : str
-        (Default value = "method_type")
-
-    Returns
-    -------
-
-    """
     if func is None:
         return partial(check_distance_method, param=param)
 
     @wraps(func)
     def validate(*args, **kwargs):
-        """
-
-        Parameters
-        ----------
-        *args
-
-        **kwargs
-
-
-        Returns
-        -------
-
-        """
         dist_distance_methods = kwargs[param]
 
         if isinstance(dist_distance_methods, str):
@@ -176,14 +106,7 @@ def check_distance_method(func=None, param="method_type"):
 <span class="k">def</span> <span class="nf"><span class="ident">check_distance_method</span></span>(<span class="n">func=None, param='method_type')</span>
 </code></dt>
 <dd>
-<div class="desc"><h2 id="parameters">Parameters</h2>
-<dl>
-<dt><strong><code>func</code></strong></dt>
-<dd>(Default value = None)</dd>
-<dt><strong><code>param</code></strong> :&ensp;<code>str</code></dt>
-<dd>(Default value = "method_type")</dd>
-</dl>
-<h2 id="returns">Returns</h2></div>
+<div class="desc"></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -191,37 +114,11 @@ def check_distance_method(func=None, param="method_type"):
 <pre>
 ```python
 def check_distance_method(func=None, param="method_type"):
-    """
-
-    Parameters
-    ----------
-    func
-        (Default value = None)
-    param : str
-        (Default value = "method_type")
-
-    Returns
-    -------
-
-    """
     if func is None:
         return partial(check_distance_method, param=param)
 
     @wraps(func)
     def validate(*args, **kwargs):
-        """
-
-        Parameters
-        ----------
-        *args
-
-        **kwargs
-
-
-        Returns
-        -------
-
-        """
         dist_distance_methods = kwargs[param]
 
         if isinstance(dist_distance_methods, str):
@@ -248,34 +145,7 @@ def check_distance_method(func=None, param="method_type"):
 <span class="k">def</span> <span class="nf"><span class="ident">check_list_of_columns</span></span>(<span class="n">func=None, columns='list_of_cols', target_idx: int = 1, target: str = 'idf_target', drop='drop_cols')</span>
 </code></dt>
 <dd>
-<div class="desc"><h2 id="parameters">Parameters</h2>
-<dl>
-<dt><strong><code>func</code></strong></dt>
-<dd>Default value = None)</dd>
-<dt><strong><code>columns</code></strong></dt>
-<dd>Default value = "list_of_cols")</dd>
-<dt><strong><code>target_idx</code></strong> :&ensp;<code>int</code></dt>
-<dd>Default value = 1)</dd>
-<dt><strong><code>target</code></strong> :&ensp;<code>str</code></dt>
-<dd>Default value = "idf_target")</dd>
-<dt><strong><code>drop</code></strong></dt>
-<dd>Default value = "drop_cols")</dd>
-<dt><strong><code>target_idx</code></strong> :&ensp;<code>int</code></dt>
-<dd>Default value = 1)</dd>
-<dt><strong><code>target</code></strong> :&ensp;<code>str</code></dt>
-<dd>Default value = "idf_target")</dd>
-<dt><strong><code>target_idx</code></strong></dt>
-<dd>int:
-(Default value = 1)</dd>
-<dt><strong><code>target</code></strong></dt>
-<dd>str:
-(Default value = "idf_target")</dd>
-<dt><strong><code>target_idx</code></strong> :&ensp;<code>int</code></dt>
-<dd>(Default value = 1)</dd>
-<dt><strong><code>target</code></strong> :&ensp;<code>str</code></dt>
-<dd>(Default value = "idf_target")</dd>
-</dl>
-<h2 id="returns">Returns</h2></div>
+<div class="desc"></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -289,55 +159,11 @@ def check_list_of_columns(
     target: str = "idf_target",
     drop="drop_cols",
 ):
-    """
-
-    Parameters
-    ----------
-    func
-        Default value = None)
-    columns
-        Default value = "list_of_cols")
-    target_idx : int
-        Default value = 1)
-    target : str
-        Default value = "idf_target")
-    drop
-        Default value = "drop_cols")
-    target_idx : int
-        Default value = 1)
-    target : str
-        Default value = "idf_target")
-    target_idx
-        int:  (Default value = 1)
-    target
-        str:  (Default value = "idf_target")
-    target_idx: int
-         (Default value = 1)
-    target: str
-         (Default value = "idf_target")
-
-    Returns
-    -------
-
-    """
     if func is None:
         return partial(check_list_of_columns, columns=columns, target=target, drop=drop)
 
     @wraps(func)
     def validate(*args, **kwargs):
-        """
-
-        Parameters
-        ----------
-        *args
-
-        **kwargs
-
-
-        Returns
-        -------
-
-        """
         logger.debug("check the list of columns")
 
         idf_target = kwargs.get(target, "") or args[target_idx]

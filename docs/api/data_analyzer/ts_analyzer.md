@@ -38,7 +38,7 @@ from pyspark.sql import types as T
 from pyspark.sql import Window
 from loguru import logger
 import calendar
-from anovos.shared.utils import attributeType_segregation, ends_with
+from anovos.shared.utils import attributeType_segregation, ends_with, output_to_local
 from anovos.data_analyzer.stats_generator import measures_of_percentiles
 from anovos.data_ingest.ts_auto_detection import ts_preprocess
 from anovos.data_transformer.datetime import (
@@ -73,6 +73,7 @@ def daypart_cat(column):
 
     Returns
     -------
+    String
     """
 
     # calculate hour buckets after adding local timezone
@@ -117,6 +118,7 @@ def ts_processed_feats(idf, col, id_col, tz, cnt_row, cnt_unique_id):
 
     Returns
     -------
+    DataFrame
     """
 
     if cnt_row == cnt_unique_id:
@@ -187,6 +189,7 @@ def ts_eligiblity_check(spark, idf, id_col, opt=1, tz_offset="local"):
 
     Returns
     -------
+    DataFrame
     """
 
     lagged_df = lagged_ts(
@@ -301,6 +304,7 @@ def ts_viz_data(
 
     Returns
     -------
+    DataFrame
     """
 
     y_col_org = y_col
@@ -449,12 +453,17 @@ def ts_analyzer(
 
     Returns
     -------
+    Output[CSV]
     """
 
     if run_type == "local":
         local_path = output_path
-    else:
+    elif run_type == "databricks":
+        local_path = output_to_local(output_path)
+    elif run_type == "emr":
         local_path = "report_stats"
+    else:
+        raise ValueError("Invalid run_type")
 
     Path(local_path).mkdir(parents=True, exist_ok=True)
 
@@ -550,7 +559,11 @@ def ts_analyzer(
 <dt><strong><code>column</code></strong></dt>
 <dd>Reads the column containing the hour part and converts into respective day part</dd>
 </dl>
-<h2 id="returns">Returns</h2></div>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>String</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -570,6 +583,7 @@ def daypart_cat(column):
 
     Returns
     -------
+    String
     """
 
     # calculate hour buckets after adding local timezone
@@ -600,7 +614,11 @@ def daypart_cat(column):
 <dt><strong><code>column</code></strong></dt>
 <dd>Reads the column containing the hour part and converts into respective day part</dd>
 </dl>
-<h2 id="returns">Returns</h2></div>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>String</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -620,6 +638,7 @@ def daypart_cat(column):
 
     Returns
     -------
+    String
     """
 
     # calculate hour buckets after adding local timezone
@@ -664,7 +683,11 @@ def daypart_cat(column):
 <dt><strong><code>run_type</code></strong></dt>
 <dd>Option to choose between run type "Local" or "EMR" or "Azure" basis the user flexibility. Default option is set as "Local".</dd>
 </dl>
-<h2 id="returns">Returns</h2></div>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>Output[CSV]</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -708,12 +731,17 @@ def ts_analyzer(
 
     Returns
     -------
+    Output[CSV]
     """
 
     if run_type == "local":
         local_path = output_path
-    else:
+    elif run_type == "databricks":
+        local_path = output_to_local(output_path)
+    elif run_type == "emr":
         local_path = "report_stats"
+    else:
+        raise ValueError("Invalid run_type")
 
     Path(local_path).mkdir(parents=True, exist_ok=True)
 
@@ -816,7 +844,11 @@ def ts_analyzer(
 <dt><strong><code>tz_offset</code></strong></dt>
 <dd>Timezone offset (Option to chose between options like Local, GMT, UTC, etc.). Default option is set as "Local".</dd>
 </dl>
-<h2 id="returns">Returns</h2></div>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>DataFrame</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -844,6 +876,7 @@ def ts_eligiblity_check(spark, idf, id_col, opt=1, tz_offset="local"):
 
     Returns
     -------
+    DataFrame
     """
 
     lagged_df = lagged_ts(
@@ -943,7 +976,11 @@ def ts_eligiblity_check(spark, idf, id_col, opt=1, tz_offset="local"):
 <dt><strong><code>cnt_unique_id</code></strong></dt>
 <dd>Count of unique records present in the Input dataframe</dd>
 </dl>
-<h2 id="returns">Returns</h2></div>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>DataFrame</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -973,6 +1010,7 @@ def ts_processed_feats(idf, col, id_col, tz, cnt_row, cnt_unique_id):
 
     Returns
     -------
+    DataFrame
     """
 
     if cnt_row == cnt_unique_id:
@@ -1048,7 +1086,11 @@ def ts_processed_feats(idf, col, id_col, tz, cnt_row, cnt_unique_id):
 <dt><strong><code>n_cat</code></strong></dt>
 <dd>For categorical columns whose cardinality is beyond N, the Top N categories are chosen, beyond which the categories are grouped as Others.</dd>
 </dl>
-<h2 id="returns">Returns</h2></div>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>DataFrame</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1092,6 +1134,7 @@ def ts_viz_data(
 
     Returns
     -------
+    DataFrame
     """
 
     y_col_org = y_col

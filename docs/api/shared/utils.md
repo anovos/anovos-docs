@@ -103,7 +103,7 @@ def ends_with(string, end_str="/"):
     Parameters
     ----------
     string
-        s3:mw-bucket"
+        "s3:mw-bucket"
     end_str
         return: "s3:mw-bucket/" (Default value = "/")
 
@@ -123,9 +123,9 @@ def pairwise_reduce(op, x):
     Parameters
     ----------
     op
-        param x:
+        Operation
     x
-
+        Input list
 
     Returns
     -------
@@ -137,6 +137,28 @@ def pairwise_reduce(op, x):
             v[-1] = op(v[-1], x[-1])
         x = v
     return x[0]
+
+
+def output_to_local(output_path):
+    """
+
+    Parameters
+    ----------
+    output_path :
+        input_path. e.g. dbfs:/sample_path
+
+    Returns
+    -------
+    type
+        path after removing ":" and appending "/" . e.g. /dbfs/sample_path
+
+    """
+    punctuations = ":"
+    for x in output_path:
+        if x in punctuations:
+            local_path = output_path.replace(x, "")
+            local_path = "/" + local_path
+    return local_path
 ```
 </pre>
 </details>
@@ -195,7 +217,7 @@ def attributeType_segregation(idf):
 <div class="desc"><h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>string</code></strong></dt>
-<dd>s3:mw-bucket"</dd>
+<dd>"s3:mw-bucket"</dd>
 <dt><strong><code>end_str</code></strong></dt>
 <dd>return: "s3:mw-bucket/" (Default value = "/")</dd>
 </dl>
@@ -212,7 +234,7 @@ def ends_with(string, end_str="/"):
     Parameters
     ----------
     string
-        s3:mw-bucket"
+        "s3:mw-bucket"
     end_str
         return: "s3:mw-bucket/" (Default value = "/")
 
@@ -307,6 +329,48 @@ def get_dtype(idf, col):
 </pre>
 </details>
 </dd>
+<dt id="anovos.shared.utils.output_to_local"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">output_to_local</span></span>(<span class="n">output_path)</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="parameters">Parameters</h2>
+<p>output_path :
+input_path. e.g. dbfs:/sample_path</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>type</code></dt>
+<dd>path after removing ":" and appending "/" . e.g. /dbfs/sample_path</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre>
+```python
+def output_to_local(output_path):
+    """
+
+    Parameters
+    ----------
+    output_path :
+        input_path. e.g. dbfs:/sample_path
+
+    Returns
+    -------
+    type
+        path after removing ":" and appending "/" . e.g. /dbfs/sample_path
+
+    """
+    punctuations = ":"
+    for x in output_path:
+        if x in punctuations:
+            local_path = output_path.replace(x, "")
+            local_path = "/" + local_path
+    return local_path
+```
+</pre>
+</details>
+</dd>
 <dt id="anovos.shared.utils.pairwise_reduce"><code class="name flex hljs csharp">
 <span class="k">def</span> <span class="nf"><span class="ident">pairwise_reduce</span></span>(<span class="n">op, x)</span>
 </code></dt>
@@ -314,9 +378,9 @@ def get_dtype(idf, col):
 <div class="desc"><h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>op</code></strong></dt>
-<dd>param x:</dd>
+<dd>Operation</dd>
 <dt><strong><code>x</code></strong></dt>
-<dd>&nbsp;</dd>
+<dd>Input list</dd>
 </dl>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
@@ -331,9 +395,9 @@ def pairwise_reduce(op, x):
     Parameters
     ----------
     op
-        param x:
+        Operation
     x
-
+        Input list
 
     Returns
     -------

@@ -107,6 +107,7 @@ def remove_u_score(col):
         Analysis column containing "_" present gets replaced along with upper case conversion
     Returns
     -------
+    String
     """
     col_ = col.split("_")
     bl = []
@@ -132,6 +133,7 @@ def line_chart_gen_stability(df1, df2, col):
         Analysis column
     Returns
     -------
+    DatapaneObject
     """
 
     def val_cat(val):
@@ -142,6 +144,7 @@ def line_chart_gen_stability(df1, df2, col):
 
         Returns
         -------
+        String
         """
         if val >= 3.5:
             return "Very Stable"
@@ -245,6 +248,7 @@ def data_analyzer_output(master_path, avl_recs_tab, tab_name):
         Analysis tab from association_evaluator / quality_checker / stats_generator
     Returns
     -------
+    DatapaneObject
     """
 
     df_list = []
@@ -447,24 +451,21 @@ def drift_stability_ind(
     missing_recs_drift, drift_tab, missing_recs_stability, stability_tab
 ):
     """
-
     This function helps to produce the drift & stability indicator for further processing. Ideally a data with both drift & stability should produce a list of [1,1]
-
-    missing_recs_drift: Missing files from the drift tab
-        drift_tab: "drift_statistics"
-    missing_recs_stability: Missing files from the stability tab
-        stability_tab:"stability_index, stabilityIndex_metrics"
     Parameters
     ----------
     missing_recs_drift
-        param drift_tab
-    missing_recs_stability
-        param stability_tab
+        Missing files from the drift tab
     drift_tab
+        "drift_statistics"
+    missing_recs_stability
+        Missing files from the stability tab
     stability_tab
+        "stability_index, stabilityIndex_metrics"
 
     Returns
     -------
+    List
     """
     if len(missing_recs_drift) == len(drift_tab):
         drift_ind = 0
@@ -495,6 +496,7 @@ def chart_gen_list(master_path, chart_type, type_col=None):
         None. Default value is kept as None
     Returns
     -------
+    DatapaneObject
     """
     plot_list = []
     for i in chart_type:
@@ -558,6 +560,7 @@ def executive_summary_gen(
         Printing option flexibility. Default value is kept as False.
     Returns
     -------
+    DatapaneObject / Output[HTML]
     """
     try:
         obj_dtls = json.load(
@@ -927,6 +930,7 @@ def wiki_generator(
         Printing option flexibility. Default value is kept as False.
     Returns
     -------
+    DatapaneObject / Output[HTML]
     """
     try:
         datatype_df = pd.read_csv(ends_with(master_path) + "data_type.csv")
@@ -1023,6 +1027,7 @@ def descriptive_statistics(
         Printing option flexibility. Default value is kept as False.
     Returns
     -------
+    DatapaneObject / Output[HTML]
     """
     if "global_summary" in avl_recs_SG:
         cnt = 0
@@ -1181,6 +1186,7 @@ def quality_check(
         Printing option flexibility. Default value is kept as False.
     Returns
     -------
+    DatapaneObject / Output[HTML]
     """
     c_ = []
     r_ = []
@@ -1329,6 +1335,7 @@ def attribute_associations(
         Printing option flexibility. Default value is kept as False.
     Returns
     -------
+    DatapaneObject / Output[HTML]
     """
     if (len(missing_recs_AE) == len(AE_tabs)) and (
         (len(all_charts_num_2_) + len(all_charts_cat_2_)) == 0
@@ -1465,6 +1472,7 @@ def data_drift_stability(
         Printing option flexibility. Default value is kept as False.
     Returns
     -------
+    DatapaneObject / Output[HTML]
     """
     line_chart_list = []
     if ds_ind[0] > 0:
@@ -1564,6 +1572,7 @@ def data_drift_stability(
                 count of attributes passed for analysis
             Returns
             -------
+            String
             """
             if drifted_feats == 0:
                 text = """
@@ -1947,6 +1956,7 @@ def plotSeasonalDecompose(
         "Title Description"
     Returns
     -------
+    Plot
     """
     df = pd.read_csv(ends_with(base_path) + x_col + "_" + y_col + "_daily.csv").dropna()
 
@@ -2056,6 +2066,7 @@ def gen_time_series_plots(base_path, x_col, y_col, time_cat):
 
     Returns
     -------
+    Plot
 
     """
 
@@ -2306,6 +2317,7 @@ def list_ts_remove_append(l, opt):
 
     Returns
     -------
+    List
 
     """
 
@@ -2343,7 +2355,7 @@ def ts_viz_1_1(base_path, x_col, y_col, output_type="daily"):
 
     Returns
     -------
-
+    Plot
     """
 
     ts_fig = gen_time_series_plots(base_path, x_col, y_col, output_type)
@@ -2368,7 +2380,7 @@ def ts_viz_1_2(base_path, ts_col, col_list, output_type="daily"):
 
     Returns
     -------
-
+    DatapaneObject
     """
 
     bl = []
@@ -2402,7 +2414,7 @@ def ts_viz_1_3(base_path, ts_col, num_cols, cat_cols, output_type):
 
     Returns
     -------
-
+    DatapaneObject
     """
 
     ts_v = []
@@ -2493,7 +2505,7 @@ def ts_viz_2_1(base_path, x_col, y_col):
 
     Returns
     -------
-
+    DatapaneObject
     """
 
     ts_fig = []
@@ -2525,7 +2537,7 @@ def ts_viz_2_2(base_path, ts_col, col_list):
 
     Returns
     -------
-
+    DatapaneObject
     """
 
     bl = []
@@ -2555,7 +2567,7 @@ def ts_viz_2_3(base_path, ts_col, num_cols):
 
     Returns
     -------
-
+    DatapaneObject
     """
 
     ts_v = []
@@ -2634,7 +2646,7 @@ def ts_landscape(base_path, ts_cols, id_col):
 
     Returns
     -------
-
+    DatapaneObject
     """
 
     if ts_cols is None:
@@ -2734,7 +2746,7 @@ def lambda_cat(val):
 
     Returns
     -------
-
+    String
     """
 
     if val < -1:
@@ -2768,7 +2780,7 @@ def ts_viz_3_1(base_path, x_col, y_col):
 
     Returns
     -------
-
+    DatapaneObject
     """
 
     ts_fig = []
@@ -2901,7 +2913,7 @@ def ts_viz_3_2(base_path, ts_col, col_list):
 
     Returns
     -------
-
+    DatapaneObject
     """
 
     bl = []
@@ -2932,7 +2944,7 @@ def ts_viz_3_3(base_path, ts_col, num_cols):
 
     Returns
     -------
-
+    DatapaneObject
     """
 
     ts_v = []
@@ -2960,7 +2972,7 @@ def ts_stats(base_path):
         Base path which is the same as Master path where the aggregated data resides.
     Returns
     -------
-
+    List
     """
 
     df = pd.read_csv(base_path + "ts_cols_stats.csv")
@@ -3008,7 +3020,7 @@ def ts_viz_generate(master_path, id_col, print_report=False, output_type="daily"
 
     Returns
     -------
-
+    DatapaneObject / Output[HTML]
     """
 
     try:
@@ -3115,7 +3127,7 @@ def anovos_report(
 
     Returns
     -------
-
+    Output[HTML]
     """
 
     if run_type == "emr":
@@ -3471,7 +3483,11 @@ def anovos_report(
 <dt><strong><code>output_type</code></strong></dt>
 <dd>Time category of analysis which can be between "Daily", "Hourly", "Weekly"</dd>
 </dl>
-<h2 id="returns">Returns</h2></div>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>Output[HTML]</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -3522,7 +3538,7 @@ def anovos_report(
 
     Returns
     -------
-
+    Output[HTML]
     """
 
     if run_type == "emr":
@@ -3872,7 +3888,11 @@ Parameters</p>
 <dt><strong><code>print_report</code></strong></dt>
 <dd>Printing option flexibility. Default value is kept as False.</dd>
 </dl>
-<h2 id="returns">Returns</h2></div>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>DatapaneObject / Output[HTML]</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -3911,6 +3931,7 @@ def attribute_associations(
         Printing option flexibility. Default value is kept as False.
     Returns
     -------
+    DatapaneObject / Output[HTML]
     """
     if (len(missing_recs_AE) == len(AE_tabs)) and (
         (len(all_charts_num_2_) + len(all_charts_cat_2_)) == 0
@@ -4038,7 +4059,11 @@ Parameters</p>
 <dt><strong><code>type_col</code></strong></dt>
 <dd>None. Default value is kept as None</dd>
 </dl>
-<h2 id="returns">Returns</h2></div>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>DatapaneObject</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -4059,6 +4084,7 @@ def chart_gen_list(master_path, chart_type, type_col=None):
         None. Default value is kept as None
     Returns
     -------
+    DatapaneObject
     """
     plot_list = []
     for i in chart_type:
@@ -4110,7 +4136,11 @@ Parameters</p>
 <dt><strong><code>tab_name</code></strong></dt>
 <dd>Analysis tab from association_evaluator / quality_checker / stats_generator</dd>
 </dl>
-<h2 id="returns">Returns</h2></div>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>DatapaneObject</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -4131,6 +4161,7 @@ def data_analyzer_output(master_path, avl_recs_tab, tab_name):
         Analysis tab from association_evaluator / quality_checker / stats_generator
     Returns
     -------
+    DatapaneObject
     """
 
     df_list = []
@@ -4352,7 +4383,11 @@ Parameters</p>
 <dt><strong><code>print_report</code></strong></dt>
 <dd>Printing option flexibility. Default value is kept as False.</dd>
 </dl>
-<h2 id="returns">Returns</h2></div>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>DatapaneObject / Output[HTML]</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -4385,6 +4420,7 @@ def data_drift_stability(
         Printing option flexibility. Default value is kept as False.
     Returns
     -------
+    DatapaneObject / Output[HTML]
     """
     line_chart_list = []
     if ds_ind[0] > 0:
@@ -4484,6 +4520,7 @@ def data_drift_stability(
                 count of attributes passed for analysis
             Returns
             -------
+            String
             """
             if drifted_feats == 0:
                 text = """
@@ -4871,7 +4908,11 @@ Parameters</p>
 <dt><strong><code>print_report</code></strong></dt>
 <dd>Printing option flexibility. Default value is kept as False.</dd>
 </dl>
-<h2 id="returns">Returns</h2></div>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>DatapaneObject / Output[HTML]</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -4907,6 +4948,7 @@ def descriptive_statistics(
         Printing option flexibility. Default value is kept as False.
     Returns
     -------
+    DatapaneObject / Output[HTML]
     """
     if "global_summary" in avl_recs_SG:
         cnt = 0
@@ -5045,24 +5087,24 @@ def descriptive_statistics(
 <span class="k">def</span> <span class="nf"><span class="ident">drift_stability_ind</span></span>(<span class="n">missing_recs_drift, drift_tab, missing_recs_stability, stability_tab)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>This function helps to produce the drift &amp; stability indicator for further processing. Ideally a data with both drift &amp; stability should produce a list of [1,1]</p>
-<p>missing_recs_drift: Missing files from the drift tab
-drift_tab: "drift_statistics"
-missing_recs_stability: Missing files from the stability tab
-stability_tab:"stability_index, stabilityIndex_metrics"
+<div class="desc"><p>This function helps to produce the drift &amp; stability indicator for further processing. Ideally a data with both drift &amp; stability should produce a list of [1,1]
 Parameters</p>
 <hr>
 <dl>
 <dt><strong><code>missing_recs_drift</code></strong></dt>
-<dd>param drift_tab</dd>
-<dt><strong><code>missing_recs_stability</code></strong></dt>
-<dd>param stability_tab</dd>
+<dd>Missing files from the drift tab</dd>
 <dt><strong><code>drift_tab</code></strong></dt>
-<dd>&nbsp;</dd>
+<dd>"drift_statistics"</dd>
+<dt><strong><code>missing_recs_stability</code></strong></dt>
+<dd>Missing files from the stability tab</dd>
 <dt><strong><code>stability_tab</code></strong></dt>
-<dd>&nbsp;</dd>
+<dd>"stability_index, stabilityIndex_metrics"</dd>
 </dl>
-<h2 id="returns">Returns</h2></div>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>List</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -5073,24 +5115,21 @@ def drift_stability_ind(
     missing_recs_drift, drift_tab, missing_recs_stability, stability_tab
 ):
     """
-
     This function helps to produce the drift & stability indicator for further processing. Ideally a data with both drift & stability should produce a list of [1,1]
-
-    missing_recs_drift: Missing files from the drift tab
-        drift_tab: "drift_statistics"
-    missing_recs_stability: Missing files from the stability tab
-        stability_tab:"stability_index, stabilityIndex_metrics"
     Parameters
     ----------
     missing_recs_drift
-        param drift_tab
-    missing_recs_stability
-        param stability_tab
+        Missing files from the drift tab
     drift_tab
+        "drift_statistics"
+    missing_recs_stability
+        Missing files from the stability tab
     stability_tab
+        "stability_index, stabilityIndex_metrics"
 
     Returns
     -------
+    List
     """
     if len(missing_recs_drift) == len(drift_tab):
         drift_ind = 0
@@ -5132,7 +5171,11 @@ Parameters</p>
 <dt><strong><code>print_report</code></strong></dt>
 <dd>Printing option flexibility. Default value is kept as False.</dd>
 </dl>
-<h2 id="returns">Returns</h2></div>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>DatapaneObject / Output[HTML]</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -5168,6 +5211,7 @@ def executive_summary_gen(
         Printing option flexibility. Default value is kept as False.
     Returns
     -------
+    DatapaneObject / Output[HTML]
     """
     try:
         obj_dtls = json.load(
@@ -5537,7 +5581,11 @@ def executive_summary_gen(
 <dt><strong><code>time_cat</code></strong></dt>
 <dd>Time category of analysis which can be between "Daily", "Hourly", "Weekly"</dd>
 </dl>
-<h2 id="returns">Returns</h2></div>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>Plot</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -5563,6 +5611,7 @@ def gen_time_series_plots(base_path, x_col, y_col, time_cat):
 
     Returns
     -------
+    Plot
 
     """
 
@@ -5808,7 +5857,11 @@ def gen_time_series_plots(base_path, x_col, y_col, time_cat):
 <dt><strong><code>val</code></strong></dt>
 <dd>Value of Box Cox Test which translates into the transformation to be applied.</dd>
 </dl>
-<h2 id="returns">Returns</h2></div>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>String</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -5827,7 +5880,7 @@ def lambda_cat(val):
 
     Returns
     -------
-
+    String
     """
 
     if val < -1:
@@ -5863,7 +5916,11 @@ Parameters</p>
 <dt><strong><code>col</code></strong></dt>
 <dd>Analysis column</dd>
 </dl>
-<h2 id="returns">Returns</h2></div>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>DatapaneObject</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -5884,6 +5941,7 @@ def line_chart_gen_stability(df1, df2, col):
         Analysis column
     Returns
     -------
+    DatapaneObject
     """
 
     def val_cat(val):
@@ -5894,6 +5952,7 @@ def line_chart_gen_stability(df1, df2, col):
 
         Returns
         -------
+        String
         """
         if val >= 3.5:
             return "Very Stable"
@@ -5997,7 +6056,11 @@ def line_chart_gen_stability(df1, df2, col):
 <dt><strong><code>opt</code></strong></dt>
 <dd>Option to choose between 1 &amp; Others to enable the functionality of removing or appending "_ts" within the elements of a list</dd>
 </dl>
-<h2 id="returns">Returns</h2></div>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>List</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -6020,6 +6083,7 @@ def list_ts_remove_append(l, opt):
 
     Returns
     -------
+    List
 
     """
 
@@ -6060,7 +6124,11 @@ def list_ts_remove_append(l, opt):
 <dt><strong><code>title</code></strong></dt>
 <dd>"Title Description"</dd>
 </dl>
-<h2 id="returns">Returns</h2></div>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>Plot</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -6088,6 +6156,7 @@ def plotSeasonalDecompose(
         "Title Description"
     Returns
     -------
+    Plot
     """
     df = pd.read_csv(ends_with(base_path) + x_col + "_" + y_col + "_daily.csv").dropna()
 
@@ -6201,7 +6270,11 @@ Parameters</p>
 <dt><strong><code>print_report</code></strong></dt>
 <dd>Printing option flexibility. Default value is kept as False.</dd>
 </dl>
-<h2 id="returns">Returns</h2></div>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>DatapaneObject / Output[HTML]</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -6234,6 +6307,7 @@ def quality_check(
         Printing option flexibility. Default value is kept as False.
     Returns
     -------
+    DatapaneObject / Output[HTML]
     """
     c_ = []
     r_ = []
@@ -6363,7 +6437,11 @@ Parameters</p>
 <dt><strong><code>col</code></strong></dt>
 <dd>Analysis column containing "_" present gets replaced along with upper case conversion</dd>
 </dl>
-<h2 id="returns">Returns</h2></div>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>String</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -6379,6 +6457,7 @@ def remove_u_score(col):
         Analysis column containing "_" present gets replaced along with upper case conversion
     Returns
     -------
+    String
     """
     col_ = col.split("_")
     bl = []
@@ -6406,7 +6485,11 @@ def remove_u_score(col):
 <dt><strong><code>id_col</code></strong></dt>
 <dd>ID Column</dd>
 </dl>
-<h2 id="returns">Returns</h2></div>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>DatapaneObject</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -6430,7 +6513,7 @@ def ts_landscape(base_path, ts_cols, id_col):
 
     Returns
     -------
-
+    DatapaneObject
     """
 
     if ts_cols is None:
@@ -6530,7 +6613,11 @@ def ts_landscape(base_path, ts_cols, id_col):
 <dt><strong><code>base_path</code></strong></dt>
 <dd>Base path which is the same as Master path where the aggregated data resides.</dd>
 </dl>
-<h2 id="returns">Returns</h2></div>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>List</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -6549,7 +6636,7 @@ def ts_stats(base_path):
         Base path which is the same as Master path where the aggregated data resides.
     Returns
     -------
-
+    List
     """
 
     df = pd.read_csv(base_path + "ts_cols_stats.csv")
@@ -6594,7 +6681,11 @@ def ts_stats(base_path):
 <dt><strong><code>output_type</code></strong></dt>
 <dd>Time category of analysis which can be between "Daily", "Hourly", "Weekly"</dd>
 </dl>
-<h2 id="returns">Returns</h2></div>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>Plot</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -6618,7 +6709,7 @@ def ts_viz_1_1(base_path, x_col, y_col, output_type="daily"):
 
     Returns
     -------
-
+    Plot
     """
 
     ts_fig = gen_time_series_plots(base_path, x_col, y_col, output_type)
@@ -6643,7 +6734,11 @@ def ts_viz_1_1(base_path, x_col, y_col, output_type="daily"):
 <dt><strong><code>output_type</code></strong></dt>
 <dd>Time category of analysis which can be between "Daily", "Hourly", "Weekly"</dd>
 </dl>
-<h2 id="returns">Returns</h2></div>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>DatapaneObject</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -6667,7 +6762,7 @@ def ts_viz_1_2(base_path, ts_col, col_list, output_type="daily"):
 
     Returns
     -------
-
+    DatapaneObject
     """
 
     bl = []
@@ -6701,7 +6796,11 @@ def ts_viz_1_2(base_path, ts_col, col_list, output_type="daily"):
 <dt><strong><code>output_type</code></strong></dt>
 <dd>Time category of analysis which can be between "Daily", "Hourly", "Weekly"</dd>
 </dl>
-<h2 id="returns">Returns</h2></div>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>DatapaneObject</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -6727,7 +6826,7 @@ def ts_viz_1_3(base_path, ts_col, num_cols, cat_cols, output_type):
 
     Returns
     -------
-
+    DatapaneObject
     """
 
     ts_v = []
@@ -6818,7 +6917,11 @@ def ts_viz_1_3(base_path, ts_col, num_cols, cat_cols, output_type):
 <dt><strong><code>y_col</code></strong></dt>
 <dd>Numerical column names</dd>
 </dl>
-<h2 id="returns">Returns</h2></div>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>DatapaneObject</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -6840,7 +6943,7 @@ def ts_viz_2_1(base_path, x_col, y_col):
 
     Returns
     -------
-
+    DatapaneObject
     """
 
     ts_fig = []
@@ -6872,7 +6975,11 @@ def ts_viz_2_1(base_path, x_col, y_col):
 <dt><strong><code>col_list</code></strong></dt>
 <dd>Numerical column names</dd>
 </dl>
-<h2 id="returns">Returns</h2></div>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>DatapaneObject</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -6894,7 +7001,7 @@ def ts_viz_2_2(base_path, ts_col, col_list):
 
     Returns
     -------
-
+    DatapaneObject
     """
 
     bl = []
@@ -6924,7 +7031,11 @@ def ts_viz_2_2(base_path, ts_col, col_list):
 <dt><strong><code>num_cols</code></strong></dt>
 <dd>Numerical column names</dd>
 </dl>
-<h2 id="returns">Returns</h2></div>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>DatapaneObject</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -6946,7 +7057,7 @@ def ts_viz_2_3(base_path, ts_col, num_cols):
 
     Returns
     -------
-
+    DatapaneObject
     """
 
     ts_v = []
@@ -7023,7 +7134,11 @@ def ts_viz_2_3(base_path, ts_col, num_cols):
 <dt><strong><code>y_col</code></strong></dt>
 <dd>Numerical column names</dd>
 </dl>
-<h2 id="returns">Returns</h2></div>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>DatapaneObject</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -7045,7 +7160,7 @@ def ts_viz_3_1(base_path, x_col, y_col):
 
     Returns
     -------
-
+    DatapaneObject
     """
 
     ts_fig = []
@@ -7178,7 +7293,11 @@ def ts_viz_3_1(base_path, x_col, y_col):
 <dt><strong><code>col_list</code></strong></dt>
 <dd>Numerical column names</dd>
 </dl>
-<h2 id="returns">Returns</h2></div>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>DatapaneObject</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -7200,7 +7319,7 @@ def ts_viz_3_2(base_path, ts_col, col_list):
 
     Returns
     -------
-
+    DatapaneObject
     """
 
     bl = []
@@ -7231,7 +7350,11 @@ def ts_viz_3_2(base_path, ts_col, col_list):
 <dt><strong><code>num_cols</code></strong></dt>
 <dd>Numerical column names</dd>
 </dl>
-<h2 id="returns">Returns</h2></div>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>DatapaneObject</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -7253,7 +7376,7 @@ def ts_viz_3_3(base_path, ts_col, num_cols):
 
     Returns
     -------
-
+    DatapaneObject
     """
 
     ts_v = []
@@ -7287,7 +7410,11 @@ def ts_viz_3_3(base_path, ts_col, num_cols):
 <dt><strong><code>output_type</code></strong></dt>
 <dd>Time category of analysis which can be between "Daily", "Hourly", "Weekly"</dd>
 </dl>
-<h2 id="returns">Returns</h2></div>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>DatapaneObject / Output[HTML]</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -7314,7 +7441,7 @@ def ts_viz_generate(master_path, id_col, print_report=False, output_type="daily"
 
     Returns
     -------
-
+    DatapaneObject / Output[HTML]
     """
 
     try:
@@ -7396,7 +7523,11 @@ Parameters</p>
 <dt><strong><code>print_report</code></strong></dt>
 <dd>Printing option flexibility. Default value is kept as False.</dd>
 </dl>
-<h2 id="returns">Returns</h2></div>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>DatapaneObject / Output[HTML]</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -7420,6 +7551,7 @@ def wiki_generator(
         Printing option flexibility. Default value is kept as False.
     Returns
     -------
+    DatapaneObject / Output[HTML]
     """
     try:
         datatype_df = pd.read_csv(ends_with(master_path) + "data_type.csv")

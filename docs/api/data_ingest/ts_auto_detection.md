@@ -34,7 +34,7 @@ from pyspark.sql import types as T
 from pyspark.sql import Window
 from loguru import logger
 import calendar
-from anovos.shared.utils import attributeType_segregation, ends_with
+from anovos.shared.utils import attributeType_segregation, ends_with, output_to_local
 from anovos.data_analyzer.stats_generator import measures_of_percentiles
 from anovos.data_transformer.datetime import (
     timeUnits_extraction,
@@ -84,7 +84,7 @@ def regex_date_time_parser(
     col
         Column passed for Auto detection of Timestamp / date type
     tz
-        Timezone offset (Option to chose between options like Local, GMT, UTC, etc.). Default option is set as "Local".
+        Timezone offset (Option to chose between options like Local, GMT, UTC). Default option is set as "Local".
     val_unique_cat
         Maximum character length of the field.
     trans_cat
@@ -96,6 +96,7 @@ def regex_date_time_parser(
 
     Returns
     -------
+    DataFrame
     """
 
     REGEX_PARTS = {
@@ -292,15 +293,13 @@ def regex_date_time_parser(
 
         return idf
 
-    elif trans_cat in ["long_c", "bigint_c"]:
+    elif (trans_cat in ["long_c", "bigint_c", "int_c"]) & (
+        int(val_unique_cat) in [10, 13]
+    ):
 
-        precision_chk = (
-            idf.select(F.max(F.length(col))).rdd.flatMap(lambda x: x).collect()[0]
-        )
-
-        if precision_chk == 10:
+        if int(val_unique_cat) == 10:
             precision = "s"
-        elif precision_chk == 13:
+        elif int(val_unique_cat) == 13:
             precision = "ms"
         else:
             precision = "ms"
@@ -462,7 +461,7 @@ def regex_date_time_parser(
                 ]
             )
 
-        if len(bl) > 50:
+        if len(bl) >= 1:
             columns = [col, col + "_ts"]
             # output_df = spark.createDataFrame(spark.parallelize(bl),columns)
             output_df = spark.createDataFrame(pd.DataFrame(bl, columns=columns))
@@ -501,6 +500,18 @@ def regex_date_time_parser(
                 frmt = "yyyyddMM"
             elif int(f[2]) > 12:
                 frmt = "yyyyMMdd"
+            elif (
+                (int(f[0]) > 1970 & int(f[0]) < 2049)
+                & (int(f[1]) > 0 & int(f[1]) <= 12)
+                & (int(f[2]) > 0 & int(f[2]) <= 31)
+            ):
+                frmt = "yyyyMMdd"
+            elif (
+                (int(f[0]) > 1970 & int(f[0]) < 2049)
+                & (int(f[1]) > 0 & int(f[1]) <= 31)
+                & (int(f[2]) > 0 & int(f[2]) <= 12)
+            ):
+                frmt = "yyyyddMM"
             else:
                 return idf
 
@@ -563,6 +574,7 @@ def ts_loop_cols_pre(idf, id_col):
 
     Returns
     -------
+    Three lists
     """
 
     lc1, lc2, lc3 = [], [], []
@@ -580,7 +592,7 @@ def ts_loop_cols_pre(idf, id_col):
         elif (
             (i[0] != id_col)
             & (idf.select(F.length(i[0])).distinct().count() == 1)
-            & (col_len >= 4)
+            & (col_len in [4, 6, 8])
         ):
             if i[1] == "string":
                 lc1.append(i[0])
@@ -638,12 +650,17 @@ def ts_preprocess(spark, idf, id_col, output_path, tz_offset="local", run_type="
 
     Returns
     -------
+    DataFrame,Output[CSV]
     """
 
     if run_type == "local":
         local_path = output_path
-    else:
+    elif run_type == "databricks":
+        local_path = output_to_local(output_path)
+    elif run_type == "emr":
         local_path = "report_stats"
+    else:
+        raise ValueError("Invalid run_type")
 
     Path(local_path).mkdir(parents=True, exist_ok=True)
 
@@ -741,7 +758,7 @@ def ts_preprocess(spark, idf, id_col, output_path, tz_offset="local", run_type="
 <dt><strong><code>col</code></strong></dt>
 <dd>Column passed for Auto detection of Timestamp / date type</dd>
 <dt><strong><code>tz</code></strong></dt>
-<dd>Timezone offset (Option to chose between options like Local, GMT, UTC, etc.). Default option is set as "Local".</dd>
+<dd>Timezone offset (Option to chose between options like Local, GMT, UTC). Default option is set as "Local".</dd>
 <dt><strong><code>val_unique_cat</code></strong></dt>
 <dd>Maximum character length of the field.</dd>
 <dt><strong><code>trans_cat</code></strong></dt>
@@ -751,7 +768,11 @@ def ts_preprocess(spark, idf, id_col, output_path, tz_offset="local", run_type="
 <dt><strong><code>output_mode</code></strong></dt>
 <dd>Option to choose between Append or Replace. If the option Append is selected, the column names are Appended by "_ts" else it's replaced by the original column name</dd>
 </dl>
-<h2 id="returns">Returns</h2></div>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>DataFrame</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -787,7 +808,7 @@ def regex_date_time_parser(
     col
         Column passed for Auto detection of Timestamp / date type
     tz
-        Timezone offset (Option to chose between options like Local, GMT, UTC, etc.). Default option is set as "Local".
+        Timezone offset (Option to chose between options like Local, GMT, UTC). Default option is set as "Local".
     val_unique_cat
         Maximum character length of the field.
     trans_cat
@@ -799,6 +820,7 @@ def regex_date_time_parser(
 
     Returns
     -------
+    DataFrame
     """
 
     REGEX_PARTS = {
@@ -995,15 +1017,13 @@ def regex_date_time_parser(
 
         return idf
 
-    elif trans_cat in ["long_c", "bigint_c"]:
+    elif (trans_cat in ["long_c", "bigint_c", "int_c"]) & (
+        int(val_unique_cat) in [10, 13]
+    ):
 
-        precision_chk = (
-            idf.select(F.max(F.length(col))).rdd.flatMap(lambda x: x).collect()[0]
-        )
-
-        if precision_chk == 10:
+        if int(val_unique_cat) == 10:
             precision = "s"
-        elif precision_chk == 13:
+        elif int(val_unique_cat) == 13:
             precision = "ms"
         else:
             precision = "ms"
@@ -1165,7 +1185,7 @@ def regex_date_time_parser(
                 ]
             )
 
-        if len(bl) > 50:
+        if len(bl) >= 1:
             columns = [col, col + "_ts"]
             # output_df = spark.createDataFrame(spark.parallelize(bl),columns)
             output_df = spark.createDataFrame(pd.DataFrame(bl, columns=columns))
@@ -1204,6 +1224,18 @@ def regex_date_time_parser(
                 frmt = "yyyyddMM"
             elif int(f[2]) > 12:
                 frmt = "yyyyMMdd"
+            elif (
+                (int(f[0]) > 1970 & int(f[0]) < 2049)
+                & (int(f[1]) > 0 & int(f[1]) <= 12)
+                & (int(f[2]) > 0 & int(f[2]) <= 31)
+            ):
+                frmt = "yyyyMMdd"
+            elif (
+                (int(f[0]) > 1970 & int(f[0]) < 2049)
+                & (int(f[1]) > 0 & int(f[1]) <= 31)
+                & (int(f[2]) > 0 & int(f[2]) <= 12)
+            ):
+                frmt = "yyyyddMM"
             else:
                 return idf
 
@@ -1264,7 +1296,11 @@ def regex_date_time_parser(
 <dt><strong><code>id_col</code></strong></dt>
 <dd>ID Column</dd>
 </dl>
-<h2 id="returns">Returns</h2></div>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>Three lists</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1287,6 +1323,7 @@ def ts_loop_cols_pre(idf, id_col):
 
     Returns
     -------
+    Three lists
     """
 
     lc1, lc2, lc3 = [], [], []
@@ -1304,7 +1341,7 @@ def ts_loop_cols_pre(idf, id_col):
         elif (
             (i[0] != id_col)
             & (idf.select(F.length(i[0])).distinct().count() == 1)
-            & (col_len >= 4)
+            & (col_len in [4, 6, 8])
         ):
             if i[1] == "string":
                 lc1.append(i[0])
@@ -1360,7 +1397,11 @@ def ts_loop_cols_pre(idf, id_col):
 <dt><strong><code>run_type</code></strong></dt>
 <dd>Option to choose between run type "Local" or "EMR" or "Azure" basis the user flexibility. Default option is set as "Local".</dd>
 </dl>
-<h2 id="returns">Returns</h2></div>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>DataFrame,Output[CSV]</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1391,12 +1432,17 @@ def ts_preprocess(spark, idf, id_col, output_path, tz_offset="local", run_type="
 
     Returns
     -------
+    DataFrame,Output[CSV]
     """
 
     if run_type == "local":
         local_path = output_path
-    else:
+    elif run_type == "databricks":
+        local_path = output_to_local(output_path)
+    elif run_type == "emr":
         local_path = "report_stats"
+    else:
+        raise ValueError("Invalid run_type")
 
     Path(local_path).mkdir(parents=True, exist_ok=True)
 
