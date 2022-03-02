@@ -38,17 +38,6 @@ cat_cols = []
 
 
 def master_to_local(master_path):
-    """
-
-    Parameters
-    ----------
-    master_path
-
-
-    Returns
-    -------
-
-    """
     punctuations = ":"
     for x in master_path:
         if x in punctuations:
@@ -1160,12 +1149,7 @@ def edit_binRange(col):
 <span class="k">def</span> <span class="nf"><span class="ident">master_to_local</span></span>(<span class="n">master_path)</span>
 </code></dt>
 <dd>
-<div class="desc"><h2 id="parameters">Parameters</h2>
-<dl>
-<dt><strong><code>master_path</code></strong></dt>
-<dd>&nbsp;</dd>
-</dl>
-<h2 id="returns">Returns</h2></div>
+<div class="desc"></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1173,17 +1157,6 @@ def edit_binRange(col):
 <pre>
 ```python
 def master_to_local(master_path):
-    """
-
-    Parameters
-    ----------
-    master_path
-
-
-    Returns
-    -------
-
-    """
     punctuations = ":"
     for x in master_path:
         if x in punctuations:

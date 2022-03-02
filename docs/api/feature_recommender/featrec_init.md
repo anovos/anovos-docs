@@ -12,6 +12,7 @@ from re import finditer
 import pandas as pd
 from sentence_transformers import SentenceTransformer
 from torch.hub import _get_torch_home
+import site
 
 
 def detect_model_path():
@@ -72,7 +73,16 @@ def init_input_fer():
     -------
     Loading the Feature Explorer and Recommender (FER) Input DataFrame (FER corpus)
     """
-    input_path_fer = "https://raw.githubusercontent.com/anovos/anovos/main/data/feature_recommender/flatten_fr_db.csv"
+    local_path = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "data", "flatten_fr_db.csv"
+    )
+    if os.path.exists(local_path):
+        input_path_fer = local_path
+    else:
+        site_path = site.getsitepackages()[0]
+        input_path_fer = os.path.join(
+            site_path, "anovos/feature_recommender/data/flatten_fr_db.csv"
+        )
     df_input_fer = pd.read_csv(input_path_fer)
     return df_input_fer
 
@@ -489,7 +499,16 @@ def init_input_fer():
     -------
     Loading the Feature Explorer and Recommender (FER) Input DataFrame (FER corpus)
     """
-    input_path_fer = "https://raw.githubusercontent.com/anovos/anovos/main/data/feature_recommender/flatten_fr_db.csv"
+    local_path = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "data", "flatten_fr_db.csv"
+    )
+    if os.path.exists(local_path):
+        input_path_fer = local_path
+    else:
+        site_path = site.getsitepackages()[0]
+        input_path_fer = os.path.join(
+            site_path, "anovos/feature_recommender/data/flatten_fr_db.csv"
+        )
     df_input_fer = pd.read_csv(input_path_fer)
     return df_input_fer
 ```

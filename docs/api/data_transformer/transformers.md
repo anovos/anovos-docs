@@ -1974,11 +1974,13 @@ def imputation_matrixFactorization(
     if output_mode not in ("replace", "append"):
         raise TypeError("Invalid input for output_mode")
 
+    remove_id = False
     if id_col == "":
         idf = idf.withColumn("id", F.monotonically_increasing_id()).withColumn(
             "id", F.row_number().over(Window.orderBy("id"))
         )
         id_col = "id"
+        remove_id = True
 
     key_and_val = F.create_map(
         list(chain.from_iterable([[F.lit(c), F.col(c)] for c in list_of_cols]))
@@ -2045,6 +2047,9 @@ def imputation_matrixFactorization(
             odf = odf.drop(i + "_imputed")
         elif output_mode == "replace":
             odf = odf.drop(i).withColumnRenamed(i + "_imputed", i)
+
+    if remove_id:
+        odf = odf.drop("id")
 
     if print_impact:
         if output_mode == "replace":
@@ -6735,11 +6740,13 @@ def imputation_matrixFactorization(
     if output_mode not in ("replace", "append"):
         raise TypeError("Invalid input for output_mode")
 
+    remove_id = False
     if id_col == "":
         idf = idf.withColumn("id", F.monotonically_increasing_id()).withColumn(
             "id", F.row_number().over(Window.orderBy("id"))
         )
         id_col = "id"
+        remove_id = True
 
     key_and_val = F.create_map(
         list(chain.from_iterable([[F.lit(c), F.col(c)] for c in list_of_cols]))
@@ -6806,6 +6813,9 @@ def imputation_matrixFactorization(
             odf = odf.drop(i + "_imputed")
         elif output_mode == "replace":
             odf = odf.drop(i).withColumnRenamed(i + "_imputed", i)
+
+    if remove_id:
+        odf = odf.drop("id")
 
     if print_impact:
         if output_mode == "replace":
