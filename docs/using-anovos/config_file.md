@@ -141,8 +141,9 @@ method: name
 - `file_path`: The file (or directory) path to read the other concatenating input dataset from.
    It can be a local path, an [S3 path](https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-bucket-intro.html)
    (when running on AWS), a path to a file resource on Google Colab (see
-   [this tutorial](https://neptune.ai/blog/google-colab-dealing-with-files)for
-   an overview), or a path on the [Databricks File System](https://docs.microsoft.com/de-de/azure/databricks/data/databricks-file-system)
+   [this tutorial](https://neptune.ai/blog/google-colab-dealing-with-files) for
+   an overview), or a path on the
+   [Databricks File System](https://docs.microsoft.com/de-de/azure/databricks/data/databricks-file-system)
    (when running on Azure).
 
 - `file_type`: The file format of the other concatenating input data. Currently, _Anovos_ supports
@@ -181,7 +182,6 @@ to be selected for further processing.
   [the Spark documentation](https://spark.apache.org/docs/latest/sql-ref-datatypes.html)
   for a list of valid datatypes.
   Note that this field is case-insensitive.
-
 
 ### `dataset2`, `dataset3`, ...
 
@@ -224,7 +224,8 @@ join_type: inner
    It can be a local path, an [S3 path](https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-bucket-intro.html)
   (when running on AWS), a path to a file resource on Google Colab (see
    [this tutorial](https://neptune.ai/blog/google-colab-dealing-with-files)for
-   an overview), or a path on the [Databricks File System](https://docs.microsoft.com/de-de/azure/databricks/data/databricks-file-system)
+   an overview), or a path on the
+  [Databricks File System](https://docs.microsoft.com/de-de/azure/databricks/data/databricks-file-system)
    (when running on Azure).
 
 - `file_type`: The file format of the other joining input data. Currently, _Anovos_ supports
@@ -270,17 +271,24 @@ Additional datasets are configured in the same manner as `dataset1`.
 
 ## `timeseries_analyzer`
 
-- `auto_detection`: This takes Boolean type input -- `True` or `False`. If True, it will help produce the output containing a transformation through auto timestamp / date detection by reading the ingested dataframe from source.
+- `auto_detection`: Can be set to `True` or `False`.
+  If `True`, it attempt to automatically infer the date/timestamp format in the input dataset.
 
-- `id_col`: Name of Id column in the input dataset
+- `id_col`: Name of ID column in the input dataset.
 
-- `tz_offset`: Timezone offset (Option to chose between these three options `local`, `gmt`, `utc`). Default option is set as "Local".
+- `tz_offset`: The timezone offset of the timestamps in the input dataset.
+   Can be set to either `local`, `gmt`, or `utc`. The default setting is `local`.
 
-- `inspection`: This takes Boolean type input -- `True` or `False`. If True, time series elements undergo inspection.
+- `inspection`: Can be set to `True` or `False`. If `True`, the time series elements undergo an inspection.
 
-- `analysis_level`: Option to choose between "Daily" or "Weekly" or "Hourly". Daily is chosen as default. If "Daily" is selected as the output type, the daily view is populated ; If it's "Hourly", the view is shown at a Day part level. However, if it's "Weekly", then the display it per individual week days (1-7) as captured.
+- `analysis_level`: Can be set to `daily`, `weekly`, or `hourly`. The default setting is `daily`.
+   If set to `daily`, the daily view is populated.
+   If set to `hourly`, the view is shown at a day part level.  
+   If set to `weekly`, the display it per individual weekdays (1-7) as captured.
 
-- `max_days`: Max days upto which the data will be aggregated. If we've a dataset containing a timestamp / date field with very high number of unique dates (Let's say beyond 20 years worth of daily data), a maximum days value chosen basis which the latest output is displayed.
+- `max_days`: Maximum number of days up to which the data will be aggregated.
+   If the dataset contains a timestamp/date field with very high number of unique dates
+   (e.g., 20 years worth of daily data), this option can be used to reduce the timespan that is analyzed.
 
 _Example:_
 ```yaml
