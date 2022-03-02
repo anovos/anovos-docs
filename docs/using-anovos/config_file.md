@@ -271,6 +271,8 @@ Additional datasets are configured in the same manner as `dataset1`.
 
 ## `timeseries_analyzer`
 
+Configuration for the  [time series analyzer](../api/data_analyzer/ts_analyzer.md).
+
 - `auto_detection`: Can be set to `True` or `False`.
   If `True`, it attempt to automatically infer the date/timestamp format in the input dataset.
 
