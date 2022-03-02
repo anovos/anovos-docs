@@ -1,11 +1,11 @@
 # Current Limitations of Anovos
 
-The current Alpha release of _Anovos_ still has several limitations, which we will address in the upcoming releases. 
+The current V0.2.0 release of _Anovos_ still has some limitations, which we will address in the upcoming releases. 
 To learn more about what's on the horizon, check out our [roadmap](roadmap.md).
  
 ## 🔣 Data
-- _Anovos_ currently only supports numerical, categorical and datetime/timestamp columns.
-  We plan to add support for additional data types such as (struct) arrays etc. in the future.
+- _Anovos_ currently only supports numerical, categorical and datetime/timestamp related columns (cross sectional & transactional level).
+  We plan to add support for additional data types such as (struct) arrays, geo spatical etc. in the future.
 
 - Geospatial columns like geohash or lat/long can only be analysed as categorical (geohash)
   or numerical (lat/long). Functionalities specific to geospatial features will be supported in the later releases.
