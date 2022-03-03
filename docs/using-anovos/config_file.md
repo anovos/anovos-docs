@@ -725,10 +725,10 @@ configs:
 ```
 Note: There can be multiple historical datasets, for loading the other datasets, it's configuration should be written in same as dataset1
 ```
-
-#### `dataset2`
   
-  same configuration as dataset1
+#### `dataset2`, `dataset3`, ...
+
+Additional datasets are configured in the same manner as `dataset1`.
 
 ## `report_preprocessing`
 
@@ -787,7 +787,7 @@ This section covers the final execution part where primarily the output generate
 
 - `corr_threshold`: The threshold chosen beyond which the attributes are found to be redundant. It should be between 0 to 1.
 
- `iv_threshold`: The threshold beyond which the attributes are found to be significant in terms of model. It takes value between 0 to 1.
+- `iv_threshold`: The threshold beyond which the attributes are found to be significant in terms of model. It takes value between 0 to 1.
 
 | **Information Value**  | **Variable Predictiveness**  |
 |------------------------|------------------------------|
