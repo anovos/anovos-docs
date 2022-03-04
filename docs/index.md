@@ -18,7 +18,7 @@ To get a first impression of _Anovos_' capabilities, check out our [interactive 
 
 Need a little help? We're here!
 
-This documentation provides a thorough introduction to _Anovos_ and includes a comprehensive [API documentation](api/index.md).
+This documentation provides a thorough introduction to _Anovos_ and includes a comprehensive [API documentation](https://docs.anovos.ai/api/index.html).
 
 If you have any questions on how to use _Anovos_ or would like to suggest future enhancements, [here's how to reach out](community/communication.md).
 
@@ -33,9 +33,18 @@ _Anovos_ is built on a curated collection of powerful open source libraries, inc
 
 - [Apache Spark](https://github.com/apache/spark)
 - [datapane](https://github.com/datapane/datapane/)
+- [findspark](https://github.com/minrk/findspark/)
+- [numpy](https://github.com/numpy/numpy/)
+- [loguru](https://github.com/Delgan/loguru/) 
 - [Pandas](https://github.com/pandas-dev/pandas)
+- [plotly](https://github.com/plotly/)
 - [popmon](https://github.com/ing-bank/popmon/)
+- [pyarrow](https://github.com/apache/arrow/)
+- [py4j](https://github.com/py4j/py4j/)
+- [pyaml](https://github.com/yaml/pyyaml/)
+- [s3fs](https://github.com/fsspec/s3fs/)
 - [seaborn](https://github.com/mwaskom/seaborn)
+- [sentence-transformers](https://github.com/UKPLab/sentence-transformers/)
 - [scipy](https://github.com/scipy/scipy)
 - [scikit-learn](https://github.com/scikit-learn/scikit-learn/)
 - [statsmodels](https://github.com/statsmodels/statsmodels)
