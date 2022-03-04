@@ -7,7 +7,7 @@ All you need is [Docker](https://www.docker.com) (see [here](https://www.docker.
 for instructions how to install it on your machine).
 
 The easiest way to try out _Anovos_ and explore its capabilities is through the provided
-[examples](/examples) that you can run via Docker without the need to install anything
+[examples](https://github.com/anovos/anovos/tree/main/examples) that you can run via Docker without the need to install anything
 on your local machine.
 
 ```bash
