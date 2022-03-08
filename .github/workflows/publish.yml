@@ -15,6 +15,14 @@ jobs:
       - name: Checkout main
         uses: actions/checkout@v2
 
+      - name: Pip cache
+        uses: actions/cache@v2.1.7
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-docs-${{ hashFiles('./requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-docs-
+
       - name: Deploy docs
         uses: mhausenblas/mkdocs-deploy-gh-pages@1.24
 
