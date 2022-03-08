@@ -687,12 +687,16 @@ nullColumns_detection:
 
 ## 📑 `association_evaluator`
 
+🔎 _Corresponds to [`data_analyzer.association_evaluator`](../api/data_analyzer/association_evaluator.md)_
+
 This submodule focuses on understanding the interaction between different attributes and/or the relationship between an attribute & the binary target variable. see the 
-[Association Evaluator Doc](https://github.com/anovos/anovos-docs/blob/main/docs/api/data_analyzer/association_evaluator.md) for understanding its functions.
 
 ### `correlation_matrix`
 
-`list_of_cols`: List of column names (list of strings or string of column names separated by `|`)subjected for generating correlation matrix. The user can also use `all` as an input to this argument to consider all columns. This is super useful instead of specifying all column names manually.
+🔎 _Corresponds to [`association_evaluator.correlation_matrix`](../api/data_analyzer/association_evaluator.md#anovos.data_analyzer.association_evaluator.correlation_matrix)_
+
+
+`list_of_cols`: List of column names (list of strings or string of column names separated by `|`) subjected for generating correlation matrix. The user can also use `all` as an input to this argument to consider all columns. This is super useful instead of specifying all column names manually.
 
 - `drop_cols`: List of column names (list of strings or string of column names separated by `|`) It is used to specify the columns which needs to be dropped from list_of_cols. It is most useful when used coupled with `all` value of list_of_cols, when we need to consider all columns except few handful of them.
 
@@ -705,7 +709,9 @@ correlation_matrix:
 
 ### `IV_calculation`
 
-`list_of_cols`: List of column names (list of strings or string of column names separated by `|`)subjected to IV calculation.
+🔎 _Corresponds to [`association_evaluator.IV_calculation`](../api/data_analyzer/association_evaluator.md#anovos.data_analyzer.association_evaluator.IV_calculation)_
+
+`list_of_cols`: List of column names (list of strings or string of column names separated by `|`) subjected to IV calculation.
 
 - `drop_cols`: List of column names (list of strings or string of column names separated by `|`) It is used to specify the columns that need to be dropped from list_of_cols before IV calculation
 
@@ -730,7 +736,9 @@ IV_calculation:
 
 ### `IG_calculation`
 
-`list_of_cols`: List of column names (list of strings or string of column names separated by `|`)subjected to IG calculation
+🔎 _Corresponds to [`association_evaluator.IG_calculation`](../api/data_analyzer/association_evaluator.md#anovos.data_analyzer.association_evaluator.IG_calculation)_
+
+`list_of_cols`: List of column names (list of strings or string of column names separated by `|`) subjected to IG calculation
 
 - `drop_cols`: List of column names (list of strings or string of column names separated by `|`) It is used to specify the columns that need to be dropped from list_of_cols before IG calculation
 
@@ -753,9 +761,11 @@ IG_calculation:
     monotonicity_check: 0
 ```
 
-### `Variable_clustering`
+### `variable_clustering`
 
-`list_of_cols`: List of column names (list of strings or string of column names separated by `|`)subjected to variable clustering
+🔎 _Corresponds to [`association_evaluator.variable_clustering`](../api/data_analyzer/association_evaluator.md#anovos.data_analyzer.association_evaluator.variable_clustering)_
+
+`list_of_cols`: List of column names (list of strings or string of column names separated by `|`) subjected to variable clustering
 
 - `drop_cols`: List of column names (list of strings or string of column names separated by `|`) It is used to specify the columns that need to be dropped from list_of_cols before variable clustering.
 
@@ -766,7 +776,9 @@ variable_clustering:
   drop_cols: id_column|label_col
 ```
 
-## `drift_detector`
+## 📑 `drift_detector`
+
+🔎 _Corresponds to [`drfit.detector`](../api/drift/detector.md)_
 
 ### `drift_statistics`
 
@@ -892,7 +904,7 @@ Note: There can be multiple historical datasets, for loading the other datasets,
 
 Additional datasets are configured in the same manner as `dataset1`.
 
-## `report_preprocessing`
+## 📑 `report_preprocessing`
 
 This section largely covers the data pre–processing. The primary function which is used to address all the subsequent modules is charts_to_objects. It precisely helps in saving the chart data in form of objects, which is eventually read by the final report generation script. The objects saved are specifically used at the modules shown at the Report based on the user input. See the [Intermediate Report Doc](https://github.com/anovos/anovos-docs/blob/main/docs/using-anovos/data-reports/intermediate_report.md) for more details.
 
@@ -941,6 +953,8 @@ charts_to_objects:
 
 ## 📑 `report_generation`
 
+🔎 _Corresponds to [`data_report.report_generation`](../api/data_report/report_generation.md)_
+
 This section covers the final execution part where primarily the output generated by the previous step is being fetched upon and structured in the desirable UI layout. See the [Final report generation Doc](https://github.com/anovos/anovos-docs/blob/main/docs/using-anovos/data-reports/final_report.md) for more details.
 
 - `master_path`: The path which contains the data of intermediate output in terms of json chart objects, csv file (pandas df).
@@ -980,7 +994,9 @@ metricDict_path: 'data/metric_dictionary.csv'
 final_report_path: 'report_stats'
 ```
 
-## 📑 `transformers`:
+## 📑 `transformers`
+
+🔎 _Corresponds to [`data_transformer.transformers`](../api/data_transformer/transformers.md)_
 
 The data transformer module supports selected pre-processing & transformation functions, such as binning, encoding, scaling, imputation, to name a few, which are required for statistics generation and quality checks. See the
 [Transformers Doc](https://github.com/anovos/anovos-docs/blob/main/docs/api/data_transformer/transformers.md) for understanding its functions in detail.
@@ -989,8 +1005,7 @@ The data transformer module supports selected pre-processing & transformation fu
 
 This group of functions used to perform mathematical transformation over numerical attributes. Users must use only one function at a time and section of other function should be commented like if user want to use feature transformation then all Section of boxcox transformation should be commented.
 
-
-#### `feature_transformation`:
+#### `feature_transformation`
 
 - `list_of_cols`: List of numerical columns to encode e.g., ["col1","col2"]. "all" can be passed to include all numerical columns for analysis.
 
@@ -1008,7 +1023,7 @@ feature_transformation:
   method_type: sqrt
 ```
 
-#### `boxcox_transformation`:
+#### `boxcox_transformation`
 
 - `list_of_cols`: List of numerical columns to encode e.g., ["col1","col2"].
 
@@ -1076,8 +1091,7 @@ attribute_binning:
   bin_dtype: numerical
 ```
 
-
-### `numerical_expression`:
+### `numerical_expression`
 
 #### `expression_parser`
 
