@@ -24,7 +24,7 @@ You'll find links to the respective sections of the
 [API Documentation](../api/index.md) that provide much more detailed information
 on each modules' capabilities than we can squeeze into this guide.
 
-## `input_dataset`
+## 📑 `input_dataset`
 
 This configuration block describes how the input dataset is loaded and prepared
 using the [`data_ingest.data_ingest`](../api/data_ingest/data_ingest.md) module.
@@ -38,10 +38,10 @@ First, columns are deleted, then selected, then renamed, and then recast.
 🔎 _Corresponds to [`data_ingest.read_dataset`](../api/data_ingest/data_ingest.md#anovos.data_ingest.data_ingest.read_dataset)_
 
 - `file_path`: The file (or directory) path to read the input dataset from.
-   It can be a local path, an [S3 path](https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-bucket-intro.html)
+   It can be a local path, an [📖 S3 path](https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-bucket-intro.html)
   (when running on AWS), a path to a file resource on Google Colab (see
-   [this tutorial](https://neptune.ai/blog/google-colab-dealing-with-files)for
-   an overview), or a path on the [Databricks File System](https://docs.microsoft.com/de-de/azure/databricks/data/databricks-file-system)
+   [📖 this tutorial](https://neptune.ai/blog/google-colab-dealing-with-files) for
+   an overview), or a path on the [📖 Databricks File System](https://docs.microsoft.com/de-de/azure/databricks/data/databricks-file-system)
    (when running on Azure).
 
 - `file_type`: The file format of the input data. Currently, _Anovos_ supports
@@ -117,7 +117,7 @@ This will rename the column `very_long_column_name` to `short_name` and the colu
 
 - `list_of_dtypes`: The new datatypes. The first element in `list_of_cols` will be recast
   to the first type in `list_of_dtypes` and so on. See
-  [the Spark documentation](https://spark.apache.org/docs/latest/sql-ref-datatypes.html)
+  [📖 the Spark documentation](https://spark.apache.org/docs/latest/sql-ref-datatypes.html)
   for a list of valid datatypes.
   Note that this field is case-insensitive.
 
@@ -128,7 +128,7 @@ recast_column:
   list_of_dtypes: ['double', 'int']
 ```
 
-## `concatenate_dataset`
+## 📑 `concatenate_dataset`
 
 🔎 _Corresponds to [`data_ingest.concatenate_dataset`](../api/data_ingest/data_ingest.md#anovos.data_ingest.data_ingest.concatenate_dataset)_
 
@@ -159,11 +159,11 @@ method: name
 🔎 _Corresponds to [`data_ingest.read_dataset`](../api/data_ingest/data_ingest.md#anovos.data_ingest.data_ingest.read_dataset)_
 
 - `file_path`: The file (or directory) path to read the other concatenating input dataset from.
-   It can be a local path, an [S3 path](https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-bucket-intro.html)
+   It can be a local path, an [📖 S3 path](https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-bucket-intro.html)
    (when running on AWS), a path to a file resource on Google Colab (see
-   [this tutorial](https://neptune.ai/blog/google-colab-dealing-with-files) for
+   [📖 this tutorial](https://neptune.ai/blog/google-colab-dealing-with-files) for
    an overview), or a path on the
-   [Databricks File System](https://docs.microsoft.com/de-de/azure/databricks/data/databricks-file-system)
+   [📖 Databricks File System](https://docs.microsoft.com/de-de/azure/databricks/data/databricks-file-system)
    (when running on Azure).
 
 - `file_type`: The file format of the other concatenating input data. Currently, _Anovos_ supports
@@ -207,7 +207,7 @@ to be selected for further processing.
 
 - `list_of_dtypes`: The new datatypes. The first element in `list_of_cols` will be recast
   to the first type in `list_of_dtypes` and so on. See
-  [the Spark documentation](https://spark.apache.org/docs/latest/sql-ref-datatypes.html)
+  [📖 the Spark documentation](https://spark.apache.org/docs/latest/sql-ref-datatypes.html)
   for a list of valid datatypes.
   Note that this field is case-insensitive.
 
@@ -215,7 +215,7 @@ to be selected for further processing.
 
 Additional datasets are configured in the same manner as `dataset1`.
 
-## `join_dataset`
+## 📑 `join_dataset`
 
 🔎 _Corresponds to [`data_ingest.join_dataset`](../api/data_ingest/data_ingest.md#anovos.data_ingest.data_ingest.join_dataset)_
 
@@ -239,7 +239,7 @@ join_cols: id_column
 
 The type of join: `inner`, `full`, `left`, `right`, `left_semi`, `left_anti`
 
-For an introduction, see [this tutorial](https://sparkbyexamples.com/spark/spark-sql-dataframe-join/).
+For an introduction, see [📖 this tutorial](https://sparkbyexamples.com/spark/spark-sql-dataframe-join/).
 
 _Example:_
 ```yaml
@@ -253,11 +253,11 @@ join_type: inner
 🔎 _Corresponds to [`data_ingest.read_dataset`](../api/data_ingest/data_ingest.md#anovos.data_ingest.data_ingest.read_dataset)_
 
 - `file_path`: The file (or directory) path to read the other joining input dataset from.
-   It can be a local path, an [S3 path](https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-bucket-intro.html)
+   It can be a local path, an [📖 S3 path](https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-bucket-intro.html)
   (when running on AWS), a path to a file resource on Google Colab (see
-   [this tutorial](https://neptune.ai/blog/google-colab-dealing-with-files)for
+   [📖 this tutorial](https://neptune.ai/blog/google-colab-dealing-with-files) for
    an overview), or a path on the
-  [Databricks File System](https://docs.microsoft.com/de-de/azure/databricks/data/databricks-file-system)
+  [📖 Databricks File System](https://docs.microsoft.com/de-de/azure/databricks/data/databricks-file-system)
    (when running on Azure).
 
 - `file_type`: The file format of the other joining input data. Currently, _Anovos_ supports
@@ -301,7 +301,7 @@ to be selected for further processing.
 
 - `list_of_dtypes`: The new datatypes. The first element in `list_of_cols` will be recast
   to the first type in `list_of_dtypes` and so on. See
-  [the Spark documentation](https://spark.apache.org/docs/latest/sql-ref-datatypes.html)
+  [📖 the Spark documentation](https://spark.apache.org/docs/latest/sql-ref-datatypes.html)
   for a list of valid datatypes.
   Note that this field is case-insensitive.
 
@@ -309,19 +309,22 @@ to be selected for further processing.
 
 Additional datasets are configured in the same manner as `dataset1`.
 
-## `timeseries_analyzer`
+## 📑 `timeseries_analyzer`
 
-Configuration for the  [time series analyzer](../api/data_analyzer/ts_analyzer.md).
+🔎 _Corresponds to [`data_analyzer.ts_analyzer`](../api/data_analyzer/ts_analyzer.md)_
+
+Configuration for the time series analyzer.
 
 - `auto_detection`: Can be set to `True` or `False`.
-  If `True`, it attempt to automatically infer the date/timestamp format in the input dataset.
+  If `True`, it attempts to automatically infer the date/timestamp format in the input dataset.
 
-- `id_col`: Name of ID column in the input dataset.
+- `id_col`: Name of the ID column in the input dataset.
 
 - `tz_offset`: The timezone offset of the timestamps in the input dataset.
    Can be set to either `local`, `gmt`, or `utc`. The default setting is `local`.
 
-- `inspection`: Can be set to `True` or `False`. If `True`, the time series elements undergo an inspection.
+- `inspection`: Can be set to `True` or `False`.
+   If `True`, the time series elements undergo an inspection.
 
 - `analysis_level`: Can be set to `daily`, `weekly`, or `hourly`. The default setting is `daily`.
    If set to `daily`, the daily view is populated.
@@ -334,31 +337,48 @@ Configuration for the  [time series analyzer](../api/data_analyzer/ts_analyzer.m
 
 _Example:_
 ```yaml
-auto_detection: True
-id_col: 'id_column'
-tz_offset: 'local'
-inspection: True
-analysis_level: 'daily'
-max_days: 3600
+timeseries_analyzer:
+    auto_detection: True
+    id_col: 'id_column'
+    tz_offset: 'local'
+    inspection: True
+    analysis_level: 'daily'
+    max_days: 3600
 ```
 
-## `anovos_basic_report`
+## 📑 `anovos_basic_report`
 
-Anovos basic report consists of basic report which is generated after completion of data analyzer, association evaluator and quality checker modules. See the [Data Report Doc](https://github.com/anovos/anovos-docs/tree/main/docs/using-anovos/data-reports) for more details. In this basic report user will get basic descriptive stats and count  like descriptive statistics(global_summary, measures_of_count, measures_of_centralTendency, measures_of_cardinality, measures_of_dispersion, measures_of_percentiles, measures_of_shape), quality checker(nullRows_detection, nullColumns_detection, duplicate_detection, IDness_detection, biasedness_detection, invalidEntries_detection, outlier_detection), attribute association (correlation_matrix, IV_calculation, IG_calculation, variable_clustering). If user does not want basic report to be generated, they can keep basic report equals to False. 
+🔎 _Corresponds to [`data_report.basic_report_generation`](../api/data_report/basic_report_generation.md)
+
+The basic report consists of a summary of the outputs of the 
+[stats_generator](../api/data_analyzer/stats_generator.md),
+[quality_checker](../api/data_analyzer/quality_checker.md), and
+[association evaluator](../api/data_analyzer/association_evaluator.md)
+See the [📖 documentation for data reports](data-reports/overview.md) for more details.
+
+The basic report can be customized using the following options:
 
 ### `basic_report`
 
-This takes Boolean type input -- `True` or `False`. If True, basic report is generated after completion of data analyzer, association evaluator and quality checker modules. If False, basic report is not generated after completion of data analyzer, association evaluator and quality checker modules. But all the stats and counts are avaialble in final report independent of the basic report option.
+If `True`, a basic report is generated after completion of the [data_analyzer](../api/data_analyzer/index.md)
+modules mentioned above.
+If `False`, no report is generated.
+Nevertheless, all the computed statistics and metrics will be available in the final report.
 
 ### `report_args`
 
-- `Id_col`: Name of Id column in the input dataset
+- `id_col`: The name of the ID column in the input dataset.
 
-- `Label_col`: Name of label or target column in the input dataset
+- `label_col`: The name of the label or target column in the input dataset.
 
-- `Event_lable`: Value of event (label 1) in the label column
+- `event_lable`: The value of the event (label `1`/`true`) in the label column.
 
-- `Output_path`: Path where basic report is saved. File path can be a local path or s3 path (when running with AWS cloud services)
+- `output_path`: Path where the basic report is saved.
+   It can be a local path, an [📖 S3 path](https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-bucket-intro.html)
+   (when running on AWS), a path to a file resource on Google Colab (see
+   [📖 this tutorial](https://neptune.ai/blog/google-colab-dealing-with-files) for
+   an overview), or a path on the [📖 Databricks File System](https://docs.microsoft.com/de-de/azure/databricks/data/databricks-file-system)
+   (when running on Azure).
 
 _Example:_
 ```yaml
