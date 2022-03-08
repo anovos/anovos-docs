@@ -348,7 +348,7 @@ timeseries_analyzer:
 
 ## 📑 `anovos_basic_report`
 
-🔎 _Corresponds to [`data_report.basic_report_generation`](../api/data_report/basic_report_generation.md)
+🔎 _Corresponds to [`data_report.basic_report_generation`](../api/data_report/basic_report_generation.md)_
 
 The basic report consists of a summary of the outputs of the 
 [stats_generator](../api/data_analyzer/stats_generator.md),
@@ -389,25 +389,41 @@ report_args:
   output_path: report_stats
 ```
 
-## `stats_generator`
+## 📑 `stats_generator`
 
-This module generates all the descriptive statistics related to the ingested data. Descriptive statistics are split into different metric types, and each function corresponds to one metric type. - global_summary - measures_of_counts - measures_of_centralTendency - measures_of_cardinality - measures_of_dispersion - measures_of_percentiles - measures_of_shape. See the 
-[Stats Generator Doc](https://github.com/anovos/anovos-docs/blob/main/docs/api/data_analyzer/stats_generator.md) for understanding its functions in detail.
-### `Metric`
+🔎 _Corresponds to [`data_analyzer.stats_generator`](../api/data_analyzer/stats_generator.md)_
 
-list of different metrics used to generate descriptive statistics [global_summary, measures_of_count, measures_of_centralTendency, measures_of_cardinality, measures_of_dispersion, measures_of_percentiles, measures_of_shape]
+This module generates descriptive statistics of the ingested data. 
+Descriptive statistics are split into different metric types, and each function corresponds to one metric type. 
+
+### `metric`
+
+List of metrics to calculate for the input dataset.
+Available options are:
+
+- [📖  `global_summary`](../api/data_analyzer/stats_generator.md#anovos.data_analyzer.stats_generator.global_summary)
+- [📖  `measures_of_count`](../api/data_analyzer/stats_generator.md#anovos.data_analyzer.stats_generator.measures_of_count)
+- [📖  `measures_of_centralTendency`](../api/data_analyzer/stats_generator.md#anovos.data_analyzer.stats_generator.measures_of_centralTendency)
+- [📖  `measures_of_cardinality`](../api/data_analyzer/stats_generator.md#anovos.data_analyzer.stats_generator.measures_of_cardinality)
+- [📖  `measures_of_dispersion`](../api/data_analyzer/stats_generator.md#anovos.data_analyzer.stats_generator.measures_of_dispersion)
+- [📖  `measures_of_percentiles`](../api/data_analyzer/stats_generator.md#anovos.data_analyzer.stats_generator.measures_of_percentiles)
+- [📖  `measures_of_shape`](../api/data_analyzer/stats_generator.md#anovos.data_analyzer.stats_generator.measures_of_shape)
 
 _Example:_
 ```yaml
-metric: ['global_summary','measures_of_counts','measures_of_centralTendency','measures_of_cardinality',
-          'measures_of_percentiles','measures_of_dispersion','measures_of_shape']
+metric: ['global_summary', 'measures_of_counts', 'measures_of_cardinality', 'measures_of_dispersion']
 ```
 
-### `Metric_args`
+### `metric_args`
 
-- `List_of_cols`: (list format or string of col names separated by `|`). It is used to specify the columns which are subjected to the analysis in the input dataframe. The user can also use "all" as an input to this argument to consider all columns. This is super useful instead of specifying all column names manually.
+- `list_of_cols`: List of column names (list of strings or string of column names separated by `|`)
+   to compute the metrics for.
+   Alternatively, if set to `"all"`, all columns are included.
 
-- `Drop_cols`: (list format or string of col names separated by `|`). It is used to specify the columns that need to be dropped from list_of_cols. It is most useful when coupled with the `all` value of list_of_cols, when we need to consider all columns except a few handful of them.
+- `drop_cols`:  List of column names (list of strings or string of column names separated by `|`)
+   to exclude from metrics computation.
+   This option is especially useful if `list_of_cols` is set to `"all"`, as it allows computing metrics
+   for all except a few columns without having to specify a potentially very long list of column names to include.
 
 _Example:_
 ```yaml
@@ -416,17 +432,27 @@ metric_args:
   drop_cols: ['id_column']
 ```
 
-## `quality_checker`
+## 📑 `quality_checker`
 
-This submodule focuses on assessing the data quality at both row-level and column-level and also provides an appropriate treatment option to fix quality issues. see the
-[Quality Checker Dic](https://github.com/anovos/anovos-docs/blob/main/docs/api/data_analyzer/quality_checker.md) for understanding its functions in detail.
+🔎 _Corresponds to [`data_analyzer.quality_checker`](../api/data_analyzer/quality_checker.md)_
+
+This module assesses the data quality along different dimensions.
+Quality metrics are computed at both the row and column level. 
+Further, the module includes appropriate treatment options to fix several common quality issues.
+
 ### `duplicate_detection`
 
-- `list_of_cols`: (list format or string of col names separated by `|`). It is used to specify the columns which are subjected to the duplicate detection
+🔎 _Corresponds to [`quality_checker.duplicate_detection`](../api/data_analyzer/quality_checker.md#anovos.data_analyzer.quality_checker.duplicate_detection)_
 
-- `drop_cols`: (list format or string of col names separated by `|`). It is used to specify the columns that need to be dropped from list_of_cols before duplicate detection
+- `list_of_cols`: List of column names (list of strings or string of column names separated by `|`)
+  to consider when searching for duplicates.
+  Alternatively, if set to `"all"`, all columns are included.
 
-- `treatment`: It takes Boolean type input -- `True` or `False`. If true, duplicate rows are removed from the input dataset.
+- `drop_cols`: List of column names (list of strings or string of column names separated by `|`)
+  to be excluded from duplicate detection.
+
+- `treatment`: If `False`, duplicates are detected and reported. 
+  If `True`, duplicate rows are removed from the input dataset.
 
 _Example:_
 ```yaml
@@ -438,13 +464,22 @@ duplicate_detection:
 
 ### `nullRows_detection`
 
-- `list_of_cols`: (list format or string of col names separated by `|`). It is used to specify the columns which are subjected to the null rows detection
+🔎 _Corresponds to [`quality_checker.nullRows_detection`](../api/data_analyzer/quality_checker.md#anovos.data_analyzer.quality_checker.nullRows_detection)_
 
-- `drop_cols`: (list format or string of col names separated by `|`). It is used to specify the columns that need to be dropped from list_of_cols before null rows detection
+- `list_of_cols`: List of column names (list of strings or string of column names separated by `|`)
+  to consider during `null` rows detection.
+  Alternatively, if set to `"all"`, all columns are included.
 
-- `treatment`: This takes Boolean type input -- `True` or `False`. If true, rows with high null columns (defined by treatment_threshold argument) are removed from the input dataset.
+- `drop_cols`: List of column names (list of strings or string of column names separated by `|`)
+  to exclude from `null` rows detection.
 
-- `treatment_threshold`: It takes a value between `0` to `1` with default 0.8, which means 80% of columns are allowed to be Null per row. If it is more than the threshold, then it is flagged and if treatment is True, then affected rows are removed. If the threshold is 0, it means rows with any missing value will be flagged. If the threshold is 1, it means rows with all missing values will be flagged.
+- `treatment`: If `False`, `null` rows are detected and reported. 
+  If `True`, rows where more than `treatment_threshold` columns are `null` are removed from the input dataset.
+
+- `treatment_threshold`: It takes a value between `0` and `1` (default `0.8`) that specifies which fraction of
+  columns has to be `null` for a row to be considered a `null` row.
+  If the threshold is `0`, rows with any missing value will be flagged as `null`.
+  If the threshold is `1`, only rows where all values are missing will be flagged as `null`.
 
 _Example:_
 ```yaml
@@ -457,13 +492,23 @@ nullRows_detection:
 
 ### `invalidEntries_detection`
 
-- `list_of_cols`: (list format or string of col names separated by `|`). It is used to specify the columns which are subjected to the invalid entries' detection
+🔎 _Corresponds to [`quality_checker.invalidEntries_detection`](../api/data_analyzer/quality_checker.md#anovos.data_analyzer.quality_checker.invalidEntries_detection)_
 
-- `drop_cols`: (list format or string of col names separated by `|`). It is used to specify the columns that need to be dropped from list_of_cols before invalid entries' detection
+- `list_of_cols`: List of column names (list of strings or string of column names separated by `|`)
+  to be considered during invalid entries' detection.
+  Alternatively, if set to `"all"`, all columns are included.
 
-- `treatment`: This takes Boolean type input -- `True` or `False`. If true, invalid values are replaced as null and treated as missing.
+- `drop_cols`: List of column names (list of strings or string of column names separated by `|`)
+  to exclude from invalid entries' detection.
 
-- `output_mode`: `replace` or `append`. "replace" option replaces original columns with treated column, whereas "append" option append treated column to the input dataset. All treated columns are appended with the naming convention `{original.column.name}_cleaned`
+- `treatment`: If `False`, invalid entries are detected and reported. 
+  If `True`, invalid entries are replaced with `null`.
+
+- `output_mode`: Can be either `"replace"` or `"append"`. 
+ If set to `"replace"`, the original columns will be replaced with the treated columns.
+ If set to `"append"`, the original columns will be kept and the treated columns will be appended to the dataset.
+ The appended columns will be named as the original column with a suffix `"_cleaned"`
+ (e.g., the column `"cost_of_living_cleaned"` corresponds to the original column `"cost_of_living"`).
 
 _Example:_
 ```yaml
@@ -476,13 +521,19 @@ invalidEntries_detection:
 
 ### `IDness_detection`
 
-- `List_of_cols`: (list format or string of col names separated by `|`). It is used to specify the columns which are subjected to the Idness detection
+🔎 _Corresponds to [`quality_checker.IDness_detection`](../api/data_analyzer/quality_checker.md#anovos.data_analyzer.quality_checker.IDness_detection)_
 
-- `Drop_cols`: (list format or string of col names separated by `|`). It is used to specify the columns that need to be dropped from list_of_cols before Idness detection
+- `list_of_cols`: List of column names (list of strings or string of column names separated by `|`)
+  to be considered for IDness detection.
+  Alternatively, if set to `"all"`, all columns are included.
 
-- `Treatment`: This takes Boolean type input -- `True` or `False`. If true, columns above IDness threshold are removed.
+- `drop_cols`: List of column names (list of strings or string of column names separated by `|`)
+  to exclude from IDness detection.
 
-- `Treatment_threshold`: This takes value between `0` to `1` with default 1.0.
+- `treatment`: If `False`, columns with high IDness are detected and reported. 
+  If `True`, columns with an IDness above `treatment_threshold` are removed.
+
+- `treatment_threshold`: A value between `0` and `1` (default `1.0`).
 
 _Example:_
 ```yaml
@@ -493,15 +544,21 @@ IDness_detection:
   treatment_threshold: 0.9
 ```
 
-### `Biasedness_detection`
+### `biasedness_detection`
 
-- `List_of_cols`: (list format or string of col names separated by `|`). It is used to specify the columns which are subjected to the biasedness detection
+🔎 _Corresponds to [`quality_checker.biasedness_detection`](../api/data_analyzer/quality_checker.md#anovos.data_analyzer.quality_checker.biasedness_detection)_
 
-- `Drop_cols`: (list format or string of col names separated by `|`). It is used to specify the columns that need to be dropped from list_of_cols before biasedness detection
+- `list_of_cols`: List of column names (list of strings or string of column names separated by `|`)
+  to be considered for biasedness detection.
+  Alternatively, if set to `"all"`, all columns are included.
 
-- `Treatment`: This takes Boolean type input -- `True` or `False`. If true, columns above biasedness threshold are removed.
+- `drop_cols`: List of column names (list of strings or string of column names separated by `|`)
+  to exclude from biasedness detection.
 
-- `Treatment_threshold`: This takes value between `0` to `1` with default 1.0.
+- `treatment`: If `False`, columns with high IDness are detected and reported. 
+  If `True`, columns with a bias above `treatment_threshold` are removed.
+
+- `treatment_threshold`: A value between `0` and `1` (default `1.0`).
 
 _Example:_
 ```yaml
@@ -512,29 +569,57 @@ biasedness_detection:
   treatment_threshold: 0.98
 ```
 
-### `Outlier_detection`
+### `outlier_detection`
 
-- `List_of_cols`: (list format or string of col names separated by `|`). It is used to specify the columns which are subjected to the outlier detection
+🔎 _Corresponds to [`quality_checker.outlier_detection`](../api/data_analyzer/quality_checker.md#anovos.data_analyzer.quality_checker.outlier_detection)_
 
-```
-Note: Any attribute with single value or all null values are not subjected to outlier detection even if it is selected under this argument.
-```
+- `list_of_cols`: List of column names (list of strings or string of column names separated by `|`)
+  to be considered for outlier detection.
+  Alternatively, if set to `"all"`, all columns are included.
 
-- `Drop_cols`: (list format or string of col names separated by `|`). It is used to specify the columns that need to be dropped from list_of_cols before outlier detection
+  ⚠ _Note that any column that contains just a single value or only null values is not subjected to outlier detection_
+  _even if it is selected under this argument._
 
-- `Detection_side`: 'upper', 'lower', 'both'
+- `drop_cols`: List of column names (list of strings or string of column names separated by `|`)
+  to exclude from outlier detection.
 
-- `Detection_configs`: It takes input in dictionary format with keys (representing upper and lower bound for different outlier identification methodologies) - pctile_lower (default 0.05), pctile_upper (default 0.95), stdev_lower (default 3.0), stdev_upper (default 3.0), IQR_lower (default 1.5), IQR_upper (default 1.5), min_validation (default 2)
+- `detection_side`: Whether outliers should be detected on the `"upper"`, the `"lower"`, or `"both"` sides.
 
-- `Treatment`: takes Boolean type input -- `True` or `False`. If true, specified treatment method is applied.
+- `detection_configs`: A map that defines the input parameters for different outlier detection methods.
+  Possible keys are:
+    - `pctile_lower` (default `0.05`)
+    - `pctile_upper` (default `0.95`)
+    - `stdev_lower` (default `3.0`)
+    - `stdev_upper` (default `3.0`)
+    - `IQR_lower` (default `1.5`)
+    - `IQR_upper` (default `1.5`)
+    - `min_validation` (default `2`)
+  For details, see [📖 the `outlier_detection` API documentation](../api/data_analyzer/quality_checker.md#anovos.data_analyzer.quality_checker.outlier_detection)
 
-- `Treatment_method`: 'null_replacement', 'row_removal', 'value_replacement'
+- `treatment`: If `False`, outliers are detected and reported. 
+  If `True`, outliers are treated with the specified `treatment_method`.
 
-- `Pre_existing_model`: It takes Boolean type input -- `True` or `False`. True if the file with upper/lower permissible values exists already, False Otherwise.
+- `treatment_method`: Specifies how outliers are treated.
+  Possible options are `"null_replacement"`, `"row_removal"`, `"value_replacement"`.
 
-- `Model_path`: If pre_existing_model is `True`, this is path for pre-saved model file. If pre_existing_model is `False`, this field can be used for saving the model file. Default NA means there is neither pre-saved model file nor there is a need to save one.
+- `pre_existing_model`: If `True`, the file specified under `model_path` with lower/upper bounds is loaded.
+  If no such file exists, set to `False` (the default).
 
-- `Output_mode`: `replace` or `append`. "replace" option replaces original columns with treated column, whereas "append" option append treated column to the input dataset. All treated columns are appended with the naming convention - `{original.column.name}_outliered`.
+- `model_path`: The path to the file with lower/upper bounds.
+  It can be a local path, an [📖 S3 path](https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-bucket-intro.html)
+  (when running on AWS), a path to a file resource on Google Colab (see
+  [📖 this tutorial](https://neptune.ai/blog/google-colab-dealing-with-files) for
+  an overview), or a path on the [📖 Databricks File System](https://docs.microsoft.com/de-de/azure/databricks/data/databricks-file-system)
+  (when running on Azure).
+  If `pre_existing_model` is `True`, the pre-saved will be loaded from this location.
+  If `pre_existing_model` is `False`, a file with lower/upper bounds will be saved at this location.
+  By default, it is set to `NA`, indicating that there is neither a pre-saved file nor should such a file be generated.
+
+- `output_mode`: Can be either `"replace"` or `"append"`. 
+  If set to `"replace"`, the original columns will be replaced with the treated columns.
+  If set to `"append"`, the original columns will be kept and the treated columns will be appended to the dataset.
+  The appended columns will be named as the original column with a suffix `"_outliered"`
+  (e.g., the column `"cost_of_living_outliered"` corresponds to the original column `"cost_of_living"`).
 
 _Example:_
 ```yaml
@@ -559,15 +644,32 @@ outlier_detection:
 
 ### `nullColumns_detection`
 
-- `list_of_cols`: `all` can be passed to include all (non-array) columns for analysis. `missing` (default) can be passed to include only those columns with missing values. One of the use cases where "all" may be preferable over "missing" is when the user wants to save the imputation model for future use e.g. a column may not have missing value in the training dataset. Still, missing values may possibly appear in the prediction dataset.
+🔎 _Corresponds to [`quality_checker.nullColumns_detection`](../api/data_analyzer/quality_checker.md#anovos.data_analyzer.quality_checker.nullColumns_detection)_
 
-- `drop_cols`: (list format or string of col names separated by `|`). It is used to specify the columns that need to be dropped from list_of_cols before null column detection
+- `list_of_cols`: List of column names (list of strings or string of column names separated by `|`)
+  to be considered for `null` columns detection.
+  Alternatively, if set to `"all"`, all columns are included.
+  If set to `"missing"` (the default) only columns with missing values are included.
+  One of the use cases where `"all"` may be preferable over `"missing"` is when the user wants to save the
+  imputation model for future use.
+  This can be useful, for example, if a column may not have missing values in the training dataset but
+  missing values are acceptable in the test dataset.
 
-- `treatment`: takes Boolean type input -- `True` or `False`. If true, missing values are treated as per treatment_method argument
+- `drop_cols`: List of column names (list of strings or string of column names separated by `|`)
+  to be excluded from `null` columns detection.
 
-- `treatment_method`: 'MMM', 'row_removal' or 'column_removal'
+- `treatment`: If `False`, `null` columns are detected and reported. 
+  If `True`, missing values are treated with the specified `treatment_method`.
 
-- `treatment_configs`: It takes input in dictionary format with keys `treatment_threshold` for column_removal treatment, or all arguments corresponding to imputation_MMM function.
+- `treatment_method`: Specifies how `null` columns are treated.
+  Possible values are `"MMM"`, "`row_removal"`, or `"column_removal"`.
+
+- `treatment_configs`: Additional parameters for the `treatment_method`.
+  If `treatment_method` is `"column_removal"`, the key `treatment_threshold` can be used to define the fraction of
+  missing values above which a column is flagged as a `null` column and remove.
+  If `treatment_method` is `"MMM"`, possible keys are the parameters of the
+  [`imputation_MMM`](../api/data_analyzer/quality_checker.md#anovos.data_analyzer.quality_checker.imputation_MMM)
+  function.
 
 _Example:_
 ```yaml
@@ -583,16 +685,16 @@ nullColumns_detection:
     output_mode: replace
 ```
 
-## `association_evaluator`
+## 📑 `association_evaluator`
 
 This submodule focuses on understanding the interaction between different attributes and/or the relationship between an attribute & the binary target variable. see the 
 [Association Evaluator Doc](https://github.com/anovos/anovos-docs/blob/main/docs/api/data_analyzer/association_evaluator.md) for understanding its functions.
 
 ### `correlation_matrix`
 
-- `list_of_cols`: (list format or string of col names separated by `|`). It is used to specify the columns which are subjected for generating correlation matrix. The user can also use `all` as an input to this argument to consider all columns. This is super useful instead of specifying all column names manually.
+`list_of_cols`: List of column names (list of strings or string of column names separated by `|`)subjected for generating correlation matrix. The user can also use `all` as an input to this argument to consider all columns. This is super useful instead of specifying all column names manually.
 
-- `drop_cols`: (list format or string of col names separated by `|`). It is used to specify the columns which needs to be dropped from list_of_cols. It is most useful when used coupled with `all` value of list_of_cols, when we need to consider all columns except few handful of them.
+- `drop_cols`: List of column names (list of strings or string of column names separated by `|`) It is used to specify the columns which needs to be dropped from list_of_cols. It is most useful when used coupled with `all` value of list_of_cols, when we need to consider all columns except few handful of them.
 
 _Example:_
 ```yaml
@@ -603,9 +705,9 @@ correlation_matrix:
 
 ### `IV_calculation`
 
-- `List_of_cols`: (list format or string of col names separated by `|`). It is used to specify the columns which are subjected to IV calculation.
+`list_of_cols`: List of column names (list of strings or string of column names separated by `|`)subjected to IV calculation.
 
-- `Drop_cols`: (list format or string of col names separated by `|`). It is used to specify the columns that need to be dropped from list_of_cols before IV calculation
+- `drop_cols`: List of column names (list of strings or string of column names separated by `|`) It is used to specify the columns that need to be dropped from list_of_cols before IV calculation
 
 - `Label_col`: Name of label or target column in the input dataset
 
@@ -628,9 +730,9 @@ IV_calculation:
 
 ### `IG_calculation`
 
-- `List_of_cols`: (list format or string of col names separated by `|`). It is used to specify the columns which are subjected to IG calculation
+`list_of_cols`: List of column names (list of strings or string of column names separated by `|`)subjected to IG calculation
 
-- `Drop_cols`: (list format or string of col names separated by `|`). It is used to specify the columns that need to be dropped from list_of_cols before IG calculation
+- `drop_cols`: List of column names (list of strings or string of column names separated by `|`) It is used to specify the columns that need to be dropped from list_of_cols before IG calculation
 
 - `Label_col`: Name of label or target column in the input dataset
 
@@ -653,9 +755,9 @@ IG_calculation:
 
 ### `Variable_clustering`
 
-- `List_of_cols`: (list format or string of col names separated by `|`). It is used to specify the columns which are subjected to variable clustering
+`list_of_cols`: List of column names (list of strings or string of column names separated by `|`)subjected to variable clustering
 
-- `Drop_cols`: (list format or string of col names separated by `|`). It is used to specify the columns that need to be dropped from list_of_cols before variable clustering.
+- `drop_cols`: List of column names (list of strings or string of column names separated by `|`) It is used to specify the columns that need to be dropped from list_of_cols before variable clustering.
 
 _Example:_
 ```yaml
@@ -805,9 +907,9 @@ master_path: 'report_stats'
 
 ### `charts_to_objects`
 
-- `list_of_cols`: (list format or string of col names separated by `|`). It is used to specify the columns which are subjected to the analysis in the input dataframe.
+`list_of_cols`: List of column names (list of strings or string of column names separated by `|`)subjected to the analysis in the input dataframe.
 
-- `drop_cols`: (list format or string of col names separated by `|`). It is used to specify the columns which needs to be dropped from list_of_cols
+- `drop_cols`: List of column names (list of strings or string of column names separated by `|`) It is used to specify the columns which needs to be dropped from list_of_cols
 
 - `lable_col`: Name of label or target column in the input dataset
 
@@ -837,7 +939,7 @@ charts_to_objects:
   source_path: "NA"
 ```
 
-## `report_generation`
+## 📑 `report_generation`
 
 This section covers the final execution part where primarily the output generated by the previous step is being fetched upon and structured in the desirable UI layout. See the [Final report generation Doc](https://github.com/anovos/anovos-docs/blob/main/docs/using-anovos/data-reports/final_report.md) for more details.
 
@@ -878,7 +980,7 @@ metricDict_path: 'data/metric_dictionary.csv'
 final_report_path: 'report_stats'
 ```
 
-## `transformers`:
+## 📑 `transformers`:
 
 The data transformer module supports selected pre-processing & transformation functions, such as binning, encoding, scaling, imputation, to name a few, which are required for statistics generation and quality checks. See the
 [Transformers Doc](https://github.com/anovos/anovos-docs/blob/main/docs/api/data_transformer/transformers.md) for understanding its functions in detail.
@@ -1165,7 +1267,7 @@ autoencoder_latentFeatures:
   batch_size: 256
 ```
 
-## `write_intermediate`
+## 📑 `write_intermediate`
 
 - `file_path`: Path where intermediate datasets (after selecting, dropping, renaming, and recasting of columns) for quality checker operations, join dataset and concatenate dataset will be saved.
 
@@ -1186,7 +1288,7 @@ autoencoder_latentFeatures:
      - [Write Parquet files](https://sparkbyexamples.com/pyspark/pyspark-read-and-write-parquet-file/)
      - [Write Avro files](https://sparkbyexamples.com/spark/read-write-avro-file-spark-dataframe/)
 
-## `write_main`
+## 📑 `write_main`
 
 - `file_path`: Path where final cleaned input dataset will be saved.
 
@@ -1207,7 +1309,7 @@ autoencoder_latentFeatures:
      - [Write Parquet files](https://sparkbyexamples.com/pyspark/pyspark-read-and-write-parquet-file/)
      - [Write Avro files](https://sparkbyexamples.com/spark/read-write-avro-file-spark-dataframe/)
 
-## `write_stats`
+## 📑 `write_stats`
 
 - `file_path`: Path where all tables/stats of anovos modules (data drift & data analyzer) will be saved.
 
