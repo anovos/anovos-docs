@@ -19,15 +19,23 @@ configuration file.
 If you'd rather see a full example right away, have a look at 
 [this example](https://github.com/anovos/anovos/blob/main/config/configs.yaml).
 
+Note that each section of the configuration file maps to a module of _Anovos_.
+You'll find links to the respective sections of the
+[API Documentation](../api/index.md) that provide much more detailed information
+on each modules' capabilities than we can squeeze into this guide.
+
 ## `input_dataset`
 
-This configuration block describes how the input dataset is loaded and prepared.
+This configuration block describes how the input dataset is loaded and prepared
+using the [`data_ingest.data_ingest`](../api/data_ingest/data_ingest.md) module.
 Each _Anovos_ configuration file must contain exactly one `input_dataset` block.
 
 Note that the subsequent operations are performed in the order given here:
 First, columns are deleted, then selected, then renamed, and then recast.
 
 ### `read_dataset`
+
+🔎 _Corresponds to [`data_ingest.read_dataset`](../api/data_ingest/data_ingest.md#anovos.data_ingest.data_ingest.read_dataset)_
 
 - `file_path`: The file (or directory) path to read the input dataset from.
    It can be a local path, an [S3 path](https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-bucket-intro.html)
@@ -59,6 +67,8 @@ First, columns are deleted, then selected, then renamed, and then recast.
   
 ### `delete_column`
 
+🔎 _Corresponds to [`data_ingest.delete_column`](../api/data_ingest/data_ingest.md#anovos.data_ingest.data_ingest.delete_column)_
+
 List of column names (list of strings or string of column names separated by `|`)
 to be deleted from the loaded input data.
 
@@ -69,6 +79,8 @@ delete_column: ['unnecessary', 'obsolete', 'outdated']
 
 ### `select_column`
 
+🔎 _Corresponds to [`data_ingest.select_column`](../api/data_ingest/data_ingest.md#anovos.data_ingest.data_ingest.select_column)_
+
 List of column names (list of strings or string of column names separated by `|`)
 to be selected for further processing.
 
@@ -78,6 +90,8 @@ select_column: ['feature1', 'feature2', 'feature3', 'label']
 ```
 
 ### `rename_column`
+
+🔎 _Corresponds to [`data_ingest.rename_column`](../api/data_ingest/data_ingest.md#anovos.data_ingest.data_ingest.rename_column)_
 
 - `list_of_cols`: List of the names of columns (list of strings or string of column names separated by `|`)
   to be renamed.
@@ -96,6 +110,8 @@ This will rename the column `very_long_column_name` to `short_name` and the colu
 
 ### `recast_column`
 
+🔎 _Corresponds to [`data_ingest.recast_column`](../api/data_ingest/data_ingest.md#anovos.data_ingest.data_ingest.recast_column)_
+
 - `list_of_cols`: List of the names of columns (list of strings or string of column names separated by `|`)
   to be cast to a different type.
 
@@ -113,6 +129,8 @@ recast_column:
 ```
 
 ## `concatenate_dataset`
+
+🔎 _Corresponds to [`data_ingest.concatenate_dataset`](../api/data_ingest/data_ingest.md#anovos.data_ingest.data_ingest.concatenate_dataset)_
 
 This configuration block describes how to combine multiple dataframes into a single dataframe.
 There can be varying number of input dataframes that can be concatenated and for loading other
@@ -138,6 +156,8 @@ method: name
 
 #### `read_dataset`
 
+🔎 _Corresponds to [`data_ingest.read_dataset`](../api/data_ingest/data_ingest.md#anovos.data_ingest.data_ingest.read_dataset)_
+
 - `file_path`: The file (or directory) path to read the other concatenating input dataset from.
    It can be a local path, an [S3 path](https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-bucket-intro.html)
    (when running on AWS), a path to a file resource on Google Colab (see
@@ -156,15 +176,21 @@ method: name
   
 #### `delete_column`
 
+🔎 _Corresponds to [`data_ingest.delete_column`](../api/data_ingest/data_ingest.md#anovos.data_ingest.data_ingest.delete_column)_
+
 List of column names (list of strings or string of column names separated by `|`)
 to be deleted from the loaded input data.
 
 #### `select_column`
 
+🔎 _Corresponds to [`data_ingest.select_column`](../api/data_ingest/data_ingest.md#anovos.data_ingest.data_ingest.select_column)_
+
 List of column names (list of strings or string of column names separated by `|`)
 to be selected for further processing.
 
 #### `rename_column`
+
+🔎 _Corresponds to [`data_ingest.rename_column`](../api/data_ingest/data_ingest.md#anovos.data_ingest.data_ingest.rename_column)_
 
 - `list_of_cols`: List of the names of columns (list of strings or string of column names separated by `|`)
   to be renamed.
@@ -173,6 +199,8 @@ to be selected for further processing.
   to the first name in `list_of_newcols` and so on.
 
 #### `recast_column`
+
+🔎 _Corresponds to [`data_ingest.recast_column`](../api/data_ingest/data_ingest.md#anovos.data_ingest.data_ingest.recast_column)_
 
 - `list_of_cols`: List of the names of columns (list of strings or string of column names separated by `|`)
   to be cast to a different type.
@@ -189,12 +217,14 @@ Additional datasets are configured in the same manner as `dataset1`.
 
 ## `join_dataset`
 
+🔎 _Corresponds to [`data_ingest.join_dataset`](../api/data_ingest/data_ingest.md#anovos.data_ingest.data_ingest.join_dataset)_
+
 This configuration block describes how multiple dataframes are joined into a single dataframe by a key column.
 
 There can be a varying number of input dataframes.
 Each dataset to be joined is configured separately as `dataset1`, `dataset2`, and so on.
 
-### `Join_cols`
+### `join_cols`
 
 Key column(s) to join all dataframes together.
 In the case that the key consists of multiple columns, they can be passed as a list of strings or
@@ -220,6 +250,8 @@ join_type: inner
 
 #### `read_dataset`
 
+🔎 _Corresponds to [`data_ingest.read_dataset`](../api/data_ingest/data_ingest.md#anovos.data_ingest.data_ingest.read_dataset)_
+
 - `file_path`: The file (or directory) path to read the other joining input dataset from.
    It can be a local path, an [S3 path](https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-bucket-intro.html)
   (when running on AWS), a path to a file resource on Google Colab (see
@@ -238,15 +270,21 @@ join_type: inner
   
 #### `delete_column`
 
+🔎 _Corresponds to [`data_ingest.delete_column`](../api/data_ingest/data_ingest.md#anovos.data_ingest.data_ingest.delete_column)_
+
 List of column names (list of strings or string of column names separated by `|`)
 to be deleted from the loaded input data.
 
 #### `select_column`
 
+🔎 _Corresponds to [`data_ingest.select_column`](../api/data_ingest/data_ingest.md#anovos.data_ingest.data_ingest.select_column)_
+
 List of column names (list of strings or string of column names separated by `|`)
 to be selected for further processing.
 
 #### `rename_column`
+
+🔎 _Corresponds to [`data_ingest.rename_column`](../api/data_ingest/data_ingest.md#anovos.data_ingest.data_ingest.rename_column)_
 
 - `list_of_cols`: List of the names of columns (list of strings or string of column names separated by `|`)
   to be renamed.
@@ -255,6 +293,8 @@ to be selected for further processing.
   to the first name in `list_of_newcols` and so on.
 
 #### `recast_column`
+
+🔎 _Corresponds to [`data_ingest.recast_column`](../api/data_ingest/data_ingest.md#anovos.data_ingest.data_ingest.recast_column)_
 
 - `list_of_cols`: List of the names of columns (list of strings or string of column names separated by `|`)
   to be cast to a different type.
