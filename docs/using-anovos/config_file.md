@@ -132,20 +132,20 @@ recast_column:
 
 🔎 _Corresponds to [`data_ingest.concatenate_dataset`](../api/data_ingest/data_ingest.md#anovos.data_ingest.data_ingest.concatenate_dataset)_
 
-This configuration block describes how to combine multiple dataframes into a single dataframe.
-There can be varying number of input dataframes that can be concatenated and for loading other
-concatenating input datasets, we need to write its subsequent operations separately 
-for each dataset like `dataset1`, `dataset2`, `dataset3` and so on.
+This configuration block describes how to combine multiple loaded dataframes into a single one.
 
 ### `method`
 
-`index` or `name`. This needs to be entered as a keyword argument.
-The "index" method involves concatenating the dataframes by the column index.
-If the sequence of column is not fixed among the dataframe, this method should be avoided.
-The "name" method involves concatenating by column names.
+There are two different methods to concatenate dataframes:
 
-The first dataframe passed will define the final columns in the concatenated dataframe.
-It will throw an error if any column in the first dataframe is not available in any of other dataframes.
+- `index`: Concatenate by column index, i.e., the first column of the first dataframe is
+  matched with the first column of the second dataframe and so forth.
+- `name`: Concatenate by column name, i.e., columns of the same name are matched.
+
+Note that in both cases, the first dataframe will define both the names and the order of the
+columns in the final dataframe.
+If the subsequent dataframes have too few columns (`index`) or are missing named columns (`name´)
+for the concatenation to proceed, an error will be raised.
 
 _Example:_
 ```yaml
@@ -159,20 +159,20 @@ method: name
 🔎 _Corresponds to [`data_ingest.read_dataset`](../api/data_ingest/data_ingest.md#anovos.data_ingest.data_ingest.read_dataset)_
 
 - `file_path`: The file (or directory) path to read the other concatenating input dataset from.
-   It can be a local path, an [📖 S3 path](https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-bucket-intro.html)
-   (when running on AWS), a path to a file resource on Google Colab (see
-   [📖 this tutorial](https://neptune.ai/blog/google-colab-dealing-with-files) for
-   an overview), or a path on the
-   [📖 Databricks File System](https://docs.microsoft.com/de-de/azure/databricks/data/databricks-file-system)
-   (when running on Azure).
+  It can be a local path, an [📖 S3 path](https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-bucket-intro.html)
+  (when running on AWS), a path to a file resource on Google Colab (see
+  [📖 this tutorial](https://neptune.ai/blog/google-colab-dealing-with-files) for
+  an overview), or a path on the
+  [📖 Databricks File System](https://docs.microsoft.com/de-de/azure/databricks/data/databricks-file-system)
+  (when running on Azure).
 
 - `file_type`: The file format of the other concatenating input data. Currently, _Anovos_ supports
-   CSV (`csv`), Parquet (`parquet`), and Avro (`avro`).
-   (Please note that if you're using Avro data sources, you need to add the external
-   package `org.apache.spark:spark-avro` when submitting the Spark job.)
+  CSV (`csv`), Parquet (`parquet`), and Avro (`avro`).
+  (Please note that if you're using Avro data sources, you need to add the external
+  package `org.apache.spark:spark-avro` when submitting the Spark job.)
 
 - `file_configs` (optional): Options to pass to the respective Spark file reader,
-   e.g., delimiters, schemas, headers.
+  e.g., delimiters, schemas, headers.
   
 #### `delete_column`
 
@@ -219,14 +219,12 @@ Additional datasets are configured in the same manner as `dataset1`.
 
 🔎 _Corresponds to [`data_ingest.join_dataset`](../api/data_ingest/data_ingest.md#anovos.data_ingest.data_ingest.join_dataset)_
 
-This configuration block describes how multiple dataframes are joined into a single dataframe by a key column.
-
-There can be a varying number of input dataframes.
-Each dataset to be joined is configured separately as `dataset1`, `dataset2`, and so on.
+This configuration block describes how multiple dataframes are joined into a single one.
 
 ### `join_cols`
 
-Key column(s) to join all dataframes together.
+The key of the column(s) to join on.
+
 In the case that the key consists of multiple columns, they can be passed as a list of strings or
 a single string where the column names are separated by `|`.
 
@@ -237,9 +235,10 @@ join_cols: id_column
 
 ### `join_type`
 
-The type of join: `inner`, `full`, `left`, `right`, `left_semi`, `left_anti`
+The type of join to perform: `inner`, `full`, `left`, `right`, `left_semi`, or `left_anti`.
 
-For an introduction, see [📖 this tutorial](https://sparkbyexamples.com/spark/spark-sql-dataframe-join/).
+For a general introduction to joins, see
+[📖 this tutorial](https://sparkbyexamples.com/spark/spark-sql-dataframe-join/).
 
 _Example:_
 ```yaml
@@ -253,20 +252,20 @@ join_type: inner
 🔎 _Corresponds to [`data_ingest.read_dataset`](../api/data_ingest/data_ingest.md#anovos.data_ingest.data_ingest.read_dataset)_
 
 - `file_path`: The file (or directory) path to read the other joining input dataset from.
-   It can be a local path, an [📖 S3 path](https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-bucket-intro.html)
+  It can be a local path, an [📖 S3 path](https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-bucket-intro.html)
   (when running on AWS), a path to a file resource on Google Colab (see
-   [📖 this tutorial](https://neptune.ai/blog/google-colab-dealing-with-files) for
-   an overview), or a path on the
+  [📖 this tutorial](https://neptune.ai/blog/google-colab-dealing-with-files) for
+  an overview), or a path on the
   [📖 Databricks File System](https://docs.microsoft.com/de-de/azure/databricks/data/databricks-file-system)
-   (when running on Azure).
+  (when running on Azure).
 
 - `file_type`: The file format of the other joining input data. Currently, _Anovos_ supports
-   CSV (`csv`), Parquet (`parquet`), and Avro (`avro`).
-   (Please note that if you're using Avro data sources, you need to add the external
-   package `org.apache.spark:spark-avro` when submitting the Spark job.)
+  CSV (`csv`), Parquet (`parquet`), and Avro (`avro`).
+  (Please note that if you're using Avro data sources, you need to add the external
+  package `org.apache.spark:spark-avro` when submitting the Spark job.)
 
 - `file_configs` (optional): Options to pass to the respective Spark file reader,
-   e.g., delimiters, schemas, headers.
+  e.g., delimiters, schemas, headers.
   
 #### `delete_column`
 
@@ -321,19 +320,19 @@ Configuration for the time series analyzer.
 - `id_col`: Name of the ID column in the input dataset.
 
 - `tz_offset`: The timezone offset of the timestamps in the input dataset.
-   Can be set to either `local`, `gmt`, or `utc`. The default setting is `local`.
+  Can be set to either `local`, `gmt`, or `utc`. The default setting is `local`.
 
 - `inspection`: Can be set to `True` or `False`.
-   If `True`, the time series elements undergo an inspection.
+  If `True`, the time series elements undergo an inspection.
 
 - `analysis_level`: Can be set to `daily`, `weekly`, or `hourly`. The default setting is `daily`.
-   If set to `daily`, the daily view is populated.
-   If set to `hourly`, the view is shown at a day part level.  
-   If set to `weekly`, the display it per individual weekdays (1-7) as captured.
+  If set to `daily`, the daily view is populated.
+  If set to `hourly`, the view is shown at a day part level.  
+  If set to `weekly`, the display it per individual weekdays (1-7) as captured.
 
 - `max_days`: Maximum number of days up to which the data will be aggregated.
-   If the dataset contains a timestamp/date field with very high number of unique dates
-   (e.g., 20 years worth of daily data), this option can be used to reduce the timespan that is analyzed.
+  If the dataset contains a timestamp/date field with very high number of unique dates 
+  (e.g., 20 years worth of daily data), this option can be used to reduce the timespan that is analyzed.
 
 _Example:_
 ```yaml
@@ -360,8 +359,9 @@ The basic report can be customized using the following options:
 
 ### `basic_report`
 
-If `True`, a basic report is generated after completion of the [data_analyzer](../api/data_analyzer/index.md)
-modules mentioned above.
+If `True`, a basic report is generated after completion of the
+[data_analyzer](../api/data_analyzer/index.md) modules.
+
 If `False`, no report is generated.
 Nevertheless, all the computed statistics and metrics will be available in the final report.
 
@@ -374,11 +374,11 @@ Nevertheless, all the computed statistics and metrics will be available in the f
 - `event_lable`: The value of the event (label `1`/`true`) in the label column.
 
 - `output_path`: Path where the basic report is saved.
-   It can be a local path, an [📖 S3 path](https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-bucket-intro.html)
-   (when running on AWS), a path to a file resource on Google Colab (see
-   [📖 this tutorial](https://neptune.ai/blog/google-colab-dealing-with-files) for
-   an overview), or a path on the [📖 Databricks File System](https://docs.microsoft.com/de-de/azure/databricks/data/databricks-file-system)
-   (when running on Azure).
+  It can be a local path, an [📖 S3 path](https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-bucket-intro.html)
+  (when running on AWS), a path to a file resource on Google Colab (see
+  [📖 this tutorial](https://neptune.ai/blog/google-colab-dealing-with-files) for
+  an overview), or a path on the [📖 Databricks File System](https://docs.microsoft.com/de-de/azure/databricks/data/databricks-file-system)
+  (when running on Azure).
 
 _Example:_
 ```yaml
@@ -394,7 +394,8 @@ report_args:
 🔎 _Corresponds to [`data_analyzer.stats_generator`](../api/data_analyzer/stats_generator.md)_
 
 This module generates descriptive statistics of the ingested data. 
-Descriptive statistics are split into different metric types, and each function corresponds to one metric type. 
+Descriptive statistics are split into different metric types.
+Each function corresponds to one metric type. 
 
 ### `metric`
 
@@ -417,13 +418,13 @@ metric: ['global_summary', 'measures_of_counts', 'measures_of_cardinality', 'mea
 ### `metric_args`
 
 - `list_of_cols`: List of column names (list of strings or string of column names separated by `|`)
-   to compute the metrics for.
-   Alternatively, if set to `"all"`, all columns are included.
+  to compute the metrics for.
+  Alternatively, if set to `"all"`, all columns are included.
 
 - `drop_cols`:  List of column names (list of strings or string of column names separated by `|`)
-   to exclude from metrics computation.
-   This option is especially useful if `list_of_cols` is set to `"all"`, as it allows computing metrics
-   for all except a few columns without having to specify a potentially very long list of column names to include.
+  to exclude from metrics computation.
+  This option is especially useful if `list_of_cols` is set to `"all"`, as it allows computing metrics
+  for all except a few columns without having to specify a potentially very long list of column names to include.
 
 _Example:_
 ```yaml
@@ -689,16 +690,22 @@ nullColumns_detection:
 
 🔎 _Corresponds to [`data_analyzer.association_evaluator`](../api/data_analyzer/association_evaluator.md)_
 
-This submodule focuses on understanding the interaction between different attributes and/or the relationship between an attribute & the binary target variable. see the 
+This block configures the association evaluator that focuses on understanding the
+interaction between different attributes or the relationship between an attribute
+and a binary target variable. 
 
 ### `correlation_matrix`
 
 🔎 _Corresponds to [`association_evaluator.correlation_matrix`](../api/data_analyzer/association_evaluator.md#anovos.data_analyzer.association_evaluator.correlation_matrix)_
 
+- `list_of_cols`: List of column names (list of strings or string of column names separated by `|`)
+  to include in the correlation matrix.
+  Alternatively, when set to `all`, all columns are included.
 
-`list_of_cols`: List of column names (list of strings or string of column names separated by `|`) subjected for generating correlation matrix. The user can also use `all` as an input to this argument to consider all columns. This is super useful instead of specifying all column names manually.
-
-- `drop_cols`: List of column names (list of strings or string of column names separated by `|`) It is used to specify the columns which needs to be dropped from list_of_cols. It is most useful when used coupled with `all` value of list_of_cols, when we need to consider all columns except few handful of them.
+- `drop_cols`: List of column names (list of strings or string of column names separated by `|`)
+  to be excluded from the correlation matrix. 
+  This is especially useful when almost all columns should be included in the correlation matrix:
+  Set `list_of_cols` to `all` and drop the few excluded columns.
 
 _Example:_
 ```yaml
@@ -711,15 +718,22 @@ correlation_matrix:
 
 🔎 _Corresponds to [`association_evaluator.IV_calculation`](../api/data_analyzer/association_evaluator.md#anovos.data_analyzer.association_evaluator.IV_calculation)_
 
-`list_of_cols`: List of column names (list of strings or string of column names separated by `|`) subjected to IV calculation.
+- `list_of_cols`: List of column names (list of strings or string of column names separated by `|`)
+  to include in the IV calculation.
 
-- `drop_cols`: List of column names (list of strings or string of column names separated by `|`) It is used to specify the columns that need to be dropped from list_of_cols before IV calculation
+- `drop_cols`: List of column names (list of strings or string of column names separated by `|`)
+  to exclude from IV calculation.
 
-- `Label_col`: Name of label or target column in the input dataset
+- `label_col`: Name of label or target column in the input dataset.
 
-- `Event_lable`: Value of event (label 1) in the label column
+- `event_label`: Value of event (label `1`/`true`) in the label column.
 
-- `Encoding_configs`: It takes input in dictionary format with keys related to binning operation - `bin_method` (default 'equal_frequency'), `bin_size` (default 10) and `monotonicity_check` (default 0). monotonicity_check of 1 will dynamically calculate the bin_size ensuring monotonic nature and can be expensive operation.
+- `encoding_configs`: Detailed configuration of the binning step.
+
+  - `bin_method`: The binning method. Defaults to `equal_frequency`.
+  - `bin_size`: The bin size. Defaults to `10`.
+  - `monotonicity_check`: If set to `1`, dynamically computes the `bin_size` such that monotonicity is ensured.
+    Can be a computationally expensive calculation. Defaults to `0`.
 
 _Example:_
 ```yaml
@@ -738,15 +752,22 @@ IV_calculation:
 
 🔎 _Corresponds to [`association_evaluator.IG_calculation`](../api/data_analyzer/association_evaluator.md#anovos.data_analyzer.association_evaluator.IG_calculation)_
 
-`list_of_cols`: List of column names (list of strings or string of column names separated by `|`) subjected to IG calculation
+- `list_of_cols`: List of column names (list of strings or string of column names separated by `|`)
+  to consider for IG calculation.
 
-- `drop_cols`: List of column names (list of strings or string of column names separated by `|`) It is used to specify the columns that need to be dropped from list_of_cols before IG calculation
+- `drop_cols`: List of column names (list of strings or string of column names separated by `|`)
+  to exclude from IG calculation.
 
-- `Label_col`: Name of label or target column in the input dataset
+- `label_col`: Name of label or target column in the input dataset.
 
-- `Event_lable`: Value of event (label 1) in the label column
+- `event_label`: Value of event (label `1`/`true`) in the label column.
 
-- `Encoding_configs`: It takes input in dictionary format with keys related to binning operation - 'bin_method' (default 'equal_frequency'), 'bin_size' (default 10) and 'monotonicity_check' (default 0). monotonicity_check of 1 will dynamically calculate the bin_size ensuring monotonic nature and can be expensive operation.
+- `encoding_configs`: Detailed configuration of the binning step.
+
+  - `bin_method`: The binning method. Defaults to `equal_frequency`.
+  - `bin_size`: The bin size. Defaults to `10`.
+  - `monotonicity_check`: If set to `1`, dynamically computes the `bin_size` such that monotonicity is ensured.
+    Can be a computationally expensive calculation. Defaults to `0`.
 
 _Example:_
 ```yaml
@@ -765,9 +786,11 @@ IG_calculation:
 
 🔎 _Corresponds to [`association_evaluator.variable_clustering`](../api/data_analyzer/association_evaluator.md#anovos.data_analyzer.association_evaluator.variable_clustering)_
 
-`list_of_cols`: List of column names (list of strings or string of column names separated by `|`) subjected to variable clustering
+- `list_of_cols`: List of column names (list of strings or string of column names separated by `|`)
+  to include for variable clustering
 
-- `drop_cols`: List of column names (list of strings or string of column names separated by `|`) It is used to specify the columns that need to be dropped from list_of_cols before variable clustering.
+- `drop_cols`: List of column names (list of strings or string of column names separated by `|`)
+  to exclude from variable clustering.
 
 _Example:_
 ```yaml
@@ -778,27 +801,46 @@ variable_clustering:
 
 ## 📑 `drift_detector`
 
-🔎 _Corresponds to [`drfit.detector`](../api/drift/detector.md)_
+🔎 _Corresponds to [`drift.detector`](../api/drift/detector.md)_
+
+This block configures the drift detector module that provides a range of methods
+to detect drift within and between datasets.
 
 ### `drift_statistics`
 
+🔎 _Corresponds to [`drfit.detector.statistics`](../api/drift/detector.md#anovos.drift.detector.statistics)_
+
 #### `configs`
 
-- `list_of_cols`: List of columns to check drift (list or string of col names separated by `|`). Use `all` - to include all non-array columns (excluding drop_cols).
+- `list_of_cols`: List of columns to check drift (list or string of col names separated by `|`)
+  to include in the drift statistics.
+  Can be set to `all` to include all non-array columns (except those given in `drop_cols`).
 
 - `drop_cols`: List of columns to be dropped (list or string of col names separated by `|`)
+  to exclude from the drift statistics.
 
-- `method_type`: 'PSI', 'JSD', 'HD', 'KS' (list or string of methods separated by `|`). Use `all` - to calculate all metrics.
+- `method_type`: Method(s) to apply to detect drift  (list or string of methods separated by `|`).
+  Possible values are `PSI`, `JSD`, `HD`, and `KS`.
+  If set to `all`, all available metrics are calculated.
+# TODO: Link a tutorial
 
-- `Threshold`: To flag attributes meeting drift threshold
+- `threshold`: Threshold above which attributes are flagged as exhibiting drift.
 
-- `bin_method`: 'equal_frequency' or 'equal_range'
+- `bin_method`: The binning method.
+  Possible values are `equal_frequency` and `equal_range`.
 
-- `bin_size`: 10 - 20 (recommended for PSI), >100 (other method types)
+- `bin_size`: The bin size.
+  We recommend to set it to `10` to `20` for `PSI` and above `100` for all other metrics.
 
-- `pre_existing_source`: True if binning model & frequency counts/attribute exists already, False Otherwise.
+- `pre_existing_source`: Set to `true` if a pre-computed binning model as well as frequency
+  counts and attributes are available.
+  `false` otherwise.
 
-- `source_path`: If pre_existing_source is True, this is path for the source dataset details - drift_statistics folder. drift_statistics folder must contain attribute_binning & frequency_counts folders. If pre_existing_source is False, this can be used for saving the details. Default "NA" for temporarily saving source dataset attribute_binning folder.
+- `source_path`: If `pre_existing_source` is `true`, this described from where the pre-computed
+  data is loaded.
+
+# TODO: This is confusing
+  - `drift_statistics_folder`. drift_statistics folder must contain attribute_binning & frequency_counts folders. If pre_existing_source is False, this can be used for saving the details. Default "NA" for temporarily saving source dataset attribute_binning folder.
 
 _Example:_
 ```yaml
@@ -815,22 +857,24 @@ configs:
 
 #### `source_dataset`
 
+The reference/baseline dataset.
+
 ##### `read_dataset`
 
 - `file_path`: The file (or directory) path to read the source dataset from.
-   It can be a local path, an [S3 path](https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-bucket-intro.html)
+  It can be a local path, an [S3 path](https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-bucket-intro.html)
   (when running on AWS), a path to a file resource on Google Colab (see
-   [this tutorial](https://neptune.ai/blog/google-colab-dealing-with-files)for
-   an overview), or a path on the [Databricks File System](https://docs.microsoft.com/de-de/azure/databricks/data/databricks-file-system)
-   (when running on Azure).
+  [this tutorial](https://neptune.ai/blog/google-colab-dealing-with-files)for
+  an overview), or a path on the [Databricks File System](https://docs.microsoft.com/de-de/azure/databricks/data/databricks-file-system)
+  (when running on Azure).
 
 - `file_type`: The file format of the source data. Currently, _Anovos_ supports
-   CSV (`csv`), Parquet (`parquet`), and Avro (`avro`).
-   (Please note that if you're using Avro data sources, you need to add the external
-   package `org.apache.spark:spark-avro` when submitting the Spark job.)
+  CSV (`csv`), Parquet (`parquet`), and Avro (`avro`).
+  (Please note that if you're using Avro data sources, you need to add the external
+  package `org.apache.spark:spark-avro` when submitting the Spark job.)
 
 - `file_configs` (optional): Options to pass to the respective Spark file reader,
-   e.g., delimiters, schemas, headers.
+  e.g., delimiters, schemas, headers.
 
 ##### `delete_column`
 
@@ -863,15 +907,22 @@ to be selected for further processing.
 
 ### `stability_index`
 
+🔎 _Corresponds to [`drfit.detector.stability_index_computation`](../api/drift/detector.md#anovos.drift.detector.stability_index_computation)_
+
 #### `configs`
 
-- `metric_weightages`: A dictionary with key being the metric name (mean, stdev, kurtosis) and value being the weightage of the metric (between 0 and 1). Sum of all weightages must be 1.
+- `metric_weightages`: A dictionary where the keys are the metric names (`mean`, `stdev`, `kurtosis`)
+  and the values are the weight of the metric (between `0` and `1`).
+  All weights must sum to `1`.
 
-- `existing_metric_path`: path for pre-existing metrics of historical datasets <idx, attribute, mean, stdev, kurtosis>. idx is index number of historical datasets assigned in chronological order
+- `existing_metric_path`: Location of previously computed metrics of historical datasets
+ (`idx`, `attribute`, `mean`, `stdev`, `kurtosis` where `idx` is index number of
+ the historical datasets in chronological order).
 
-- `appended_metric_path`: path for saving input dataframes metrics after appending to the historical datasets' metrics.
+- `appended_metric_path`: The path where the input dataframe metrics are saved after they
+  have been appended to the historical metrics.
 
-- `threshold`: To flag unstable attributes meeting the threshold.
+- `threshold`: The threshold above which attributes are flagged as unstable.
 
 _Example:_
 ```yaml
@@ -889,16 +940,23 @@ configs:
 
 ##### `read_dataset`
 
-- `file_path`: file (or directory) path where the historical dataset is saved.
+_Corresponds to [`data_ingest.read_dataset`](../api/data_ingest/data_ingest.md#anovos.data_ingest.data_ingest.read_dataset)_
 
-- `file_type`: (CSV, Parquet or Avro). file format of the historical dataset.
+- `file_path`: The file (or directory) path to read the other joining input dataset from.
+  It can be a local path, an [📖 S3 path](https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-bucket-intro.html)
+  (when running on AWS), a path to a file resource on Google Colab (see
+  [📖 this tutorial](https://neptune.ai/blog/google-colab-dealing-with-files) for
+  an overview), or a path on the
+  [📖 Databricks File System](https://docs.microsoft.com/de-de/azure/databricks/data/databricks-file-system)
+  (when running on Azure).
+
+- `file_type`: The file format of the other joining input data. Currently, _Anovos_ supports
+  CSV (`csv`), Parquet (`parquet`), and Avro (`avro`).
+  (Please note that if you're using Avro data sources, you need to add the external
+  package `org.apache.spark:spark-avro` when submitting the Spark job.)
 
 - `file_configs` (optional): Options to pass to the respective Spark file reader,
-   e.g., delimiters, schemas, headers.
-
-```
-Note: There can be multiple historical datasets, for loading the other datasets, it's configuration should be written in same as dataset1
-```
+  e.g., delimiters, schemas, headers.
   
 #### `dataset2`, `dataset3`, ...
 
@@ -906,7 +964,11 @@ Additional datasets are configured in the same manner as `dataset1`.
 
 ## 📑 `report_preprocessing`
 
-This section largely covers the data pre–processing. The primary function which is used to address all the subsequent modules is charts_to_objects. It precisely helps in saving the chart data in form of objects, which is eventually read by the final report generation script. The objects saved are specifically used at the modules shown at the Report based on the user input. See the [Intermediate Report Doc](https://github.com/anovos/anovos-docs/blob/main/docs/using-anovos/data-reports/intermediate_report.md) for more details.
+🔎 _Corresponds to [`data_report.report_preprocessing`](../api/data_report/report_preprocessing.md)_
+
+This configuration block describes the data pre–processing necessary for report generation.
+
+The primary function which is used to address all the subsequent modules is charts_to_objects. It precisely helps in saving the chart data in form of objects, which is eventually read by the final report generation script. The objects saved are specifically used at the modules shown at the Report based on the user input. See the [Intermediate Report Doc](https://github.com/anovos/anovos-docs/blob/main/docs/using-anovos/data-reports/intermediate_report.md) for more details.
 
 ### `master_path` 
 
