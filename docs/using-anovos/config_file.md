@@ -830,7 +830,7 @@ to detect drift within and between datasets.
   Possible values are `equal_frequency` and `equal_range`.
 
 - `bin_size`: The bin size.
-  We recommend to set it to `10` to `20` for `PSI` and above `100` for all other metrics.
+  We recommend setting it to `10` to `20` for `PSI` and above `100` for all other metrics.
 
 - `pre_existing_source`: Set to `true` if a pre-computed binning model as well as frequency
   counts and attributes are available.
@@ -907,7 +907,7 @@ to be selected for further processing.
 
 ### `stability_index`
 
-🔎 _Corresponds to [`drfit.detector.stability_index_computation`](../api/drift/detector.md#anovos.drift.detector.stability_index_computation)_
+🔎 _Corresponds to [`detector.stability_index_computation`](../api/drift/detector.md#anovos.drift.detector.stability_index_computation)_
 
 #### `configs`
 
@@ -968,11 +968,9 @@ Additional datasets are configured in the same manner as `dataset1`.
 
 This configuration block describes the data pre–processing necessary for report generation.
 
-The primary function which is used to address all the subsequent modules is charts_to_objects. It precisely helps in saving the chart data in form of objects, which is eventually read by the final report generation script. The objects saved are specifically used at the modules shown at the Report based on the user input. See the [Intermediate Report Doc](https://github.com/anovos/anovos-docs/blob/main/docs/using-anovos/data-reports/intermediate_report.md) for more details.
-
 ### `master_path` 
 
-  Path where all modules output is saved
+The path where all outputs are saved.
 
 _Example:_
 ```yaml
@@ -981,23 +979,36 @@ master_path: 'report_stats'
 
 ### `charts_to_objects`
 
-`list_of_cols`: List of column names (list of strings or string of column names separated by `|`)subjected to the analysis in the input dataframe.
+🔎 _Corresponds to [`report_preprocessing.charts_to_objects`](../api/data_report/report_preprocessing.md#anovos.data_report.report_preprocessing.charts_to_objects)_
 
-- `drop_cols`: List of column names (list of strings or string of column names separated by `|`) It is used to specify the columns which needs to be dropped from list_of_cols
+This is the core function of the report preprocessing stage.
+It saves the chart data in the form of objects that are used by the subsequent report generation scripts.
 
-- `lable_col`: Name of label or target column in the input dataset
+See the
+[intermediate report documentation](../using-anovos/data-reports/intermediate_report.md) for more details.
 
-- `event_label`: Value of event (label 1) in the label column
+- `list_of_cols`: List of column names (list of strings or string of column names separated by `|`)
+  to include in preprocessing.
 
-- `bin_method`: equal_frequency or equal_range
+- `drop_cols`: List of column names (list of strings or string of column names separated by `|`)
+  to exclude from preprocessing.
 
-- `bin_size`: 10 - 20 (recommended for PSI), >100 (other method types)
+- `label_col`: Name of the label or target column in the input dataset.
 
-- `drift_detector`: It takes Boolean type input -- `True` or `False`. It indicates whether the drift component is already analyzed or not. By default it is kept as False.
+- `event_label`: Value of the event (label `1`/`true`) in the label column.
 
-- `outlier_charts`: It takes Boolean type input -- `True` or `False`. Outlier chart provides the flexibility to the user whether the user wants outlier charts or not. If True, outlier_chart will be generated.
+- `bin_method`: The binning method.
+  Possible values are `equal_frequency` and `equal_range`.
 
-- `source_path`: The source data path which is needed for drift analysis. If it's not computed / out of scope, the default value of "NA" is considered.
+- `bin_size`: The bin size.
+  We recommend setting it to `10` to `20` for `PSI` and above `100` for all other metrics.
+
+- `drift_detector`: Indicates whether data drift has already analyzed. Defaults to `False`.
+
+- `outlier_charts`: Indicates whether outlier charts should be included. Defaults to `False`.
+
+- `source_path`: The source data path for drift analysis.
+  If it has not been computed or is not required, set it to the default value `"NA"`.
 
 _Example:_
 ```yaml
@@ -1069,6 +1080,9 @@ This group of functions used to perform mathematical transformation over numeric
 
 #### `feature_transformation`
 
+🔎 _Corresponds to [`transformers.feature_transformation`](../api/data_transformer/transformers.md#anovos.data_transformer.transformers.feature_transformation)_
+
+
 - `list_of_cols`: List of numerical columns to encode e.g., ["col1","col2"]. "all" can be passed to include all numerical columns for analysis.
 
 - `drop_cols`: List of columns to be dropped e.g., ["col1","col2"].
@@ -1086,6 +1100,8 @@ feature_transformation:
 ```
 
 #### `boxcox_transformation`
+
+🔎 _Corresponds to [`transformers.boxcox_transformation`](../api/data_transformer/transformers.md#anovos.data_transformer.transformers.boxcox_transformation)_
 
 - `list_of_cols`: List of numerical columns to encode e.g., ["col1","col2"].
 
@@ -1109,6 +1125,8 @@ This group of functions used to tranform the numerical attribute into discrete (
 
 #### `attribute_binning`
 
+🔎 _Corresponds to [`transformers.attribute_binning`](../api/data_transformer/transformers.md#anovos.data_transformer.transformers.attribute_binning)_
+
 - `list_of_cols`: List of numerical columns to transform e.g., ["col1","col2"]
 
 - `drop_cols`: List of columns to be dropped e.g., ["col1","col2"]
@@ -1130,6 +1148,8 @@ attribute_binning:
 ```
 
 #### `monotonic_binning`
+
+🔎 _Corresponds to [`transformers.monotonic_binning`](../api/data_transformer/transformers.md#anovos.data_transformer.transformers.monotonic_binning)_
 
 - `list_of_cols`: List of numerical columns to transform e.g., ["col1","col2"]
 
@@ -1157,6 +1177,8 @@ attribute_binning:
 
 #### `expression_parser`
 
+🔎 _Corresponds to [`transformers.expression_parser`](../api/data_transformer/transformers.md#anovos.data_transformer.transformers.expression_parser)_
+
 - `list_of_expr`: List of expressions to evaluate as new features e.g., ["expr1","expr2"]. Alternatively, expressions can be specified in a string format, where different expressions are separated by pipe delimiter “|” e.g., "expr1|expr2".
 
 - `postfix`: postfix for new feature name.Naming convention "f" + expression_index + postfix e.g. with postfix of "new", new added features are named as f0new, f1new etc. (Default value = "").
@@ -1172,6 +1194,8 @@ expression_parser:
 This function replaces less frequently seen values (called as outlier values in the current context) in a categorical column by 'others'.
 
 #### `outlier_categories`
+
+🔎 _Corresponds to [`transformers.outlier_categories`](../api/data_transformer/transformers.md#anovos.data_transformer.transformers.outlier_categories)_
 
 - `list_of_cols`: List of categorical columns to transform e.g., ["col1","col2"].
 
@@ -1195,6 +1219,8 @@ outlier_categories:
 This group of transformers functions used to converting a categorical attribute into numerical attribute(s). Users should use only one function at a time and section of other function should be commented like if user want to use categorical to numerical conversion using unsupervised method then all Section of categorical to numerical conversion using supervised method should be commented.
 
 #### `cat_to_num_unsupervised`
+
+🔎 _Corresponds to [`transformers.cat_to_num_unsupervised`](../api/data_transformer/transformers.md#anovos.data_transformer.transformers.cat_to_num_unsupervised)_
 
 - `list_of_cols`: List of categorical columns to transform e.g., ["col1","col2"]
 
@@ -1220,6 +1246,8 @@ cat_to_num_unsupervised:
 
 #### `cat_to_num_supervised`
 
+🔎 _Corresponds to [`transformers.cat_to_num_supervised`](../api/data_transformer/transformers.md#anovos.data_transformer.transformers.cat_to_num_supervised)_
+
 - `list_of_cols`: List of catigorical columns to transform e.g., ["col1","col2"].
 
 - `drop_cols`: List of columns to be dropped e.g., ["col1","col2"].
@@ -1243,6 +1271,8 @@ This group of transformers functions used to rescale attribute(s). Users should 
 
 #### `normalization`
 
+🔎 _Corresponds to [`transformers.normalization`](../api/data_transformer/transformers.md#anovos.data_transformer.transformers.normalization)_
+
 - `list_of_cols`: List of numerical columns to transform e.g., ["col1","col2"]. "all" can be passed to include all numerical columns for analysis.
 
 - `drop_cols`: List of columns to be dropped e.g., ["col1","col2"].
@@ -1254,7 +1284,9 @@ normalization:
   drop_cols: []
 ```
 
-#### `z_standarization`
+#### `z_standardization`
+
+🔎 _Corresponds to [`transformers.z_standardization`](../api/data_transformer/transformers.md#anovos.data_transformer.transformers.z_standardization)_
 
 - `list_of_cols`: List of numerical columns to transform e.g., ["col1","col2"]. "all" can be passed to include all numerical columns for analysis.
 
@@ -1267,7 +1299,9 @@ z_standardization:
   drop_cols: []
 ```
 
-#### `IQR_standarization`
+#### `IQR_standardization`
+
+🔎 _Corresponds to [`transformers.IQR_standardization`](../api/data_transformer/transformers.md#anovos.data_transformer.transformers.IQR_standardization)_
 
 - `list_of_cols`: List of numerical columns to transform e.g., ["col1","col2"].
 
@@ -1285,6 +1319,8 @@ IQR_standardization:
 This group of transformer functions used to generate latent features which reduces the dimensionality of the input dataframe. Users should use only one function at a time and section of other function should be commented like if user want to use PCA method then all Section of AutoEncoder method should be commented.
 
 #### `PCA_latentFeatures`
+
+🔎 _Corresponds to [`transformers.PCA_latentFeatures`](../api/data_transformer/transformers.md#anovos.data_transformer.transformers.PCA_latentFeatures)_
 
 - `list_of_cols`: List of numerical columns to encode e.g., ["col1","col2"]. "all" can be passed to include all numerical columns for analysis.
 
@@ -1310,6 +1346,8 @@ PCA_latentFeatures:
 ```
 
 #### `autoencoder_latentFeatures`
+
+🔎 _Corresponds to [`transformers.PCA_latentFeatures`](../api/data_transformer/transformers.md#anovos.data_transformer.transformers.PCA_latentFeatures)_
 
 - `list_of_cols`:  List of numerical columns to encode e.g., ["col1","col2"]. "all" can be passed to include all numerical columns for analysis.
 
