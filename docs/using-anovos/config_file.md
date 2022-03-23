@@ -72,7 +72,7 @@ First, columns are deleted, then selected, then renamed, and then recast.
 List of column names (list of strings or string of column names separated by `|`)
 to be deleted from the loaded input data.
 
-_Example:_
+🤓  _Example:_
 ```yaml
 delete_column: ['unnecessary', 'obsolete', 'outdated']
 ```
@@ -84,7 +84,7 @@ delete_column: ['unnecessary', 'obsolete', 'outdated']
 List of column names (list of strings or string of column names separated by `|`)
 to be selected for further processing.
 
-_Example:_
+🤓  _Example:_
 ```yaml
 select_column: ['feature1', 'feature2', 'feature3', 'label']
 ```
@@ -99,7 +99,7 @@ select_column: ['feature1', 'feature2', 'feature3', 'label']
 - `list_of_newcols`: The new column names. The first element in `list_of_cols` will be renamed
   to the first name in `list_of_newcols` and so on.
 
-_Example:_
+🤓  _Example:_
 ```yaml
 rename_column:
   list_of_cols: ['very_long_column_name', 'price']
@@ -121,7 +121,7 @@ This will rename the column `very_long_column_name` to `short_name` and the colu
   for a list of valid datatypes.
   Note that this field is case-insensitive.
 
-_Example:_
+🤓  _Example:_
 ```yaml
 recast_column:
   list_of_cols: ['price', 'quantity']
@@ -147,7 +147,7 @@ columns in the final dataframe.
 If the subsequent dataframes have too few columns (`index`) or are missing named columns (`name´)
 for the concatenation to proceed, an error will be raised.
 
-_Example:_
+🤓  _Example:_
 ```yaml
 method: name
 ```
@@ -228,7 +228,7 @@ The key of the column(s) to join on.
 In the case that the key consists of multiple columns, they can be passed as a list of strings or
 a single string where the column names are separated by `|`.
 
-_Example:_
+🤓  _Example:_
 ```yaml
 join_cols: id_column
 ```
@@ -240,7 +240,7 @@ The type of join to perform: `inner`, `full`, `left`, `right`, `left_semi`, or `
 For a general introduction to joins, see
 [📖 this tutorial](https://sparkbyexamples.com/spark/spark-sql-dataframe-join/).
 
-_Example:_
+🤓  _Example:_
 ```yaml
 join_type: inner
 ```
@@ -334,7 +334,7 @@ Configuration for the time series analyzer.
   If the dataset contains a timestamp/date field with very high number of unique dates 
   (e.g., 20 years worth of daily data), this option can be used to reduce the timespan that is analyzed.
 
-_Example:_
+🤓  _Example:_
 ```yaml
 timeseries_analyzer:
     auto_detection: True
@@ -380,7 +380,7 @@ Nevertheless, all the computed statistics and metrics will be available in the f
   an overview), or a path on the [📖 Databricks File System](https://docs.microsoft.com/de-de/azure/databricks/data/databricks-file-system)
   (when running on Azure).
 
-_Example:_
+🤓  _Example:_
 ```yaml
 report_args:
   id_col: id_column
@@ -410,7 +410,7 @@ Available options are:
 - [📖  `measures_of_percentiles`](../api/data_analyzer/stats_generator.md#anovos.data_analyzer.stats_generator.measures_of_percentiles)
 - [📖  `measures_of_shape`](../api/data_analyzer/stats_generator.md#anovos.data_analyzer.stats_generator.measures_of_shape)
 
-_Example:_
+🤓  _Example:_
 ```yaml
 metric: ['global_summary', 'measures_of_counts', 'measures_of_cardinality', 'measures_of_dispersion']
 ```
@@ -426,7 +426,7 @@ metric: ['global_summary', 'measures_of_counts', 'measures_of_cardinality', 'mea
   This option is especially useful if `list_of_cols` is set to `"all"`, as it allows computing metrics
   for all except a few columns without having to specify a potentially very long list of column names to include.
 
-_Example:_
+🤓  _Example:_
 ```yaml
 metric_args:
   list_of_cols: all
@@ -455,7 +455,7 @@ Further, the module includes appropriate treatment options to fix several common
 - `treatment`: If `False`, duplicates are detected and reported. 
   If `True`, duplicate rows are removed from the input dataset.
 
-_Example:_
+🤓  _Example:_
 ```yaml
 duplicate_detection:
   list_of_cols: all
@@ -482,7 +482,7 @@ duplicate_detection:
   If the threshold is `0`, rows with any missing value will be flagged as `null`.
   If the threshold is `1`, only rows where all values are missing will be flagged as `null`.
 
-_Example:_
+🤓  _Example:_
 ```yaml
 nullRows_detection:
   list_of_cols: all
@@ -511,7 +511,7 @@ nullRows_detection:
  The appended columns will be named as the original column with a suffix `"_cleaned"`
  (e.g., the column `"cost_of_living_cleaned"` corresponds to the original column `"cost_of_living"`).
 
-_Example:_
+🤓  _Example:_
 ```yaml
 invalidEntries_detection:
   list_of_cols: all
@@ -536,7 +536,7 @@ invalidEntries_detection:
 
 - `treatment_threshold`: A value between `0` and `1` (default `1.0`).
 
-_Example:_
+🤓  _Example:_
 ```yaml
 IDness_detection:
   list_of_cols: all
@@ -561,7 +561,7 @@ IDness_detection:
 
 - `treatment_threshold`: A value between `0` and `1` (default `1.0`).
 
-_Example:_
+🤓  _Example:_
 ```yaml
 biasedness_detection:
   list_of_cols: all
@@ -622,7 +622,7 @@ biasedness_detection:
   The appended columns will be named as the original column with a suffix `"_outliered"`
   (e.g., the column `"cost_of_living_outliered"` corresponds to the original column `"cost_of_living"`).
 
-_Example:_
+🤓  _Example:_
 ```yaml
 outlier_detection:
   list_of_cols: all
@@ -672,7 +672,7 @@ outlier_detection:
   [`imputation_MMM`](../api/data_analyzer/quality_checker.md#anovos.data_analyzer.quality_checker.imputation_MMM)
   function.
 
-_Example:_
+🤓  _Example:_
 ```yaml
 nullColumns_detection:
   list_of_cols: all
@@ -707,7 +707,7 @@ and a binary target variable.
   This is especially useful when almost all columns should be included in the correlation matrix:
   Set `list_of_cols` to `all` and drop the few excluded columns.
 
-_Example:_
+🤓  _Example:_
 ```yaml
 correlation_matrix:
   list_of_cols: all
@@ -735,7 +735,7 @@ correlation_matrix:
   - `monotonicity_check`: If set to `1`, dynamically computes the `bin_size` such that monotonicity is ensured.
     Can be a computationally expensive calculation. Defaults to `0`.
 
-_Example:_
+🤓  _Example:_
 ```yaml
 IV_calculation:
   list_of_cols: all
@@ -769,7 +769,7 @@ IV_calculation:
   - `monotonicity_check`: If set to `1`, dynamically computes the `bin_size` such that monotonicity is ensured.
     Can be a computationally expensive calculation. Defaults to `0`.
 
-_Example:_
+🤓  _Example:_
 ```yaml
 IG_calculation:
   list_of_cols: all
@@ -792,7 +792,7 @@ IG_calculation:
 - `drop_cols`: List of column names (list of strings or string of column names separated by `|`)
   to exclude from variable clustering.
 
-_Example:_
+🤓  _Example:_
 ```yaml
 variable_clustering:
   list_of_cols: all
@@ -822,7 +822,7 @@ to detect drift within and between datasets.
 - `method_type`: Method(s) to apply to detect drift  (list or string of methods separated by `|`).
   Possible values are `PSI`, `JSD`, `HD`, and `KS`.
   If set to `all`, all available metrics are calculated.
-# TODO: Link a tutorial
+  **🚧 TODO: Link a tutorial**
 
 - `threshold`: Threshold above which attributes are flagged as exhibiting drift.
 
@@ -839,10 +839,11 @@ to detect drift within and between datasets.
 - `source_path`: If `pre_existing_source` is `true`, this described from where the pre-computed
   data is loaded.
 
-# TODO: This is confusing
-  - `drift_statistics_folder`. drift_statistics folder must contain attribute_binning & frequency_counts folders. If pre_existing_source is False, this can be used for saving the details. Default "NA" for temporarily saving source dataset attribute_binning folder.
 
-_Example:_
+- `drift_statistics_folder`. drift_statistics folder must contain attribute_binning & frequency_counts folders. If pre_existing_source is False, this can be used for saving the details. Default "NA" for temporarily saving source dataset attribute_binning folder.
+  **🚧 TODO: Clarify. This is confusing for users that are not familiar with the library's internals.**
+
+🤓  _Example:_
 ```yaml
 configs:
   list_of_cols: all
@@ -862,10 +863,10 @@ The reference/baseline dataset.
 ##### `read_dataset`
 
 - `file_path`: The file (or directory) path to read the source dataset from.
-  It can be a local path, an [S3 path](https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-bucket-intro.html)
+  It can be a local path, an [📖 S3 path](https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-bucket-intro.html)
   (when running on AWS), a path to a file resource on Google Colab (see
-  [this tutorial](https://neptune.ai/blog/google-colab-dealing-with-files)for
-  an overview), or a path on the [Databricks File System](https://docs.microsoft.com/de-de/azure/databricks/data/databricks-file-system)
+  [📖 this tutorial](https://neptune.ai/blog/google-colab-dealing-with-files) for
+  an overview), or a path on the [📖 Databricks File System](https://docs.microsoft.com/de-de/azure/databricks/data/databricks-file-system)
   (when running on Azure).
 
 - `file_type`: The file format of the source data. Currently, _Anovos_ supports
@@ -900,8 +901,8 @@ to be selected for further processing.
   to be cast to a different type.
 
 - `list_of_dtypes`: The new datatypes. The first element in `list_of_cols` will be recast
-  to the first type in `list_of_dtypes` and so on. See
-  [the Spark documentation](https://spark.apache.org/docs/latest/sql-ref-datatypes.html)
+  to the first type in `list_of_dtypes` and so on. See the
+  [📖 Spark documentation](https://spark.apache.org/docs/latest/sql-ref-datatypes.html)
   for a list of valid datatypes.
   Note that this field is case-insensitive.
 
@@ -924,7 +925,7 @@ to be selected for further processing.
 
 - `threshold`: The threshold above which attributes are flagged as unstable.
 
-_Example:_
+🤓  _Example:_
 ```yaml
 configs:
   metric_weightages:
@@ -972,7 +973,7 @@ This configuration block describes the data pre–processing necessary for repor
 
 The path where all outputs are saved.
 
-_Example:_
+🤓  _Example:_
 ```yaml
 master_path: 'report_stats'
 ```
@@ -1010,7 +1011,7 @@ See the
 - `source_path`: The source data path for drift analysis.
   If it has not been computed or is not required, set it to the default value `"NA"`.
 
-_Example:_
+🤓  _Example:_
 ```yaml
 charts_to_objects:
   list_of_cols: all
@@ -1028,43 +1029,59 @@ charts_to_objects:
 
 🔎 _Corresponds to [`data_report.report_generation`](../api/data_report/report_generation.md)_
 
-This section covers the final execution part where primarily the output generated by the previous step is being fetched upon and structured in the desirable UI layout. See the [Final report generation Doc](https://github.com/anovos/anovos-docs/blob/main/docs/using-anovos/data-reports/final_report.md) for more details.
+This configuration block controls the generation of the actual report, i.e., the data that is included and
+the layout. 
+See the [report generation documentation](data-reports/final_report.md) for more details.
 
-- `master_path`: The path which contains the data of intermediate output in terms of json chart objects, csv file (pandas df).
+- `master_path`: The path to the preprocessed data generated during the [`report_preprocessing`](#report_preprocessing) step.
 
-- `id_col`: The ID column is accepted to ensure & restrict unnecessary analysis to be performed on the same lable_col: Name of label or target column in the input dataset
+- `id_col`: The ID column is accepted to ensure & restrict unnecessary analysis to be performed on the same.
+  **🚧 TODO: Please clarify what that means.**
 
-- `corr_threshold`: The threshold chosen beyond which the attributes are found to be redundant. It should be between 0 to 1.
+- `label_col`: Name of label or target column in the input dataset.
 
-- `iv_threshold`: The threshold beyond which the attributes are found to be significant in terms of model. It takes value between 0 to 1.
+- `corr_threshold`: The threshold above which attributes are considered to be correlated and thus, redundant.
+  Its value is between `0` and `1`.
 
-| **Information Value**  | **Variable Predictiveness**  |
-|------------------------|------------------------------|
-| Less than 0.02         | Not useful for prediction    |
-| 0.02 to 0.1            | Weak predictive Power        |
-| 0.1 to 0.3             | Medium predictive Power      |
-| 0.3 to 0.5             | Strong predictive Power      |
-| >0.5                   | Suspicious Predictive Power  |
+- `iv_threshold`: The threshold above which attributes are considered ot be significant.
+  Its value is between `0` and `1`.
 
-- `drift_threshold_model`: The threshold beyond which the attribute can be flagged as 1 or drifted as measured across different drift metrices specified by the user. It takes value between 0 to 1.
+| **Information Value** | **Variable's Predictiveness** |
+|-----------------------|-------------------------------|
+| <0.02                 | Not useful for prediction     |
+| 0.02 to 0.1           | Weak predictive power         |
+| 0.1 to 0.3            | Medium predictive power       |
+| 0.3 to 0.5            | Strong predictive power       |
+| >0.5                  | Suspicious predictive power   |
 
-- `dataDict_path`: The path containing the exact name, definition mapping of the attributes. This is eventually used to populate at the report for easy referencing. 
+- `drift_threshold_model`: The threshold above which an attribute is flagged as exhibiting drift.
+  Its value is between `0` and `1`.
 
-- `metricDict_path`: Path of metric dictionary.
+- `dataDict_path`: The path to the data dictionary containing the exact names and definitions of the attributes.
+  This information is used in the report to aid comprehensibility. 
 
-- `final_report_path`: Path where final report will be saved. File path can be a local path or s3 path (when running with AWS cloud services), azure dbfs or azure blob storage (when running with Azure databricks). Note: azure dbfs path should be like "/dbfs/directory_name" and For azure blob storage path should be like "/dbfs/mnt/directory_name" beacause in report generation all the operations happen in python.
+- `metricDict_path`: Path to the metric dictionary.
 
-_Example:_
+- `final_report_path`: The path where final report will be saved.
+  It can be a local path, an [📖 S3 path](https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-bucket-intro.html)
+  (when running on AWS), a path to a file resource on Google Colab (see
+  [📖 this tutorial](https://neptune.ai/blog/google-colab-dealing-with-files) for
+  an overview), or a path on the
+  [📖 Databricks File System](https://docs.microsoft.com/de-de/azure/databricks/data/databricks-file-system)
+  (when running on Azure).
+
+🤓  _Example:_
 ```yaml
-master_path: 'report_stats'
-id_col: 'id_column'
-label_col: 'label_col'
-corr_threshold: 0.4
-iv_threshold: 0.02
-drift_threshold_model: 0.1
-dataDict_path: 'data/income_dataset/data_dictionary.csv'
-metricDict_path: 'data/metric_dictionary.csv'
-final_report_path: 'report_stats'
+report_generation:
+  master_path: 'report_stats'
+  id_col: 'id_column'
+  label_col: 'label_col'
+  corr_threshold: 0.4
+  iv_threshold: 0.02
+  drift_threshold_model: 0.1
+  dataDict_path: 'data/income_dataset/data_dictionary.csv'
+  metricDict_path: 'data/metric_dictionary.csv'
+  final_report_path: 'report_stats'
 ```
 
 ## 📑 `transformers`
@@ -1072,7 +1089,7 @@ final_report_path: 'report_stats'
 🔎 _Corresponds to [`data_transformer.transformers`](../api/data_transformer/transformers.md)_
 
 The data transformer module supports selected pre-processing & transformation functions, such as binning, encoding, scaling, imputation, to name a few, which are required for statistics generation and quality checks. See the
-[Transformers Doc](https://github.com/anovos/anovos-docs/blob/main/docs/api/data_transformer/transformers.md) for understanding its functions in detail.
+[Transformers Doc](../api/data_transformer/transformers.md) for understanding its functions in detail.
 
 ### `numerical_mathops`
 
@@ -1091,7 +1108,7 @@ This group of functions used to perform mathematical transformation over numeric
 
 - `N`: None by default. If method_type is "powOfN", "toPowerN", "remainderDivByN" or "roundN", N will be used as the required constant.
 
-_Example:_
+🤓  _Example:_
 ```yaml
 feature_transformation:
   list_of_cols: all
@@ -1113,7 +1130,7 @@ feature_transformation:
     2. `int/float`: all attributes will be assigned the same lambda value.
     Else, search for the best lambda among [1,-1,0.5,-0.5,2,-2,0.25,-0.25,3,-3,4,-4,5,-5] for each column and apply the transformation (Default value = None)
 
-_Example:_
+🤓  _Example:_
 ```yaml
 list_of_cols: num_feature1|num_feature2
 drop_cols: []
@@ -1137,7 +1154,7 @@ This group of functions used to tranform the numerical attribute into discrete (
 
 - `bin_dtype`: "numerical", "categorical". With "numerical" option, original value is replaced with an Integer (1,2,…) and with "categorical" option, original replaced with a string describing min and max value allowed in the bin ("minval-maxval"). (Default value = "numerical").
 
-_Example:_
+🤓  _Example:_
 ```yaml
 attribute_binning:
   list_of_cols: num_feature1|num_feature2
@@ -1161,7 +1178,7 @@ attribute_binning:
 
 - `bin_dtype`: "numerical", "categorical". With "numerical" option, original value is replaced with an Integer (1,2,…) and with "categorical" option, original replaced with a string describing min and max value allowed in the bin ("minval-maxval"). (Default value = "numerical").
 
-_Example:_
+🤓  _Example:_
 ```yaml
 attribute_binning:
   list_of_cols: num_feature1|num_feature2
@@ -1183,7 +1200,7 @@ attribute_binning:
 
 - `postfix`: postfix for new feature name.Naming convention "f" + expression_index + postfix e.g. with postfix of "new", new added features are named as f0new, f1new etc. (Default value = "").
 
-_Example:_
+🤓  _Example:_
 ```yaml
 expression_parser:
   list_of_expr: 'log(age) + 1.5|sin(capital-gain)+cos(capital-loss)'
@@ -1205,7 +1222,7 @@ This function replaces less frequently seen values (called as outlier values in 
 
 - `max_category`: Even if coverage is less, only (max_category - 1) categories will be mapped to actual name and rest to others. Caveat is when multiple categories have same rank, then #categories can be more than max_category. (Default value = 50).
 
-_Example:_
+🤓  _Example:_
 ```yaml
 outlier_categories:
   list_of_cols: ["cat_feature1","cat_feature2"]
@@ -1235,7 +1252,7 @@ This group of transformers functions used to converting a categorical attribute 
 
 - `cardinality_threshold`: Defines threshold to skip columns with higher cardinality values from encoding. Default value is 100.
 
-_Example:_
+🤓  _Example:_
 ```yaml
 cat_to_num_unsupervised:
   list_of_cols: ["cat_feature1","cat_feature2"]
@@ -1256,7 +1273,7 @@ cat_to_num_unsupervised:
 
 - `event_label`: Value of (positive) event (i.e label 1) (Default value = 1).
 
-_Example:_
+🤓  _Example:_
 ```yaml
 cat_to_num_supervised:
   list_of_cols: cat_feature1 | cat_feature2
@@ -1277,7 +1294,7 @@ This group of transformers functions used to rescale attribute(s). Users should 
 
 - `drop_cols`: List of columns to be dropped e.g., ["col1","col2"].
 
-_Example:_
+🤓  _Example:_
 ```yaml
 normalization:
   list_of_cols: ["num_feature1","num_feature2"]
@@ -1292,7 +1309,7 @@ normalization:
 
 - `drop_cols`: List of columns to be dropped e.g., ["col1","col2"].
 
-_Example:_
+🤓  _Example:_
 ```yaml
 z_standardization:
   list_of_cols: ["num_feature1","num_feature2"]
@@ -1307,7 +1324,7 @@ z_standardization:
 
 - `drop_cols`: List of columns to be dropped e.g., ["col1","col2"].
 
-_Example:_
+🤓  _Example:_
 ```yaml
 IQR_standardization:
   list_of_cols: ["num_feature1","num_feature2","num_feature3"]
@@ -1336,7 +1353,7 @@ This group of transformer functions used to generate latent features which reduc
 
 - `stats_missing`: Takes arguments for read_dataset (data_ingest module) function in a dictionary format to read pre-saved statistics on missing count/pct i.e. if measures_of_counts or missingCount_computation (data_analyzer.stats_generator module) has been computed & saved before. (Default value = {}).
 
-_Example:_
+🤓  _Example:_
 ```yaml
 PCA_latentFeatures:
   list_of_cols: ["num_feature1","num_feature2","num_feature3"]
@@ -1371,7 +1388,7 @@ PCA_latentFeatures:
 
 - `stats_missing`: Takes arguments for read_dataset (data_ingest module) function in a dictionary format to read pre-saved statistics on missing count/pct i.e. if measures_of_counts or missingCount_computation (data_analyzer.stats_generator module) has been computed & saved before. (Default value = {})
 
-_Example:_
+🤓  _Example:_
 ```yaml
 autoencoder_latentFeatures:
   list_of_cols: ["num_feature1","num_feature2","num_feature3"]
@@ -1398,9 +1415,9 @@ autoencoder_latentFeatures:
    For more information on available configuration options, see the following external
    documentation:
    
-     - [Write CSV files](https://sparkbyexamples.com/pyspark/pyspark-read-csv-file-into-dataframe/)
-     - [Write Parquet files](https://sparkbyexamples.com/pyspark/pyspark-read-and-write-parquet-file/)
-     - [Write Avro files](https://sparkbyexamples.com/spark/read-write-avro-file-spark-dataframe/)
+     - [📖 Writing CSV files](https://sparkbyexamples.com/pyspark/pyspark-read-csv-file-into-dataframe/)
+     - [📖 Writing Parquet files](https://sparkbyexamples.com/pyspark/pyspark-read-and-write-parquet-file/)
+     - [📖 Writing Avro files](https://sparkbyexamples.com/spark/read-write-avro-file-spark-dataframe/)
 
 ## 📑 `write_main`
 
@@ -1419,9 +1436,9 @@ autoencoder_latentFeatures:
    For more information on available configuration options, see the following external
    documentation:
    
-     - [Write CSV files](https://sparkbyexamples.com/pyspark/pyspark-read-csv-file-into-dataframe/)
-     - [Write Parquet files](https://sparkbyexamples.com/pyspark/pyspark-read-and-write-parquet-file/)
-     - [Write Avro files](https://sparkbyexamples.com/spark/read-write-avro-file-spark-dataframe/)
+     - [📖 Writing CSV files](https://sparkbyexamples.com/pyspark/pyspark-read-csv-file-into-dataframe/)
+     - [📖 Writing Parquet files](https://sparkbyexamples.com/pyspark/pyspark-read-and-write-parquet-file/)
+     - [📖 Writing Avro files](https://sparkbyexamples.com/spark/read-write-avro-file-spark-dataframe/)
 
 ## 📑 `write_stats`
 
@@ -1430,7 +1447,6 @@ autoencoder_latentFeatures:
 - `file_type`: (CSV, Parquet or Avro). file format of final dataset
 
 - `file_configs` (optional): Rest of the valid configuration can be passed through this options e.g., repartition, mode, compression, header, delimiter, inferSchema etc. This might look like: 
-
    ```yaml
    file_configs:
       mode: overwrite
@@ -1438,10 +1454,10 @@ autoencoder_latentFeatures:
       delimiter: ","
       inferSchema: True
    ```
-
    For more information on available configuration options, see the following external
    documentation:
    
-     - [Write CSV files](https://sparkbyexamples.com/pyspark/pyspark-read-csv-file-into-dataframe/)
-     - [Write Parquet files](https://sparkbyexamples.com/pyspark/pyspark-read-and-write-parquet-file/)
-     - [Write Avro files](https://sparkbyexamples.com/spark/read-write-avro-file-spark-dataframe/)
+     - [📖 Writing CSV files](https://sparkbyexamples.com/pyspark/pyspark-read-csv-file-into-dataframe/)
+     - [📖 Writing Parquet files](https://sparkbyexamples.com/pyspark/pyspark-read-and-write-parquet-file/)
+     - [📖 Writing Avro files](https://sparkbyexamples.com/spark/read-write-avro-file-spark-dataframe/)
+     
