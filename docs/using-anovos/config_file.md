@@ -1300,6 +1300,8 @@ This function assigns less frequently seen values in a categorical column to a n
   rest to others. Caveat is when multiple categories have same rank, then #categories can be more than max_category.
   Defaults to `50`.
 
+**🚧 TODO: Provide an example for modifying different sets of columns with different coverage settings.**
+
 🤓  _Example:_
 ```yaml
 outlier_categories:
@@ -1345,6 +1347,8 @@ numerical conversion using supervised method should be commented.
 - `cardinality_threshold`: Columns with a cardinality above this threshold are excluded from enconding.
   Defaults to `100`.
 
+**🚧 TODO: Provide an example for modifying different sets of columns with different methods and cardinality thresholds.**
+
 🤓  _Example:_
 ```yaml
 cat_to_num_unsupervised:
@@ -1379,7 +1383,11 @@ cat_to_num_supervised:
 
 ### `numerical_rescaling`
 
-This group of transformers functions used to rescale attribute(s). Users should use only one function at a time and section of other functions should be commented like if user want to use normalization method then all Sections of Z-standarization and IQR-standarization should be commented.
+Group of functions to rescale numerical attributes.
+
+**🚧 TODO: Please clarify and provide an example for the following:**
+Users should use only one function at a time and section of other functions should be commented like if user want 
+to use normalization method then all Sections of Z-standarization and IQR-standarization should be commented.
 
 #### `normalization`
 
@@ -1434,7 +1442,11 @@ IQR_standardization:
 
 ### `numerical_latentFeatures`
 
-This group of transformer functions used to generate latent features which reduces the dimensionality of the input dataframe. Users should use only one function at a time and section of other function should be commented like if user want to use PCA method then all Section of AutoEncoder method should be commented.
+Group of functions to generate latent features to reduce the dimensionality of the input dataset.
+
+**🚧 TODO: Please clarify and provide an example for the following:**
+Users should use only one function at a time and section of other function should be commented like if user
+want to use PCA method then all Section of AutoEncoder method should be commented.
 
 #### `PCA_latentFeatures`
 
@@ -1453,6 +1465,8 @@ This group of transformer functions used to generate latent features which reduc
 - `imputation_configs`: Takes input in dictionary format. Imputation function name is provided with key "imputation_name". optional arguments pertaining to that imputation function can be provided with argument name as key. (Default value = {"imputation_function": "imputation_MMM"})
 
 - `stats_missing`: Takes arguments for read_dataset (data_ingest module) function in a dictionary format to read pre-saved statistics on missing count/pct i.e. if measures_of_counts or missingCount_computation (data_analyzer.stats_generator module) has been computed & saved before. (Default value = {}).
+
+**🚧 TODO: Provide an example for modifying different sets of columns with different settings.**
 
 🤓  _Example:_
 ```yaml
@@ -1488,6 +1502,8 @@ PCA_latentFeatures:
 - `imputation_configs`: Takes input in dictionary format. Imputation function name is provided with key "imputation_name". optional arguments pertaining to that imputation function can be provided with argument name as key. (Default value = {"imputation_function": "imputation_MMM"})
 
 - `stats_missing`: Takes arguments for read_dataset (data_ingest module) function in a dictionary format to read pre-saved statistics on missing count/pct i.e. if measures_of_counts or missingCount_computation (data_analyzer.stats_generator module) has been computed & saved before. (Default value = {})
+
+**🚧 TODO: Provide an example for modifying different sets of columns with different settings.**
 
 🤓  _Example:_
 ```yaml
