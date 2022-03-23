@@ -1452,19 +1452,29 @@ want to use PCA method then all Section of AutoEncoder method should be commente
 
 🔎 _Corresponds to [`transformers.PCA_latentFeatures`](../api/data_transformer/transformers.md#anovos.data_transformer.transformers.PCA_latentFeatures)_
 
-- `list_of_cols`: List of numerical columns to encode e.g.,  ["col1", "col2"]. "all" can be passed to include all numerical columns for analysis.
+- `list_of_cols`:  The numerical columns (list of strings or string of column names separated by `|`) to standardize.
+  Can be set to `"all"` to include all numerical columns.
 
-- `drop_cols`: List of columns to be dropped e.g.,  ["col1", "col2"].
+- `drop_cols`: The columns (list of strings or string of column names separated by `|`) 
+  to exclude from latent features computation.
 
-- `explained_variance_cutoff`: Determines the number of encoded columns in the output. If N is the smallest integer such that top N encoded columns explain more than explained_variance_cutoff variance,  these N columns will be selected. (Default value = 0.95)
+- `explained_variance_cutoff`: The required explained variance cutoff.
+  Determines the number of encoded columns in the output.
+  If `N` is the smallest integer such that the top `N` encoded columns explain more than the given variance threshold,
+  these `N` columns be selected.
+  Defaults to `0.95`.
 
-- `standardization`:  Boolean argument – True or False. True,  if the standardization required. (Default value = True)
+- `standardization`:  If `True` (the default), standardization is applied. `False` otherwise.
 
-- `imputation`: Boolean argument – True or False. True,  if the imputation required. (Default value = False)
+**🚧 TODO: Do we need a `standardization_configs` option here, just as we have it for `autoencoder_latentFeatures`?**
 
-- `imputation_configs`: Takes input in dictionary format. Imputation function name is provided with key "imputation_name". optional arguments pertaining to that imputation function can be provided with argument name as key. (Default value = {"imputation_function": "imputation_MMM"})
+- `imputation`: If `True`, imputation is applied. `False` (the default) otherwise.
 
-- `stats_missing`: Takes arguments for read_dataset (data_ingest module) function in a dictionary format to read pre-saved statistics on missing count/pct i.e. if measures_of_counts or missingCount_computation (data_analyzer.stats_generator module) has been computed & saved before. (Default value = {}).
+- `imputation_configs`: Configuration for imputation in dictionary format.
+  The name of the imputation function is specified with the key `imputation_name` (defaults to `imputation_MMM`).
+  Arguments for the imputation function can be passed using additional keys.
+
+- `stats_missing`: **🚧 TODO: Please clarify the following, link the respective sections, and provide an example.** Takes arguments for read_dataset (data_ingest module) function in a dictionary format to read pre-saved statistics on missing count/pct i.e. if measures_of_counts or missingCount_computation (data_analyzer.stats_generator module) has been computed & saved before. (Default value = {}).
 
 **🚧 TODO: Provide an example for modifying different sets of columns with different settings.**
 
@@ -1481,27 +1491,37 @@ PCA_latentFeatures:
 
 🔎 _Corresponds to [`transformers.PCA_latentFeatures`](../api/data_transformer/transformers.md#anovos.data_transformer.transformers.PCA_latentFeatures)_
 
-- `list_of_cols`:  List of numerical columns to encode e.g.,  ["col1", "col2"]. "all" can be passed to include all numerical columns for analysis.
+- `list_of_cols`:  The numerical columns (list of strings or string of column names separated by `|`) to standardize.
+  Can be set to `"all"` to include all numerical columns.
 
-- `drop_cols`: List of columns to be dropped e.g.,  ["col1", "col2"].
+- `drop_cols`: The columns (list of strings or string of column names separated by `|`) 
+  to exclude from latent features computation.
 
-- `reduction_params`: Determines the number of encoded features in the result. If reduction_params < 1,  int(reduction_params * (number of columns)) columns will be generated. Else,  reduction_params columns will be generated. (Default value = 0.5)
+- `reduction_params`: Determines the number of resulting encoded features.
+  If `reduction_params` is below `1`, `reduction_params * "number of columns"` columns will be generated.
+  Else, `reduction_params` columns will be generated.
+  Defaults to `0.5`, i.e., the number of columns in the result is half the of number of columns in the input.
 
-- `sample_size`: Maximum rows for training the autoencoder model using tensorflow. (Default value = 500000)
+- `sample_size`: Maximum number of rows used for training the autoencoder model. Defaults to `500000` (`5e5`).
 
-- `epochs`: Integer - number of epochs to train the tensorflow model. (Default value = 100)
+- `epochs`: The number of epochs to train the autoencoder model. Defaults to `100`.
 
-- `batch_size`: Integer - number of samples per gradient update when fitting the tensorflow model. (Default value = 256)
+- `batch_size`: The batch size for autoencoder model training. Defaults to `256`.
 
-- `standardization`: Boolean argument – True or False. True,  if the standardization required. (Default value = True)
+- `standardization`:  If `True` (the default), standardization is applied. `False` otherwise.
 
-- `standardization_configs`: z_standardization function arguments in dictionary format. (Default value = {"pre_existing_model": False)
+- `standardization_configs`: The arguments for the
+  [`z_standardization`](../api/data_transformer/transformers.md#anovos.data_transformer.transformers.z_standardization)
+  function in dictionary format.
+  Defaults to `{"pre_existing_model": False}`
 
-- `imputation`: Boolean argument – True or False. True,  if the imputation required. (Default value = False)
+- `imputation`: If `True`, imputation is applied. `False` (the default) otherwise.
 
-- `imputation_configs`: Takes input in dictionary format. Imputation function name is provided with key "imputation_name". optional arguments pertaining to that imputation function can be provided with argument name as key. (Default value = {"imputation_function": "imputation_MMM"})
+- `imputation_configs`: Configuration for imputation in dictionary format.
+  The name of the imputation function is specified with the key `imputation_name` (defaults to `imputation_MMM`).
+  Arguments for the imputation function can be passed using additional keys.
 
-- `stats_missing`: Takes arguments for read_dataset (data_ingest module) function in a dictionary format to read pre-saved statistics on missing count/pct i.e. if measures_of_counts or missingCount_computation (data_analyzer.stats_generator module) has been computed & saved before. (Default value = {})
+- `stats_missing`:  **🚧 TODO: Please clarify the following, link the respective sections, and provide an example.** Takes arguments for read_dataset (data_ingest module) function in a dictionary format to read pre-saved statistics on missing count/pct i.e. if measures_of_counts or missingCount_computation (data_analyzer.stats_generator module) has been computed & saved before. (Default value = {})
 
 **🚧 TODO: Provide an example for modifying different sets of columns with different settings.**
 
