@@ -1192,7 +1192,7 @@ want to use attribute binning method then all Section of monotonic binning metho
 🔎 _Corresponds to [`transformers.attribute_binning`](../api/data_transformer/transformers.md#anovos.data_transformer.transformers.attribute_binning)_
 
 - `list_of_cols`:  The numerical columns (list of strings or string of column names separated by `|`) to transform.
-  Can be set to `"all"` to include all columns.
+  Can be set to `"all"` to include all numerical columns.
 
 - `drop_cols`: The columns (list of strings or string of column names separated by `|`) 
   to exclude from attribute binning.
@@ -1224,7 +1224,7 @@ attribute_binning:
 🔎 _Corresponds to [`transformers.monotonic_binning`](../api/data_transformer/transformers.md#anovos.data_transformer.transformers.monotonic_binning)_
 
 - `list_of_cols`: The numerical columns (list of strings or string of column names separated by `|`) to transform.
-  Can be set to `"all"` to include all columns.
+  Can be set to `"all"` to include all numerical columns.
 
 - `drop_cols`: The columns (list of strings or string of column names separated by `|`) 
   to exclude from monotonic binning.
@@ -1255,11 +1255,15 @@ attribute_binning:
 
 ### `numerical_expression`
 
+**🚧 TODO: Add a brief description.**
+
 #### `expression_parser`
 
 🔎 _Corresponds to [`transformers.expression_parser`](../api/data_transformer/transformers.md#anovos.data_transformer.transformers.expression_parser)_
 
-- `list_of_expr`: List of expressions to evaluate as new features e.g.,  ["expr1", "expr2"]. Alternatively,  expressions can be specified in a string format,  where different expressions are separated by pipe delimiter “|” e.g.,  "expr1|expr2".
+**🚧 TODO: Which columns are these expressions applied to? What syntax is allowed? Can I specify multiple blocks?**
+
+- `list_of_expr`: List of expressions to evaluate as new features e.g.,  ["expr1", "expr2"]. Alternatively, expressions can be specified in a string format, where different expressions are separated by pipe delimiter “|” e.g.,  "expr1|expr2".
 
 - `postfix`: postfix for new feature name.Naming convention "f" + expression_index + postfix e.g. with postfix of "new",  new added features are named as f0new,  f1new etc. (Default value = "").
 
@@ -1269,21 +1273,32 @@ expression_parser:
   list_of_expr: 'log(age) + 1.5|sin(capital-gain)+cos(capital-loss)'
 ```
 
+**🚧 TODO: Describe in words what this example represents.**
+
 ### `categorical_outliers`
 
-This function replaces less frequently seen values (called as outlier values in the current context) in a categorical column by 'others'.
+This function assigns less frequently seen values in a categorical column to a new category `others`.
+
+**🚧 TODO: Can I change the name of the new category to something else? What happens if there already is a category `others`?**
 
 #### `outlier_categories`
 
 🔎 _Corresponds to [`transformers.outlier_categories`](../api/data_transformer/transformers.md#anovos.data_transformer.transformers.outlier_categories)_
 
-- `list_of_cols`: List of categorical columns to transform e.g.,  ["col1", "col2"].
+- `list_of_cols`: The categorical columns (list of strings or string of column names separated by `|`) to transform.
+  Can be set to `"all"` to include all categorical columns.
 
-- `drop_cols`: List of columns to be dropped e.g.,  ["col1", "col2"]
+- `drop_cols`: The columns (list of strings or string of column names separated by `|`) 
+  to exclude from outlier transformation.
 
-- `coverage`: Defines the minimum % of rows that will be mapped to actual category name and the rest to be mapped to others and takes value between 0 to 1. Coverage of 0.8 can be interpreted as top frequently seen categories are considered till it covers minimum 80% of rows and rest lesser seen values are mapped to others. (Default value = 1.0)
+- `coverage`: The minimum fraction of rows that remain in their original category, given as a value between `0` and `1`.
+  For example, with a coverage of `0.8`, the categories that 80% of the rows belong to remain and the more seldom
+  occurring categories are mapped to `others`.
+  The default value is `1.0`, which means that no rows are changed to `others`.
 
-- `max_category`: Even if coverage is less,  only (max_category - 1) categories will be mapped to actual name and rest to others. Caveat is when multiple categories have same rank,  then #categories can be more than max_category. (Default value = 50).
+- `max_category`: Even if coverage is less, only (max_category - 1) categories will be mapped to actual name and 
+  rest to others. Caveat is when multiple categories have same rank, then #categories can be more than max_category.
+  Defaults to `50`.
 
 🤓  _Example:_
 ```yaml
@@ -1296,24 +1311,39 @@ outlier_categories:
 
 ### `categorical_encoding`
 
-This group of transformers functions used to converting a categorical attribute into numerical attribute(s). Users should use only one function at a time and section of other function should be commented like if user want to use categorical to numerical conversion using unsupervised method then all Section of categorical to numerical conversion using supervised method should be commented.
+This group of transformers functions used to converting a categorical attribute into numerical attribute(s).
+
+**🚧 TODO: Please clarify and provide an example for the following:**
+Users should use only one function at a time and section of other function should be commented like if user
+want to use categorical to numerical conversion using unsupervised method then all Section of categorical to
+numerical conversion using supervised method should be commented.
 
 #### `cat_to_num_unsupervised`
 
 🔎 _Corresponds to [`transformers.cat_to_num_unsupervised`](../api/data_transformer/transformers.md#anovos.data_transformer.transformers.cat_to_num_unsupervised)_
 
-- `list_of_cols`: List of categorical columns to transform e.g.,  ["col1", "col2"]
+- `list_of_cols`: The categorical columns (list of strings or string of column names separated by `|`) to encode.
+  Can be set to `"all"` to include all categorical columns.
 
-- `drop_cols`: List of columns to be dropped e.g.,  ["col1", "col2"].
+- `drop_cols`: The columns (list of strings or string of column names separated by `|`) 
+  to exclude from categorical encoding.
 
-- `method_type`: 1 for Label Encoding or 0 for One hot encoding. 
-  In label encoding,  each categorical value is assigned a unique integer based on alphabetical or frequency ordering (both ascending & descending options are available that can be selected by index_order argument). 
 
-  In one-hot encoding,  every unique value in the column will be added in a form of dummy/binary column. (Default value = 1)
+- `method_type`: The encoding method. Set to `1` for label encoding and to `0` for one-hot encoding.
+  **🚧 TODO: Shouldn't this be `label_encoding` and `onehot_encoding` to be consistent with the other methods?**
+  With label encoding, each categorical value is assigned a unique integer based on the ordering specified through `index_order`.
+  With one-hot encoding, each categorical value will be represented by a binary column.
+  Defaults to `1` (label encoding).
 
-- `index_order`: frequencyDesc",  "frequencyAsc",  "alphabetDesc",  "alphabetAsc". Valid only for Label Encoding method_type. (Default value = "frequencyDesc")
+- `index_order`: The order assigned to the categorical values when `method_type` is set to `1` (label encoding).
+  Possible values are:
+    - `frequencyDesc` (default): Order by descending frequency.
+    - `frequencyAsc`: Order by ascending frequency.
+    - `alphabetDesc`: Order alphabetically (descending).
+    - `alphabetAsc`: Order alphabetically (ascending).
 
-- `cardinality_threshold`: Defines threshold to skip columns with higher cardinality values from encoding. Default value is 100.
+- `cardinality_threshold`: Columns with a cardinality above this threshold are excluded from enconding.
+  Defaults to `100`.
 
 🤓  _Example:_
 ```yaml
@@ -1328,13 +1358,15 @@ cat_to_num_unsupervised:
 
 🔎 _Corresponds to [`transformers.cat_to_num_supervised`](../api/data_transformer/transformers.md#anovos.data_transformer.transformers.cat_to_num_supervised)_
 
-- `list_of_cols`: List of catigorical columns to transform e.g.,  ["col1", "col2"].
+- `list_of_cols`: The categorical columns (list of strings or string of column names separated by `|`) to encode.
+  Can be set to `"all"` to include all categorical columns.
 
-- `drop_cols`: List of columns to be dropped e.g.,  ["col1", "col2"].
+- `drop_cols`: The columns (list of strings or string of column names separated by `|`) 
+  to exclude from categorical encoding.
 
-- `label_col`: Label/Target column (Default value = "label")
+- `label_col`: The label/target column. Defaults to `label`.
 
-- `event_label`: Value of (positive) event (i.e label 1) (Default value = 1).
+- `event_label`: Value of the (positive) event (i.e, label `1`/`true`). Defaults to `1`.
 
 🤓  _Example:_
 ```yaml
@@ -1353,9 +1385,11 @@ This group of transformers functions used to rescale attribute(s). Users should 
 
 🔎 _Corresponds to [`transformers.normalization`](../api/data_transformer/transformers.md#anovos.data_transformer.transformers.normalization)_
 
-- `list_of_cols`: List of numerical columns to transform e.g.,  ["col1", "col2"]. "all" can be passed to include all numerical columns for analysis.
+- `list_of_cols`: The numerical columns (list of strings or string of column names separated by `|`) to normalize.
+  Can be set to `"all"` to include all numerical columns.
 
-- `drop_cols`: List of columns to be dropped e.g.,  ["col1", "col2"].
+- `drop_cols`: The columns (list of strings or string of column names separated by `|`) 
+  to exclude from normalization.
 
 🤓  _Example:_
 ```yaml
@@ -1368,9 +1402,11 @@ normalization:
 
 🔎 _Corresponds to [`transformers.z_standardization`](../api/data_transformer/transformers.md#anovos.data_transformer.transformers.z_standardization)_
 
-- `list_of_cols`: List of numerical columns to transform e.g.,  ["col1", "col2"]. "all" can be passed to include all numerical columns for analysis.
+- `list_of_cols`: The numerical columns (list of strings or string of column names separated by `|`) to standardize.
+  Can be set to `"all"` to include all numerical columns.
 
-- `drop_cols`: List of columns to be dropped e.g.,  ["col1", "col2"].
+- `drop_cols`: The columns (list of strings or string of column names separated by `|`) 
+  to exclude from standardization.
 
 🤓  _Example:_
 ```yaml
@@ -1383,9 +1419,11 @@ z_standardization:
 
 🔎 _Corresponds to [`transformers.IQR_standardization`](../api/data_transformer/transformers.md#anovos.data_transformer.transformers.IQR_standardization)_
 
-- `list_of_cols`: List of numerical columns to transform e.g.,  ["col1", "col2"].
+- `list_of_cols`: The numerical columns (list of strings or string of column names separated by `|`) to standardize.
+  Can be set to `"all"` to include all numerical columns.
 
-- `drop_cols`: List of columns to be dropped e.g.,  ["col1", "col2"].
+- `drop_cols`: The columns (list of strings or string of column names separated by `|`) 
+  to exclude from standardization.
 
 🤓  _Example:_
 ```yaml
