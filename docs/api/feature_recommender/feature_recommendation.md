@@ -93,7 +93,7 @@ def feature_recommendation(
     if top_n > len(list_train_fer):
         raise TypeError("top_n value is too large")
     if type(threshold) != float:
-        raise TypeError("Invalid input for building_corpus")
+        raise TypeError("Invalid input for threshold")
     if threshold < 0 or threshold > 1:
         raise TypeError(
             "Invalid input for threshold. Threshold value is between 0 and 1"
@@ -105,7 +105,7 @@ def feature_recommendation(
         df_rec_fr = df_rec_fer[df_rec_fer.iloc[:, 2].str.contains(suggested_industry)]
         list_keep = list(df_rec_fr.index)
         list_embedding_train_fr = [
-            list_embedding_train_fer.get().tolist()[x] for x in list_keep
+            list_embedding_train_fer.get.tolist()[x] for x in list_keep
         ]
         df_rec_fr = df_rec_fr.reset_index(drop=True)
     elif suggested_usecase != "all" and suggested_industry == "all":
@@ -113,7 +113,7 @@ def feature_recommendation(
         df_rec_fr = df_rec_fer[df_rec_fer.iloc[:, 3].str.contains(suggested_usecase)]
         list_keep = list(df_rec_fr.index)
         list_embedding_train_fr = [
-            list_embedding_train_fer.get().tolist()[x] for x in list_keep
+            list_embedding_train_fer.get.tolist()[x] for x in list_keep
         ]
         df_rec_fr = df_rec_fr.reset_index(drop=True)
     elif suggested_usecase != "all" and suggested_industry != "all":
@@ -126,7 +126,7 @@ def feature_recommendation(
         if len(df_rec_fr) > 0:
             list_keep = list(df_rec_fr.index)
             list_embedding_train_fr = [
-                list_embedding_train_fer.get().tolist()[x] for x in list_keep
+                list_embedding_train_fer.get.tolist()[x] for x in list_keep
             ]
             df_rec_fr = df_rec_fr.reset_index(drop=True)
         else:
@@ -145,7 +145,7 @@ def feature_recommendation(
             return df_out
     else:
         df_rec_fr = df_rec_fer
-        list_embedding_train_fr = list_embedding_train_fer.get()
+        list_embedding_train_fr = list_embedding_train_fer.get
 
     if name_column is None:
         df_out = pd.DataFrame(
@@ -769,7 +769,7 @@ def feature_recommendation(
     if top_n > len(list_train_fer):
         raise TypeError("top_n value is too large")
     if type(threshold) != float:
-        raise TypeError("Invalid input for building_corpus")
+        raise TypeError("Invalid input for threshold")
     if threshold < 0 or threshold > 1:
         raise TypeError(
             "Invalid input for threshold. Threshold value is between 0 and 1"
@@ -781,7 +781,7 @@ def feature_recommendation(
         df_rec_fr = df_rec_fer[df_rec_fer.iloc[:, 2].str.contains(suggested_industry)]
         list_keep = list(df_rec_fr.index)
         list_embedding_train_fr = [
-            list_embedding_train_fer.get().tolist()[x] for x in list_keep
+            list_embedding_train_fer.get.tolist()[x] for x in list_keep
         ]
         df_rec_fr = df_rec_fr.reset_index(drop=True)
     elif suggested_usecase != "all" and suggested_industry == "all":
@@ -789,7 +789,7 @@ def feature_recommendation(
         df_rec_fr = df_rec_fer[df_rec_fer.iloc[:, 3].str.contains(suggested_usecase)]
         list_keep = list(df_rec_fr.index)
         list_embedding_train_fr = [
-            list_embedding_train_fer.get().tolist()[x] for x in list_keep
+            list_embedding_train_fer.get.tolist()[x] for x in list_keep
         ]
         df_rec_fr = df_rec_fr.reset_index(drop=True)
     elif suggested_usecase != "all" and suggested_industry != "all":
@@ -802,7 +802,7 @@ def feature_recommendation(
         if len(df_rec_fr) > 0:
             list_keep = list(df_rec_fr.index)
             list_embedding_train_fr = [
-                list_embedding_train_fer.get().tolist()[x] for x in list_keep
+                list_embedding_train_fer.get.tolist()[x] for x in list_keep
             ]
             df_rec_fr = df_rec_fr.reset_index(drop=True)
         else:
@@ -821,7 +821,7 @@ def feature_recommendation(
             return df_out
     else:
         df_rec_fr = df_rec_fer
-        list_embedding_train_fr = list_embedding_train_fer.get()
+        list_embedding_train_fr = list_embedding_train_fer.get
 
     if name_column is None:
         df_out = pd.DataFrame(
