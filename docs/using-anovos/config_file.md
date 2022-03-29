@@ -820,7 +820,7 @@ to detect drift within and between datasets.
   to exclude from the drift statistics.
 
 - `method_type`: Method(s) to apply to detect drift  (list or string of methods separated by `|`).
-  Possible values are [`PSI`](https://www.listendata.com/2015/05/population-stability-index.html),  `JSD`,  `HD`,  and `KS`.
+  Possible values are [`PSI`](https://www.listendata.com/2015/05/population-stability-index.html),  [`JSD`](https://medium.com/datalab-log/measuring-the-statistical-similarity-between-two-samples-using-jensen-shannon-and-kullback-leibler-8d05af514b15),  [`HD`](https://www.tifr.res.in/~prahladh/teaching/2011-12/comm/lectures/l12.pdf),  and [`KS`](https://www.itl.nist.gov/div898/handbook/eda/section3/eda35g.htm).
   If set to `all`,  all available metrics are calculated.
   **🚧 TODO: Link a tutorial**
 
