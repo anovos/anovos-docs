@@ -63,12 +63,16 @@ jobs:
           rmdir ./api/anovos
           find . -name '*.html' -exec sh -c 'mv "$0" "${0%.html}.md"' {} \;
 
+      - name: Remove unnecessary files
+        run: |
+          rm -f /api/version.md
+
       - name: Modify overviews
         run: |
           # ensure that the overview is the first entry in each section
           find . -name 'index.md' -exec sh -c 'mv "$0" "${0%/*}/_${0##*/}"' {} \;
           # replace the headline
-          find . -name '_index.md' -exec sh -c 'sed -i "1s/.*/# Overview/ $0"' {} \;
+          find . -name '_index.md' -exec sh -c 'sed -i "1s/.*/# Overview/" $0' {} \;
 
       - name: Merge API docs into docs
         run: |
