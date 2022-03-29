@@ -1,4 +1,4 @@
-# <code>feature_recommender</code>
+# Overview
 ## Sub-modules
 <dl>
 <dt><code class="name"><a title="anovos.feature_recommender.featrec_init" href="featrec_init.html">anovos.feature_recommender.featrec_init</a></code></dt>

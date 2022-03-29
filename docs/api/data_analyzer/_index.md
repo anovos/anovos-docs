@@ -1,4 +1,4 @@
-# <code>data_analyzer</code>
+# Overview
 ## Sub-modules
 <dl>
 <dt><code class="name"><a title="anovos.data_analyzer.association_evaluator" href="association_evaluator.html">anovos.data_analyzer.association_evaluator</a></code></dt>
