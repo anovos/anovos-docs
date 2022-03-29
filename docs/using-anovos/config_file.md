@@ -808,7 +808,7 @@ to detect drift within and between datasets.
 
 ### `drift_statistics`
 
-🔎 _Corresponds to [`drfit.detector.statistics`](../api/drift/detector.md#anovos.drift.detector.statistics)_
+🔎 _Corresponds to [`drift.detector.statistics`](../api/drift/detector.md#anovos.drift.detector.statistics)_
 
 #### `configs`
 
