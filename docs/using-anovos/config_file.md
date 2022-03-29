@@ -822,7 +822,6 @@ to detect drift within and between datasets.
 - `method_type`: Method(s) to apply to detect drift  (list or string of methods separated by `|`).
   Possible values are [`PSI`](https://www.listendata.com/2015/05/population-stability-index.html),  [`JSD`](https://medium.com/datalab-log/measuring-the-statistical-similarity-between-two-samples-using-jensen-shannon-and-kullback-leibler-8d05af514b15),  [`HD`](https://www.tifr.res.in/~prahladh/teaching/2011-12/comm/lectures/l12.pdf),  and [`KS`](https://www.itl.nist.gov/div898/handbook/eda/section3/eda35g.htm).
   If set to `all`,  all available metrics are calculated.
-  **🚧 TODO: Link a tutorial**
 
 - `threshold`: Threshold above which attributes are flagged as exhibiting drift.
 
@@ -840,8 +839,7 @@ to detect drift within and between datasets.
   data is loaded.
 
 
-- `drift_statistics_folder`. drift_statistics folder must contain attribute_binning & frequency_counts folders. If pre_existing_source is False,  this can be used for saving the details. Default "NA" for temporarily saving source dataset attribute_binning folder.
-  **🚧 TODO: Clarify. This is confusing for users that are not familiar with the library's internals.**
+- `drift_statistics_folder`. drift_statistics folder must contain the output from `attribute_binning` & `frequency_counts`. If `pre_existing_source` is False,  this can be used for saving the details. Default folder "NA" is used for saving the intermediate output
 
 🤓  _Example:_
 ```yaml
@@ -1035,8 +1033,7 @@ See the [report generation documentation](data-reports/final_report.md) for more
 
 - `master_path`: The path to the preprocessed data generated during the [`report_preprocessing`](#report_preprocessing) step.
 
-- `id_col`: The ID column is accepted to ensure & restrict unnecessary analysis to be performed on the same.
-  **🚧 TODO: Please clarify what that means.**
+- `id_col`: The ID column present in the input dataset
 
 - `label_col`: Name of label or target column in the input dataset.
 
