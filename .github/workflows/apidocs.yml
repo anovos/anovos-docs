@@ -63,10 +63,6 @@ jobs:
           rmdir ./api/anovos
           find . -name '*.html' -exec sh -c 'mv "$0" "${0%.html}.md"' {} \;
 
-      - name: Remove unnecessary files
-        run: |
-          rm -f /api/version.md
-
       - name: Modify overviews
         run: |
           # ensure that the overview is the first entry in each section
@@ -83,6 +79,10 @@ jobs:
         run: |
           rm -rf docs/license.md || true
           cp anovos/LICENSE docs/license.md
+
+      - name: Remove unnecessary files
+        run: |
+          rm -rf docs/api/version.md || true
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3
