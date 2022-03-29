@@ -2,27 +2,24 @@
 <p>Datetime module supports various transformations related to date and timestamp datatype columns.
 All available functions in this release can be classified into the following 4 categories:</p>
 <p>Conversion:
-- Between Timestamp and Epoch (<code><a title="anovos.data_transformer.datetime.timestamp_to_unix" href="#anovos.data_transformer.datetime.timestamp_to_unix">timestamp_to_unix()</a></code> and <code><a title="anovos.data_transformer.datetime.unix_to_timestamp" href="#anovos.data_transformer.datetime.unix_to_timestamp">unix_to_timestamp()</a></code>)
-- Between Timestamp and String (<code><a title="anovos.data_transformer.datetime.timestamp_to_string" href="#anovos.data_transformer.datetime.timestamp_to_string">timestamp_to_string()</a></code> and <code><a title="anovos.data_transformer.datetime.string_to_timestamp" href="#anovos.data_transformer.datetime.string_to_timestamp">string_to_timestamp()</a></code>)
-- Between Date Formats (<code><a title="anovos.data_transformer.datetime.dateformat_conversion" href="#anovos.data_transformer.datetime.dateformat_conversion">dateformat_conversion()</a></code>)
-- Between Time Zones (<code><a title="anovos.data_transformer.datetime.timezone_conversion" href="#anovos.data_transformer.datetime.timezone_conversion">timezone_conversion()</a></code>)</p>
+- Between Timestamp and Epoch (timestamp_to_unix and unix_to_timestamp)
+- Between Timestamp and String (timestamp_to_string and string_to_timestamp)
+- Between Date Formats (dateformat_conversion)
+- Between Time Zones (timezone_conversion)</p>
 <p>Calculation:
-- Time difference - [Timestamp 1 - Timestamp 2] (<code><a title="anovos.data_transformer.datetime.time_diff" href="#anovos.data_transformer.datetime.time_diff">time_diff()</a></code>)
-- Time elapsed - [Current - Given Timestamp] (<code><a title="anovos.data_transformer.datetime.time_elapsed" href="#anovos.data_transformer.datetime.time_elapsed">time_elapsed()</a></code>)
-- Adding/subtracting time units (<code><a title="anovos.data_transformer.datetime.adding_timeUnits" href="#anovos.data_transformer.datetime.adding_timeUnits">adding_timeUnits()</a></code>)
-- Aggregate features at X granularity level (<code><a title="anovos.data_transformer.datetime.aggregator" href="#anovos.data_transformer.datetime.aggregator">aggregator()</a></code>)
-- Aggregate features with window frame (<code><a title="anovos.data_transformer.datetime.window_aggregator" href="#anovos.data_transformer.datetime.window_aggregator">window_aggregator()</a></code>)
-- Lagged features - lagged date and time diff from the lagged date (<code><a title="anovos.data_transformer.datetime.lagged_ts" href="#anovos.data_transformer.datetime.lagged_ts">lagged_ts()</a></code>)</p>
+- Time difference - [Timestamp 1 - Timestamp 2] (time_diff)
+- Time elapsed - [Current - Given Timestamp] (time_elapsed)
+- Adding/subtracting time units (adding_timeUnits)
+- Aggregate features at X granularity level (aggregator)
+- Aggregate features with window frame (window_aggregator)
+- Lagged features - lagged date and time diff from the lagged date (lagged_ts)</p>
 <p>Extraction:
-- Time component extraction (<code><a title="anovos.data_transformer.datetime.timeUnits_extraction" href="#anovos.data_transformer.datetime.timeUnits_extraction">timeUnits_extraction()</a></code>)
-- Start/end of month/year/quarter (<code><a title="anovos.data_transformer.datetime.start_of_month" href="#anovos.data_transformer.datetime.start_of_month">start_of_month()</a></code>, <code><a title="anovos.data_transformer.datetime.end_of_month" href="#anovos.data_transformer.datetime.end_of_month">end_of_month()</a></code>, <code><a title="anovos.data_transformer.datetime.start_of_year" href="#anovos.data_transformer.datetime.start_of_year">start_of_year()</a></code>, <code><a title="anovos.data_transformer.datetime.end_of_year" href="#anovos.data_transformer.datetime.end_of_year">end_of_year()</a></code>, <code><a title="anovos.data_transformer.datetime.start_of_quarter" href="#anovos.data_transformer.datetime.start_of_quarter">start_of_quarter()</a></code>
-and <code><a title="anovos.data_transformer.datetime.end_of_quarter" href="#anovos.data_transformer.datetime.end_of_quarter">end_of_quarter()</a></code>)</p>
+- Time component extraction (timeUnits_extraction)
+- Start/end of month/year/quarter (start_of_month, end_of_month, start_of_year, end_of_year, start_of_quarter and end_of_quarter)</p>
 <p>Binary features:
-- Timestamp comparison (<code><a title="anovos.data_transformer.datetime.timestamp_comparison" href="#anovos.data_transformer.datetime.timestamp_comparison">timestamp_comparison()</a></code>)
-- Is start/end of month/year/quarter nor not (<code><a title="anovos.data_transformer.datetime.is_monthStart" href="#anovos.data_transformer.datetime.is_monthStart">is_monthStart()</a></code>, <code><a title="anovos.data_transformer.datetime.is_monthEnd" href="#anovos.data_transformer.datetime.is_monthEnd">is_monthEnd()</a></code>, <code><a title="anovos.data_transformer.datetime.is_yearStart" href="#anovos.data_transformer.datetime.is_yearStart">is_yearStart()</a></code>, <code><a title="anovos.data_transformer.datetime.is_yearEnd" href="#anovos.data_transformer.datetime.is_yearEnd">is_yearEnd()</a></code>,
-<code><a title="anovos.data_transformer.datetime.is_quarterStart" href="#anovos.data_transformer.datetime.is_quarterStart">is_quarterStart()</a></code>, <code><a title="anovos.data_transformer.datetime.is_quarterEnd" href="#anovos.data_transformer.datetime.is_quarterEnd">is_quarterEnd()</a></code>)
-- Is first half of the year/selected hours/leap year/weekend or not (<code><a title="anovos.data_transformer.datetime.is_yearFirstHalf" href="#anovos.data_transformer.datetime.is_yearFirstHalf">is_yearFirstHalf()</a></code>, <code><a title="anovos.data_transformer.datetime.is_selectedHour" href="#anovos.data_transformer.datetime.is_selectedHour">is_selectedHour()</a></code>,
-<code><a title="anovos.data_transformer.datetime.is_leapYear" href="#anovos.data_transformer.datetime.is_leapYear">is_leapYear()</a></code> and <code><a title="anovos.data_transformer.datetime.is_weekend" href="#anovos.data_transformer.datetime.is_weekend">is_weekend()</a></code>)</p>
+- Timestamp comparison (timestamp_comparison)
+- Is start/end of month/year/quarter nor not (is_monthStart, is_monthEnd, is_yearStart, is_yearEnd, is_quarterStart, is_quarterEnd)
+- Is first half of the year/selected hours/leap year/weekend or not (is_yearFirstHalf, is_selectedHour, is_leapYear and is_weekend)</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -34,31 +31,27 @@ Datetime module supports various transformations related to date and timestamp d
 All available functions in this release can be classified into the following 4 categories:
 
 Conversion:
-- Between Timestamp and Epoch (`timestamp_to_unix` and `unix_to_timestamp`)
-- Between Timestamp and String (`timestamp_to_string` and `string_to_timestamp`)
-- Between Date Formats (`dateformat_conversion`)
-- Between Time Zones (`timezone_conversion`)
+- Between Timestamp and Epoch (timestamp_to_unix and unix_to_timestamp)
+- Between Timestamp and String (timestamp_to_string and string_to_timestamp)
+- Between Date Formats (dateformat_conversion)
+- Between Time Zones (timezone_conversion)
 
 Calculation:
-- Time difference - [Timestamp 1 - Timestamp 2] (`time_diff`)
-- Time elapsed - [Current - Given Timestamp] (`time_elapsed`)
-- Adding/subtracting time units (`adding_timeUnits`)
-- Aggregate features at X granularity level (`aggregator`)
-- Aggregate features with window frame (`window_aggregator`)
-- Lagged features - lagged date and time diff from the lagged date (`lagged_ts`)
+- Time difference - [Timestamp 1 - Timestamp 2] (time_diff)
+- Time elapsed - [Current - Given Timestamp] (time_elapsed)
+- Adding/subtracting time units (adding_timeUnits)
+- Aggregate features at X granularity level (aggregator)
+- Aggregate features with window frame (window_aggregator)
+- Lagged features - lagged date and time diff from the lagged date (lagged_ts)
 
 Extraction:
-- Time component extraction (`timeUnits_extraction`)
-- Start/end of month/year/quarter (`start_of_month`, `end_of_month`, `start_of_year`, `end_of_year`, `start_of_quarter`
- and `end_of_quarter`)
+- Time component extraction (timeUnits_extraction)
+- Start/end of month/year/quarter (start_of_month, end_of_month, start_of_year, end_of_year, start_of_quarter and end_of_quarter)
 
 Binary features:
-- Timestamp comparison (`timestamp_comparison`)
-- Is start/end of month/year/quarter nor not (`is_monthStart`, `is_monthEnd`, `is_yearStart`, `is_yearEnd`,
-`is_quarterStart`, `is_quarterEnd`)
-- Is first half of the year/selected hours/leap year/weekend or not (`is_yearFirstHalf`, `is_selectedHour`,
-`is_leapYear` and `is_weekend`)
-
+- Timestamp comparison (timestamp_comparison)
+- Is start/end of month/year/quarter nor not (is_monthStart, is_monthEnd, is_yearStart, is_yearEnd, is_quarterStart, is_quarterEnd)
+- Is first half of the year/selected hours/leap year/weekend or not (is_yearFirstHalf, is_selectedHour, is_leapYear and is_weekend)
 
 """
 import calendar

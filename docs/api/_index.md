@@ -1,4 +1,14 @@
 # <code>anovos</code>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre>
+```python
+from .version import __version__
+```
+</pre>
+</details>
 ## Sub-modules
 <dl>
 <dt><code class="name"><a title="anovos.data_analyzer" href="data_analyzer/index.html">anovos.data_analyzer</a></code></dt>
@@ -26,6 +36,10 @@
 <div class="desc"></div>
 </dd>
 <dt><code class="name"><a title="anovos.shared" href="shared/index.html">anovos.shared</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="anovos.version" href="version.html">anovos.version</a></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>

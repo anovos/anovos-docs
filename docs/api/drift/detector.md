@@ -24,6 +24,7 @@ from anovos.data_transformer.transformers import attribute_binning
 from anovos.shared.utils import attributeType_segregation
 from .distances import hellinger, psi, js_divergence, ks
 from .validations import check_distance_method, check_list_of_columns
+from ..shared.utils import platform_root_path
 
 
 @check_distance_method
@@ -42,6 +43,7 @@ def statistics(
     pre_existing_source: bool = False,
     source_path: str = "NA",
     model_directory: str = "drift_statistics",
+    run_type: str = "local",
     print_impact: bool = False,
 ):
     """
@@ -130,12 +132,14 @@ def statistics(
         If pre_existing_source is False, this argument can be used for saving the drift_statistics folder.
         The drift_statistics folder will have attribute_binning (binning model) & frequency_counts sub-folders.
         If pre_existing_source is True, this argument is path for referring the drift_statistics folder.
-        Default "NA" for temporarily saving source dataset attribute_binning folder. (Default value = "NA")
+        Default "NA" for temporarily saving data in "intermediate_data/" folder. (Default value = "NA")
     model_directory
         If pre_existing_source is False, this argument can be used for saving the drift stats to folder.
         The default drift statics directory is drift_statistics folder will have attribute_binning
         If pre_existing_source is True, this argument is model_directory for referring the drift statistics dir.
         Default "drift_statistics" for temporarily saving source dataset attribute_binning folder. (Default value = "drift_statistics")
+    run_type
+        "local", "emr", "databricks" (Default value = "local")
     print_impact
         True, False. (Default value = False)
         This argument is to print out the drift statistics of all attributes and attributes meeting the threshold.
@@ -149,6 +153,14 @@ def statistics(
     """
     drop_cols = drop_cols or []
     num_cols = attributeType_segregation(idf_target.select(list_of_cols))[0]
+
+    if run_type in list(platform_root_path.keys()):
+        root_path = platform_root_path[run_type]
+    else:
+        root_path = ""
+
+    if source_path == "NA":
+        source_path = root_path + "intermediate_data"
 
     if not pre_existing_source:
         source_bin = attribute_binning(
@@ -1613,7 +1625,7 @@ def stability_index_computation(
 </details>
 </dd>
 <dt id="anovos.drift.detector.statistics"><code class="name flex hljs csharp">
-<span class="k">def</span> <span class="nf"><span class="ident">statistics</span></span>(<span class="n">spark: pyspark.sql.session.SparkSession, idf_target: pyspark.sql.dataframe.DataFrame, idf_source: pyspark.sql.dataframe.DataFrame, *, list_of_cols: list = 'all', drop_cols: list = None, method_type: str = 'PSI', bin_method: str = 'equal_range', bin_size: int = 10, threshold: float = 0.1, pre_existing_source: bool = False, source_path: str = 'NA', model_directory: str = 'drift_statistics', print_impact: bool = False)</span>
+<span class="k">def</span> <span class="nf"><span class="ident">statistics</span></span>(<span class="n">spark: pyspark.sql.session.SparkSession, idf_target: pyspark.sql.dataframe.DataFrame, idf_source: pyspark.sql.dataframe.DataFrame, *, list_of_cols: list = 'all', drop_cols: list = None, method_type: str = 'PSI', bin_method: str = 'equal_range', bin_size: int = 10, threshold: float = 0.1, pre_existing_source: bool = False, source_path: str = 'NA', model_directory: str = 'drift_statistics', run_type: str = 'local', print_impact: bool = False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>When the performance of a deployed machine learning model degrades in production, one potential reason is that
@@ -1693,12 +1705,14 @@ frequency counts for each attribute) exists already, False Otherwise. (Default v
 <dd>If pre_existing_source is False, this argument can be used for saving the drift_statistics folder.
 The drift_statistics folder will have attribute_binning (binning model) &amp; frequency_counts sub-folders.
 If pre_existing_source is True, this argument is path for referring the drift_statistics folder.
-Default "NA" for temporarily saving source dataset attribute_binning folder. (Default value = "NA")</dd>
+Default "NA" for temporarily saving data in "intermediate_data/" folder. (Default value = "NA")</dd>
 <dt><strong><code>model_directory</code></strong></dt>
 <dd>If pre_existing_source is False, this argument can be used for saving the drift stats to folder.
 The default drift statics directory is drift_statistics folder will have attribute_binning
 If pre_existing_source is True, this argument is model_directory for referring the drift statistics dir.
 Default "drift_statistics" for temporarily saving source dataset attribute_binning folder. (Default value = "drift_statistics")</dd>
+<dt><strong><code>run_type</code></strong></dt>
+<dd>"local", "emr", "databricks" (Default value = "local")</dd>
 <dt><strong><code>print_impact</code></strong></dt>
 <dd>True, False. (Default value = False)
 This argument is to print out the drift statistics of all attributes and attributes meeting the threshold.</dd>
@@ -1731,6 +1745,7 @@ def statistics(
     pre_existing_source: bool = False,
     source_path: str = "NA",
     model_directory: str = "drift_statistics",
+    run_type: str = "local",
     print_impact: bool = False,
 ):
     """
@@ -1819,12 +1834,14 @@ def statistics(
         If pre_existing_source is False, this argument can be used for saving the drift_statistics folder.
         The drift_statistics folder will have attribute_binning (binning model) & frequency_counts sub-folders.
         If pre_existing_source is True, this argument is path for referring the drift_statistics folder.
-        Default "NA" for temporarily saving source dataset attribute_binning folder. (Default value = "NA")
+        Default "NA" for temporarily saving data in "intermediate_data/" folder. (Default value = "NA")
     model_directory
         If pre_existing_source is False, this argument can be used for saving the drift stats to folder.
         The default drift statics directory is drift_statistics folder will have attribute_binning
         If pre_existing_source is True, this argument is model_directory for referring the drift statistics dir.
         Default "drift_statistics" for temporarily saving source dataset attribute_binning folder. (Default value = "drift_statistics")
+    run_type
+        "local", "emr", "databricks" (Default value = "local")
     print_impact
         True, False. (Default value = False)
         This argument is to print out the drift statistics of all attributes and attributes meeting the threshold.
@@ -1838,6 +1855,14 @@ def statistics(
     """
     drop_cols = drop_cols or []
     num_cols = attributeType_segregation(idf_target.select(list_of_cols))[0]
+
+    if run_type in list(platform_root_path.keys()):
+        root_path = platform_root_path[run_type]
+    else:
+        root_path = ""
+
+    if source_path == "NA":
+        source_path = root_path + "intermediate_data"
 
     if not pre_existing_source:
         source_bin = attribute_binning(
