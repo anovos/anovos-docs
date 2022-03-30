@@ -1092,10 +1092,6 @@ numerous pre-processing and transformation functions,  such as binning,  encodin
 
 This group of functions is used to perform mathematical transformations of numerical attributes.
 
-**🚧 TODO: Please clarify and provide an example for the following:**
-Users must use only one function at a time and section of other function should be commented like if
-user want to use feature transformation then all Section of boxcox transformation should be commented.
-
 #### `feature_transformation`
 
 🔎 _Corresponds to [`transformers.feature_transformation`](../api/data_transformer/transformers.md#anovos.data_transformer.transformers.feature_transformation)_
@@ -1195,10 +1191,6 @@ boxcox_transformation:
 ### `numerical_binning`
 
 This group of functions is used to transform numerical attributes into discrete (integer or categorical) attribute.
-
-**🚧 TODO: Please clarify and provide an example for the following:**
-Users must use only one function at a time and section of other function should be commented like if user 
-want to use attribute binning method then all Section of monotonic binning method should be commented.
 
 #### `attribute_binning`
 
@@ -1341,11 +1333,6 @@ outlier_categories:
 
 This group of transformers functions used to converting a categorical attribute into numerical attribute(s).
 
-**🚧 TODO: Please clarify and provide an example for the following:**
-Users should use only one function at a time and section of other function should be commented like if user
-want to use categorical to numerical conversion using unsupervised method then all Section of categorical to
-numerical conversion using supervised method should be commented.
-
 #### `cat_to_num_unsupervised`
 
 🔎 _Corresponds to [`transformers.cat_to_num_unsupervised`](../api/data_transformer/transformers.md#anovos.data_transformer.transformers.cat_to_num_unsupervised)_
@@ -1422,10 +1409,6 @@ cat_to_num_supervised:
 
 Group of functions to rescale numerical attributes.
 
-**🚧 TODO: Please clarify and provide an example for the following:**
-Users should use only one function at a time and section of other functions should be commented like if user want 
-to use normalization method then all Sections of Z-standarization and IQR-standarization should be commented.
-
 #### `normalization`
 
 🔎 _Corresponds to [`transformers.normalization`](../api/data_transformer/transformers.md#anovos.data_transformer.transformers.normalization)_
@@ -1481,10 +1464,6 @@ IQR_standardization:
 
 Group of functions to generate latent features to reduce the dimensionality of the input dataset.
 
-**🚧 TODO: Please clarify and provide an example for the following:**
-Users should use only one function at a time and section of other function should be commented like if user
-want to use PCA method then all Section of AutoEncoder method should be commented.
-
 #### `PCA_latentFeatures`
 
 🔎 _Corresponds to [`transformers.PCA_latentFeatures`](../api/data_transformer/transformers.md#anovos.data_transformer.transformers.PCA_latentFeatures)_
@@ -1513,8 +1492,6 @@ want to use PCA method then all Section of AutoEncoder method should be commente
 - `imputation_configs`: Configuration for imputation in dictionary format.
   The name of the imputation function is specified with the key `imputation_name` (defaults to `imputation_MMM`).
   Arguments for the imputation function can be passed using additional keys.
-
-- `stats_missing`: **🚧 TODO: Please clarify the following, link the respective sections, and provide an example.** Takes arguments for read_dataset (data_ingest module) function in a dictionary format to read pre-saved statistics on missing count/pct i.e. if measures_of_counts or missingCount_computation (data_analyzer.stats_generator module) has been computed & saved before. (Default value = {}).
 
 
 🤓  _Example 1:_
@@ -1573,8 +1550,6 @@ PCA_latentFeatures:
 - `imputation_configs`: Configuration for imputation in dictionary format.
   The name of the imputation function is specified with the key `imputation_name` (defaults to `imputation_MMM`).
   Arguments for the imputation function can be passed using additional keys.
-
-- `stats_missing`:  **🚧 TODO: Please clarify the following, link the respective sections, and provide an example.** Takes arguments for read_dataset (data_ingest module) function in a dictionary format to read pre-saved statistics on missing count/pct i.e. if measures_of_counts or missingCount_computation (data_analyzer.stats_generator module) has been computed & saved before. (Default value = {})
 
 🤓  _Example 1:_
 ```yaml
