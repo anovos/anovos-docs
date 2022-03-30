@@ -360,7 +360,7 @@ The basic report can be customized using the following options:
 ### `basic_report`
 
 If `True`,  a basic report is generated after completion of the
-[data_analyzer](../api/data_analyzer/index.md) modules.
+[data_analyzer](../api/data_analyzer/_index.md) modules.
 
 If `False`,  no report is generated.
 Nevertheless,  all the computed statistics and metrics will be available in the final report.
