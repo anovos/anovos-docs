@@ -1139,14 +1139,24 @@ user want to use feature transformation then all Section of boxcox transformatio
 - `N`: `None` by default. If `method_type` is `powOfN`,  `toPowerN`,  `remainderDivByN`,  or `roundN`,  
   `N` will be used as the required constant.
 
-**🚧 TODO: Provide an example for modifying different sets of columns with different methods.**
-
-🤓  _Example:_
+🤓  _Example 1:_
 ```yaml
 feature_transformation:
   list_of_cols: all
   drop_cols: []
   method_type: sqrt
+```
+🤓  _Example 2:_
+```yaml
+feature_transformation:
+  list_of_cols: ['capital-gain', 'capital-loss']
+  drop_cols: []
+  method_type: sqrt
+
+feature_transformation:
+  list_of_cols: ['age','education_num']
+  drop_cols: []
+  method_type: sq
 ```
 
 #### `boxcox_transformation`
@@ -1168,12 +1178,18 @@ feature_transformation:
   `[1, -1, 0.5, -0.5, 2, -2, 0.25, -0.25, 3, -3, 4, -4, 5, -5]`.
   The search is conducted independently for each column.
 
-**🚧 TODO: Provide an example for modifying different sets of columns with different values of $\lambda$.**
-
-🤓  _Example:_
+🤓  _Example 1:_
 ```yaml
-list_of_cols: num_feature1|num_feature2
-drop_cols: []
+boxcox_transformation:
+  list_of_cols: num_feature1|num_feature2
+  drop_cols: []
+```
+🤓  _Example 2:_
+```yaml
+boxcox_transformation:
+  list_of_cols: num_feature3|num_feature4
+  drop_cols: []
+  boxcox_lambda: [-2, -1]
 ```
 
 ### `numerical_binning`
@@ -1252,31 +1268,32 @@ attribute_binning:
 
 ### `numerical_expression`
 
-**🚧 TODO: Add a brief description.**
-
 #### `expression_parser`
 
 🔎 _Corresponds to [`transformers.expression_parser`](../api/data_transformer/transformers.md#anovos.data_transformer.transformers.expression_parser)_
 
-**🚧 TODO: Which columns are these expressions applied to? What syntax is allowed? Can I specify multiple blocks?**
+This function can be used to evaluate a list of SQL expressions and output the result as new features. Columns used in the SQL expression must be available in the dataset.
 
 - `list_of_expr`: List of expressions to evaluate as new features e.g.,  ["expr1", "expr2"]. Alternatively, expressions can be specified in a string format, where different expressions are separated by pipe delimiter “|” e.g.,  "expr1|expr2".
 
 - `postfix`: postfix for new feature name.Naming convention "f" + expression_index + postfix e.g. with postfix of "new",  new added features are named as f0new,  f1new etc. (Default value = "").
 
-🤓  _Example:_
+🤓  _Example 1:_
 ```yaml
 expression_parser:
   list_of_expr: 'log(age) + 1.5|sin(capital-gain)+cos(capital-loss)'
 ```
 
-**🚧 TODO: Describe in words what this example represents.**
+🤓  _Example 2:_
+```yaml
+expression_parser:
+  list_of_expr: ['log(age) + 1.5', 'sin(capital-gain)+cos(capital-loss)']
+```
 
+Both _Example 1_ and _Example 2_ generate 2 new features: _log(age) + 1.5_ and _sin(capital-gain)+cos(capital-loss)_. The newly generated features will be appended to the dataframe as new columns: f0 and f1.
 ### `categorical_outliers`
 
 This function assigns less frequently seen values in a categorical column to a new category `others`.
-
-**🚧 TODO: Can I change the name of the new category to something else? What happens if there already is a category `others`?**
 
 #### `outlier_categories`
 
@@ -1297,15 +1314,27 @@ This function assigns less frequently seen values in a categorical column to a n
   rest to others. Caveat is when multiple categories have same rank, then #categories can be more than max_category.
   Defaults to `50`.
 
-**🚧 TODO: Provide an example for modifying different sets of columns with different coverage settings.**
-
-🤓  _Example:_
+🤓  _Example 1:_
 ```yaml
 outlier_categories:
-  list_of_cols: ["cat_feature1", "cat_feature2"]
+  list_of_cols: all
   drop_cols: ['id_column', 'label_col']
   coverage: 0.9
   max_category: 20
+```
+🤓  _Example 2:_
+```yaml
+outlier_categories:
+  list_of_cols: ["cat_feature1", "cat_feature2"]
+  drop_cols: []
+  coverage: 0.8
+  max_category: 10
+
+outlier_categories:
+  list_of_cols: ["cat_feature3", "cat_feature4"]
+  drop_cols: []
+  coverage: 0.9
+  max_category: 15
 ```
 
 ### `categorical_encoding`
@@ -1329,7 +1358,6 @@ numerical conversion using supervised method should be commented.
 
 
 - `method_type`: The encoding method. Set to `1` for label encoding and to `0` for one-hot encoding.
-  **🚧 TODO: Shouldn't this be `label_encoding` and `onehot_encoding` to be consistent with the other methods?**
   With label encoding, each categorical value is assigned a unique integer based on the ordering specified through `index_order`.
   With one-hot encoding, each categorical value will be represented by a binary column.
   Defaults to `1` (label encoding).
@@ -1344,15 +1372,27 @@ numerical conversion using supervised method should be commented.
 - `cardinality_threshold`: Columns with a cardinality above this threshold are excluded from enconding.
   Defaults to `100`.
 
-**🚧 TODO: Provide an example for modifying different sets of columns with different methods and cardinality thresholds.**
+🤓  _Example 1:_
+```yaml
+cat_to_num_unsupervised:
+  list_of_cols: all
+  drop_cols: ['id_column']
+  method_type: 0
+  cardinality_threshold: 10
+```
 
-🤓  _Example:_
+🤓  _Example 2:_
 ```yaml
 cat_to_num_unsupervised:
   list_of_cols: ["cat_feature1", "cat_feature2"]
-  drop_cols: ['id_column']
+  drop_cols: []
   method_type: 0
-  cardinality_threshold: 110
+  cardinality_threshold: 10
+
+cat_to_num_unsupervised:
+  list_of_cols: ["cat_feature3", "cat_feature4"]
+  drop_cols: []
+  method_type: 1
 ```
 
 #### `cat_to_num_supervised`
@@ -1463,7 +1503,10 @@ want to use PCA method then all Section of AutoEncoder method should be commente
 
 - `standardization`:  If `True` (the default), standardization is applied. `False` otherwise.
 
-**🚧 TODO: Do we need a `standardization_configs` option here, just as we have it for `autoencoder_latentFeatures`?**
+- `standardization_configs`: The arguments for the
+  [`z_standardization`](../api/data_transformer/transformers.md#anovos.data_transformer.transformers.z_standardization)
+  function in dictionary format.
+  Defaults to `{"pre_existing_model": False}`
 
 - `imputation`: If `True`, imputation is applied. `False` (the default) otherwise.
 
@@ -1473,9 +1516,8 @@ want to use PCA method then all Section of AutoEncoder method should be commente
 
 - `stats_missing`: **🚧 TODO: Please clarify the following, link the respective sections, and provide an example.** Takes arguments for read_dataset (data_ingest module) function in a dictionary format to read pre-saved statistics on missing count/pct i.e. if measures_of_counts or missingCount_computation (data_analyzer.stats_generator module) has been computed & saved before. (Default value = {}).
 
-**🚧 TODO: Provide an example for modifying different sets of columns with different settings.**
 
-🤓  _Example:_
+🤓  _Example 1:_
 ```yaml
 PCA_latentFeatures:
   list_of_cols: ["num_feature1", "num_feature2", "num_feature3"]
@@ -1483,10 +1525,24 @@ PCA_latentFeatures:
   standardization: False
   imputation: True
 ```
+🤓  _Example 2:_
+```yaml
+PCA_latentFeatures:
+  list_of_cols: ["num_feature1", "num_feature2", "num_feature3"]
+  explained_variance_cutoff: 0.8
+  standardization: False
+  imputation: True
+
+PCA_latentFeatures:
+  list_of_cols: ["num_feature4", "num_feature5", "num_feature6"]
+  explained_variance_cutoff: 0.6
+  standardization: True
+  imputation: True
+```
 
 #### `autoencoder_latentFeatures`
 
-🔎 _Corresponds to [`transformers.PCA_latentFeatures`](../api/data_transformer/transformers.md#anovos.data_transformer.transformers.PCA_latentFeatures)_
+🔎 _Corresponds to [`transformers.autoencoder_latentFeatures`](../api/data_transformer/transformers.md#anovos.data_transformer.transformers.autoencoder_latentFeatures)_
 
 - `list_of_cols`:  The numerical columns (list of strings or string of column names separated by `|`) to standardize.
   Can be set to `"all"` to include all numerical columns.
@@ -1520,15 +1576,29 @@ PCA_latentFeatures:
 
 - `stats_missing`:  **🚧 TODO: Please clarify the following, link the respective sections, and provide an example.** Takes arguments for read_dataset (data_ingest module) function in a dictionary format to read pre-saved statistics on missing count/pct i.e. if measures_of_counts or missingCount_computation (data_analyzer.stats_generator module) has been computed & saved before. (Default value = {})
 
-**🚧 TODO: Provide an example for modifying different sets of columns with different settings.**
-
-🤓  _Example:_
+🤓  _Example 1:_
 ```yaml
 autoencoder_latentFeatures:
   list_of_cols: ["num_feature1", "num_feature2", "num_feature3"]
   reduction_params: 0.5
   sample_size: 10000 
   epochs: 20
+  batch_size: 256
+```
+🤓  _Example 2:_
+```yaml
+autoencoder_latentFeatures:
+  list_of_cols: ["num_feature1", "num_feature2"]
+  reduction_params: 0.5
+  sample_size: 10000 
+  epochs: 20
+  batch_size: 256
+
+autoencoder_latentFeatures:
+  list_of_cols: ["num_feature3", "num_feature4", "num_feature5", "num_feature6", "num_feature7"]
+  reduction_params: 0.8
+  sample_size: 10000
+  epochs: 100
   batch_size: 256
 ```
 
