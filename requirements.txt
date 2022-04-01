@@ -1,5 +1,5 @@
 mkdocs==1.2.3
-mkdocs-material==8.2.3
+mkdocs-material==8.2.8
 mkdocs-include-dir-to-nav==1.1.0
 pymdown-extensions==9.3
 jinja2<3.1.0
