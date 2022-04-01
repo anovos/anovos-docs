@@ -13,10 +13,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Docs
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Checkout Anovos
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: anovos/anovos
           path: anovos
