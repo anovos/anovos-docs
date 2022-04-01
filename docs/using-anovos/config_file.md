@@ -21,7 +21,7 @@ If you'd rather see a full example right away,  have a look at
 
 Note that each section of the configuration file maps to a module of _Anovos_.
 You'll find links to the respective sections of the
-[API Documentation](../api/index.md) that provide much more detailed information
+[API Documentation](../api/_index.md) that provide much more detailed information
 on each modules' capabilities than we can squeeze into this guide.
 
 ## 📑 `input_dataset`
@@ -1085,7 +1085,7 @@ report_generation:
 
 🔎 _Corresponds to [`data_transformer.transformers`](../api/data_transformer/transformers.md)_
 
-This block configures the [`data_transformer`](../api/data_transformer/index.md) module that supports
+This block configures the [`data_transformer`](../api/data_transformer/_index.md) module that supports
 numerous pre-processing and transformation functions,  such as binning,  encoding,  scaling,  and imputation.
 
 ### `numerical_mathops`
