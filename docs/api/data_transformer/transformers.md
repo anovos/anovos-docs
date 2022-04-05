@@ -479,6 +479,7 @@ def cat_to_num_unsupervised(
     cardinality_threshold=100,
     pre_existing_model=False,
     model_path="NA",
+    stats_unique={},
     output_mode="replace",
     print_impact=False,
 ):
@@ -530,6 +531,10 @@ def cat_to_num_unsupervised(
         If pre_existing_model is True, this argument is path for referring the pre-saved model.
         If pre_existing_model is False, this argument can be used for saving the model.
         Default "NA" means there is neither pre existing model nor there is a need to save one.
+    stats_unique
+        Takes arguments for read_dataset (data_ingest module) function in a dictionary format
+        to read pre-saved statistics on unique value count i.e. if measures_of_cardinality or
+        uniqueCount_computation (data_analyzer.stats_generator module) has been computed & saved before. (Default value = {})
     output_mode
         "replace", "append".
         “replace” option replaces original columns with transformed column. “append” option append transformed
@@ -555,14 +560,9 @@ def cat_to_num_unsupervised(
     if isinstance(drop_cols, str):
         drop_cols = [x.strip() for x in drop_cols.split("|")]
 
-    list_of_cols = list(set([e for e in list_of_cols if e not in drop_cols]))
-
     if any(x not in cat_cols for x in list_of_cols):
         raise TypeError("Invalid input for Column(s)")
 
-    if len(list_of_cols) == 0:
-        warnings.warn("No Encoding Computation - No categorical column(s) to transform")
-        return idf
     if method_type not in (0, 1):
         raise TypeError("Invalid input for method_type")
     if index_order not in (
@@ -574,6 +574,42 @@ def cat_to_num_unsupervised(
         raise TypeError("Invalid input for Encoding Index Order")
     if output_mode not in ("replace", "append"):
         raise TypeError("Invalid input for output_mode")
+
+    skip_cols = []
+    if method_type == 0:
+        if stats_unique == {}:
+            skip_cols = (
+                uniqueCount_computation(spark, idf, list_of_cols)
+                .where(F.col("unique_values") > cardinality_threshold)
+                .select("attribute")
+                .rdd.flatMap(lambda x: x)
+                .collect()
+            )
+        else:
+            skip_cols = (
+                read_dataset(spark, **stats_unique)
+                .where(F.col("unique_values") > cardinality_threshold)
+                .select("attribute")
+                .rdd.flatMap(lambda x: x)
+                .collect()
+            )
+        skip_cols = list(
+            set([e for e in skip_cols if e in list_of_cols and e not in drop_cols])
+        )
+
+        if skip_cols:
+            warnings.warn(
+                "Columns dropped from one-hot encoding due to high cardinality: "
+                + ",".join(skip_cols)
+            )
+
+    list_of_cols = list(
+        set([e for e in list_of_cols if e not in drop_cols + skip_cols])
+    )
+
+    if len(list_of_cols) == 0:
+        warnings.warn("No Encoding Computation - No categorical column(s) to transform")
+        return idf
 
     list_of_cols_vec = []
     list_of_cols_idx = []
@@ -657,15 +693,9 @@ def cat_to_num_unsupervised(
 
         f_vector_to_array = F.udf(vector_to_array, T.ArrayType(T.IntegerType()))
 
-        skipped_cols = []
+        odf_sample = odf.take(1)
         for i in list_of_cols:
-            uniq_cats = (
-                odf.select(i + "_vec").rdd.flatMap(lambda x: x).collect()[0].size
-            )
-            if uniq_cats > cardinality_threshold:
-                skipped_cols.append(i)
-                odf = odf.drop(i + "_vec", i + "_index")
-                continue
+            uniq_cats = odf_sample[0].asDict()[i + "_vec"].size
             odf_schema = odf.schema.add(
                 T.StructField("tmp", T.ArrayType(T.IntegerType()))
             )
@@ -686,11 +716,6 @@ def cat_to_num_unsupervised(
             else:
                 odf = odf.drop(i + "_vec", i + "_index", "tmp")
 
-        if skipped_cols:
-            warnings.warn(
-                "Columns dropped from one-hot encoding due to high cardinality: "
-                + ",".join(skipped_cols)
-            )
     else:
         odf = odf_indexed
         for i in list_of_cols:
@@ -5589,7 +5614,7 @@ def cat_to_num_supervised(
 </details>
 </dd>
 <dt id="anovos.data_transformer.transformers.cat_to_num_unsupervised"><code class="name flex hljs csharp">
-<span class="k">def</span> <span class="nf"><span class="ident">cat_to_num_unsupervised</span></span>(<span class="n">spark, idf, list_of_cols='all', drop_cols=[], method_type=1, index_order='frequencyDesc', cardinality_threshold=100, pre_existing_model=False, model_path='NA', output_mode='replace', print_impact=False)</span>
+<span class="k">def</span> <span class="nf"><span class="ident">cat_to_num_unsupervised</span></span>(<span class="n">spark, idf, list_of_cols='all', drop_cols=[], method_type=1, index_order='frequencyDesc', cardinality_threshold=100, pre_existing_model=False, model_path='NA', stats_unique={}, output_mode='replace', print_impact=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>This is unsupervised method of converting a categorical attribute into numerical attribute(s). This is among
@@ -5637,6 +5662,10 @@ Valid only for Label Encoding method_type. (Default value = "frequencyDesc")</dd
 <dd>If pre_existing_model is True, this argument is path for referring the pre-saved model.
 If pre_existing_model is False, this argument can be used for saving the model.
 Default "NA" means there is neither pre existing model nor there is a need to save one.</dd>
+<dt><strong><code>stats_unique</code></strong></dt>
+<dd>Takes arguments for read_dataset (data_ingest module) function in a dictionary format
+to read pre-saved statistics on unique value count i.e. if measures_of_cardinality or
+uniqueCount_computation (data_analyzer.stats_generator module) has been computed &amp; saved before. (Default value = {})</dd>
 <dt><strong><code>output_mode</code></strong></dt>
 <dd>"replace", "append".
 “replace” option replaces original columns with transformed column. “append” option append transformed
@@ -5668,6 +5697,7 @@ def cat_to_num_unsupervised(
     cardinality_threshold=100,
     pre_existing_model=False,
     model_path="NA",
+    stats_unique={},
     output_mode="replace",
     print_impact=False,
 ):
@@ -5719,6 +5749,10 @@ def cat_to_num_unsupervised(
         If pre_existing_model is True, this argument is path for referring the pre-saved model.
         If pre_existing_model is False, this argument can be used for saving the model.
         Default "NA" means there is neither pre existing model nor there is a need to save one.
+    stats_unique
+        Takes arguments for read_dataset (data_ingest module) function in a dictionary format
+        to read pre-saved statistics on unique value count i.e. if measures_of_cardinality or
+        uniqueCount_computation (data_analyzer.stats_generator module) has been computed & saved before. (Default value = {})
     output_mode
         "replace", "append".
         “replace” option replaces original columns with transformed column. “append” option append transformed
@@ -5744,14 +5778,9 @@ def cat_to_num_unsupervised(
     if isinstance(drop_cols, str):
         drop_cols = [x.strip() for x in drop_cols.split("|")]
 
-    list_of_cols = list(set([e for e in list_of_cols if e not in drop_cols]))
-
     if any(x not in cat_cols for x in list_of_cols):
         raise TypeError("Invalid input for Column(s)")
 
-    if len(list_of_cols) == 0:
-        warnings.warn("No Encoding Computation - No categorical column(s) to transform")
-        return idf
     if method_type not in (0, 1):
         raise TypeError("Invalid input for method_type")
     if index_order not in (
@@ -5763,6 +5792,42 @@ def cat_to_num_unsupervised(
         raise TypeError("Invalid input for Encoding Index Order")
     if output_mode not in ("replace", "append"):
         raise TypeError("Invalid input for output_mode")
+
+    skip_cols = []
+    if method_type == 0:
+        if stats_unique == {}:
+            skip_cols = (
+                uniqueCount_computation(spark, idf, list_of_cols)
+                .where(F.col("unique_values") > cardinality_threshold)
+                .select("attribute")
+                .rdd.flatMap(lambda x: x)
+                .collect()
+            )
+        else:
+            skip_cols = (
+                read_dataset(spark, **stats_unique)
+                .where(F.col("unique_values") > cardinality_threshold)
+                .select("attribute")
+                .rdd.flatMap(lambda x: x)
+                .collect()
+            )
+        skip_cols = list(
+            set([e for e in skip_cols if e in list_of_cols and e not in drop_cols])
+        )
+
+        if skip_cols:
+            warnings.warn(
+                "Columns dropped from one-hot encoding due to high cardinality: "
+                + ",".join(skip_cols)
+            )
+
+    list_of_cols = list(
+        set([e for e in list_of_cols if e not in drop_cols + skip_cols])
+    )
+
+    if len(list_of_cols) == 0:
+        warnings.warn("No Encoding Computation - No categorical column(s) to transform")
+        return idf
 
     list_of_cols_vec = []
     list_of_cols_idx = []
@@ -5846,15 +5911,9 @@ def cat_to_num_unsupervised(
 
         f_vector_to_array = F.udf(vector_to_array, T.ArrayType(T.IntegerType()))
 
-        skipped_cols = []
+        odf_sample = odf.take(1)
         for i in list_of_cols:
-            uniq_cats = (
-                odf.select(i + "_vec").rdd.flatMap(lambda x: x).collect()[0].size
-            )
-            if uniq_cats > cardinality_threshold:
-                skipped_cols.append(i)
-                odf = odf.drop(i + "_vec", i + "_index")
-                continue
+            uniq_cats = odf_sample[0].asDict()[i + "_vec"].size
             odf_schema = odf.schema.add(
                 T.StructField("tmp", T.ArrayType(T.IntegerType()))
             )
@@ -5875,11 +5934,6 @@ def cat_to_num_unsupervised(
             else:
                 odf = odf.drop(i + "_vec", i + "_index", "tmp")
 
-        if skipped_cols:
-            warnings.warn(
-                "Columns dropped from one-hot encoding due to high cardinality: "
-                + ",".join(skipped_cols)
-            )
     else:
         odf = odf_indexed
         for i in list_of_cols:
