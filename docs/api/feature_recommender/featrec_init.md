@@ -5,8 +5,8 @@
 </summary>
 <pre>
 ```python
-import copy
 import os
+import copy
 from re import finditer
 
 import pandas as pd
