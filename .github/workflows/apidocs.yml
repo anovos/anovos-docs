@@ -70,7 +70,7 @@ jobs:
           # replace the headline
           find . -name '_index.md' -exec sh -c 'sed -i "1s/.*/# Overview/" $0' {} \;
           # replace the links in the main overview
-          sed -i "s/\/index\.html/\/_index\.html/" anobos/src/main/api/_index.md
+          sed -i "s/\/index\.html/\/_index\.html/" anovos/src/main/api/_index.md
 
       - name: Merge API docs into docs
         run: |
