@@ -65,7 +65,7 @@ To access Spark through Python, we need the `pyspark` library as well as the `fi
 ```
 _**Note**: Make sure that the version of `pyspark` matches the Spark versions you downloaded._
 
-## Step 2: Installing _Anovos_ and its dependencies
+### Step 2: Installing _Anovos_ and its dependencies
 
 Clone the _Anovos_ GitHub repository to Google Colab:
 
@@ -97,7 +97,7 @@ we need to install the required Python dependencies:
 !pip install -r requirements.txt
 ```
     
-## Step 3: Configuring an _Anovos_ workflow
+### Step 3: Configuring an _Anovos_ workflow
 
 _Anovos_ workflows are configured through a YAML configuration file.
 To learn more, have a look at the exhaustive [Configuring Workflows](../config_file.md) documentation.
@@ -129,7 +129,7 @@ Once you adapted the `configs.yaml` file, you can upload it again by right-click
 and selecting _Upload_:
 ![Upload the `configs.yaml` file to the `dist` folder](../../assets/google_colab_notebook_images/image3_colab.png)
 
-## Step 4: Trigger a workflow run
+### Step 4: Trigger a workflow run
 
 Once the workflow configuration has been uploaded, you can run your workflow.
 _Anovos_ workflows are triggered by executing the `spark-submit.sh` file that you'll find in the `dist` folder.
