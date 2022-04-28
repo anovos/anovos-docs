@@ -1,6 +1,6 @@
 # Setting Up Anovos on Google Colab
 
-[https://colab.research.google.com/ Colab] is an offer by Google Research 
+[Colab](https://colab.research.google.com/) is an offer by Google Research 
 that provides access to cloud-hosted [Jupyter notebooks](https://jupyter.org/) 
 for collaborating on and sharing data science work.
 
@@ -12,9 +12,9 @@ on your local machine.
 If you're not yet familiar with Google Colab, the following selection of introductory tutorials
 are an excellent starting point to familiarize yourself with this platform:
 
-- Vishaka Lall: [Google Colab — The Beginner’s Guide](https://medium.com/lean-in-women-in-tech-india/google-colab-the-beginners-guide-5ad3b417dfa) (Lean In Women In Tech India)
-- Souvik Mandal: [How to use Google Colab](https://www.geeksforgeeks.org/how-to-use-google-colab/) (GeeksforGeeks)
-- Bala Priya C: [Google Colab Tutorial for Data Scientists](https://www.datacamp.com/community/tutorials/tutorial-google-colab-for-data-scientists) (Datacamp)
+- [Google Colab — The Beginner’s Guide](https://medium.com/lean-in-women-in-tech-india/google-colab-the-beginners-guide-5ad3b417dfa) (Lean In Women In Tech India)
+- [How to use Google Colab](https://www.geeksforgeeks.org/how-to-use-google-colab/) (GeeksforGeeks)
+- [Google Colab Tutorial for Data Scientists](https://www.datacamp.com/community/tutorials/tutorial-google-colab-for-data-scientists) (Datacamp)
 
 ## Step-by-step Instructions for Using _Anovos_ on Google Colab
 
@@ -82,6 +82,7 @@ cd anovos
 ```
 As indicated by the output shown, _Anovos_ was placed in the folder `/content/anovos`,
 which you can also access through the sidebar:
+
 ![You can view and access Anovos' files through the sidebar](../../assets/google_colab_notebook_images/image1_colab.png)
 
 The next step is to build _Anovos_:
