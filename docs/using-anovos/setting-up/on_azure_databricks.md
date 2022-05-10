@@ -39,9 +39,7 @@ make clean build
 
 ### Step 2: Download the wheel file from PyPI
 
-Users just download the wheel file on the local machine from PyPI which is present at this location
-- [Wheel File Path](https://pypi.org/project/anovos/#files)
-and put inside 'dist' folder and can directly use this for installing all packages and scripts for running latest release version of anovos in azure databricks.
+Users just download the wheel file on the local machine from PyPI which is present at this location [Wheel File Path](https://pypi.org/project/anovos/#files)and put inside 'dist' folder and can directly use this for installing all packages and scripts for running latest release version of anovos in azure databricks.
 
 For running latest development version of Anovos, Users need to create a wheel file on the local machine on their own.The Users need to follow following steps :
 
@@ -243,9 +241,7 @@ make clean build
 
 ### Step 2: Download the wheel file from PyPI
 
-Users just download the wheel file on the local machine from PyPI which is present at this location
-- [Wheel File Path](https://pypi.org/project/anovos/#files)
-and put inside 'dist' folder and can directly use this for installing all packages and scripts for running latest release version of anovos in azure databricks.
+Users just download the wheel file on the local machine from PyPI which is present at this location [Wheel File Path](https://pypi.org/project/anovos/#files) and put inside 'dist' folder and can directly use this for installing all packages and scripts for running latest release version of anovos in azure databricks.
 
 For running latest development version of Anovos, Users need to create a wheel file on the local machine on their own.The Users need to follow following steps :
 
