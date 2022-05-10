@@ -37,9 +37,13 @@ to clean and build the latest modules in dist folder:
 make clean build
 ```
 
-### Step 2: Create a wheel file on the local machine
+### Step 2: Download the wheel file from PyPI
 
-**TODO: Why is this necessary? Why not get the wheel from PyPI?**
+Users just download the wheel file on the local machine from PyPI which is present at this location
+- [Wheel File Path](https://pypi.org/project/anovos/#files)
+and put inside 'dist' folder and can directly use this for installing all packages and scripts for running latest release version of anovos in azure databricks.
+
+For running latest development version of Anovos, Users need to create a wheel file on the local machine on their own.The Users need to follow following steps :
 
 Note: Before creating this wheel file, you will need to install python
 packages using command:
@@ -62,9 +66,9 @@ in azure databricks.
 
 ## Step 3: Copy necessary files to Databricks File System (DBFS)
 
-Copy the following files from local machine to DBFS directly from UI or from CLI commands:
+Copy the following files from local machine to DBFS directly from UI or from CLI commands to bring all the files from local machine in to DBFS in order to run the Anovos in Azure databricks using DBFS:
 
-**Note** Steps to copy from UI or from CLI commands are mentioned below in detail.
+**Note** Steps to copy files from UI or from CLI commands are mentioned below in detail.
 
   i. dist/income_dataset (optional)
 
@@ -88,7 +92,7 @@ Copy the following files from local machine to DBFS directly from UI or from CLI
   - Update configs.yaml for all input & output DBFS paths. All other
     changes depend upon the dataset being used.
     
-    **Note**Attaching config file description link to get more information about updating input,output path and threshold settings according to use case.
+    **Note** Attaching config file description link to get more information about updating input,output path and threshold settings according to use case.
     [config_file_description](https://github.com/anovos/anovos-docs/blob/anovos_config_file_desc/docs/using-anovos/config_file.md)
 
 #### Steps to copy files to DBFS using the UI
@@ -104,7 +108,7 @@ Copy the following files from local machine to DBFS directly from UI or from CLI
     [Files upload interface in DBFS](https://docs.microsoft.com/en-us/azure/databricks/data/databricks-file-system#dbfs-and-local-driver-node-paths)
 
 
-#### Databricks CLI configuration stepss
+#### Databricks CLI configuration steps
 
 1.  Install *databricks-cli* using command – pip install databricks-cli
 
@@ -113,6 +117,10 @@ Copy the following files from local machine to DBFS directly from UI or from CLI
 3.  Copy the URL of databricks host and the personal access tokens
 
 4.  Configure the CLI using command – databricks configure --token
+
+**Note** Users can refer the following links for more information related to Databricks CLI configuration
+- [databricks-configure-using-cmd](https://stackoverflow.com/questions/57867156/databricks-configure-using-cmd-and-r)
+- [Databricks CLI](https://docs.microsoft.com/en-us/azure/databricks/dev-tools/cli/)
 
 **DBFS CLI Command for copy in Azure Databricks:**
 
@@ -125,8 +133,12 @@ eg.
 dbfs cp -r /home/user1/Desktop/dummy_folder
 dbfs:/Filestore/tables/dummy_folder
 ```
+**Note** Users can refer the following links for more information related to DBFS CLI Command for copy in Azure Databricks
+- [File manipulation Commands in Azure Databricks](https://www.analyticsvidhya.com/blog/2021/06/storage-options-and-file-manipulation-commands-in-azure-databricks/)
+
 `
 ### Step 4: Creating jobs for running _Anovos_ by initiating cluster
+Once you have copied all files in DBFS, then you can create jobs for running anovos by starting cluster and provides all the task details like task name, type, cluster configurations, Parameters and Dependent Libraries. Below shows one sample example for creating jobs for reference.
 
   - **Task Details**
 
@@ -204,9 +216,7 @@ Option for scheduling these jobs for running automatically are also available.
 
 Once the job finishes successfully, users will be able to see their status as succeeded. we can see that in the above images.
 
-The reports and all the intermediate outputs are saved at the required
-DBFS path. All the required DBFS path location is updated in
-configs.yaml file.
+The intermediate data and the report data are saved at the master_path and the final_report_path in DBFS as specified by the user inside the configs.yaml file 
 
 ## Anovos on Azure Databricks by mounting Azure Blob Storage containers to DBFS
 
@@ -231,9 +241,13 @@ to clean and build the latest modules in dist folder:
 make clean build
 ```
 
-### Step 2: Creating wheel file in local machine
+### Step 2: Download the wheel file from PyPI
 
-**TODO: Why is this necessary? Why not get the wheel from PyPI?**
+Users just download the wheel file on the local machine from PyPI which is present at this location
+- [Wheel File Path](https://pypi.org/project/anovos/#files)
+and put inside 'dist' folder and can directly use this for installing all packages and scripts for running latest release version of anovos in azure databricks.
+
+For running latest development version of Anovos, Users need to create a wheel file on the local machine on their own.The Users need to follow following steps :
 
 Note: Before creating this wheel file, you will need to install python
 packages using command:
@@ -254,9 +268,9 @@ contains the .whl file which is your wheel file. Wheel file contains all
 the packages and scripts which are given in setup.py for running anovos
 in azure databricks.
 
-### Step 3: Copy the files to an Azure Blob Storage container
+### Step 3: Copy the files to an Azure Blob Storage container 
 
-Copy the following files from local machine to Azureblob storage container directly from UI or from CLI commands:
+Copy the following files from local machine to Azureblob storage container directly from UI or from CLI commands in order to run Anovos using Azure Blob Storage container:
 
 - dist/income_dataset (optional)
 
@@ -272,7 +286,7 @@ Copy the following files from local machine to Azureblob storage container direc
 - dist/.whl file
 
   - This is wheel file that contains all the packages and required
-    scripts that was built in step 2
+    scripts that was taken or built in step 2
 
 - jars/.jar file
 
@@ -319,7 +333,7 @@ here,
 - **storage-account-key:** is the access key for that storage account
 
 Attaching some links to get more information about mounting azure blob storage container in dbfs path.
-[Azure Blob storage](https://docs.microsoft.com/en-us/azure/databricks/data/data-sources/azure/azure-storage#:~:text=Mount%20Azure%20Blob%20storage%20containers%20to%20DBFS,-You%20can%20mount&text=All%20users%20have%20read%20and,immediately%20access%20the%20mount%20point)
+- [Azure Blob storage](https://docs.microsoft.com/en-us/azure/databricks/data/data-sources/azure/azure-storage#:~:text=Mount%20Azure%20Blob%20storage%20containers%20to%20DBFS,-You%20can%20mount&text=All%20users%20have%20read%20and,immediately%20access%20the%20mount%20point)
 
 **Note:** 
 Mounting needs to be done only one time when we are using the same mount_name for mounting in dbfs. No need to mount when we are running again using same mount_name as it is already mounted.
@@ -358,6 +372,7 @@ using UI or from azure command in similar way like in step 3 for other files
 This is the sample yaml configuration file which sets the argument for all functions for running anovos in Azure Databricks
 
 ### Step 7: Creating jobs for running anovos by initiating cluster on Azure Databricks
+Once you have copied all files in DBFS, then you can create jobs for running anovos by starting cluster and provides all the task details like task name, type, cluster configurations, Parameters and Dependent Libraries. Below shows one sample example for creating jobs for reference.
 
 **•Task Details**
 ![Task details](../../assets/azure_databricks_images/image7.png)
@@ -368,7 +383,7 @@ This is the sample yaml configuration file which sets the argument for all funct
 
 **c.Cluster**
 
-**Note**Attaching link that describes all the information related to cluster configurations.
+**Note** Attaching link that describes all the information related to cluster configurations.
 [Configure clusters](https://docs.microsoft.com/en-us/azure/databricks/clusters/configure#cluster-configurations)
                                                 **Cluster Configurations**
                                                 
@@ -410,4 +425,4 @@ Once the job finishes successfully, users will be able to see status as succeede
 
 ![Active and completed runs](../../assets/azure_databricks_images/image5.png)
 
-The reports and all the intermediate outputs are saved at the required Azure blob storage container automatically once jobs finishes successfully.
+The intermediate data and the report data are saved at the master_path and the final_report_path as specified by the user inside the configs.yaml file and these outputs will be stored in Azure blob storage container automatically once jobs finishes successfully.
