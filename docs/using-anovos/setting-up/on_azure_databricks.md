@@ -1,68 +1,84 @@
 # Setting up Anovos on Azure Databricks 
 
-Azure Databricks is an implementation of Apache Spark on Microsoft Azure.
-It is a powerful chamber that handles big data workloads effortlessly and helps
-in both data wrangling and exploration. It lets you run large-scale Spark jobs from any Python, R, SQL, and Scala applications.
+[Azure Databricks](https://azure.microsoft.com/services/databricks/)
+is a hosted version of [Apache Spark](https://spark.apache.org/) on [Microsoft Azure](https://azure.microsoft.com/).
+It is a convenient way to handle big data workloads of Spark without having to set up and maintain your own cluster.
 
-Following links and video will brief about introduction about Azure Databricks and the usage of this platform and its benefits.
+To learn more about Azure Databricks, have a look at
+[the official documentation](https://databricks.com/introducing-azure-databricks)
+or the following introductoray tutorials:
 - [A beginner’s guide to Azure Databricks](https://www.sqlshack.com/a-beginners-guide-to-azure-databricks/)
 - [Azure Databricks Hands-on](https://medium.com/@jcbaey/azure-databricks-hands-on-6ed8bed125c7)
-- [Introducing Azure Databricks](https://databricks.com/introducing-azure-databricks)
 
-Currently we are supporting two ways of running Anovos on Azure Databricks Platform 
+Currently, _Anovos_ supports two ways of running workflows on Azure Databricks: 
 
-1.	Anovos on Azure Databricks using DBFS
-2.	Anovos on Azure Databricks using Azure blob storage container by mounting to DBFS
+1.	Using DBFS directly
+2.	Mounting an Azure blob storage container to DBFS
+
+**TODO: What do we recommend in which case?**
 
 ## Anovos on Azure Databricks using DBFS
 
-Following are the steps required for running anovos on Azure Databricks using DBFS:
+The following are required for running _Anovos_ workloads on Azure Databricks using DBFS.
 
-### Step 1: Installing/Downloading _Anovos_
+### Step 1: Download Anovos wheel file from PyPI
 
-Clone the Anovos Repository on local machine using command:
+To make _Anovos_ available on Azure Databricks, you need to upload a wheel file.
+The easiest way to obtain it is to download directly from PyPI.
+This ensures that you have the latest stable and well-tested version of _Anovos_.
+
+You'll find the link to the latest wheel file on
+[the "Download files" tab](https://pypi.org/project/anovos/#files).
+If you'd like to use an older version, you can navigate to the respective version in the
+[Release history](https://pypi.org/project/anovos/#history) and access the "Download files" tab
+from there.
+
+#### Alternative: Use a development version of _Anovos_
+
+If you would like to try the latest version of _Anovos_ on Azure Databricks
+(or would like to make custom modifications to the library),
+you can also create a wheel file yourself.
+
+First, clone the _Anovos_ GitHub repository to your local machine:
 
 ```shell
-git clone --depth 1 --branch v0.2.1 <https://github.com/anovos/anovos.git>
+git clone --depth 1 <https://github.com/anovos/anovos.git>
 ```
 
-_**Note**: Using the `--branch` flag allows you to select the desired release of Anovos._
+_**Note**: Using the `--branch` flag allows you to select a specific release of Anovos._
+_For example, adding `--branch v0.2.2` will give you the state of the 0.2.2 release._
 _If you omit the flag, you will get the latest development version of Anovos, which might not_
 _be fully functional or exhibit unexpected behavior._
+__
 
-After cloning, go to anovos directory and execute the following command
-to clean and build the latest modules in dist folder:
-
-```shell
-make clean build
-```
-
-### Step 2: Download the wheel file from PyPI
-
-Users just download the wheel file on the local machine from PyPI which is present at this location [Wheel File Path](https://pypi.org/project/anovos/#files)and put inside 'dist' folder and can directly use this for installing all packages and scripts for running latest release version of anovos in azure databricks.
-
-For running latest development version of Anovos, Users need to create a wheel file on the local machine on their own.The Users need to follow following steps :
-
-Note: Before creating this wheel file, you will need to install python
-packages using command:
+After cloning, go to the `anovos` directory that was automatically created in the process
+and execute the following command to clean and prepare the environment:
 
 ```shell
-    pip install wheel setuptools
+make clean
 ```
 
-Then create wheel file using setup.py file that contains all python
-scripts and dependencies using command:
+It is a good practice to always run this command prior to generating a wheel file or another kind
+of build artifact.
+
+_**Note**: To be able to create a wheel file, `wheel`, `build`, and `setuptools` need to be installed_
+_in the current Python environment. You can do so by running `pip install build wheel setuptools`._
+
+Then, to create the wheel file, run the following command directly inside the `anovos` folder:
 
 ```shell
-python setup.py bdist_wheel --universal
+python -m build --wheel --universal --outdir dist/ .
 ```
-`
-After the command finishes executing successfully, a folder name ‘dist’
-contains the .whl file which is your wheel file. Wheel file contains all
-the packages and scripts which are given in setup.py for running anovos
-in azure databricks.
 
-## Step 3: Copy necessary files to Databricks File System (DBFS)
+Once the process is finished, the folder `dist` will contain the wheel file.
+It will have the file extension `*.whl` and might carry the latest version in its name.
+
+_**Note:** The version in the file name will be that of the latest version of _Anovos_,_
+_even if you cloned the repository yourself and used the latest state of the code._
+_This is due to the fact that the version is only updated right before new release is published._
+_To avoid confusion, it's a good practice to rename the wheel file to a custom name._
+
+### Step 2: Copy necessary files to Databricks File System (DBFS)
 
 Copy the following files from local machine to DBFS directly from UI or from CLI commands to bring all the files from local machine in to DBFS in order to run the Anovos in Azure databricks using DBFS:
 
@@ -70,7 +86,10 @@ Copy the following files from local machine to DBFS directly from UI or from CLI
 
   i. dist/income_dataset (optional)
 
-  - This folder contains our demo dataset. This is sample dataset that is shown for reference.Users can copy their own dataset.
+  - This folder contains our demo dataset. This is sample dataset that is shown for reference.
+    Users can copy their own dataset.
+
+**TODO: Why is main.py not shipped within the wheel? How do we ensure that the versions match?**
 
   ii. dist/main.py
 
