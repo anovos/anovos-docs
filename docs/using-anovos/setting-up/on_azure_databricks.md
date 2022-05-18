@@ -33,6 +33,9 @@ If you'd like to use an older version, you can navigate to the respective versio
 [Release history](https://pypi.org/project/anovos/#history) and access the "Download files" tab
 from there.
 
+**TODO: Do users really need to download the wheel? In the screenshot below, there is an option
+to use packages directly from PyPI**
+
 #### Alternative: Use a development version of _Anovos_
 
 If you would like to try the latest version of _Anovos_ on Azure Databricks
@@ -78,135 +81,98 @@ _even if you cloned the repository yourself and used the latest state of the cod
 _This is due to the fact that the version is only updated right before new release is published._
 _To avoid confusion, it's a good practice to rename the wheel file to a custom name._
 
-### Step 2: Copy necessary files to Databricks File System (DBFS)
+### Step 2: Copy the data and workflow configuration to DBFS
 
-Copy the following files from local machine to DBFS directly from UI or from CLI commands to bring all the files from local machine in to DBFS in order to run the Anovos in Azure databricks using DBFS:
+To run an _Anovos_ workflow, both the data to be processed as well as the workflow configuration
+need to be stored on DBFS.
 
-**Note** Steps to copy files from UI or from CLI commands are mentioned below in detail.
+You can either use the UI or the CLI to copy files from your local machine to DBFS.
+For detailed instructions, see the respective sub-sections below.
 
-  i. dist/income_dataset (optional)
+In this tutorial, we will use "income dataset" and an accompanying pre-defined workflow.
 
-  - This folder contains our demo dataset. This is sample dataset that is shown for reference.
-    Users can copy their own dataset.
+You can obtain these files by cloning the _Anovos_ GitHub repository:
+```shell
+git clone https://github.com/anovos/anovos.git
+```
 
-**TODO: Why is main.py not shipped within the wheel? How do we ensure that the versions match?**
+You'll find the dataset under `examples/data/income_dataset` and the configuration file
+under `config/configs_income_azure.yaml`.
 
-  ii. dist/main.py
+**TODO: What exactly do users need to update here to run the example?**
+Update configs.yaml for all input & output DBFS paths. All other  
+changes depend upon the dataset being used.
 
-  - This is sample script to show how different functions from Anovos
-    module can be stitched together to create a workflow.
+**TODO: In which folder(s) should the data and config file be placed? The screenshot below shows the config file at FileStore/tables/**
 
-  - The users can create their own workflow script by importing the
-    necessary functions.
+To learn more about defining workflows through config files, see the
+[config file documentation](../config_file.md).
 
-  - This script takes input from a yaml configuration file
-
-  iii. config/configs_income_azure.yaml
-
-  - This is the sample yaml configuration file for running anovos in
-    Azure Databricks which sets the argument for all functions.
-
-  - Update configs.yaml for all input & output DBFS paths. All other
-    changes depend upon the dataset being used.
-    
-    **Note** Attaching config file description link to get more information about updating input,output path and threshold settings according to use case.
-    [config_file_description](https://github.com/anovos/anovos-docs/blob/anovos_config_file_desc/docs/using-anovos/config_file.md)
-
-#### Steps to copy files to DBFS using the UI
+#### Copying files to DBFS using the UI
 
 ![https://raw.githubusercontent.com/anovos/anovos-docs/azure_databricks_docs/docs/assets/azure_databricks_images/image1.png](https://raw.githubusercontent.com/anovos/anovos-docs/azure_databricks_docs/docs/assets/azure_databricks_images/image1.png)
 
-1.  Launch any workspace and go to data menu on databricks. After
-    clicking data menu, options to upload file will appear and then by
-    clicking ‘drop files to upload, or click to browse’, users will be
-    able to upload the above required files from local machine.
-    
-    **Note** Attaching link that details about DBFS and Files upload interface
-    [Files upload interface in DBFS](https://docs.microsoft.com/en-us/azure/databricks/data/databricks-file-system#dbfs-and-local-driver-node-paths)
+1. Launch the workspace on Databricks.
+2. Enter the data menu
+3. Upload files by dragging files onto the marked area or click on it to upload using the file browser.
 
+For more detailed instructions, see the
+[Databricks documentation](https://docs.microsoft.com/en-us/azure/databricks/data/databricks-file-system#dbfs-and-local-driver-node-paths)
 
-#### Databricks CLI configuration steps
+#### Copying files to DBFS using the CLI
 
-1.  Install *databricks-cli* using command – pip install databricks-cli
+1. Install `databricks-cli` into a local Python environment by running `pip install databricks-cli`.
+2. Generate a personal access token for your Databricks workspace **TODO** Where/how do I create such a token?
+3. Configure the CLI to access your workspace by running `databricks configure --token`.
+4. Copy the files using the `dbfs cp` command.
 
-2.  Make sure the personal access tokens have already generated
-
-3.  Copy the URL of databricks host and the personal access tokens
-
-4.  Configure the CLI using command – databricks configure --token
-
-**Note** Users can refer the following links for more information related to Databricks CLI configuration
-- [databricks-configure-using-cmd](https://stackoverflow.com/questions/57867156/databricks-configure-using-cmd-and-r)
-- [Databricks CLI](https://docs.microsoft.com/en-us/azure/databricks/dev-tools/cli/)
-
-**DBFS CLI Command for copy in Azure Databricks:**
-
+For example:
 ```shell
-dbfs cp -r source_folder_path destination_folder_path
+dbfs cp -r /home/user1/Desktop/dummy_folder dbfs:/Filestore/tables/dummy_folder
 ```
 
-eg.
-```shell
-dbfs cp -r /home/user1/Desktop/dummy_folder
-dbfs:/Filestore/tables/dummy_folder
+For more information on the Databricks CLI, see the
+[Databricks documentation](https://docs.microsoft.com/en-us/azure/databricks/dev-tools/cli/).
+
+### Step 3: Create a workflow script
+
+To launch the workflow on Azure Databricks, we need a single Python script as the entry point.
+Hence, we'll create a `main.py` script that invokes the _Anovos'_ workflow runner with the proper run type:
+```python
+import sys
+from anovos import workflow
+
+workflow.run(config_path=sys.argv[1], run_type="databricks")
 ```
-**Note** Users can refer the following links for more information related to DBFS CLI Command for copy in Azure Databricks
-- [File manipulation Commands in Azure Databricks](https://www.analyticsvidhya.com/blog/2021/06/storage-options-and-file-manipulation-commands-in-azure-databricks/)
 
-`
-### Step 4: Creating jobs for running _Anovos_ by initiating cluster
-Once you have copied all files in DBFS, then you can create jobs for running anovos by starting cluster and provides all the task details like task name, type, cluster configurations, Parameters and Dependent Libraries. Below shows one sample example for creating jobs for reference.
+Upload this script to DBFS as well.
+**TODO: Which location should it be placed in? The screenshot below shows it at FileStore/tables/scripts/**
 
-  - **Task Details**
+### Step 4: Configure and launch an _Anovos_ workflow as a Databricks job
 
-  ![](../../assets/azure_databricks_images/image2.png)
+Once all files have been copied to DBFS, we can create an Azure Databricks job
+that starts a cluster and launches the _Anovos_ workflow.
 
-1.  **Task Name –** Give any task name relevant to your project
+Here's an example of a job configuration:
 
-2.  **Type –** Python, location of main.py script file in DBFS
+![Job configuration](../../assets/azure_databricks_images/image2.png)
 
-3.  **Cluster: -**
-**Note**Attaching link that describes all the information related to cluster configurations.
-[Configure clusters](https://docs.microsoft.com/en-us/azure/databricks/clusters/configure#cluster-configurations)
-  **Cluster Configurations -**
+The cluster configuration comprises settings for the Spark version, the number of workers and worker types,
+as well as the scaling behavior.
+For more detailed information, refer to the
+[Databricks documentation](https://docs.microsoft.com/en-us/azure/databricks/clusters/configure#cluster-configurations).
 
-  ![](../../assets/azure_databricks_images/image3.png)
+For purposes of this tutorial, you can use the following example configuration:
 
-i.  **Cluster mode –** Standard
+![Cluster configuration](../../assets/azure_databricks_images/image3.png)
 
-ii.  **Databricks run time version –** Select the spark and scala version
-    for creating cluster
-
-> For running in python 3.7.x – scala 2.11, spark 2.x.x
-> 
-> For running in python 3.8.x – scala 2.12, spark 3.x.x
-
-iii.  **Autopilot Options –** Enable autoscaling has to be on
-
-iv.  **Worker Types –** General purpose (14GB Memory, 4 cores), min
-    worker – 2, max worker-8
-
-v.  **Driver Types -** General purpose (14GB Memory, 4 cores)
-
-> Notes – Users can change this worker types and driver types
-> configurations according to jobs complexity.
-
-4.  **Parameters –** [ DBFS path to config.yaml , global_run_type]
-
-Eg. - ["/dbfs/FileStore/tables/configs_income_azure.yaml
-", "databricks"]
-
-5.  **Dependent libraries -**
+To give the Databricks platform access to _Anovos_, click on "Advanced options" and select "Add dependent libraries".
+In the configuration dialogue, upload the _Anovos_ wheel.
+**TODO: Why don't we use the "PyPI" option visible in the screenshot?**
 
 ![Add dependent library](../../assets/azure_databricks_images/image4.png)
 
-i.  Add wheel file (.whl file) by uploading from local machine
-    (dist/.whl file)
-
-> Library Source- Upload
-> 
-> Library Type- Python Whl
-
+**TODO: Which Jars need to be uploaded and why? Can't we just get them from Maven?**
 ii.  Add jars by uploading from local machine (jars/.jar file)
 
 > Library Source- Upload
@@ -217,23 +183,21 @@ ii.  Add jars by uploading from local machine (jars/.jar file)
 > DBFS/ADLS (Library Source) if required wheel file and jars are already
 > uploaded there from local machine.
 
-After setting all these required steps in task, click create and jobs
-will be created:
+Once the job is configured, click "Create" to instantiate it.
+On the subsequent screen, click on "Run now" to launch the job:
 
 ![Active and completed runs](../../assets/azure_databricks_images/image5.png)
 
-For running these jobs, click on run now and then jobs will be triggered
-automatically.
+For more information on creating and maintaining jobs, see the
+[Azure Databricks configuration](https://docs.microsoft.com/en-us/azure/databricks/jobs).
 
-Option for scheduling these jobs for running automatically are also available.
+### Step 5: Retrieve the output
 
-**Note:** Attaching links that will brief about creating jobs, running as well as scheduling jobs for reference.
-- [Jobs](https://docs.microsoft.com/en-us/azure/databricks/jobs)
-- [Jobs](https://docs.databricks.com/jobs.html)
+Once the job finishes successfully, it will show up under "Completed runs".
 
-Once the job finishes successfully, users will be able to see their status as succeeded. we can see that in the above images.
-
+**TODO: Be more specific: Where do I go and what will I find? What should I do with that data?**
 The intermediate data and the report data are saved at the master_path and the final_report_path in DBFS as specified by the user inside the configs.yaml file 
+
 
 ## Anovos on Azure Databricks by mounting Azure Blob Storage containers to DBFS
 
