@@ -83,11 +83,11 @@ _To avoid confusion, it's a good practice to rename the wheel file to a custom n
 
 ### Step 2: Copy the data and workflow configuration to DBFS
 
-To run an _Anovos_ workflow, both the data to be processed as well as the workflow configuration
+To run an _Anovos_ workflow, both the data to be processed and the workflow configuration
 need to be stored on DBFS.
 
 You can either use the UI or the CLI to copy files from your local machine to DBFS.
-For detailed instructions, see the respective sub-sections below.
+For detailed instructions, see the respective subsections below.
 
 In this tutorial, we will use "income dataset" and an accompanying pre-defined workflow.
 
@@ -103,7 +103,8 @@ under `config/configs_income_azure.yaml`.
 Update configs.yaml for all input & output DBFS paths. All other  
 changes depend upon the dataset being used.
 
-**TODO: In which folder(s) should the data and config file be placed? The screenshot below shows the config file at FileStore/tables/**
+**TODO: In which folder(s) should the data and config file be placed?
+The screenshot below shows the config file at FileStore/tables/**
 
 To learn more about defining workflows through config files, see the
 [config file documentation](../config_file.md).
@@ -122,7 +123,7 @@ For more detailed instructions, see the
 #### Copying files to DBFS using the CLI
 
 1. Install `databricks-cli` into a local Python environment by running `pip install databricks-cli`.
-2. Generate a personal access token for your Databricks workspace **TODO** Where/how do I create such a token?
+2. Generate a personal access token for your Databricks workspace **TODO: Where/how do I create such a token?**
 3. Configure the CLI to access your workspace by running `databricks configure --token`.
 4. Copy the files using the `dbfs cp` command.
 
@@ -198,54 +199,9 @@ Once the job finishes successfully, it will show up under "Completed runs".
 **TODO: Be more specific: Where do I go and what will I find? What should I do with that data?**
 The intermediate data and the report data are saved at the master_path and the final_report_path in DBFS as specified by the user inside the configs.yaml file 
 
+## Anovos on Azure Databricks using an Azure Blob Storage container mounted to DBFS
 
-## Anovos on Azure Databricks by mounting Azure Blob Storage containers to DBFS
-
-Following are the steps required for running end to end anovos on Azure Databricks Platform using Azure blob storage container by mounting to DBFS:
-
-### Step 1: Installing/Downloading _Anovos_
-
-Clone the Anovos Repository on local machine using command:
-
-```shell
-git clone --depth 1 --branch v0.2.1 https://github.com/anovos/anovos.git
-```
-
-_**Note**: Using the `--branch` flag allows you to select the desired release of Anovos._
-_If you omit the flag, you will get the latest development version of Anovos, which might not_
-_be fully functional or exhibit unexpected behavior._
-
-After cloning, go to anovos directory and execute the following command
-to clean and build the latest modules in dist folder:
-
-```shell
-make clean build
-```
-
-### Step 2: Download the wheel file from PyPI
-
-Users just download the wheel file on the local machine from PyPI which is present at this location [Wheel File Path](https://pypi.org/project/anovos/#files) and put inside 'dist' folder and can directly use this for installing all packages and scripts for running latest release version of anovos in azure databricks.
-
-For running latest development version of Anovos, Users need to create a wheel file on the local machine on their own.The Users need to follow following steps :
-
-Note: Before creating this wheel file, you will need to install python
-packages using command:
-
-```shell
-pip install wheel setuptools
-```
-
-Then create wheel file using setup.py file that contains all python
-scripts and dependencies using command:
-
-```shell
-python setup.py bdist_wheel --universal
-```
-
-After the command finishes executing successfully, a folder name ‘dist’
-contains the .whl file which is your wheel file. Wheel file contains all
-the packages and scripts which are given in setup.py for running anovos
-in azure databricks.
+**TODO: Update to simplified workflow similar to the preceding section**
 
 ### Step 3: Copy the files to an Azure Blob Storage container 
 
