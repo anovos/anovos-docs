@@ -153,7 +153,7 @@ The initial analysis details we records where we understand whether a particular
 
 - **Time Stamp Data Diagnosis**
 
-The landscaping & diagnosis work done on the fields which have been auto-detected as time series. Different statistics are taken out pertaining to the association of devices `id_date` & `date_id` pair combination as specified. Additionally, vital stats are also produced. 
+The landscaping & diagnosis work done on the fields which have been auto-detected as time series. Different statistics are taken out pertaining to the association of devices for `id_date` & `date_id` pair combination as specified. Additionally, vital stats are also produced. 
 
 ![](https://raw.githubusercontent.com/anovos/anovos-docs/docs_update_report_v2/docs/assets/html-reports/time-series-3.png)
 ![](https://raw.githubusercontent.com/anovos/anovos-docs/docs_update_report_v2/docs/assets/html-reports/time-series-4.png)
@@ -162,10 +162,10 @@ The landscaping & diagnosis work done on the fields which have been auto-detecte
 
 The visualization below shows the typical time series plots generated based on the analysis attributes and the granularity of data set for analysis. 
 
-The decomposed view largely talks about some of the the typical components of time series forecasting like Trend, Seasonal & Residual on top of the Observed series. Time series decomposition is supposedly one of the fundamental steps from analysis point irrespective of the model used.
+The decomposed view largely describes about some of the the typical components of time series forecasting like Trend, Seasonal & Residual on top of the Observed series. Time series decomposition is supposedly one of the fundamental steps from analysis point irrespective of the model used.
 
 ![](https://raw.githubusercontent.com/anovos/anovos-docs/docs_update_report_v2/docs/assets/html-reports/time-series-5.png)
 
-The stationarity & transformation view help us in determinining how much the data can be quantified (through KPSS & ADSS test) in terms of transformation needed to attain stationarity. Additionally, we're showing on how a post transformation view basis `Box-Cox-Transformation` can be further in downstream.
+The stationarity & transformation view help us in determinining how much the data can be quantified (through KPSS & ADSS test) in terms of transformation needed to attain stationarity. Additionally, we're showing on how a post transformation view basis `Box-Cox-Transformation` can be further used in the downstream applications.
 
 ![](https://raw.githubusercontent.com/anovos/anovos-docs/docs_update_report_v2/docs/assets/html-reports/time-series-6.png)
