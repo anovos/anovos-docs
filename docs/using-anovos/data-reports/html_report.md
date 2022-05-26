@@ -1,6 +1,6 @@
 # Generating HTML Reports with Anovos
 
-The final output is generated in form of HTML report. This has 7 sections viz. Executive Summary, Wiki, Descriptive Statistics, Quality Check, Attribute Associations, Data Drift & Data Stability and Time Series Analyzer at most which can be seen basis user input. We’ve tried to detail each section based on the analysis performed referring to a publicly available income dataset.
+The final output is generated in form of HTML report. This has 7 sections viz. `Executive Summary`, `Wiki`, `Descriptive Statistics`, `Quality Check`, `Attribute Associations`, `Data Drift & Data Stability` and `Time Series Analyzer` at most which can be seen basis user input. We’ve tried to detail each section based on the analysis performed referring to a publicly available **Income Dataset**.
 
 
 ### Executive Summary
@@ -16,12 +16,16 @@ The **Executive Summary** gives an overall summary of the key statistics obtaine
 
 ### Wiki
 
+![](https://raw.githubusercontent.com/anovos/anovos-docs/docs_update_report_v2/docs/assets/html-reports/wiki-1.png)
+
 The **Wiki** tab has two different sections consisting of:
 
 - **Data Dictionary**: This section contains the details of the attributes present in the data frame. The user if specifies the attribute wise definition at a specific path, then the details of the same will be populated along with the data type else only the attribute wise datatype will be seen.
+
 ![](https://raw.githubusercontent.com/anovos/anovos-docs/docs_update_report_v2/docs/assets/html-reports/wiki-2.png)
 
 - **Metric Dictionary**: Mostly containing the details about the different sections under the report. This could be a quick reference for the user.
+
 ![](https://raw.githubusercontent.com/anovos/anovos-docs/docs_update_report_v2/docs/assets/html-reports/wiki-3.png)
 
 ### Descriptive Statistics
@@ -103,7 +107,7 @@ Attribute Associations section details of the interaction between different attr
 - **Variable Clustering** divides the numerical attributes into disjoint or hierarchical clusters based on linear relationship of attributes. 
 ![](https://raw.githubusercontent.com/anovos/anovos-docs/docs_update_report_v2/docs/assets/html-reports/attribute-association-5.png)
 
-- **Attribute to Target Association** determines the event rate trend across different attribute categories<br>
+- **Attribute to Target Association** determines the event rate trend across different attribute categories :
     **Numeric**
     ![](https://raw.githubusercontent.com/anovos/anovos-docs/docs_update_report_v2/docs/assets/html-reports/attribute-association-6.png)
     **Categorical**
@@ -134,3 +138,34 @@ Attribute wise stability charts have been plotted and the results are being high
 ![](https://raw.githubusercontent.com/anovos/anovos-docs/docs_update_report_v2/docs/assets/html-reports/data-drift-analytics-4.png)
 
 ![](https://raw.githubusercontent.com/anovos/anovos-docs/docs_update_report_v2/docs/assets/html-reports/data-drift-analytics-5.png)
+
+### Time Series Analyzer
+
+![](https://raw.githubusercontent.com/anovos/anovos-docs/docs_update_report_v2/docs/assets/html-reports/time-series-1.png)
+
+This section summarizes the information about timestamp features and how they are interactive with other attributes. An exhaustive diagnosis is done by looking at different time series components, how they could be useful in deriving insights for further downstream applications.
+
+- **The Basic Landscaping**
+
+The initial analysis details we records where we understand whether a particular field qualifies for Time Series check or not. 
+
+![](https://raw.githubusercontent.com/anovos/anovos-docs/docs_update_report_v2/docs/assets/html-reports/time-series-2.png)
+
+- **Time Stamp Data Diagnosis**
+
+The landscaping & diagnosis work done on the fields which have been auto-detected as time series. Different statistics are taken out pertaining to the association of devices `id_date` & `date_id` pair combination as specified. Additionally, vital stats are also produced. 
+
+![](https://raw.githubusercontent.com/anovos/anovos-docs/docs_update_report_v2/docs/assets/html-reports/time-series-3.png)
+![](https://raw.githubusercontent.com/anovos/anovos-docs/docs_update_report_v2/docs/assets/html-reports/time-series-4.png)
+
+- **Visualization across the Shortlisted Timestamp Attributes**
+
+The visualization below shows the typical time series plots generated based on the analysis attributes and the granularity of data set for analysis. 
+
+The decomposed view largely talks about some of the the typical components of time series forecasting like Trend, Seasonal & Residual on top of the Observed series. Time series decomposition is supposedly one of the fundamental steps from analysis point irrespective of the model used.
+
+![](https://raw.githubusercontent.com/anovos/anovos-docs/docs_update_report_v2/docs/assets/html-reports/time-series-5.png)
+
+The stationarity & transformation view help us in determinining how much the data can be quantified (through KPSS & ADSS test) in terms of transformation needed to attain stationarity. Additionally, we're showing on how a post transformation view basis `Box-Cox-Transformation` can be further in downstream.
+
+![](https://raw.githubusercontent.com/anovos/anovos-docs/docs_update_report_v2/docs/assets/html-reports/time-series-6.png)
