@@ -21,3 +21,4 @@ The following parameters are specified in the function **anovos_report**:
 - **metricDict_path**: The path containing the metric dictionary 
 - **run_type**: Option to specify whether the execution happen locally or in EMR way
 - **final_report_path**: Path where the final report needs to be saved
+- **output_type**: Time category of analysis which can be between "Daily", "Hourly", "Weekly"
