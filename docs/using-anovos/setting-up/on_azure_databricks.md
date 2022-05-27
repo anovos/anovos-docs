@@ -10,7 +10,7 @@ or the following introductoray tutorials:
 - [A beginner’s guide to Azure Databricks](https://www.sqlshack.com/a-beginners-guide-to-azure-databricks/)
 - [Azure Databricks Hands-on](https://medium.com/@jcbaey/azure-databricks-hands-on-6ed8bed125c7)
 
-Currently, _Anovos_ supports two ways of running workflows on Azure Databricks using python way: 
+Currently, _Anovos_ supports two ways of running workflows on Azure Databricks: 
 
 1.	Using DBFS directly - Generally used when dataset is present in dbfs path
 2.	Mounting an Azure blob storage container to DBFS - Generally used when dataset is present in azure blob storage container and of any size
@@ -19,8 +19,8 @@ Currently, _Anovos_ supports two ways of running workflows on Azure Databricks u
 
 The following steps are required for running _Anovos_ workloads on Azure Databricks using DBFS.
 
-### Step 1: Install anovos packages directly from PyPI
-To make the latest released version of _Anovos_ available on Azure Databricks, you need to install anovos packages directly from PyPI. The detailed instructions of installing anovos packages from PyPI is shown in step 4.
+### Step 1: Installing/Downloading _Anovos_
+To make the latest released version of _Anovos_ available on Azure Databricks, you need to install anovos packages directly from PyPI in step 4 itself.
 
 Another way to make _Anovos_ available on Azure Databricks, you need to upload a wheel file.
 The easiest way to obtain it is to download directly from PyPI.
@@ -95,15 +95,13 @@ git clone https://github.com/anovos/anovos.git
 You'll find the dataset under `examples/data/income_dataset` and the configuration file
 under `config/configs_income_azure.yaml`.
 
-Users can give the input dataset path and output path as dbfs path.For example, here in input_dataset section file_path kept at this dbfs path - "dbfs:/FileStore/tables/income_dataset/csv/". Users can store data in same dbfs path as given in config file or can keep input and output path in any dbfs path as per their choice and will update in config file accordingly to run the example.
+Users can update configs.yaml for all input & output DBFS paths
+For example,you can see below input_dataset section, here input_dataset kept at this dbfs path - "dbfs:/FileStore/tables/income_dataset/csv/". Users can store data in same dbfs path as given in config file or can keep input and output path in any dbfs path as per their choice and will update in config file accordingly to run the example.
 
 input_dataset:
 ...
-  read_dataset:
-      file_path: "dbfs:/FileStore/tables/income_dataset/csv/"
+  file_path: "dbfs:/FileStore/tables/income_dataset/csv/"
 ...    
-Update configs.yaml for all input & output DBFS paths. All other  
-changes depend upon the dataset being used.
 
 Also you can now adapt the workflow it describes to your needs.
 
@@ -162,12 +160,12 @@ workflow.run(config_path=sys.argv[1], run_type="databricks")
 Upload this script to DBFS as well.
 Users can place at any location as per their choice. Here in this tutorial it is placed at FileStore/tables/scripts/**
 
-### Step 4: Configure and launch an _Anovos_ workflow as a Databricks job
+### Step 4: Configure and launch an _Anovos_ workflow as a Databricks job in Python way
 
 Once all files have been copied to DBFS, we can create an Azure Databricks job
 that starts a cluster and launches the _Anovos_ workflow.
 
-Here's an example of a job configuration: In fig you can show we need to keep the type as Python and also need to give the dbfs path of `main.py` script.In Parameter section we need to give the dbfs path of config file and assign the run_type as "databricks".
+Here's an example of a job configuration: In figure you can see we need to keep the type as Python and also need to give the dbfs path of `main.py` script.In Parameters section we need to give the dbfs path of config file and assign the run_type as "databricks".
 
 ![Job configuration](../../assets/azure_databricks_images/image2.png)
 
@@ -193,6 +191,7 @@ The following figure shows examples of how to install these jars through Maven.
 ![Adding histogramm jars through Maven](../../assets/azure_databricks_images/image9.png)
 
 Once the job is configured, click "Create" to instantiate it and then users will be able to see like this in tasks
+
 ![Task Details](../../assets/azure_databricks_images/image10.png)
 
 On the subsequent screen, click on "Run now" to launch the job:
@@ -212,8 +211,8 @@ The intermediate data and the report data are saved at the master_path and the f
 
 The following steps are required for running _Anovos_ workloads on Azure Databricks using an Azure Blob Storage container mounted to DBFS
 
-### Step 1: Install anovos packages directly from PyPI
-To make the latest released version of _Anovos_ available on Azure Databricks, you need to install anovos packages directly from PyPI.
+### Step 1: Installing/Downloading _Anovos_
+To make the latest released version of _Anovos_ available on Azure Databricks, you need to install anovos packages directly from PyPI in step 7 itself.
 
 Another way to make _Anovos_ available on Azure Databricks, you need to upload a wheel file.
 The easiest way to obtain it is to download directly from PyPI.
@@ -274,7 +273,7 @@ _To avoid confusion, it's a good practice to rename the wheel file to a custom n
 
 To run an _Anovos_ workflow, the dataset needs to be stored on an Azure Blob Storage container.
 
-You can either use the UI by clicking upload button or the CLI to copy files from your local machine to an Azure Blob Storage container
+You can either use the UI by clicking upload button or the CLI to copy files from your local machine to an Azure Blob Storage container.
 For detailed instructions, see the respective subsections below.
 
 In this tutorial, we will use "income dataset" and an accompanying pre-defined workflow.
@@ -362,7 +361,7 @@ workflow.run(config_path=sys.argv[1], run_type="databricks")
 
 Upload this script to copy on Azure Blob Storage in the same container that was mounted to DBFS.
 
-### Step 7: Creating jobs for running anovos by initiating cluster on Azure Databricks
+### Step 7: Creating jobs for running anovos by initiating cluster on Azure Databricks in Python way
 Once you have copied all files in Azure Blob Storage Container after doing mounting, then you can create jobs for running anovos by starting cluster and provides all the task details like task name, type, cluster configurations, Parameters and Dependent Libraries. Below shows one sample example for creating jobs for reference.
 
 **•Task Details**
@@ -406,6 +405,7 @@ The following figure shows how to install these jars through Maven.
 ![Adding histogramm jars through Maven](../../assets/azure_databricks_images/image9.png)
 
 Once the job is configured, click "Create" to instantiate it and then users will be able to see like this in tasks
+
 ![Task Details](../../assets/azure_databricks_images/image11.png)
 
 On the subsequent screen, click on "Run now" to launch the job:
