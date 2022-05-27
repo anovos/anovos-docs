@@ -372,7 +372,7 @@ To unmount a mount point, use the following command in Azure databricks notebook
 
 Once mounting is completed, the data is present in the required dbfs path where we have given in mount_point. All the operations happened during running anovos by using this mount dbfs path and that automatically get updated in azure blob storage container too.
 
-Config.yaml file that is available in local machine needs to be updated accordingly using path which we have given in mount_point.
+Config.yaml file that is available in local machine which is present under - config/configs_income_azure_blob_mount.yaml needs to be updated accordingly using path which we have given in mount_point.
 Input and Output Path should be updated everywhere in config file that starts like this 
 
     For Pyspark operations - "dbfs:/mnt/mount-name/folder_name/"
@@ -392,11 +392,12 @@ here mount-name refers to anovos1 and income_dataset is the folder name that is 
 
 ### Step 5: Copy updated config file from local machine to Azure Blob Storage container
 
-Users can copy config file using UI or from azure command in similar way like in step 2 in the same container that was mounted to DBFS
-
-    - config/configs_income_azure_blob_mount.yaml
+Updated config file present under this in local machine - config/configs_income_azure_blob_mount.yaml
     
 This is the sample yaml configuration file which sets the argument for all functions for running anovos in Azure Databricks using Azure Bolb Storage Container
+
+Users can copy updated config file using UI or from azure command in similar way like in step 2 in the same container that was mounted to DBFS
+
 
 ### Step 6: Create a workflow script
 
