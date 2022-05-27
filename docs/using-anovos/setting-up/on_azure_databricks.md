@@ -7,6 +7,7 @@ It is a convenient way to handle big data workloads of Spark without having to s
 To learn more about Azure Databricks, have a look at
 [the official documentation](https://databricks.com/introducing-azure-databricks)
 or the following introductory tutorials:
+
 - [A beginner’s guide to Azure Databricks](https://www.sqlshack.com/a-beginners-guide-to-azure-databricks/)
 - [Azure Databricks Hands-on](https://medium.com/@jcbaey/azure-databricks-hands-on-6ed8bed125c7)
 
@@ -25,6 +26,7 @@ The following steps are required for running _Anovos_ workloads on Azure Databri
 on DBFS.
 
 ### Step 1: Installing _Anovos_ on Azure Databricks
+
 To make _Anovos_ available on Azure Databricks, you need to provide access to the _Anovos_ Python package.
 
 The easiest way is to point Azure Databricks to the
@@ -90,7 +92,7 @@ python -m build --wheel --outdir dist/ .
 Once the process is finished, the folder `dist` will contain the wheel file.
 It will have the file extension `*.whl` and might carry the latest version in its name.
 
-_**Note:** The version in the file name will be that of the latest version of _Anovos_,_
+_**Note:** The version in the file name will be that of the latest version of Anovos,_
 _even if you cloned the repository yourself and used the latest state of the code._
 _This is due to the fact that the version is only updated right before new release is published._
 _To avoid confusion, it's a good practice to rename the wheel file to a custom name._
@@ -106,6 +108,7 @@ For detailed instructions, see the respective subsections below.
 In this tutorial, we will use "income dataset" and an accompanying pre-defined workflow.
 
 You can obtain these files by cloning the _Anovos_ GitHub repository:
+
 ```shell
 git clone https://github.com/anovos/anovos.git
 ```
@@ -163,7 +166,7 @@ in the subsequent steps.
 
 #### Copying files to DBFS using the UI
 
-![https://raw.githubusercontent.com/anovos/anovos-docs/azure_databricks_docs/docs/assets/azure_databricks_images/image1.png](https://raw.githubusercontent.com/anovos/anovos-docs/azure_databricks_docs/docs/assets/azure_databricks_images/image1.png)
+![Uploading files through the Databricks UI](../../assets/azure_databricks_images/image1.png)
 
 1. Launch the Azure Databricks workspace.
 2. Enter the data menu.
@@ -176,7 +179,8 @@ For more detailed instructions, see the
 
 1. Install `databricks-cli` into a local Python environment by running `pip install databricks-cli`.
 2. Generate a personal access token for your Databricks workspace by going to _Settings_ > _User Settings_ >
-   _Generate new token_. For details, see the [Databricks documentation](https://docs.microsoft.com/azure/databricks/dev-tools/api/latest/authentication).
+   _Generate new token_. For details, see the
+  [Databricks documentation](https://docs.microsoft.com/azure/databricks/dev-tools/api/latest/authentication).
 3. Configure the CLI to access your workspace by running `databricks configure --token`.
 4. Enter the URL of the databricks host (the domain of your workspace,
    usually of the pattern `https://<UNIQUE ID OF YOUR WORKSPACE>.azuredatabricks.net/`) and the token when prompted
@@ -185,6 +189,7 @@ For more detailed instructions, see the
 6. Then copy the files using the `dbfs cp` command:
 
 For example:
+
 ```shell
 dbfs cp anovos/config/configs_income_azure.yaml dbfs:/FileStore/tables/configs_income_azure.yaml
 dbfs cp anovos/data/data_dictionary.csv dbfs:/FileStore/tables/data_dictionary.csv
@@ -198,6 +203,7 @@ For more information on the Databricks CLI, see the
 
 To launch the workflow on Azure Databricks, we need a single Python script as the entry point.
 Hence, we'll create a `main.py` script that invokes the _Anovos'_ workflow runner:
+
 ```python
 import sys
 from anovos import workflow
@@ -270,6 +276,7 @@ In this tutorial, we have set these paths to `dbfs:FileStore/tables/report_stats
 
 To retrieve the HTML report and the report data, you can either go to this path in the UI and copy the files,
 or use the CLI to copy everything to your local machine:
+
 ```shell
 dbfs cp -r dbfs:/FileStore/tables/report_stats/ ./
 ```
