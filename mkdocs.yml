@@ -44,9 +44,10 @@ nav:
   - Using Anovos:
       - Setting up:
           - Locally: using-anovos/setting-up/locally.md
-          - On AWS: using-anovos/setting-up/on_aws.md
-          - Google Colab: using-anovos/setting-up/on_google_colab.md
-          - Spark cluster: using-anovos/setting-up/spark_cluster.md
+          - On AWS EMR: using-anovos/setting-up/on_aws.md
+          - On Azure Databricks: using-anovos/setting-up/on_azure_databricks.md
+          - On Google Colab: using-anovos/setting-up/on_google_colab.md
+          - On a Spark cluster: using-anovos/setting-up/spark_cluster.md
       - Workflow: using-anovos/workflow.md
       - Configuration: using-anovos/config_file.md
       - Data Reports:
