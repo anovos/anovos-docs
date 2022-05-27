@@ -279,4 +279,4 @@ For more details regarding accessing files on DBFS, see the instructions on uplo
 ## Anovos on Azure Databricks using an Azure Blob Storage container mounted to DBFS
 
 _We're currently working on this section._
-_If you're interested in learning more about this option, [let us know!](../community/communication.md)_
+_If you're interested in learning more about this option, [let us know!](../../community/communication.md)_
