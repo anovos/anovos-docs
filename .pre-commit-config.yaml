@@ -10,3 +10,8 @@ repos:
     -   id: mixed-line-ending
     -   id: check-merge-conflict
     -   id: check-case-conflict
+
+- repo: https://github.com/jackdewinter/pymarkdown
+  rev: v0.9.6
+  hooks:
+  - id: pymarkdown
