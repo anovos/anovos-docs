@@ -112,6 +112,7 @@ git clone https://github.com/anovos/anovos.git
 
 You'll find the dataset under `examples/data/income_dataset` and the configuration file
 under `config/configs_income_azure.yaml`.
+You'll also need the `metric_dictionary.csv` file found under `data/`.
 
 The `configs_income_azure.yaml` file contains the definition of the _Anovos_ workflow.
 (To learn more about this file, see [📖 Configuring Workloads](../config_file.md).)
@@ -133,6 +134,10 @@ In this tutorial, by default, all these paths are set to `dbfs:/FileStore/tables
 The location where the processed data is stored is given by `file_path` in the blocks `write_main`,
 `write_intermediate`, and `write_stats`.
 In this tutorial, by default, these are set to sub-folders of `dbfs:/FileStore/tables/result`.
+
+Finally, you need to ensure that the path to the `metric_dictionary.csv` file as well as the
+`data_dictionary.csv` file, which is part of the "income dataset", are correctly specified in the
+`report_generation` block.
 
 You can also make other changes to the workflow.
 For example, you can define which columns from the input dataset are used in the workflow.
@@ -181,7 +186,8 @@ For more detailed instructions, see the
 
 For example:
 ```shell
-dbfs cp configs_income_azure.yaml dbfs:/FileStore/tables/configs_income_azure.yaml
+dbfs cp anovos/config/configs_income_azure.yaml dbfs:/FileStore/tables/configs_income_azure.yaml
+dbfs cp anovos/data/data_dictionary.csv dbfs:/FileStore/tables/data_dictionary.csv
 dbfs cp -r anovos/examples/data/income_dataset dbfs:/FileStore/tables/income_dataset
 ```
 
