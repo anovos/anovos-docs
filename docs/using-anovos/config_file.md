@@ -11,12 +11,12 @@ Such a configuration file defines:
 
 Defining workloads this way allows users to make full use of _Anovos_ capabilities
 while maintaining an easy-to-grasp overview.
-Since each configuration file fully describes one workload,  these files can be 
+Since each configuration file fully describes one workload,  these files can be
 shared,  versioned,  and run across different compute environments.
 
-In the following,  we'll describe in detail each of the sections in an _Anovos_ 
+In the following,  we'll describe in detail each of the sections in an _Anovos_
 configuration file.
-If you'd rather see a full example right away,  have a look at 
+If you'd rather see a full example right away,  have a look at
 [this example](https://github.com/anovos/anovos/blob/main/config/configs.yaml).
 
 Note that each section of the configuration file maps to a module of _Anovos_.
@@ -49,22 +49,24 @@ First,  columns are deleted,  then selected,  then renamed,  and then recast.
    (Please note that if you're using Avro data sources,  you need to add the external
    package `org.apache.spark:spark-avro` when submitting the Spark job.)
 
-- `file_configs` (optional): Options to pass to the respective Spark file reader, 
+- `file_configs` (optional): Options to pass to the respective Spark file reader,
    e.g.,  delimiters,  schemas,  headers. In the case of a CSV file,  this might look
    like:
+
    ```yaml
    file_configs:
      delimiter: ", "
      header: True
      inferSchema: True
    ```
+
    For more information on available configuration options,  see the following external
    documentation:
-   
-     - [Read CSV files](https://sparkbyexamples.com/pyspark/pyspark-read-csv-file-into-dataframe/)
-     - [Read Parquet files](https://sparkbyexamples.com/pyspark/pyspark-read-and-write-parquet-file/)
-     - [Read Avro files](https://sparkbyexamples.com/spark/read-write-avro-file-spark-dataframe/)
-  
+
+  - [Read CSV files](https://sparkbyexamples.com/pyspark/pyspark-read-csv-file-into-dataframe/)
+  - [Read Parquet files](https://sparkbyexamples.com/pyspark/pyspark-read-and-write-parquet-file/)
+  - [Read Avro files](https://sparkbyexamples.com/spark/read-write-avro-file-spark-dataframe/)
+
 ### `delete_column`
 
 🔎 _Corresponds to [`data_ingest.delete_column`](../api/data_ingest/data_ingest.md#anovos.data_ingest.data_ingest.delete_column)_
@@ -73,6 +75,7 @@ List of column names (list of strings or string of column names separated by `|`
 to be deleted from the loaded input data.
 
 🤓  _Example:_
+
 ```yaml
 delete_column: ['unnecessary',  'obsolete',  'outdated']
 ```
@@ -85,6 +88,7 @@ List of column names (list of strings or string of column names separated by `|`
 to be selected for further processing.
 
 🤓  _Example:_
+
 ```yaml
 select_column: ['feature1',  'feature2',  'feature3',  'label']
 ```
@@ -100,6 +104,7 @@ select_column: ['feature1',  'feature2',  'feature3',  'label']
   to the first name in `list_of_newcols` and so on.
 
 🤓  _Example:_
+
 ```yaml
 rename_column:
   list_of_cols: ['very_long_column_name',  'price']
@@ -122,6 +127,7 @@ This will rename the column `very_long_column_name` to `short_name` and the colu
   Note that this field is case-insensitive.
 
 🤓  _Example:_
+
 ```yaml
 recast_column:
   list_of_cols: ['price',  'quantity']
@@ -148,6 +154,7 @@ If the subsequent dataframes have too few columns (`index`) or are missing named
 for the concatenation to proceed,  an error will be raised.
 
 🤓  _Example:_
+
 ```yaml
 method: name
 ```
@@ -171,9 +178,9 @@ method: name
   (Please note that if you're using Avro data sources,  you need to add the external
   package `org.apache.spark:spark-avro` when submitting the Spark job.)
 
-- `file_configs` (optional): Options to pass to the respective Spark file reader, 
+- `file_configs` (optional): Options to pass to the respective Spark file reader,
   e.g.,  delimiters,  schemas,  headers.
-  
+
 #### `delete_column`
 
 🔎 _Corresponds to [`data_ingest.delete_column`](../api/data_ingest/data_ingest.md#anovos.data_ingest.data_ingest.delete_column)_
@@ -211,7 +218,7 @@ to be selected for further processing.
   for a list of valid datatypes.
   Note that this field is case-insensitive.
 
-### `dataset2`,  `dataset3`,  ...
+### `dataset2`,  `dataset3`,  …
 
 Additional datasets are configured in the same manner as `dataset1`.
 
@@ -229,6 +236,7 @@ In the case that the key consists of multiple columns,  they can be passed as a 
 a single string where the column names are separated by `|`.
 
 🤓  _Example:_
+
 ```yaml
 join_cols: id_column
 ```
@@ -241,6 +249,7 @@ For a general introduction to joins,  see
 [📖 this tutorial](https://sparkbyexamples.com/spark/spark-sql-dataframe-join/).
 
 🤓  _Example:_
+
 ```yaml
 join_type: inner
 ```
@@ -264,9 +273,9 @@ join_type: inner
   (Please note that if you're using Avro data sources,  you need to add the external
   package `org.apache.spark:spark-avro` when submitting the Spark job.)
 
-- `file_configs` (optional): Options to pass to the respective Spark file reader, 
+- `file_configs` (optional): Options to pass to the respective Spark file reader,
   e.g.,  delimiters,  schemas,  headers.
-  
+
 #### `delete_column`
 
 🔎 _Corresponds to [`data_ingest.delete_column`](../api/data_ingest/data_ingest.md#anovos.data_ingest.data_ingest.delete_column)_
@@ -304,7 +313,7 @@ to be selected for further processing.
   for a list of valid datatypes.
   Note that this field is case-insensitive.
 
-### `dataset2`,  `dataset3`,  ...
+### `dataset2`,  `dataset3`,  …
 
 Additional datasets are configured in the same manner as `dataset1`.
 
@@ -327,14 +336,15 @@ Configuration for the time series analyzer.
 
 - `analysis_level`: Can be set to `daily`,  `weekly`,  or `hourly`. The default setting is `daily`.
   If set to `daily`,  the daily view is populated.
-  If set to `hourly`,  the view is shown at a day part level.  
+  If set to `hourly`,  the view is shown at a day part level.
   If set to `weekly`,  the display it per individual weekdays (1-7) as captured.
 
 - `max_days`: Maximum number of days up to which the data will be aggregated.
-  If the dataset contains a timestamp/date field with very high number of unique dates 
+  If the dataset contains a timestamp/date field with very high number of unique dates
   (e.g.,  20 years worth of daily data),  this option can be used to reduce the timespan that is analyzed.
 
 🤓  _Example:_
+
 ```yaml
 timeseries_analyzer:
     auto_detection: True
@@ -349,8 +359,8 @@ timeseries_analyzer:
 
 🔎 _Corresponds to [`data_report.basic_report_generation`](../api/data_report/basic_report_generation.md)_
 
-The basic report consists of a summary of the outputs of the 
-[stats_generator](../api/data_analyzer/stats_generator.md), 
+The basic report consists of a summary of the outputs of the
+[stats_generator](../api/data_analyzer/stats_generator.md),
 [quality_checker](../api/data_analyzer/quality_checker.md),  and
 [association evaluator](../api/data_analyzer/association_evaluator.md)
 See the [📖 documentation for data reports](data-reports/overview.md) for more details.
@@ -381,6 +391,7 @@ Nevertheless,  all the computed statistics and metrics will be available in the 
   (when running on Azure).
 
 🤓  _Example:_
+
 ```yaml
 report_args:
   id_col: id_column
@@ -393,9 +404,9 @@ report_args:
 
 🔎 _Corresponds to [`data_analyzer.stats_generator`](../api/data_analyzer/stats_generator.md)_
 
-This module generates descriptive statistics of the ingested data. 
+This module generates descriptive statistics of the ingested data.
 Descriptive statistics are split into different metric types.
-Each function corresponds to one metric type. 
+Each function corresponds to one metric type.
 
 ### `metric`
 
@@ -411,6 +422,7 @@ Available options are:
 - [📖  `measures_of_shape`](../api/data_analyzer/stats_generator.md#anovos.data_analyzer.stats_generator.measures_of_shape)
 
 🤓  _Example:_
+
 ```yaml
 metric: ['global_summary',  'measures_of_counts',  'measures_of_cardinality',  'measures_of_dispersion']
 ```
@@ -427,6 +439,7 @@ metric: ['global_summary',  'measures_of_counts',  'measures_of_cardinality',  '
   for all except a few columns without having to specify a potentially very long list of column names to include.
 
 🤓  _Example:_
+
 ```yaml
 metric_args:
   list_of_cols: all
@@ -438,7 +451,7 @@ metric_args:
 🔎 _Corresponds to [`data_analyzer.quality_checker`](../api/data_analyzer/quality_checker.md)_
 
 This module assesses the data quality along different dimensions.
-Quality metrics are computed at both the row and column level. 
+Quality metrics are computed at both the row and column level.
 Further,  the module includes appropriate treatment options to fix several common quality issues.
 
 ### `duplicate_detection`
@@ -452,10 +465,11 @@ Further,  the module includes appropriate treatment options to fix several commo
 - `drop_cols`: List of column names (list of strings or string of column names separated by `|`)
   to be excluded from duplicate detection.
 
-- `treatment`: If `False`,  duplicates are detected and reported. 
+- `treatment`: If `False`,  duplicates are detected and reported.
   If `True`,  duplicate rows are removed from the input dataset.
 
 🤓  _Example:_
+
 ```yaml
 duplicate_detection:
   list_of_cols: all
@@ -474,7 +488,7 @@ duplicate_detection:
 - `drop_cols`: List of column names (list of strings or string of column names separated by `|`)
   to exclude from `null` rows detection.
 
-- `treatment`: If `False`,  `null` rows are detected and reported. 
+- `treatment`: If `False`,  `null` rows are detected and reported.
   If `True`,  rows where more than `treatment_threshold` columns are `null` are removed from the input dataset.
 
 - `treatment_threshold`: It takes a value between `0` and `1` (default `0.8`) that specifies which fraction of
@@ -483,6 +497,7 @@ duplicate_detection:
   If the threshold is `1`,  only rows where all values are missing will be flagged as `null`.
 
 🤓  _Example:_
+
 ```yaml
 nullRows_detection:
   list_of_cols: all
@@ -502,16 +517,17 @@ nullRows_detection:
 - `drop_cols`: List of column names (list of strings or string of column names separated by `|`)
   to exclude from invalid entries' detection.
 
-- `treatment`: If `False`,  invalid entries are detected and reported. 
+- `treatment`: If `False`,  invalid entries are detected and reported.
   If `True`,  invalid entries are replaced with `null`.
 
-- `output_mode`: Can be either `"replace"` or `"append"`. 
+- `output_mode`: Can be either `"replace"` or `"append"`.
  If set to `"replace"`,  the original columns will be replaced with the treated columns.
  If set to `"append"`,  the original columns will be kept and the treated columns will be appended to the dataset.
  The appended columns will be named as the original column with a suffix `"_cleaned"`
  (e.g.,  the column `"cost_of_living_cleaned"` corresponds to the original column `"cost_of_living"`).
 
 🤓  _Example:_
+
 ```yaml
 invalidEntries_detection:
   list_of_cols: all
@@ -531,12 +547,13 @@ invalidEntries_detection:
 - `drop_cols`: List of column names (list of strings or string of column names separated by `|`)
   to exclude from IDness detection.
 
-- `treatment`: If `False`,  columns with high IDness are detected and reported. 
+- `treatment`: If `False`,  columns with high IDness are detected and reported.
   If `True`,  columns with an IDness above `treatment_threshold` are removed.
 
 - `treatment_threshold`: A value between `0` and `1` (default `1.0`).
 
 🤓  _Example:_
+
 ```yaml
 IDness_detection:
   list_of_cols: all
@@ -556,12 +573,13 @@ IDness_detection:
 - `drop_cols`: List of column names (list of strings or string of column names separated by `|`)
   to exclude from biasedness detection.
 
-- `treatment`: If `False`,  columns with high IDness are detected and reported. 
+- `treatment`: If `False`,  columns with high IDness are detected and reported.
   If `True`,  columns with a bias above `treatment_threshold` are removed.
 
 - `treatment_threshold`: A value between `0` and `1` (default `1.0`).
 
 🤓  _Example:_
+
 ```yaml
 biasedness_detection:
   list_of_cols: all
@@ -588,16 +606,16 @@ biasedness_detection:
 
 - `detection_configs`: A map that defines the input parameters for different outlier detection methods.
   Possible keys are:
-    - `pctile_lower` (default `0.05`)
-    - `pctile_upper` (default `0.95`)
-    - `stdev_lower` (default `3.0`)
-    - `stdev_upper` (default `3.0`)
-    - `IQR_lower` (default `1.5`)
-    - `IQR_upper` (default `1.5`)
-    - `min_validation` (default `2`)
+  - `pctile_lower` (default `0.05`)
+  - `pctile_upper` (default `0.95`)
+  - `stdev_lower` (default `3.0`)
+  - `stdev_upper` (default `3.0`)
+  - `IQR_lower` (default `1.5`)
+  - `IQR_upper` (default `1.5`)
+  - `min_validation` (default `2`)
   For details,  see [📖 the `outlier_detection` API documentation](../api/data_analyzer/quality_checker.md#anovos.data_analyzer.quality_checker.outlier_detection)
 
-- `treatment`: If `False`,  outliers are detected and reported. 
+- `treatment`: If `False`,  outliers are detected and reported.
   If `True`,  outliers are treated with the specified `treatment_method`.
 
 - `treatment_method`: Specifies how outliers are treated.
@@ -616,13 +634,14 @@ biasedness_detection:
   If `pre_existing_model` is `False`,  a file with lower/upper bounds will be saved at this location.
   By default,  it is set to `NA`,  indicating that there is neither a pre-saved file nor should such a file be generated.
 
-- `output_mode`: Can be either `"replace"` or `"append"`. 
+- `output_mode`: Can be either `"replace"` or `"append"`.
   If set to `"replace"`,  the original columns will be replaced with the treated columns.
   If set to `"append"`,  the original columns will be kept and the treated columns will be appended to the dataset.
   The appended columns will be named as the original column with a suffix `"_outliered"`
   (e.g.,  the column `"cost_of_living_outliered"` corresponds to the original column `"cost_of_living"`).
 
 🤓  _Example:_
+
 ```yaml
 outlier_detection:
   list_of_cols: all
@@ -659,7 +678,7 @@ outlier_detection:
 - `drop_cols`: List of column names (list of strings or string of column names separated by `|`)
   to be excluded from `null` columns detection.
 
-- `treatment`: If `False`,  `null` columns are detected and reported. 
+- `treatment`: If `False`,  `null` columns are detected and reported.
   If `True`,  missing values are treated with the specified `treatment_method`.
 
 - `treatment_method`: Specifies how `null` columns are treated.
@@ -673,6 +692,7 @@ outlier_detection:
   function.
 
 🤓  _Example:_
+
 ```yaml
 nullColumns_detection:
   list_of_cols: all
@@ -692,7 +712,7 @@ nullColumns_detection:
 
 This block configures the association evaluator that focuses on understanding the
 interaction between different attributes or the relationship between an attribute
-and a binary target variable. 
+and a binary target variable.
 
 ### `correlation_matrix`
 
@@ -703,11 +723,12 @@ and a binary target variable.
   Alternatively,  when set to `all`,  all columns are included.
 
 - `drop_cols`: List of column names (list of strings or string of column names separated by `|`)
-  to be excluded from the correlation matrix. 
+  to be excluded from the correlation matrix.
   This is especially useful when almost all columns should be included in the correlation matrix:
   Set `list_of_cols` to `all` and drop the few excluded columns.
 
 🤓  _Example:_
+
 ```yaml
 correlation_matrix:
   list_of_cols: all
@@ -736,6 +757,7 @@ correlation_matrix:
     Can be a computationally expensive calculation. Defaults to `0`.
 
 🤓  _Example:_
+
 ```yaml
 IV_calculation:
   list_of_cols: all
@@ -770,6 +792,7 @@ IV_calculation:
     Can be a computationally expensive calculation. Defaults to `0`.
 
 🤓  _Example:_
+
 ```yaml
 IG_calculation:
   list_of_cols: all
@@ -793,6 +816,7 @@ IG_calculation:
   to exclude from variable clustering.
 
 🤓  _Example:_
+
 ```yaml
 variable_clustering:
   list_of_cols: all
@@ -820,7 +844,10 @@ to detect drift within and between datasets.
   to exclude from the drift statistics.
 
 - `method_type`: Method(s) to apply to detect drift  (list or string of methods separated by `|`).
-  Possible values are [`PSI`](https://www.listendata.com/2015/05/population-stability-index.html),  [`JSD`](https://medium.com/datalab-log/measuring-the-statistical-similarity-between-two-samples-using-jensen-shannon-and-kullback-leibler-8d05af514b15),  [`HD`](https://www.tifr.res.in/~prahladh/teaching/2011-12/comm/lectures/l12.pdf),  and [`KS`](https://www.itl.nist.gov/div898/handbook/eda/section3/eda35g.htm).
+  Possible values are [`PSI`](https://www.listendata.com/2015/05/population-stability-index.html),
+  [`JSD`](https://medium.com/datalab-log/measuring-the-statistical-similarity-between-two-samples-using-jensen-shannon-and-kullback-leibler-8d05af514b15),
+  [`HD`](https://www.tifr.res.in/~prahladh/teaching/2011-12/comm/lectures/l12.pdf),
+  and [`KS`](https://www.itl.nist.gov/div898/handbook/eda/section3/eda35g.htm).
   If set to `all`,  all available metrics are calculated.
 
 - `threshold`: Threshold above which attributes are flagged as exhibiting drift.
@@ -838,10 +865,12 @@ to detect drift within and between datasets.
 - `source_path`: If `pre_existing_source` is `true`,  this described from where the pre-computed
   data is loaded.
 
-
-- `drift_statistics_folder`. drift_statistics folder must contain the output from `attribute_binning` & `frequency_counts`. If `pre_existing_source` is False,  this can be used for saving the details. Default folder "NA" is used for saving the intermediate output
+- `drift_statistics_folder`. drift_statistics folder must contain the output from `attribute_binning` and
+  `frequency_counts`. If `pre_existing_source` is False,  this can be used for saving the details.
+  Default folder "NA" is used for saving the intermediate output.
 
 🤓  _Example:_
+
 ```yaml
 configs:
   list_of_cols: all
@@ -872,7 +901,7 @@ The reference/baseline dataset.
   (Please note that if you're using Avro data sources,  you need to add the external
   package `org.apache.spark:spark-avro` when submitting the Spark job.)
 
-- `file_configs` (optional): Options to pass to the respective Spark file reader, 
+- `file_configs` (optional): Options to pass to the respective Spark file reader,
   e.g.,  delimiters,  schemas,  headers.
 
 ##### `delete_column`
@@ -924,12 +953,13 @@ to be selected for further processing.
 - `threshold`: The threshold above which attributes are flagged as unstable.
 
 🤓  _Example:_
+
 ```yaml
 configs:
   metric_weightages:
     mean: 0.5
     stddev: 0.3
-    kurtosis: 0.2 
+    kurtosis: 0.2
   existing_metric_path: ''
   appended_metric_path: 'si_metrics'
   threshold: 2
@@ -954,10 +984,10 @@ _Corresponds to [`data_ingest.read_dataset`](../api/data_ingest/data_ingest.md#a
   (Please note that if you're using Avro data sources,  you need to add the external
   package `org.apache.spark:spark-avro` when submitting the Spark job.)
 
-- `file_configs` (optional): Options to pass to the respective Spark file reader, 
+- `file_configs` (optional): Options to pass to the respective Spark file reader,
   e.g.,  delimiters,  schemas,  headers.
-  
-#### `dataset2`,  `dataset3`,  ...
+
+#### `dataset2`,  `dataset3`,  …
 
 Additional datasets are configured in the same manner as `dataset1`.
 
@@ -967,11 +997,12 @@ Additional datasets are configured in the same manner as `dataset1`.
 
 This configuration block describes the data pre–processing necessary for report generation.
 
-### `master_path` 
+### `master_path`
 
 The path where all outputs are saved.
 
 🤓  _Example:_
+
 ```yaml
 master_path: 'report_stats'
 ```
@@ -1010,6 +1041,7 @@ See the
   If it has not been computed or is not required,  set it to the default value `"NA"`.
 
 🤓  _Example:_
+
 ```yaml
 charts_to_objects:
   list_of_cols: all
@@ -1028,7 +1060,7 @@ charts_to_objects:
 🔎 _Corresponds to [`data_report.report_generation`](../api/data_report/report_generation.md)_
 
 This configuration block controls the generation of the actual report,  i.e.,  the data that is included and
-the layout. 
+the layout.
 See the [report generation documentation](data-reports/final_report.md) for more details.
 
 - `master_path`: The path to the preprocessed data generated during the [`report_preprocessing`](#report_preprocessing) step.
@@ -1055,7 +1087,7 @@ See the [report generation documentation](data-reports/final_report.md) for more
   Its value is between `0` and `1`.
 
 - `dataDict_path`: The path to the data dictionary containing the exact names and definitions of the attributes.
-  This information is used in the report to aid comprehensibility. 
+  This information is used in the report to aid comprehensibility.
 
 - `metricDict_path`: Path to the metric dictionary.
 
@@ -1068,6 +1100,7 @@ See the [report generation documentation](data-reports/final_report.md) for more
   (when running on Azure).
 
 🤓  _Example:_
+
 ```yaml
 report_generation:
   master_path: 'report_stats'
@@ -1103,46 +1136,49 @@ This group of functions is used to perform mathematical transformations of numer
 - `drop_cols`: The numerical columns (list of strings or string of column names separated by `|`)
   to exclude from feature transformation.
 
-- `method_type`: The method to apply to use for transformation. 
+- `method_type`: The method to apply to use for transformation.
   The default method is `sqrt` ($\sqrt{x}$).
   Possible values are:
-    - `ln`
-    - `log10`
-    - `log2`
-    - `exp`
-    - `powOf2` ($2^x$)
-    - `powOf10` ($10^x$)
-    - `powOfN` ($N^x$)
-    - `sqrt` ($\sqrt{x}$)
-    - `cbrt` ($\sqrt[3]{x}$)
-    - `sq` ($x^2$)
-    - `cb` ($x^3$)
-    - `toPowerN` ($x^N$)
-    - `sin`
-    - `cos`
-    - `tan`
-    - `asin`
-    - `acos`
-    - `atan` 
-    - `radians`
-    - `remainderDivByN` ($x % N$)
-    - `factorial` ($x!$)
-    - `mul_inv` ($1/x$)
-    - `floor`
-    - `ceil`
-    - `roundN` (round to `N` decimal places)
+  - `ln`
+  - `log10`
+  - `log2`
+  - `exp`
+  - `powOf2` ($2^x$)
+  - `powOf10` ($10^x$)
+  - `powOfN` ($N^x$)Z
+  - `sqrt` ($\sqrt{x}$)
+  - `cbrt` ($\sqrt[3]{x}$)
+  - `sq` ($x^2$)
+  - `cb` ($x^3$)
+  - `toPowerN` ($x^N$)
+  - `sin`
+  - `cos`
+  - `tan`
+  - `asin`
+  - `acos`
+  - `atan`
+  - `radians`
+  - `remainderDivByN` ($x % N$)
+  - `factorial` ($x!$)
+  - `mul_inv` ($1/x$)
+  - `floor`
+  - `ceil`
+  - `roundN` (round to `N` decimal places)
 
-- `N`: `None` by default. If `method_type` is `powOfN`,  `toPowerN`,  `remainderDivByN`,  or `roundN`,  
+- `N`: `None` by default. If `method_type` is `powOfN`,  `toPowerN`,  `remainderDivByN`,  or `roundN`,
   `N` will be used as the required constant.
 
 🤓  _Example 1:_
+
 ```yaml
 feature_transformation:
   list_of_cols: all
   drop_cols: []
   method_type: sqrt
 ```
+
 🤓  _Example 2:_
+
 ```yaml
 feature_transformation:
   list_of_cols: ['capital-gain', 'capital-loss']
@@ -1162,25 +1198,28 @@ feature_transformation:
 - `list_of_cols`:  The columns (list of strings or string of column names separated by `|`) to transform.
   Can be set to `"all"` to include all columns.
 
-- `drop_cols`: The columns (list of strings or string of column names separated by `|`) 
+- `drop_cols`: The columns (list of strings or string of column names separated by `|`)
   to exclude from Box-Cox transformation.
 
 - `boxcox_lambda`: The $\lambda$ value for the Box-Cox transformation.
   It can be given as a
-    - list where each element represents the value of $\lambda$ for a single attribute.
-      The length of the list must be the same as the number of columns to transform.
-    - number that is used for all attributes.
+  - list where each element represents the value of $\lambda$ for a single attribute.
+    The length of the list must be the same as the number of columns to transform.
+  - number that is used for all attributes.
   If no value is given (the default),  a search for the best $\lambda$ will be conducted among the following values:
   `[1, -1, 0.5, -0.5, 2, -2, 0.25, -0.25, 3, -3, 4, -4, 5, -5]`.
   The search is conducted independently for each column.
 
 🤓  _Example 1:_
+
 ```yaml
 boxcox_transformation:
   list_of_cols: num_feature1|num_feature2
   drop_cols: []
 ```
+
 🤓  _Example 2:_
+
 ```yaml
 boxcox_transformation:
   list_of_cols: num_feature3|num_feature4
@@ -1199,11 +1238,11 @@ This group of functions is used to transform numerical attributes into discrete 
 - `list_of_cols`:  The numerical columns (list of strings or string of column names separated by `|`) to transform.
   Can be set to `"all"` to include all numerical columns.
 
-- `drop_cols`: The columns (list of strings or string of column names separated by `|`) 
+- `drop_cols`: The columns (list of strings or string of column names separated by `|`)
   to exclude from attribute binning.
 
 - `method_type`: The binning method. Possible values are `equal_frequency` and `equal_range`.
-  With `equal_range`, each bin is of equal size/width and with `equal_frequency`, 
+  With `equal_range`, each bin is of equal size/width and with `equal_frequency`,
   each bin contains an equal number of rows.
   Defaults to `equal_range`.
 
@@ -1215,6 +1254,7 @@ This group of functions is used to transform numerical attributes into discrete 
   Defaults to `numerical`.
 
 🤓  _Example:_
+
 ```yaml
 attribute_binning:
   list_of_cols: num_feature1|num_feature2
@@ -1231,11 +1271,11 @@ attribute_binning:
 - `list_of_cols`: The numerical columns (list of strings or string of column names separated by `|`) to transform.
   Can be set to `"all"` to include all numerical columns.
 
-- `drop_cols`: The columns (list of strings or string of column names separated by `|`) 
+- `drop_cols`: The columns (list of strings or string of column names separated by `|`)
   to exclude from monotonic binning.
 
 - `method_type`: The binning method. Possible values are `equal_frequency` and `equal_range`.
-  With `equal_range`, each bin is of equal size/width and with `equal_frequency`, 
+  With `equal_range`, each bin is of equal size/width and with `equal_frequency`,
   each bin contains an equal number of rows.
   Defaults to `equal_range`.
 
@@ -1247,6 +1287,7 @@ attribute_binning:
   Defaults to `numerical`.
 
 🤓  _Example:_
+
 ```yaml
 attribute_binning:
   list_of_cols: num_feature1|num_feature2
@@ -1264,25 +1305,33 @@ attribute_binning:
 
 🔎 _Corresponds to [`transformers.expression_parser`](../api/data_transformer/transformers.md#anovos.data_transformer.transformers.expression_parser)_
 
-This function can be used to evaluate a list of SQL expressions and output the result as new features. Columns used in the SQL expression must be available in the dataset.
+This function can be used to evaluate a list of SQL expressions and output the result as new features.
+Columns used in the SQL expression must be available in the dataset.
 
-- `list_of_expr`: List of expressions to evaluate as new features e.g.,  ["expr1", "expr2"]. Alternatively, expressions can be specified in a string format, where different expressions are separated by pipe delimiter “|” e.g.,  "expr1|expr2".
+- `list_of_expr`: List of expressions to evaluate as new features e.g.,  ["expr1", "expr2"].
+  Alternatively, expressions can be specified in a string format, where different expressions are separated
+  by pipe delimiter “|” e.g.,  "expr1|expr2".
 
-- `postfix`: postfix for new feature name.Naming convention "f" + expression_index + postfix e.g. with postfix of "new",  new added features are named as f0new,  f1new etc. (Default value = "").
+- `postfix`: postfix for new feature name.Naming convention "f" + expression_index + postfix e.g. with postfix
+  of "new",  new added features are named as f0new,  f1new etc. (Default value = "").
 
 🤓  _Example 1:_
+
 ```yaml
 expression_parser:
   list_of_expr: 'log(age) + 1.5|sin(capital-gain)+cos(capital-loss)'
 ```
 
 🤓  _Example 2:_
+
 ```yaml
 expression_parser:
   list_of_expr: ['log(age) + 1.5', 'sin(capital-gain)+cos(capital-loss)']
 ```
 
-Both _Example 1_ and _Example 2_ generate 2 new features: _log(age) + 1.5_ and _sin(capital-gain)+cos(capital-loss)_. The newly generated features will be appended to the dataframe as new columns: f0 and f1.
+Both _Example 1_ and _Example 2_ generate 2 new features: _log(age) + 1.5_ and _sin(capital-gain)+cos(capital-loss)_.
+The newly generated features will be appended to the dataframe as new columns: f0 and f1.
+
 ### `categorical_outliers`
 
 This function assigns less frequently seen values in a categorical column to a new category `others`.
@@ -1294,7 +1343,7 @@ This function assigns less frequently seen values in a categorical column to a n
 - `list_of_cols`: The categorical columns (list of strings or string of column names separated by `|`) to transform.
   Can be set to `"all"` to include all categorical columns.
 
-- `drop_cols`: The columns (list of strings or string of column names separated by `|`) 
+- `drop_cols`: The columns (list of strings or string of column names separated by `|`)
   to exclude from outlier transformation.
 
 - `coverage`: The minimum fraction of rows that remain in their original category, given as a value between `0` and `1`.
@@ -1302,11 +1351,12 @@ This function assigns less frequently seen values in a categorical column to a n
   occurring categories are mapped to `others`.
   The default value is `1.0`, which means that no rows are changed to `others`.
 
-- `max_category`: Even if coverage is less, only (max_category - 1) categories will be mapped to actual name and 
+- `max_category`: Even if coverage is less, only (max_category - 1) categories will be mapped to actual name and
   rest to others. Caveat is when multiple categories have same rank, then #categories can be more than max_category.
   Defaults to `50`.
 
 🤓  _Example 1:_
+
 ```yaml
 outlier_categories:
   list_of_cols: all
@@ -1314,7 +1364,9 @@ outlier_categories:
   coverage: 0.9
   max_category: 20
 ```
+
 🤓  _Example 2:_
+
 ```yaml
 outlier_categories:
   list_of_cols: ["cat_feature1", "cat_feature2"]
@@ -1340,9 +1392,8 @@ This group of transformers functions used to converting a categorical attribute 
 - `list_of_cols`: The categorical columns (list of strings or string of column names separated by `|`) to encode.
   Can be set to `"all"` to include all categorical columns.
 
-- `drop_cols`: The columns (list of strings or string of column names separated by `|`) 
+- `drop_cols`: The columns (list of strings or string of column names separated by `|`)
   to exclude from categorical encoding.
-
 
 - `method_type`: The encoding method. Set to `1` for label encoding and to `0` for one-hot encoding.
   With label encoding, each categorical value is assigned a unique integer based on the ordering specified through `index_order`.
@@ -1351,15 +1402,16 @@ This group of transformers functions used to converting a categorical attribute 
 
 - `index_order`: The order assigned to the categorical values when `method_type` is set to `1` (label encoding).
   Possible values are:
-    - `frequencyDesc` (default): Order by descending frequency.
-    - `frequencyAsc`: Order by ascending frequency.
-    - `alphabetDesc`: Order alphabetically (descending).
-    - `alphabetAsc`: Order alphabetically (ascending).
+  - `frequencyDesc` (default): Order by descending frequency.
+  - `frequencyAsc`: Order by ascending frequency.
+  - `alphabetDesc`: Order alphabetically (descending).
+  - `alphabetAsc`: Order alphabetically (ascending).
 
 - `cardinality_threshold`: Columns with a cardinality above this threshold are excluded from enconding.
   Defaults to `100`.
 
 🤓  _Example 1:_
+
 ```yaml
 cat_to_num_unsupervised:
   list_of_cols: all
@@ -1369,6 +1421,7 @@ cat_to_num_unsupervised:
 ```
 
 🤓  _Example 2:_
+
 ```yaml
 cat_to_num_unsupervised:
   list_of_cols: ["cat_feature1", "cat_feature2"]
@@ -1389,7 +1442,7 @@ cat_to_num_unsupervised:
 - `list_of_cols`: The categorical columns (list of strings or string of column names separated by `|`) to encode.
   Can be set to `"all"` to include all categorical columns.
 
-- `drop_cols`: The columns (list of strings or string of column names separated by `|`) 
+- `drop_cols`: The columns (list of strings or string of column names separated by `|`)
   to exclude from categorical encoding.
 
 - `label_col`: The label/target column. Defaults to `label`.
@@ -1397,6 +1450,7 @@ cat_to_num_unsupervised:
 - `event_label`: Value of the (positive) event (i.e, label `1`/`true`). Defaults to `1`.
 
 🤓  _Example:_
+
 ```yaml
 cat_to_num_supervised:
   list_of_cols: cat_feature1 | cat_feature2
@@ -1416,10 +1470,11 @@ Group of functions to rescale numerical attributes.
 - `list_of_cols`: The numerical columns (list of strings or string of column names separated by `|`) to normalize.
   Can be set to `"all"` to include all numerical columns.
 
-- `drop_cols`: The columns (list of strings or string of column names separated by `|`) 
+- `drop_cols`: The columns (list of strings or string of column names separated by `|`)
   to exclude from normalization.
 
 🤓  _Example:_
+
 ```yaml
 normalization:
   list_of_cols: ["num_feature1", "num_feature2"]
@@ -1433,10 +1488,11 @@ normalization:
 - `list_of_cols`: The numerical columns (list of strings or string of column names separated by `|`) to standardize.
   Can be set to `"all"` to include all numerical columns.
 
-- `drop_cols`: The columns (list of strings or string of column names separated by `|`) 
+- `drop_cols`: The columns (list of strings or string of column names separated by `|`)
   to exclude from standardization.
 
 🤓  _Example:_
+
 ```yaml
 z_standardization:
   list_of_cols: ["num_feature1", "num_feature2"]
@@ -1450,10 +1506,11 @@ z_standardization:
 - `list_of_cols`: The numerical columns (list of strings or string of column names separated by `|`) to standardize.
   Can be set to `"all"` to include all numerical columns.
 
-- `drop_cols`: The columns (list of strings or string of column names separated by `|`) 
+- `drop_cols`: The columns (list of strings or string of column names separated by `|`)
   to exclude from standardization.
 
 🤓  _Example:_
+
 ```yaml
 IQR_standardization:
   list_of_cols: ["num_feature1", "num_feature2", "num_feature3"]
@@ -1471,7 +1528,7 @@ Group of functions to generate latent features to reduce the dimensionality of t
 - `list_of_cols`:  The numerical columns (list of strings or string of column names separated by `|`) to standardize.
   Can be set to `"all"` to include all numerical columns.
 
-- `drop_cols`: The columns (list of strings or string of column names separated by `|`) 
+- `drop_cols`: The columns (list of strings or string of column names separated by `|`)
   to exclude from latent features computation.
 
 - `explained_variance_cutoff`: The required explained variance cutoff.
@@ -1493,8 +1550,8 @@ Group of functions to generate latent features to reduce the dimensionality of t
   The name of the imputation function is specified with the key `imputation_name` (defaults to `imputation_MMM`).
   Arguments for the imputation function can be passed using additional keys.
 
-
 🤓  _Example 1:_
+
 ```yaml
 PCA_latentFeatures:
   list_of_cols: ["num_feature1", "num_feature2", "num_feature3"]
@@ -1502,7 +1559,9 @@ PCA_latentFeatures:
   standardization: False
   imputation: True
 ```
+
 🤓  _Example 2:_
+
 ```yaml
 PCA_latentFeatures:
   list_of_cols: ["num_feature1", "num_feature2", "num_feature3"]
@@ -1524,7 +1583,7 @@ PCA_latentFeatures:
 - `list_of_cols`:  The numerical columns (list of strings or string of column names separated by `|`) to standardize.
   Can be set to `"all"` to include all numerical columns.
 
-- `drop_cols`: The columns (list of strings or string of column names separated by `|`) 
+- `drop_cols`: The columns (list of strings or string of column names separated by `|`)
   to exclude from latent features computation.
 
 - `reduction_params`: Determines the number of resulting encoded features.
@@ -1552,20 +1611,23 @@ PCA_latentFeatures:
   Arguments for the imputation function can be passed using additional keys.
 
 🤓  _Example 1:_
+
 ```yaml
 autoencoder_latentFeatures:
   list_of_cols: ["num_feature1", "num_feature2", "num_feature3"]
   reduction_params: 0.5
-  sample_size: 10000 
+  sample_size: 10000
   epochs: 20
   batch_size: 256
 ```
+
 🤓  _Example 2:_
+
 ```yaml
 autoencoder_latentFeatures:
   list_of_cols: ["num_feature1", "num_feature2"]
   reduction_params: 0.5
-  sample_size: 10000 
+  sample_size: 10000
   epochs: 20
   batch_size: 256
 
@@ -1579,24 +1641,28 @@ autoencoder_latentFeatures:
 
 ## 📑 `write_intermediate`
 
-- `file_path`: Path where intermediate datasets (after selecting,  dropping,  renaming,  and recasting of columns) for quality checker operations,  join dataset and concatenate dataset will be saved.
+- `file_path`: Path where intermediate datasets (after selecting, dropping, renaming, and recasting of columns)
+  for quality checker operations,  join dataset and concatenate dataset will be saved.
 
 - `file_type`: (CSV,  Parquet or Avro). file format of intermediate dataset
 
-- `file_configs` (optional): Rest of the valid configuration can be passed through this options e.g.,  repartition,  mode,  compression,  header,  delimiter,  inferSchema etc. This might look like: 
-   ```yaml
-   file_configs:
-      mode: overwrite
-      header: True
-      delimiter: ", "
-      inferSchema: True
-   ```
-   For more information on available configuration options,  see the following external
-   documentation:
-   
-     - [📖 Writing CSV files](https://sparkbyexamples.com/pyspark/pyspark-read-csv-file-into-dataframe/)
-     - [📖 Writing Parquet files](https://sparkbyexamples.com/pyspark/pyspark-read-and-write-parquet-file/)
-     - [📖 Writing Avro files](https://sparkbyexamples.com/spark/read-write-avro-file-spark-dataframe/)
+- `file_configs` (optional): Rest of the valid configuration can be passed through this options e.g., repartition,
+  mode, compression, header, delimiter, inferSchema etc. This might look like:
+
+  ```yaml
+  file_configs:
+     mode: overwrite
+     header: True
+     delimiter: ", "
+     inferSchema: True
+  ```
+
+  For more information on available configuration options,  see the following external
+  documentation:
+
+  - [📖 Writing CSV files](https://sparkbyexamples.com/pyspark/pyspark-read-csv-file-into-dataframe/)
+  - [📖 Writing Parquet files](https://sparkbyexamples.com/pyspark/pyspark-read-and-write-parquet-file/)
+  - [📖 Writing Avro files](https://sparkbyexamples.com/spark/read-write-avro-file-spark-dataframe/)
 
 ## 📑 `write_main`
 
@@ -1604,20 +1670,23 @@ autoencoder_latentFeatures:
 
 - `file_type`: (CSV,  Parquet or Avro). file format of final dataset
 
-- `file_configs` (optional): Rest of the valid configuration can be passed through this options e.g.,  repartition,  mode,  compression,  header,  delimiter,  inferSchema etc. This might look like: 
-   ```yaml
-   file_configs:
-      mode: overwrite
-      header: True
-      delimiter: ", "
-      inferSchema: True
-   ```
-   For more information on available configuration options,  see the following external
-   documentation:
-   
-     - [📖 Writing CSV files](https://sparkbyexamples.com/pyspark/pyspark-read-csv-file-into-dataframe/)
-     - [📖 Writing Parquet files](https://sparkbyexamples.com/pyspark/pyspark-read-and-write-parquet-file/)
-     - [📖 Writing Avro files](https://sparkbyexamples.com/spark/read-write-avro-file-spark-dataframe/)
+- `file_configs` (optional): Rest of the valid configuration can be passed through this options e.g.,
+  repartition,  mode,  compression,  header,  delimiter,  inferSchema etc. This might look like:
+
+  ```yaml
+  file_configs:
+       mode: overwrite
+       header: True
+       delimiter: ", "
+       inferSchema: True
+  ```
+
+  For more information on available configuration options, see the following external
+  documentation:
+
+  - [📖 Writing CSV files](https://sparkbyexamples.com/pyspark/pyspark-read-csv-file-into-dataframe/)
+  - [📖 Writing Parquet files](https://sparkbyexamples.com/pyspark/pyspark-read-and-write-parquet-file/)
+  - [📖 Writing Avro files](https://sparkbyexamples.com/spark/read-write-avro-file-spark-dataframe/)
 
 ## 📑 `write_stats`
 
@@ -1625,18 +1694,27 @@ autoencoder_latentFeatures:
 
 - `file_type`: (CSV,  Parquet or Avro). file format of final dataset
 
-- `file_configs` (optional): Rest of the valid configuration can be passed through this options e.g.,  repartition,  mode,  compression,  header,  delimiter,  inferSchema etc. This might look like: 
-   ```yaml
-   file_configs:
-      mode: overwrite
-      header: True
-      delimiter: ", "
-      inferSchema: True
-   ```
-   For more information on available configuration options,  see the following external
-   documentation:
-   
-     - [📖 Writing CSV files](https://sparkbyexamples.com/pyspark/pyspark-read-csv-file-into-dataframe/)
-     - [📖 Writing Parquet files](https://sparkbyexamples.com/pyspark/pyspark-read-and-write-parquet-file/)
-     - [📖 Writing Avro files](https://sparkbyexamples.com/spark/read-write-avro-file-spark-dataframe/)
-     
+- `file_configs` (optional): Rest of the valid configuration can be passed through this options e.g., repartition,
+  mode,  compression,  header,  delimiter,  inferSchema etc. This might look like:
+
+  ```yaml
+  file_configs:
+     mode: overwrite
+     header: True
+     delimiter: ", "
+     inferSchema: True
+  ```
+
+  For more information on available configuration options,  see the following external
+  documentation:
+
+  - [📖 Writing CSV files](https://sparkbyexamples.com/pyspark/pyspark-read-csv-file-into-dataframe/)
+  - [📖 Writing Parquet files](https://sparkbyexamples.com/pyspark/pyspark-read-and-write-parquet-file/)
+  - [📖 Writing Avro files](https://sparkbyexamples.com/spark/read-write-avro-file-spark-dataframe/)
+
+## 📑 `write_feast_features`
+
+🔎 _Corresponds to [`??.??`](../api/??#??)_
+
+📖 _For details, see the_
+_[Feature Store Integration documentation](https://sparkbyexamples.com/pyspark/pyspark-read-csv-file-into-dataframe/)_

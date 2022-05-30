@@ -17,7 +17,7 @@ If there is a particular feature store integration you'd like to see supported b
 The following guide describes how to use _Anovos_ to push data to Feast.
 We assume that you are familiar with the fundamentals of both _Anovos_ workflows and Feast.
 
-For an introduction to Feast, see [📖 the Fest Quickstart guide](https://docs.feast.dev/getting-started/quickstart).
+For an introduction to Feast, see [📖 the Feast Quickstart guide](https://docs.feast.dev/getting-started/quickstart).
 
 ### Prerequisites
 
