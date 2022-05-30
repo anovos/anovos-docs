@@ -14,8 +14,10 @@ Following arguments are specified in the primary function **charts_to_objects**:
 - **bin_size**: The maximum number of categories which the user wants to retain is to be set here. By default the size is kept as 10 beyond which remaining records would be grouped under “others”.
 - **coverage**: Minimum % of rows mapped to actual category name and rest will be mapped to others. The default value kept is 1.0 which is the maximum at 100%.
 - **drift_detector**: This argument takes Boolean type input – True or False. It indicates whether the drift component is already analyzed or not. By default it is kept as False.
+- **outlier_charts**: This argument takes Boolean type input - True or False. It indicates whether the Outlier Chart needs to be displayed or not. By default it is kept as False. 
 - **source_path**: The source data path which is needed for drift analysis. If it’s not computed / out of scope, the default value of "NA" is considered.
 - **master_path**: The path which will contain the data of intermediate output in terms of json chart objects, csv file (pandas df)
+- **stats_unique**: Takes arguments for read_dataset (data_ingest module) function in a dictionary format to read pre-saved statistics on unique value count i.e. if measures_of_cardinality or uniqueCount_computation (data_analyzer.stats_generator module) has been computed & saved before. (Default value = {})
 - **run_type**: local or EMR. Option to specify whether the execution happen locally or in EMR way as it requires reading & writing to s3.
 
 The two form of output generated from this are **chart objects** and **data frame**. There are some secondary functions used alongside as a part of **charts_to_objects** processing.

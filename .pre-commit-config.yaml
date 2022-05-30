@@ -1,0 +1,20 @@
+repos:
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.2.0
+    hooks:
+    -   id: check-yaml
+    -   id: end-of-file-fixer
+        exclude: ^(data/|examples/data/|bin/)
+    -   id: trailing-whitespace
+        exclude: ^(data/|examples/data/|bin/)
+    -   id: mixed-line-ending
+    -   id: check-merge-conflict
+    -   id: check-case-conflict
+
+- repo: https://github.com/jackdewinter/pymarkdown
+  rev: v0.9.6
+  hooks:
+  - id: pymarkdown
+    args:
+      - --config=.pymarkdown.json
+      - scan
