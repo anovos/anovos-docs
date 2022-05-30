@@ -78,7 +78,7 @@ You can now access the local feast ui under "https://127.0.0.1:8888"
   entity_df = pd.DataFrame.from_dict(
       {
           "ifa": ['', '', '' ''], # add some ids
-          "event_timestamp": [
+          "event_time": [
               datetime(2022, 5, 31, 14, 59, 42), # add datetiem entries corresponding to timestamps of the generated features
               datetime(2022, 5, 31, 8, 12, 10),
               datetime(2022, 5, 31, 16, 40, 26),
