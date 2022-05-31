@@ -1204,7 +1204,7 @@ feature_transformation:
 - `boxcox_lambda`: The $\lambda$ value for the Box-Cox transformation.
   It can be given as a
   - list where each element represents the value of $\lambda$ for a single attribute.
-    The length of the list must be the same as the number of columns to transform.
+  The length of the list must be the same as the number of columns to transform.
   - number that is used for all attributes.
   If no value is given (the default),  a search for the best $\lambda$ will be conducted among the following values:
   `[1, -1, 0.5, -0.5, 2, -2, 0.25, -0.25, 3, -3, 4, -4, 5, -5]`.
@@ -1726,26 +1726,26 @@ _[Feature Store Integration documentation](https://sparkbyexamples.com/pyspark/p
 - `file_path`:
 
 - `entity`:
-  - `name`:
-  - `description`:
-  - `id_col`:
+    - `name`:
+    - `description`:
+    - `id_col`:
 
 - `file_source`:
-  - `description`:
-  - `owner`:
-  - `timestamp_col`:
-  - `create_timestamp_col`:
+    - `description`:
+    - `owner`:
+    - `timestamp_col`:
+    - `create_timestamp_col`:
 
 - `feature_view`:
-  - `name`:
-  - `owner`:
-  - `ttl_in_seconds`:
-  - `create_timestamps`:
+    - `name`:
+    - `owner`:
+    - `ttl_in_seconds`:
+    - `create_timestamps`:
 
 - `feature_service` (optional):
-  - `name`:
+    - `name`:
 
 - `file_configs`:
-  - `mode`:
+    - `mode`:
 
 🤓  _Example:_

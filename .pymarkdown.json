@@ -7,6 +7,10 @@
     },
     "no-duplicate-heading": {
       "enabled": false
+    },
+    "ul-indent": {
+      "enabled": false,
+      "indent": 4
     }
   }
 }
