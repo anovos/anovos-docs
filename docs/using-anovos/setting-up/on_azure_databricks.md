@@ -218,7 +218,7 @@ In this tutorial, we have placed it at `dbfs:/FileStore/tables/scripts/main.py`.
 
 ### Step 4: Configure and launch an _Anovos_ workflow as a Databricks job 
 
-####Using Python way
+#### Using Python way
 
 Once all files have been copied to DBFS, we can create an Azure Databricks job
 that starts a cluster and launches the _Anovos_ workflow.
@@ -269,7 +269,7 @@ On the subsequent screen, click on "Run now" to launch the job:
 For more information on creating and maintaining jobs, see the
 [Azure Databricks configuration](https://docs.microsoft.com/en-us/azure/databricks/jobs).
 
-####Using Spark-Submit way
+#### Using Spark-Submit way
 
 Before starting this, we need to provide the `histogrammar` package to Azure Databricks.
 _Anovos_ uses this library internally to compute correlation matrices. So, you need to copy following histogram jar files to DBFS Path.
