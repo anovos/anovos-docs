@@ -1649,6 +1649,8 @@ autoencoder_latentFeatures:
 - `file_configs` (optional): Rest of the valid configuration can be passed through this options e.g., repartition,
   mode, compression, header, delimiter, inferSchema etc. This might look like:
 
+  🤓  _Example:_
+
   ```yaml
   file_configs:
      mode: overwrite
@@ -1672,6 +1674,8 @@ autoencoder_latentFeatures:
 
 - `file_configs` (optional): Rest of the valid configuration can be passed through this options e.g.,
   repartition,  mode,  compression,  header,  delimiter,  inferSchema etc. This might look like:
+
+  🤓  _Example:_
 
   ```yaml
   file_configs:
@@ -1718,3 +1722,30 @@ autoencoder_latentFeatures:
 
 📖 _For details, see the_
 _[Feature Store Integration documentation](https://sparkbyexamples.com/pyspark/pyspark-read-csv-file-into-dataframe/)_
+
+- `file_path`:
+
+- `entity`:
+  - `name`:
+  - `description`:
+  - `id_col`:
+
+- `file_source`:
+  - `description`:
+  - `owner`:
+  - `timestamp_col`:
+  - `create_timestamp_col`:
+
+- `feature_view`:
+  - `name`:
+  - `owner`:
+  - `ttl_in_seconds`:
+  - `create_timestamps`:
+
+- `feature_service` (optional):
+  - `name`:
+
+- `file_configs`:
+  - `mode`:
+
+🤓  _Example:_
