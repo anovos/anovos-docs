@@ -173,7 +173,7 @@ in the subsequent steps.
 3. Upload files by dragging files onto the marked area or click on it to upload using the file browser.
 
 For more detailed instructions, see the
-[Databricks documentation](https://docs.microsoft.com/en-us/azure/databricks/data/databricks-file-system#dbfs-and-local-driver-node-paths).
+[Databricks documentation](https://docs.microsoft.com/azure/databricks/data/databricks-file-system#dbfs-and-local-driver-node-paths).
 
 #### Copying files to DBFS using the CLI
 
@@ -197,7 +197,7 @@ dbfs cp -r anovos/examples/data/income_dataset dbfs:/FileStore/tables/income_dat
 ```
 
 For more information on the Databricks CLI, see the
-[Databricks documentation](https://docs.microsoft.com/en-us/azure/databricks/dev-tools/cli/).
+[Databricks documentation](https://docs.microsoft.com/azure/databricks/dev-tools/cli/).
 
 ### Step 3: Create a workflow script
 
@@ -253,7 +253,7 @@ Here's an example of a cluster configuration for this tutorials:
 ![Cluster configuration](../../assets/azure_databricks_images/image12.png)
 
 For more detailed information, refer to the
-[Databricks documentation](https://docs.microsoft.com/en-us/azure/databricks/clusters/configure#cluster-configurations).
+[Databricks documentation](https://docs.microsoft.com/azure/databricks/clusters/configure#cluster-configurations).
 
 To give the Databricks platform access to _Anovos_, click on "Advanced options" and select "Add dependent libraries".
 
@@ -331,7 +331,7 @@ Here's an example of a cluster configuration for this tutorial:
 For more detailed information, refer to the
 [Databricks documentation](https://docs.microsoft.com/azure/databricks/clusters/configure#cluster-configurations).
 
-To give the Databricks platform access to _Anovos_, you need to create shell script that is executed upon cluster
+To give the Databricks platform access to _Anovos_, you need to create a shell script that is executed upon cluster
 initialization and fetches the package from PyPI.
 
 The `anovos_packages.sh` script contains just one line:
@@ -365,7 +365,7 @@ On the subsequent screen, click on "Run now" to launch the job:
 ![Active and completed runs](../../assets/azure_databricks_images/image5.png)
 
 For more information on creating and maintaining jobs, see the
-[Azure Databricks documentation](https://docs.microsoft.com/en-us/azure/databricks/jobs).
+[Azure Databricks documentation](https://docs.microsoft.com/azure/databricks/jobs).
 
 ### Step 5: Retrieve the output
 
