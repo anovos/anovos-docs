@@ -280,7 +280,7 @@ _Anovos_ uses this library internally to compute correlation matrices. So, you n
 > b)
 > [histogrammar\_2.11-1.0.20.jar](https://github.com/anovos/anovos/blob/main/jars/histogrammar_2.11-1.0.20.jar)
 > 
-> For running in spark 3.x.x, copy following jar file to DBFS Path
+  For running in spark 3.x.x, copy following jar file to DBFS Path
 > from local machine : a)
 > [histogrammar-sparksql\_2.12-1.0.20.jar](https://github.com/anovos/anovos/blob/main/jars/histogrammar-sparksql_2.12-1.0.20.jar)
 > b)
@@ -303,7 +303,7 @@ worker and driver types.
 Note: Autoscaling is not available for spark-submit jobs.
 
 Here's an example of a cluster configuration for this tutorials:
-![Cluster configuration](../../assets/azure_databricks_images/image14.png)
+![Cluster configuration](../../assets/azure_databricks_images/image17.png)
 
 For more detailed information, refer to the
 [Databricks documentation](https://docs.microsoft.com/en-us/azure/databricks/clusters/configure#cluster-configurations).
