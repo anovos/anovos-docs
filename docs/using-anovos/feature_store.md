@@ -34,7 +34,8 @@ feast init anovos_repo
 ```
 
 🤓  _Note: You can also use an existing repository._
-In this case, Anovos will simply add a new file anovos.py containing the feature definitions as well as the output file to the existing repository.
+In this case, Anovos will simply add a new file anovos.py containing the feature definitions as well as the 
+output file to the existing repository.
 
 ### Adding the Feast export to your _Anovos_ workflow
 
@@ -67,8 +68,10 @@ write_feast_features:
 
 Let's break this down!
 
-The following yaml block generates an [entity definition in Feast](https://docs.feast.dev/v/master/getting-started/concepts/entity). This block and all its child elements are mandatory.
-the ```name``` elements specifies the entity name. The ```description``` element provides a human readable description to be displayed in the Feast UI. Element ```id_col``` specifies the primary key colunm of the entity.
+The following yaml block generates an [entity definition in Feast](https://docs.feast.dev/v/master/getting-started/concepts/entity). 
+This block and all its child elements are mandatory.
+the ```name``` elements specifies the entity name. The ```description``` element provides a human readable description to be displayed 
+in the Feast UI. Element ```id_col``` specifies the primary key colunm of the entity.
 ```yaml
 entity:
     name: "income"
@@ -111,8 +114,8 @@ Run your anovos workflow with the configuration above
 
 ### Apply new features and materialize the feature data in the offline store
 
-Once the workflow has finished, switch into the folder of `anovos_feature` repository and
-apply the changed feature definitions and materialize the features:
+Once the workflow has finished, switch into the folder of `anovos_feature` repository,
+apply the changed feature definitions, and materialize the features:
 
 ```bash
 cd anovos_repo
@@ -130,8 +133,6 @@ feast ui
 ```
 
 and access the Feast UI at [`http://127.0.0.1:8888`](http://127.0.0.1:8888). The UI gives a realtime overview about data sources, entities, feature views etc. of the entire feature repository (across multiples .py files).
-
-There, ...
 
 ### Retrieve feature data from Feast
 
@@ -203,3 +204,4 @@ print(income_features_by_service_df.head())
 ```
 
 ## Integrating _Anovos_ with other feature stores
+
