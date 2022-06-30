@@ -35,4 +35,4 @@ TODO
 ## Roadmap
 
 We're exploring integration of _Anovos_ with _MLflow Projects_ and _MLFlow Pipelines_.
-[Let us know](../../community/communication.md) which capabilities you'd like to see in future versions of _Anovos_!
+[Let us know](../community/communication.md) which capabilities you'd like to see in future versions of _Anovos_!
