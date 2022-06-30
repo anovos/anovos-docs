@@ -16,8 +16,7 @@ To learn more about _MLflow_ and its capabilities, see the
 
 _Anovos_ integrates with _MLflow_ by reporting workflow metadata and results to _MLflow Tracking_.
 
-To add _MLflow_ tracking to your workflow, you can add an `mlflow` block to your
-[workflow configuration file](config_file.md):
+To track your workflows with _MLflow_, add an `mlflow` block to your [workflow configuration file](config_file.md):
 
 ```yaml
 mlflow:
@@ -30,7 +29,8 @@ mlflow:
 
 ### Current Limitations
 
-TODO
+It is currently not possible to select which intermediate outputs are stored.
+If `track_intermediate` is set to `True`, all intermediate outputs will be stored.
 
 ## Roadmap
 
