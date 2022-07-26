@@ -241,7 +241,7 @@ $ cp dist/anovos-0.3.0-py2.py3-none-any.whl /home/azureuser/spark-3.2.1-bin-hado
 $ cd /home/azureuser/spark-3.2.1-bin-hadoop3.2 
 
 # build Dockerfile as image. Replace the Dockerfile path with the correct one if required
-$ sudo ./bin/docker-image-tool.sh -r <registryname>.azurecr.io -t <tag> -p ../Dockerfile build
+$ sudo ./bin/docker-image-tool.sh -r <registryname>.azurecr.io -t <tag> -p ../Dockerfile --build-arg base_img=ubuntu:20.04 build
 
 # push Docker image to registry
 $ sudo ./bin/docker-image-tool.sh -r <registryname>.azurecr.io -t <tag> push
