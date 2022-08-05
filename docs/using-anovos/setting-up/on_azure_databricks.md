@@ -18,7 +18,7 @@ Currently, _Anovos_ supports two ways of running workflows on Azure Databricks:
 
 Generally, we recommend the first option, as it requires slightly less configuration.
 However, if you're already storing your datasets on Azure Blob Storage, mounting the respective containers
-directly to DBFS allows you to directly process them with _Anovos_.
+to DBFS allows you to directly process them with _Anovos_.
 
 ## _Anovos_ on Azure Databricks using DBFS
 
@@ -173,7 +173,7 @@ in the subsequent steps.
 3. Upload files by dragging files onto the marked area or click on it to upload using the file browser.
 
 For more detailed instructions, see the
-[Databricks documentation](https://docs.microsoft.com/en-us/azure/databricks/data/databricks-file-system#dbfs-and-local-driver-node-paths).
+[Databricks documentation](https://docs.microsoft.com/azure/databricks/data/databricks-file-system#dbfs-and-local-driver-node-paths).
 
 #### Copying files to DBFS using the CLI
 
@@ -197,7 +197,7 @@ dbfs cp -r anovos/examples/data/income_dataset dbfs:/FileStore/tables/income_dat
 ```
 
 For more information on the Databricks CLI, see the
-[Databricks documentation](https://docs.microsoft.com/en-us/azure/databricks/dev-tools/cli/).
+[Databricks documentation](https://docs.microsoft.com/azure/databricks/dev-tools/cli/).
 
 ### Step 3: Create a workflow script
 
@@ -217,6 +217,26 @@ In this tutorial, we have placed it at `dbfs:/FileStore/tables/scripts/main.py`.
 
 ### Step 4: Configure and launch an _Anovos_ workflow as a Databricks job
 
+There are several types of jobs available on the Azure Databricks platform.
+For _Anovos_, the following job types are suitable choices:
+
+- **"Python:"** The job runs from a single Python script. _Anovos_ and the required Scala
+  dependencies are installed through the respective package repositories.
+
+- **"Spark Submit:"** The job is invoked through a bare `spark-submit` call. The installation
+  of _Anovos_  is handled by a cluster initialization script and the required Scala dependencies
+  have to be provided as JAR files through DBFS.
+
+  Note that there are several limitations for "Spark Submit" tasks:
+  You can only run them on new clusters and autoscaling is not available.
+  For more information, see the [Databricks documentation on jobs](https://docs.microsoft.com/azure/databricks/data-engineering/jobs/jobs).
+
+  Unless you require the fine-grained control that this option offers with regard to
+  cluster initialization and `spark-submit` options, we recommend to select "Python" as the
+  job type.
+
+#### Using the "Python" job type
+
 Once all files have been copied to DBFS, we can create an Azure Databricks job
 that starts a cluster and launches the _Anovos_ workflow.
 
@@ -233,7 +253,7 @@ Here's an example of a cluster configuration for this tutorials:
 ![Cluster configuration](../../assets/azure_databricks_images/image12.png)
 
 For more detailed information, refer to the
-[Databricks documentation](https://docs.microsoft.com/en-us/azure/databricks/clusters/configure#cluster-configurations).
+[Databricks documentation](https://docs.microsoft.com/azure/databricks/clusters/configure#cluster-configurations).
 
 To give the Databricks platform access to _Anovos_, click on "Advanced options" and select "Add dependent libraries".
 
@@ -264,7 +284,88 @@ On the subsequent screen, click on "Run now" to launch the job:
 ![Active and completed runs](../../assets/azure_databricks_images/image5.png)
 
 For more information on creating and maintaining jobs, see the
-[Azure Databricks configuration](https://docs.microsoft.com/en-us/azure/databricks/jobs).
+[Databricks documentation](https://docs.microsoft.com/azure/databricks/jobs).
+
+#### Using the "Spark Submit" job type
+
+_Anovos_ internally uses the `histogrammar` library to compute correlation matrices.
+Hence, we need to provide the package to Azure Databricks.
+
+As the "Spark Submit" job type requires any dependency to be available through DBFS,
+you first need to upload the `histogrammar` JAR files to DBFS.
+
+If you're using Spark 3.x, download the following files and upload them to DBFS:
+
+- [`io.github.histogrammar.histogrammar_2.12-1.0.20.jar`](https://mvnrepository.com/artifact/io.github.histogrammar/histogrammar_2.12/1.0.20)
+- [`io.github.histogrammar.histogrammar-sparksql_2.12-1.0.20.jar`](https://mvnrepository.com/artifact/io.github.histogrammar/histogrammar-sparksql_2.12/1.0.20)
+
+If you're using Spark 2.x, download the following files and upload them to DBFS:
+
+- [`io.github.histogrammar.histogrammar_2.11-1.0.20.jar`](https://mvnrepository.com/artifact/io.github.histogrammar/histogrammar_2.11/1.0.20)
+- [`io.github.histogrammar.histogrammar-sparksql_2.11-1.0.20.jar`](https://mvnrepository.com/artifact/io.github.histogrammar/histogrammar-sparksql_2.11/1.0.20)
+
+Once these files have been uploaded to DBFS, we can create an Azure Databricks job
+that starts a cluster and launches the _Anovos_ workflow.
+
+Here's an example of a job configuration:
+![Job configuration](../../assets/azure_databricks_images/image16.png)
+
+You can see that we set the "Type" to "Spark Submit".
+
+In the parameters section, we pass the DBFS paths of the `histogrammar` JAR files, the sample class,
+the `main.py` script, and configuration file.
+
+For example:
+
+```json
+["--jars","dbfs:/FileStore/tables/histogramm_jar/histogrammar_sparksql_2_12_1_0_20.jar,dbfs:/FileStore/tables/histogramm_jar/histogrammar_2_12_1_0_20.jar","--class","org.apache.spark.examples.SparkPi","/dbfs/FileStore/tables/scripts/main.py","/dbfs/FileStore/tables/configs_income_azure.yaml"]
+```
+
+The cluster configuration comprises settings for the Databricks Runtime, the number of workers,
+worker and driver types.
+(Note that autoscaling is not available for "Spark Submit" jobs on Azure Databricks.)
+
+Here's an example of a cluster configuration for this tutorial:
+![Cluster configuration](../../assets/azure_databricks_images/image17.png)
+
+For more detailed information, refer to the
+[Databricks documentation](https://docs.microsoft.com/azure/databricks/clusters/configure#cluster-configurations).
+
+To give the Databricks platform access to _Anovos_, you need to create a shell script that is executed upon cluster
+initialization and fetches the package from PyPI.
+
+The `anovos_packages.sh` script contains just one line:
+
+```bash
+sudo pip3 install anovos
+```
+
+Note that you should specify the version of _Anovos_ if you're running production workloads
+to ensure reproducibility:
+
+```bash
+sudo pip3 install anovos==0.3.0
+```
+
+Place this script on DBFS as well.
+
+During cluster configuration, click on "Advanced options"
+and specify the path to the script in the "Init Script" section:
+
+![Path of .sh file](../../assets/azure_databricks_images/image13.png)
+
+To enable logging, configure a DBFS path in the "Log" section:
+
+![Path for saving logs](../../assets/azure_databricks_images/image15.png)
+
+Once the job is configured, click "Create" to instantiate it.
+
+On the subsequent screen, click on "Run now" to launch the job:
+
+![Active and completed runs](../../assets/azure_databricks_images/image5.png)
+
+For more information on creating and maintaining jobs, see the
+[Azure Databricks documentation](https://docs.microsoft.com/azure/databricks/jobs).
 
 ### Step 5: Retrieve the output
 

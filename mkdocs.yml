@@ -56,6 +56,7 @@ nav:
           - Final Report: using-anovos/data-reports/final_report.md
           - HTML Report: using-anovos/data-reports/html_report.md
       - Feature Recommender: using-anovos/feature_recommender.md
+      - MLflow Integration: using-anovos/mlflow.md
       - Feature Store Integration: using-anovos/feature_store.md
       - Scaling Up: using-anovos/scaling.md
       - Limitations: using-anovos/limitations.md

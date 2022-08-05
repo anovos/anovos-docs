@@ -13,30 +13,30 @@ import pandas as pd
 import plotly.express as px
 
 from anovos.data_analyzer.association_evaluator import (
+    IG_calculation,
+    IV_calculation,
     correlation_matrix,
     variable_clustering,
-    IV_calculation,
-    IG_calculation,
 )
 from anovos.data_analyzer.quality_checker import (
-    duplicate_detection,
-    nullRows_detection,
-    nullColumns_detection,
-    outlier_detection,
     IDness_detection,
     biasedness_detection,
+    duplicate_detection,
     invalidEntries_detection,
+    nullColumns_detection,
+    nullRows_detection,
+    outlier_detection,
 )
 from anovos.data_analyzer.stats_generator import (
     global_summary,
-    measures_of_counts,
-    measures_of_centralTendency,
     measures_of_cardinality,
+    measures_of_centralTendency,
+    measures_of_counts,
     measures_of_dispersion,
     measures_of_percentiles,
     measures_of_shape,
 )
-from anovos.shared.utils import ends_with
+from anovos.shared.utils import ends_with, output_to_local, path_ak8s_modify
 
 global_theme = px.colors.sequential.Plasma
 global_theme_r = px.colors.sequential.Plasma_r
@@ -52,8 +52,10 @@ default_template = (
         </html>
         """
     ),
-    dp.Text("# ML-Anovos Report"),
+    dp.Text("# Anovos Data Assessment Report"),
 )
+
+blank_df = dp.DataTable(pd.DataFrame(columns=[" "], index=range(1)), label=" ")
 
 
 def stats_args(path, func):
@@ -77,7 +79,6 @@ def stats_args(path, func):
     mainfunc_to_args = {
         "biasedness_detection": ["stats_mode"],
         "IDness_detection": ["stats_unique"],
-        "outlier_detection": ["stats_unique"],
         "correlation_matrix": ["stats_unique"],
         "nullColumns_detection": ["stats_unique", "stats_mode", "stats_missing"],
         "variable_clustering": ["stats_unique", "stats_mode"],
@@ -104,8 +105,10 @@ def anovos_basic_report(
     id_col="",
     label_col="",
     event_label="",
+    skip_corr_matrix=True,
     output_path=".",
     run_type="local",
+    auth_key="NA",
     print_impact=True,
 ):
     """
@@ -122,12 +125,18 @@ def anovos_basic_report(
         Label/Target column (Default value = "")
     event_label
         Value of (positive) event (i.e label 1) (Default value = "")
+    skip_corr_matrix
+        True, False.
+        This argument is to skip correlation matrix generation in basic_report.(Default value = True)
     output_path
         File Path for saving metrics and basic report (Default value = ".")
     run_type
-        "local", "emr" or "databricks"
+        "local", "emr" or "databricks" or "ak8s"
         "emr" if the files are read from or written in AWS s3
-        "databricks" if the files are read from or written in dbfs in azure databricks (Default value = "local")
+        "databricks" if the files are read from or written in dbfs in azure databricks
+        "ak8s" if the files are read from or written to in wasbs:// container in azure environment (Default value = "local")
+    auth_key
+        Option to pass an authorization key to write to filesystems. Currently applicable only for ak8s run_type.
     print_impact
         True, False.
         This argument is to print out the data analyzer statistics.(Default value = False)
@@ -153,23 +162,19 @@ def anovos_basic_report(
         biasedness_detection,
         invalidEntries_detection,
     ]
-    AA_funcs = [correlation_matrix, variable_clustering]
+
+    if skip_corr_matrix:
+        AA_funcs = [variable_clustering]
+    else:
+        AA_funcs = [correlation_matrix, variable_clustering]
     AT_funcs = [IV_calculation, IG_calculation]
     all_funcs = SG_funcs + QC_rows_funcs + QC_cols_funcs + AA_funcs + AT_funcs
-
-    def output_to_local(output_path):
-        punctuations = ":"
-        for x in output_path:
-            if x in punctuations:
-                local_path = output_path.replace(x, "")
-                local_path = "/" + local_path
-        return local_path
 
     if run_type == "local":
         local_path = output_path
     elif run_type == "databricks":
         local_path = output_to_local(output_path)
-    elif run_type == "emr":
+    elif run_type in ("emr", "ak8s"):
         local_path = "report_stats"
     else:
         raise ValueError("Invalid run_type")
@@ -181,6 +186,8 @@ def anovos_basic_report(
             stats = func(spark, idf)
         elif func in (QC_rows_funcs + QC_cols_funcs):
             extra_args = stats_args(output_path, func.__name__)
+            if func.__name__ == "outlier_detection":
+                extra_args["print_impact"] = True
             stats = func(spark, idf, **extra_args)[1]
         elif func in AA_funcs:
             extra_args = stats_args(output_path, func.__name__)
@@ -203,6 +210,20 @@ def anovos_basic_report(
                 + ".csv "
                 + ends_with(output_path)
             )
+            subprocess.check_output(["bash", "-c", bash_cmd])
+
+        elif run_type == "ak8s":
+            local_file = ends_with(local_path) + func.__name__ + ".csv"
+            output_path_mod = path_ak8s_modify(output_path)
+            bash_cmd = (
+                'azcopy cp "'
+                + local_file
+                + '" "'
+                + ends_with(output_path_mod)
+                + str(auth_key)
+                + '" --recursive=true'
+            )
+
             subprocess.check_output(["bash", "-c", bash_cmd])
 
         if print_impact:
@@ -277,9 +298,7 @@ def anovos_basic_report(
                 " Number of Categorical Attributes : **" + str(catcols_count) + "**"
             ),
             dp.Text(" Categorical Attributes Name : **" + str(catcols_name) + "**"),
-            rows=6,
         ),
-        rows=8,
     )
 
     l2 = dp.Text("### Statistics by Metric Type")
@@ -378,7 +397,6 @@ def anovos_basic_report(
                         dp.Text(unique_rows_count),
                         dp.Text(duplicate_rows_count),
                         dp.Text(duplicate_rows_pct),
-                        rows=4,
                     ),
                     dp.Text("#"),
                     dp.Text("#"),
@@ -409,15 +427,8 @@ def anovos_basic_report(
         dp.Text("# "),
         dp.Select(
             blocks=[
-                dp.Group(
-                    dp.Text("# "),
-                    dp.Group(*QCcol_content),
-                    rows=2,
-                    label="Column Level",
-                ),
-                dp.Group(
-                    dp.Text("# "), dp.Group(*QCrow_content), rows=2, label="Row Level"
-                ),
+                dp.Group(dp.Text("# "), dp.Group(*QCcol_content), label="Column Level"),
+                dp.Group(dp.Text("# "), dp.Group(*QCrow_content), label="Row Level"),
             ],
             type=dp.SelectType.TABS,
         ),
@@ -447,7 +458,6 @@ def anovos_basic_report(
                     dp.Text("##"),
                     dp.DataTable(stats[["attribute"] + feats_order]),
                     dp.Plot(fig),
-                    rows=3,
                     label=remove_u_score(i.__name__),
                 )
             )
@@ -472,7 +482,6 @@ def anovos_basic_report(
                     dp.Text("##"),
                     dp.DataTable(stats),
                     dp.Plot(fig),
-                    rows=3,
                     label=remove_u_score(i.__name__),
                 )
             )
@@ -500,9 +509,13 @@ def anovos_basic_report(
                         dp.DataTable(stats),
                         dp.Plot(fig),
                         label=remove_u_score(i.__name__),
-                        rows=3,
                     )
                 )
+
+    if len(AA_content) == 1:
+        AA_content.append(blank_df)
+    else:
+        AA_content
 
     # @TODO: is there better templating approach such as jinja
     tab3 = dp.Group(
@@ -538,13 +551,25 @@ def anovos_basic_report(
             + ends_with(output_path)
         )
         subprocess.check_output(["bash", "-c", bash_cmd])
+
+    if run_type == "ak8s":
+        output_path_mod = path_ak8s_modify(output_path)
+        bash_cmd = (
+            'azcopy cp "'
+            + ends_with(local_path)
+            + 'basic_report.html" "'
+            + ends_with(output_path_mod)
+            + str(auth_key)
+            + '"'
+        )
+        subprocess.check_output(["bash", "-c", bash_cmd])
 ```
 </pre>
 </details>
 ## Functions
 <dl>
 <dt id="anovos.data_report.basic_report_generation.anovos_basic_report"><code class="name flex hljs csharp">
-<span class="k">def</span> <span class="nf"><span class="ident">anovos_basic_report</span></span>(<span class="n">spark, idf, id_col='', label_col='', event_label='', output_path='.', run_type='local', print_impact=True)</span>
+<span class="k">def</span> <span class="nf"><span class="ident">anovos_basic_report</span></span>(<span class="n">spark, idf, id_col='', label_col='', event_label='', skip_corr_matrix=True, output_path='.', run_type='local', auth_key='NA', print_impact=True)</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
@@ -559,12 +584,18 @@ def anovos_basic_report(
 <dd>Label/Target column (Default value = "")</dd>
 <dt><strong><code>event_label</code></strong></dt>
 <dd>Value of (positive) event (i.e label 1) (Default value = "")</dd>
+<dt><strong><code>skip_corr_matrix</code></strong></dt>
+<dd>True, False.
+This argument is to skip correlation matrix generation in basic_report.(Default value = True)</dd>
 <dt><strong><code>output_path</code></strong></dt>
 <dd>File Path for saving metrics and basic report (Default value = ".")</dd>
 <dt><strong><code>run_type</code></strong></dt>
-<dd>"local", "emr" or "databricks"
+<dd>"local", "emr" or "databricks" or "ak8s"
 "emr" if the files are read from or written in AWS s3
-"databricks" if the files are read from or written in dbfs in azure databricks (Default value = "local")</dd>
+"databricks" if the files are read from or written in dbfs in azure databricks
+"ak8s" if the files are read from or written to in wasbs:// container in azure environment (Default value = "local")</dd>
+<dt><strong><code>auth_key</code></strong></dt>
+<dd>Option to pass an authorization key to write to filesystems. Currently applicable only for ak8s run_type.</dd>
 <dt><strong><code>print_impact</code></strong></dt>
 <dd>True, False.
 This argument is to print out the data analyzer statistics.(Default value = False)</dd>
@@ -581,8 +612,10 @@ def anovos_basic_report(
     id_col="",
     label_col="",
     event_label="",
+    skip_corr_matrix=True,
     output_path=".",
     run_type="local",
+    auth_key="NA",
     print_impact=True,
 ):
     """
@@ -599,12 +632,18 @@ def anovos_basic_report(
         Label/Target column (Default value = "")
     event_label
         Value of (positive) event (i.e label 1) (Default value = "")
+    skip_corr_matrix
+        True, False.
+        This argument is to skip correlation matrix generation in basic_report.(Default value = True)
     output_path
         File Path for saving metrics and basic report (Default value = ".")
     run_type
-        "local", "emr" or "databricks"
+        "local", "emr" or "databricks" or "ak8s"
         "emr" if the files are read from or written in AWS s3
-        "databricks" if the files are read from or written in dbfs in azure databricks (Default value = "local")
+        "databricks" if the files are read from or written in dbfs in azure databricks
+        "ak8s" if the files are read from or written to in wasbs:// container in azure environment (Default value = "local")
+    auth_key
+        Option to pass an authorization key to write to filesystems. Currently applicable only for ak8s run_type.
     print_impact
         True, False.
         This argument is to print out the data analyzer statistics.(Default value = False)
@@ -630,23 +669,19 @@ def anovos_basic_report(
         biasedness_detection,
         invalidEntries_detection,
     ]
-    AA_funcs = [correlation_matrix, variable_clustering]
+
+    if skip_corr_matrix:
+        AA_funcs = [variable_clustering]
+    else:
+        AA_funcs = [correlation_matrix, variable_clustering]
     AT_funcs = [IV_calculation, IG_calculation]
     all_funcs = SG_funcs + QC_rows_funcs + QC_cols_funcs + AA_funcs + AT_funcs
-
-    def output_to_local(output_path):
-        punctuations = ":"
-        for x in output_path:
-            if x in punctuations:
-                local_path = output_path.replace(x, "")
-                local_path = "/" + local_path
-        return local_path
 
     if run_type == "local":
         local_path = output_path
     elif run_type == "databricks":
         local_path = output_to_local(output_path)
-    elif run_type == "emr":
+    elif run_type in ("emr", "ak8s"):
         local_path = "report_stats"
     else:
         raise ValueError("Invalid run_type")
@@ -658,6 +693,8 @@ def anovos_basic_report(
             stats = func(spark, idf)
         elif func in (QC_rows_funcs + QC_cols_funcs):
             extra_args = stats_args(output_path, func.__name__)
+            if func.__name__ == "outlier_detection":
+                extra_args["print_impact"] = True
             stats = func(spark, idf, **extra_args)[1]
         elif func in AA_funcs:
             extra_args = stats_args(output_path, func.__name__)
@@ -680,6 +717,20 @@ def anovos_basic_report(
                 + ".csv "
                 + ends_with(output_path)
             )
+            subprocess.check_output(["bash", "-c", bash_cmd])
+
+        elif run_type == "ak8s":
+            local_file = ends_with(local_path) + func.__name__ + ".csv"
+            output_path_mod = path_ak8s_modify(output_path)
+            bash_cmd = (
+                'azcopy cp "'
+                + local_file
+                + '" "'
+                + ends_with(output_path_mod)
+                + str(auth_key)
+                + '" --recursive=true'
+            )
+
             subprocess.check_output(["bash", "-c", bash_cmd])
 
         if print_impact:
@@ -754,9 +805,7 @@ def anovos_basic_report(
                 " Number of Categorical Attributes : **" + str(catcols_count) + "**"
             ),
             dp.Text(" Categorical Attributes Name : **" + str(catcols_name) + "**"),
-            rows=6,
         ),
-        rows=8,
     )
 
     l2 = dp.Text("### Statistics by Metric Type")
@@ -855,7 +904,6 @@ def anovos_basic_report(
                         dp.Text(unique_rows_count),
                         dp.Text(duplicate_rows_count),
                         dp.Text(duplicate_rows_pct),
-                        rows=4,
                     ),
                     dp.Text("#"),
                     dp.Text("#"),
@@ -886,15 +934,8 @@ def anovos_basic_report(
         dp.Text("# "),
         dp.Select(
             blocks=[
-                dp.Group(
-                    dp.Text("# "),
-                    dp.Group(*QCcol_content),
-                    rows=2,
-                    label="Column Level",
-                ),
-                dp.Group(
-                    dp.Text("# "), dp.Group(*QCrow_content), rows=2, label="Row Level"
-                ),
+                dp.Group(dp.Text("# "), dp.Group(*QCcol_content), label="Column Level"),
+                dp.Group(dp.Text("# "), dp.Group(*QCrow_content), label="Row Level"),
             ],
             type=dp.SelectType.TABS,
         ),
@@ -924,7 +965,6 @@ def anovos_basic_report(
                     dp.Text("##"),
                     dp.DataTable(stats[["attribute"] + feats_order]),
                     dp.Plot(fig),
-                    rows=3,
                     label=remove_u_score(i.__name__),
                 )
             )
@@ -949,7 +989,6 @@ def anovos_basic_report(
                     dp.Text("##"),
                     dp.DataTable(stats),
                     dp.Plot(fig),
-                    rows=3,
                     label=remove_u_score(i.__name__),
                 )
             )
@@ -977,9 +1016,13 @@ def anovos_basic_report(
                         dp.DataTable(stats),
                         dp.Plot(fig),
                         label=remove_u_score(i.__name__),
-                        rows=3,
                     )
                 )
+
+    if len(AA_content) == 1:
+        AA_content.append(blank_df)
+    else:
+        AA_content
 
     # @TODO: is there better templating approach such as jinja
     tab3 = dp.Group(
@@ -1013,6 +1056,18 @@ def anovos_basic_report(
             + ends_with(local_path)
             + "basic_report.html "
             + ends_with(output_path)
+        )
+        subprocess.check_output(["bash", "-c", bash_cmd])
+
+    if run_type == "ak8s":
+        output_path_mod = path_ak8s_modify(output_path)
+        bash_cmd = (
+            'azcopy cp "'
+            + ends_with(local_path)
+            + 'basic_report.html" "'
+            + ends_with(output_path_mod)
+            + str(auth_key)
+            + '"'
         )
         subprocess.check_output(["bash", "-c", bash_cmd])
 ```
@@ -1062,7 +1117,6 @@ def stats_args(path, func):
     mainfunc_to_args = {
         "biasedness_detection": ["stats_mode"],
         "IDness_detection": ["stats_unique"],
-        "outlier_detection": ["stats_unique"],
         "correlation_matrix": ["stats_unique"],
         "nullColumns_detection": ["stats_unique", "stats_mode", "stats_missing"],
         "variable_clustering": ["stats_unique", "stats_mode"],

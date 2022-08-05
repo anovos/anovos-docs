@@ -16,7 +16,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Pip cache
-        uses: actions/cache@v3.0.2
+        uses: actions/cache@v3.0.5
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-docs-${{ hashFiles('./requirements.txt') }}
@@ -24,7 +24,7 @@ jobs:
             ${{ runner.os }}-pip-docs-
 
       - name: Deploy docs
-        uses: mhausenblas/mkdocs-deploy-gh-pages@1.24
+        uses: mhausenblas/mkdocs-deploy-gh-pages@1.25
 
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

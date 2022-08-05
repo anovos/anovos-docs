@@ -22,7 +22,7 @@ jobs:
           path: anovos
 
       - name: Set up Python
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v4
         with:
           python-version: '3.7'
 
@@ -37,7 +37,7 @@ jobs:
           hadoop-version: '2.7'
 
       - name: Pip cache
-        uses: actions/cache@v3.0.2
+        uses: actions/cache@v3.0.5
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-anovos-${{ hashFiles('./requirements.txt') }}
@@ -50,6 +50,8 @@ jobs:
           python -m pip install --upgrade pip
           pip install wheel
           pip install -r requirements.txt
+          # Install optional requirements
+          pip install feast==0.21.1
 
       - name: Install Python requirements for API docs generation
         run: |
@@ -87,7 +89,7 @@ jobs:
           rm -rf docs/api/version.md || true
 
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v4.0.2
+        uses: peter-evans/create-pull-request@v4.0.4
         with:
           add-paths: |
             docs/api/**
