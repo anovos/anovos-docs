@@ -1,12 +1,12 @@
-# <code>feature_recommendation</code>
-<p>Feature recommender recommends features based on ingested data dictionary by the user.</p>
+# <code>feature_mapper</code>
+<p>Feature mapper maps attributes to features based on ingested data dictionary by the user.</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre>
 ```python
-"""Feature recommender recommends features based on ingested data dictionary by the user."""
+"""Feature mapper maps attributes to features based on ingested data dictionary by the user."""
 import copy
 import random
 import re
@@ -17,14 +17,14 @@ import plotly.graph_objects as go
 from sentence_transformers import util
 
 from anovos.feature_recommender.featrec_init import (
-    recommendation_data_prep,
-    model_fer,
+    EmbeddingsTrainFer,
     camel_case_split,
     feature_recommendation_prep,
     get_column_name,
-    EmbeddingsTrainFer,
+    model_fer,
+    recommendation_data_prep,
 )
-from anovos.feature_recommender.feature_exploration import (
+from anovos.feature_recommender.feature_explorer import (
     list_usecase_by_industry,
     process_industry,
     process_usecase,
@@ -40,7 +40,7 @@ list_embedding_train_fer = EmbeddingsTrainFer(list_train_fer)
 ) = get_column_name(df_rec_fer)
 
 
-def feature_recommendation(
+def feature_mapper(
     df,
     name_column=None,
     desc_column=None,
@@ -50,7 +50,7 @@ def feature_recommendation(
     top_n=2,
     threshold=0.3,
 ):
-    """Recommends features to users based on their input attributes, and their goal industry and/or use case
+    """Matches features for users based on their input attributes, and their goal industry and/or use case
 
     Parameters
     ----------
@@ -78,12 +78,11 @@ def feature_recommendation(
 
         - Input Attribute Name: Name of the input Attribute
         - Input Attribute Description: Description of the input Attribute
-        - Recommended Feature Name: Name of the recommended Feature
-        - Recommended Feature Description: Description of the recommended Feature
-        - Feature Similarity Score: Semantic similarity score between input Attribute and recommended Feature
-        - Industry: Industry name of the recommended Feature
-        - Usecase: Usecase name of the recommended Feature
-        - Source: Source of the recommended Feature
+        - Matched Feature Name: Name of the matched Feature
+        - Matched Feature Description: Description of the matched Feature
+        - Feature Similarity Score: Semantic similarity score between input Attribute and matched Feature
+        - Industry: Industry name of the matched Feature
+        - Usecase: Usecase name of the matched Feature
 
     """
     if not isinstance(df, pd.DataFrame):
@@ -134,8 +133,8 @@ def feature_recommendation(
                 columns=[
                     "Input_Attribute_Name",
                     "Input_Attribute_Description",
-                    "Recommended_Feature_Name",
-                    "Recommended_Feature_Description",
+                    "Matched_Feature_Name",
+                    "Matched_Feature_Description",
                     "Feature_Similarity_Score",
                     "Industry",
                     "Usecase",
@@ -151,8 +150,8 @@ def feature_recommendation(
         df_out = pd.DataFrame(
             columns=[
                 "Input_Attribute_Description",
-                "Recommended_Feature_Name",
-                "Recommended_Feature_Description",
+                "Matched_Feature_Name",
+                "Matched_Feature_Description",
                 "Feature_Similarity_Score",
                 "Industry",
                 "Usecase",
@@ -162,8 +161,8 @@ def feature_recommendation(
         df_out = pd.DataFrame(
             columns=[
                 "Input_Attribute_Name",
-                "Recommended_Feature_Name",
-                "Recommended_Feature_Description",
+                "Matched_Feature_Name",
+                "Matched_Feature_Description",
                 "Feature_Similarity_Score",
                 "Industry",
                 "Usecase",
@@ -174,8 +173,8 @@ def feature_recommendation(
             columns=[
                 "Input_Attribute_Name",
                 "Input_Attribute_Description",
-                "Recommended_Feature_Name",
-                "Recommended_Feature_Description",
+                "Matched_Feature_Name",
+                "Matched_Feature_Description",
                 "Feature_Similarity_Score",
                 "Industry",
                 "Usecase",
@@ -204,8 +203,8 @@ def feature_recommendation(
                         ],
                         columns=[
                             "Input_Attribute_Description",
-                            "Recommended_Feature_Name",
-                            "Recommended_Feature_Description",
+                            "Matched_Feature_Name",
+                            "Matched_Feature_Description",
                             "Feature_Similarity_Score",
                             "Industry",
                             "Usecase",
@@ -225,8 +224,8 @@ def feature_recommendation(
                         ],
                         columns=[
                             "Input_Attribute_Description",
-                            "Recommended_Feature_Name",
-                            "Recommended_Feature_Description",
+                            "Matched_Feature_Name",
+                            "Matched_Feature_Description",
                             "Feature_Similarity_Score",
                             "Industry",
                             "Usecase",
@@ -247,8 +246,8 @@ def feature_recommendation(
                         ],
                         columns=[
                             "Input_Attribute_Name",
-                            "Recommended_Feature_Name",
-                            "Recommended_Feature_Description",
+                            "Matched_Feature_Name",
+                            "Matched_Feature_Description",
                             "Feature_Similarity_Score",
                             "Industry",
                             "Usecase",
@@ -268,8 +267,8 @@ def feature_recommendation(
                         ],
                         columns=[
                             "Input_Attribute_Name",
-                            "Recommended_Feature_Name",
-                            "Recommended_Feature_Description",
+                            "Matched_Feature_Name",
+                            "Matched_Feature_Description",
                             "Feature_Similarity_Score",
                             "Industry",
                             "Usecase",
@@ -292,8 +291,8 @@ def feature_recommendation(
                         columns=[
                             "Input_Attribute_Name",
                             "Input_Attribute_Description",
-                            "Recommended_Feature_Name",
-                            "Recommended_Feature_Description",
+                            "Matched_Feature_Name",
+                            "Matched_Feature_Description",
                             "Feature_Similarity_Score",
                             "Industry",
                             "Usecase",
@@ -315,8 +314,8 @@ def feature_recommendation(
                         columns=[
                             "Input_Attribute_Name",
                             "Input_Attribute_Description",
-                            "Recommended_Feature_Name",
-                            "Recommended_Feature_Description",
+                            "Matched_Feature_Name",
+                            "Matched_Feature_Description",
                             "Feature_Similarity_Score",
                             "Industry",
                             "Usecase",
@@ -472,12 +471,12 @@ def find_attr_by_relevance(
 
 
 def sankey_visualization(df, industry_included=False, usecase_included=False):
-    """Visualize Feature Recommendation functions through Sankey plots
+    """Visualize Feature Mapper functions through Sankey plots
 
     Parameters
     ----------
     df : DataFrame
-        Input DataFrame. This DataFrame needs to be output of feature_recommendation or find_attr_by_relevance, or in the same format.
+        Input DataFrame. This DataFrame needs to be output of feature_mapper or find_attr_by_relevance, or in the same format.
     industry_included : bool
         Whether the plot needs to include industry mapping or not. Default is False
     usecase_included : bool
@@ -490,8 +489,8 @@ def sankey_visualization(df, industry_included=False, usecase_included=False):
 
     """
     fr_proper_col_list = [
-        "Recommended_Feature_Name",
-        "Recommended_Feature_Description",
+        "Matched_Feature_Name",
+        "Matched_Feature_Description",
         "Feature_Similarity_Score",
         "Industry",
         "Usecase",
@@ -517,7 +516,7 @@ def sankey_visualization(df, industry_included=False, usecase_included=False):
             name_source = "Input_Attribute_Name"
         else:
             name_source = "Input_Attribute_Description"
-        name_target = "Recommended_Feature_Name"
+        name_target = "Matched_Feature_Name"
         name_score = "Feature_Similarity_Score"
     else:
         name_source = "Input_Feature_Description"
@@ -660,20 +659,18 @@ def sankey_visualization(df, industry_included=False, usecase_included=False):
             )
         ]
     )
-    fig.update_layout(
-        title_text="Feature Recommendation Sankey Visualization", font_size=10
-    )
+    fig.update_layout(title_text="Feature Mapper Sankey Visualization", font_size=10)
     return fig
 ```
 </pre>
 </details>
 ## Functions
 <dl>
-<dt id="anovos.feature_recommender.feature_recommendation.feature_recommendation"><code class="name flex hljs csharp">
-<span class="k">def</span> <span class="nf"><span class="ident">feature_recommendation</span></span>(<span class="n">df, name_column=None, desc_column=None, suggested_industry='all', suggested_usecase='all', semantic=True, top_n=2, threshold=0.3)</span>
+<dt id="anovos.feature_recommender.feature_mapper.feature_mapper"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">feature_mapper</span></span>(<span class="n">df, name_column=None, desc_column=None, suggested_industry='all', suggested_usecase='all', semantic=True, top_n=2, threshold=0.3)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Recommends features to users based on their input attributes, and their goal industry and/or use case</p>
+<div class="desc"><p>Matches features for users based on their input attributes, and their goal industry and/or use case</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>df</code></strong> :&ensp;<code>DataFrame</code></dt>
@@ -701,12 +698,11 @@ def sankey_visualization(df, industry_included=False, usecase_included=False):
 <ul>
 <li>Input Attribute Name: Name of the input Attribute</li>
 <li>Input Attribute Description: Description of the input Attribute</li>
-<li>Recommended Feature Name: Name of the recommended Feature</li>
-<li>Recommended Feature Description: Description of the recommended Feature</li>
-<li>Feature Similarity Score: Semantic similarity score between input Attribute and recommended Feature</li>
-<li>Industry: Industry name of the recommended Feature</li>
-<li>Usecase: Usecase name of the recommended Feature</li>
-<li>Source: Source of the recommended Feature</li>
+<li>Matched Feature Name: Name of the matched Feature</li>
+<li>Matched Feature Description: Description of the matched Feature</li>
+<li>Feature Similarity Score: Semantic similarity score between input Attribute and matched Feature</li>
+<li>Industry: Industry name of the matched Feature</li>
+<li>Usecase: Usecase name of the matched Feature</li>
 </ul>
 </dd>
 </dl></div>
@@ -716,7 +712,7 @@ def sankey_visualization(df, industry_included=False, usecase_included=False):
 </summary>
 <pre>
 ```python
-def feature_recommendation(
+def feature_mapper(
     df,
     name_column=None,
     desc_column=None,
@@ -726,7 +722,7 @@ def feature_recommendation(
     top_n=2,
     threshold=0.3,
 ):
-    """Recommends features to users based on their input attributes, and their goal industry and/or use case
+    """Matches features for users based on their input attributes, and their goal industry and/or use case
 
     Parameters
     ----------
@@ -754,12 +750,11 @@ def feature_recommendation(
 
         - Input Attribute Name: Name of the input Attribute
         - Input Attribute Description: Description of the input Attribute
-        - Recommended Feature Name: Name of the recommended Feature
-        - Recommended Feature Description: Description of the recommended Feature
-        - Feature Similarity Score: Semantic similarity score between input Attribute and recommended Feature
-        - Industry: Industry name of the recommended Feature
-        - Usecase: Usecase name of the recommended Feature
-        - Source: Source of the recommended Feature
+        - Matched Feature Name: Name of the matched Feature
+        - Matched Feature Description: Description of the matched Feature
+        - Feature Similarity Score: Semantic similarity score between input Attribute and matched Feature
+        - Industry: Industry name of the matched Feature
+        - Usecase: Usecase name of the matched Feature
 
     """
     if not isinstance(df, pd.DataFrame):
@@ -810,8 +805,8 @@ def feature_recommendation(
                 columns=[
                     "Input_Attribute_Name",
                     "Input_Attribute_Description",
-                    "Recommended_Feature_Name",
-                    "Recommended_Feature_Description",
+                    "Matched_Feature_Name",
+                    "Matched_Feature_Description",
                     "Feature_Similarity_Score",
                     "Industry",
                     "Usecase",
@@ -827,8 +822,8 @@ def feature_recommendation(
         df_out = pd.DataFrame(
             columns=[
                 "Input_Attribute_Description",
-                "Recommended_Feature_Name",
-                "Recommended_Feature_Description",
+                "Matched_Feature_Name",
+                "Matched_Feature_Description",
                 "Feature_Similarity_Score",
                 "Industry",
                 "Usecase",
@@ -838,8 +833,8 @@ def feature_recommendation(
         df_out = pd.DataFrame(
             columns=[
                 "Input_Attribute_Name",
-                "Recommended_Feature_Name",
-                "Recommended_Feature_Description",
+                "Matched_Feature_Name",
+                "Matched_Feature_Description",
                 "Feature_Similarity_Score",
                 "Industry",
                 "Usecase",
@@ -850,8 +845,8 @@ def feature_recommendation(
             columns=[
                 "Input_Attribute_Name",
                 "Input_Attribute_Description",
-                "Recommended_Feature_Name",
-                "Recommended_Feature_Description",
+                "Matched_Feature_Name",
+                "Matched_Feature_Description",
                 "Feature_Similarity_Score",
                 "Industry",
                 "Usecase",
@@ -880,8 +875,8 @@ def feature_recommendation(
                         ],
                         columns=[
                             "Input_Attribute_Description",
-                            "Recommended_Feature_Name",
-                            "Recommended_Feature_Description",
+                            "Matched_Feature_Name",
+                            "Matched_Feature_Description",
                             "Feature_Similarity_Score",
                             "Industry",
                             "Usecase",
@@ -901,8 +896,8 @@ def feature_recommendation(
                         ],
                         columns=[
                             "Input_Attribute_Description",
-                            "Recommended_Feature_Name",
-                            "Recommended_Feature_Description",
+                            "Matched_Feature_Name",
+                            "Matched_Feature_Description",
                             "Feature_Similarity_Score",
                             "Industry",
                             "Usecase",
@@ -923,8 +918,8 @@ def feature_recommendation(
                         ],
                         columns=[
                             "Input_Attribute_Name",
-                            "Recommended_Feature_Name",
-                            "Recommended_Feature_Description",
+                            "Matched_Feature_Name",
+                            "Matched_Feature_Description",
                             "Feature_Similarity_Score",
                             "Industry",
                             "Usecase",
@@ -944,8 +939,8 @@ def feature_recommendation(
                         ],
                         columns=[
                             "Input_Attribute_Name",
-                            "Recommended_Feature_Name",
-                            "Recommended_Feature_Description",
+                            "Matched_Feature_Name",
+                            "Matched_Feature_Description",
                             "Feature_Similarity_Score",
                             "Industry",
                             "Usecase",
@@ -968,8 +963,8 @@ def feature_recommendation(
                         columns=[
                             "Input_Attribute_Name",
                             "Input_Attribute_Description",
-                            "Recommended_Feature_Name",
-                            "Recommended_Feature_Description",
+                            "Matched_Feature_Name",
+                            "Matched_Feature_Description",
                             "Feature_Similarity_Score",
                             "Industry",
                             "Usecase",
@@ -991,8 +986,8 @@ def feature_recommendation(
                         columns=[
                             "Input_Attribute_Name",
                             "Input_Attribute_Description",
-                            "Recommended_Feature_Name",
-                            "Recommended_Feature_Description",
+                            "Matched_Feature_Name",
+                            "Matched_Feature_Description",
                             "Feature_Similarity_Score",
                             "Industry",
                             "Usecase",
@@ -1006,7 +1001,7 @@ def feature_recommendation(
 </pre>
 </details>
 </dd>
-<dt id="anovos.feature_recommender.feature_recommendation.find_attr_by_relevance"><code class="name flex hljs csharp">
+<dt id="anovos.feature_recommender.feature_mapper.find_attr_by_relevance"><code class="name flex hljs csharp">
 <span class="k">def</span> <span class="nf"><span class="ident">find_attr_by_relevance</span></span>(<span class="n">df, building_corpus, name_column=None, desc_column=None, threshold=0.3)</span>
 </code></dt>
 <dd>
@@ -1189,15 +1184,15 @@ def find_attr_by_relevance(
 </pre>
 </details>
 </dd>
-<dt id="anovos.feature_recommender.feature_recommendation.sankey_visualization"><code class="name flex hljs csharp">
+<dt id="anovos.feature_recommender.feature_mapper.sankey_visualization"><code class="name flex hljs csharp">
 <span class="k">def</span> <span class="nf"><span class="ident">sankey_visualization</span></span>(<span class="n">df, industry_included=False, usecase_included=False)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Visualize Feature Recommendation functions through Sankey plots</p>
+<div class="desc"><p>Visualize Feature Mapper functions through Sankey plots</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>df</code></strong> :&ensp;<code>DataFrame</code></dt>
-<dd>Input DataFrame. This DataFrame needs to be output of feature_recommendation or find_attr_by_relevance, or in the same format.</dd>
+<dd>Input DataFrame. This DataFrame needs to be output of feature_mapper or find_attr_by_relevance, or in the same format.</dd>
 <dt><strong><code>industry_included</code></strong> :&ensp;<code>bool</code></dt>
 <dd>Whether the plot needs to include industry mapping or not. Default is False</dd>
 <dt><strong><code>usecase_included</code></strong> :&ensp;<code>bool</code></dt>
@@ -1212,12 +1207,12 @@ def find_attr_by_relevance(
 <pre>
 ```python
 def sankey_visualization(df, industry_included=False, usecase_included=False):
-    """Visualize Feature Recommendation functions through Sankey plots
+    """Visualize Feature Mapper functions through Sankey plots
 
     Parameters
     ----------
     df : DataFrame
-        Input DataFrame. This DataFrame needs to be output of feature_recommendation or find_attr_by_relevance, or in the same format.
+        Input DataFrame. This DataFrame needs to be output of feature_mapper or find_attr_by_relevance, or in the same format.
     industry_included : bool
         Whether the plot needs to include industry mapping or not. Default is False
     usecase_included : bool
@@ -1230,8 +1225,8 @@ def sankey_visualization(df, industry_included=False, usecase_included=False):
 
     """
     fr_proper_col_list = [
-        "Recommended_Feature_Name",
-        "Recommended_Feature_Description",
+        "Matched_Feature_Name",
+        "Matched_Feature_Description",
         "Feature_Similarity_Score",
         "Industry",
         "Usecase",
@@ -1257,7 +1252,7 @@ def sankey_visualization(df, industry_included=False, usecase_included=False):
             name_source = "Input_Attribute_Name"
         else:
             name_source = "Input_Attribute_Description"
-        name_target = "Recommended_Feature_Name"
+        name_target = "Matched_Feature_Name"
         name_score = "Feature_Similarity_Score"
     else:
         name_source = "Input_Feature_Description"
@@ -1400,9 +1395,7 @@ def sankey_visualization(df, industry_included=False, usecase_included=False):
             )
         ]
     )
-    fig.update_layout(
-        title_text="Feature Recommendation Sankey Visualization", font_size=10
-    )
+    fig.update_layout(title_text="Feature Mapper Sankey Visualization", font_size=10)
     return fig
 ```
 </pre>

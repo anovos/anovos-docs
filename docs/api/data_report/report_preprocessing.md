@@ -6,7 +6,9 @@
 <pre>
 ```python
 import subprocess
+import warnings
 from pathlib import Path
+
 import numpy as np
 import pandas as pd
 import plotly.express as px
@@ -20,13 +22,16 @@ from pyspark.sql.window import Window
 from anovos.data_analyzer.stats_generator import uniqueCount_computation
 from anovos.data_ingest.data_ingest import read_dataset
 from anovos.data_transformer.transformers import (
-    outlier_categories,
-    imputation_MMM,
     attribute_binning,
+    imputation_MMM,
+    outlier_categories,
 )
-from anovos.shared.utils import attributeType_segregation, ends_with
-from ..shared.utils import platform_root_path
-import warnings
+from anovos.shared.utils import (
+    attributeType_segregation,
+    ends_with,
+    output_to_local,
+    path_ak8s_modify,
+)
 
 warnings.filterwarnings("ignore")
 
@@ -38,16 +43,15 @@ num_cols = []
 cat_cols = []
 
 
-def master_to_local(master_path):
-    punctuations = ":"
-    for x in master_path:
-        if x in punctuations:
-            local_path = master_path.replace(x, "")
-            local_path = "/" + local_path
-    return local_path
-
-
-def save_stats(spark, idf, master_path, function_name, reread=False, run_type="local"):
+def save_stats(
+    spark,
+    idf,
+    master_path,
+    function_name,
+    reread=False,
+    run_type="local",
+    auth_key="NA",
+):
     """
 
     Parameters
@@ -63,7 +67,9 @@ def save_stats(spark, idf, master_path, function_name, reread=False, run_type="l
     reread
         option to reread. Default value is kept as False
     run_type
-        local or emr or databricks based on the mode of execution. Default value is kept as local
+        local or emr or databricks or ak8s based on the mode of execution. Default value is kept as local
+    auth_key
+        Option to pass an authorization key to write to filesystems. Currently applicable only for ak8s run_type. Default value is kept as "NA"
 
     Returns
     -------
@@ -72,8 +78,8 @@ def save_stats(spark, idf, master_path, function_name, reread=False, run_type="l
     if run_type == "local":
         local_path = master_path
     elif run_type == "databricks":
-        local_path = master_to_local(master_path)
-    elif run_type == "emr":
+        local_path = output_to_local(master_path)
+    elif run_type in ("emr", "ak8s"):
         local_path = "report_stats"
     else:
         raise ValueError("Invalid run_type")
@@ -91,6 +97,19 @@ def save_stats(spark, idf, master_path, function_name, reread=False, run_type="l
             + ends_with(master_path)
         )
 
+        subprocess.check_output(["bash", "-c", bash_cmd])
+
+    if run_type == "ak8s":
+        output_path_mod = path_ak8s_modify(master_path)
+        bash_cmd = (
+            'azcopy cp "'
+            + ends_with(local_path)
+            + function_name
+            + '.csv" "'
+            + ends_with(output_path_mod)
+            + str(auth_key)
+            + '"'
+        )
         subprocess.check_output(["bash", "-c", bash_cmd])
 
     if reread:
@@ -457,6 +476,7 @@ def charts_to_objects(
     master_path=".",
     stats_unique={},
     run_type="local",
+    auth_key="NA",
 ):
     """
 
@@ -491,7 +511,9 @@ def charts_to_objects(
         to read pre-saved statistics on unique value count i.e. if measures_of_cardinality or
         uniqueCount_computation (data_analyzer.stats_generator module) has been computed & saved before. (Default value = {})
     run_type
-        local or emr or databricks run type. Default value is kept as local
+        local or emr or databricks or ak8s run type. Default value is kept as local
+    auth_key
+        Option to pass an authorization key to write to filesystems. Currently applicable only for ak8s run_type. Default value is kept as "NA"
 
     Returns
     -------
@@ -542,13 +564,8 @@ def charts_to_objects(
     else:
         idf_cleaned = idf
 
-    if run_type in list(platform_root_path.keys()):
-        root_path = platform_root_path[run_type]
-    else:
-        root_path = ""
-
     if source_path == "NA":
-        source_path = root_path + "intermediate_data"
+        source_path = "intermediate_data"
 
     if drift_detector:
         encoding_model_exists = True
@@ -600,8 +617,8 @@ def charts_to_objects(
     if run_type == "local":
         local_path = master_path
     elif run_type == "databricks":
-        local_path = master_to_local(master_path)
-    elif run_type == "emr":
+        local_path = output_to_local(master_path)
+    elif run_type in ("emr", "ak8s"):
         local_path = "report_stats"
     else:
         raise ValueError("Invalid run_type")
@@ -697,7 +714,18 @@ def charts_to_objects(
             + " "
             + ends_with(master_path)
         )
+        subprocess.check_output(["bash", "-c", bash_cmd])
 
+    if run_type == "ak8s":
+        output_path_mod = path_ak8s_modify(master_path)
+        bash_cmd = (
+            'azcopy cp "'
+            + ends_with(local_path)
+            + '" "'
+            + ends_with(output_path_mod)
+            + str(auth_key)
+            + '" --recursive=true'
+        )
         subprocess.check_output(["bash", "-c", bash_cmd])
 ```
 </pre>
@@ -769,7 +797,7 @@ def binRange_to_binIdx(spark, col, cutoffs_path):
 </details>
 </dd>
 <dt id="anovos.data_report.report_preprocessing.charts_to_objects"><code class="name flex hljs csharp">
-<span class="k">def</span> <span class="nf"><span class="ident">charts_to_objects</span></span>(<span class="n">spark, idf, list_of_cols='all', drop_cols=[], label_col=None, event_label=1, bin_method='equal_range', bin_size=10, coverage=1.0, drift_detector=False, outlier_charts=False, source_path='NA', master_path='.', stats_unique={}, run_type='local')</span>
+<span class="k">def</span> <span class="nf"><span class="ident">charts_to_objects</span></span>(<span class="n">spark, idf, list_of_cols='all', drop_cols=[], label_col=None, event_label=1, bin_method='equal_range', bin_size=10, coverage=1.0, drift_detector=False, outlier_charts=False, source_path='NA', master_path='.', stats_unique={}, run_type='local', auth_key='NA')</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
@@ -803,7 +831,9 @@ def binRange_to_binIdx(spark, col, cutoffs_path):
 to read pre-saved statistics on unique value count i.e. if measures_of_cardinality or
 uniqueCount_computation (data_analyzer.stats_generator module) has been computed &amp; saved before. (Default value = {})</dd>
 <dt><strong><code>run_type</code></strong></dt>
-<dd>local or emr or databricks run type. Default value is kept as local</dd>
+<dd>local or emr or databricks or ak8s run type. Default value is kept as local</dd>
+<dt><strong><code>auth_key</code></strong></dt>
+<dd>Option to pass an authorization key to write to filesystems. Currently applicable only for ak8s run_type. Default value is kept as "NA"</dd>
 </dl>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
@@ -828,6 +858,7 @@ def charts_to_objects(
     master_path=".",
     stats_unique={},
     run_type="local",
+    auth_key="NA",
 ):
     """
 
@@ -862,7 +893,9 @@ def charts_to_objects(
         to read pre-saved statistics on unique value count i.e. if measures_of_cardinality or
         uniqueCount_computation (data_analyzer.stats_generator module) has been computed & saved before. (Default value = {})
     run_type
-        local or emr or databricks run type. Default value is kept as local
+        local or emr or databricks or ak8s run type. Default value is kept as local
+    auth_key
+        Option to pass an authorization key to write to filesystems. Currently applicable only for ak8s run_type. Default value is kept as "NA"
 
     Returns
     -------
@@ -913,13 +946,8 @@ def charts_to_objects(
     else:
         idf_cleaned = idf
 
-    if run_type in list(platform_root_path.keys()):
-        root_path = platform_root_path[run_type]
-    else:
-        root_path = ""
-
     if source_path == "NA":
-        source_path = root_path + "intermediate_data"
+        source_path = "intermediate_data"
 
     if drift_detector:
         encoding_model_exists = True
@@ -971,8 +999,8 @@ def charts_to_objects(
     if run_type == "local":
         local_path = master_path
     elif run_type == "databricks":
-        local_path = master_to_local(master_path)
-    elif run_type == "emr":
+        local_path = output_to_local(master_path)
+    elif run_type in ("emr", "ak8s"):
         local_path = "report_stats"
     else:
         raise ValueError("Invalid run_type")
@@ -1068,7 +1096,18 @@ def charts_to_objects(
             + " "
             + ends_with(master_path)
         )
+        subprocess.check_output(["bash", "-c", bash_cmd])
 
+    if run_type == "ak8s":
+        output_path_mod = path_ak8s_modify(master_path)
+        bash_cmd = (
+            'azcopy cp "'
+            + ends_with(local_path)
+            + '" "'
+            + ends_with(output_path_mod)
+            + str(auth_key)
+            + '" --recursive=true'
+        )
         subprocess.check_output(["bash", "-c", bash_cmd])
 ```
 </pre>
@@ -1158,28 +1197,6 @@ def edit_binRange(col):
     except Exception as e:
         logger.error(f"processing failed during edit_binRange, error {e}")
         pass
-```
-</pre>
-</details>
-</dd>
-<dt id="anovos.data_report.report_preprocessing.master_to_local"><code class="name flex hljs csharp">
-<span class="k">def</span> <span class="nf"><span class="ident">master_to_local</span></span>(<span class="n">master_path)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre>
-```python
-def master_to_local(master_path):
-    punctuations = ":"
-    for x in master_path:
-        if x in punctuations:
-            local_path = master_path.replace(x, "")
-            local_path = "/" + local_path
-    return local_path
 ```
 </pre>
 </details>
@@ -1559,7 +1576,7 @@ def plot_outlier(spark, idf, col, split_var=None, sample_size=500000):
 </details>
 </dd>
 <dt id="anovos.data_report.report_preprocessing.save_stats"><code class="name flex hljs csharp">
-<span class="k">def</span> <span class="nf"><span class="ident">save_stats</span></span>(<span class="n">spark, idf, master_path, function_name, reread=False, run_type='local')</span>
+<span class="k">def</span> <span class="nf"><span class="ident">save_stats</span></span>(<span class="n">spark, idf, master_path, function_name, reread=False, run_type='local', auth_key='NA')</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
@@ -1575,7 +1592,9 @@ def plot_outlier(spark, idf, col, split_var=None, sample_size=500000):
 <dt><strong><code>reread</code></strong></dt>
 <dd>option to reread. Default value is kept as False</dd>
 <dt><strong><code>run_type</code></strong></dt>
-<dd>local or emr or databricks based on the mode of execution. Default value is kept as local</dd>
+<dd>local or emr or databricks or ak8s based on the mode of execution. Default value is kept as local</dd>
+<dt><strong><code>auth_key</code></strong></dt>
+<dd>Option to pass an authorization key to write to filesystems. Currently applicable only for ak8s run_type. Default value is kept as "NA"</dd>
 </dl>
 <h2 id="returns">Returns</h2></div>
 <details class="source">
@@ -1584,7 +1603,15 @@ def plot_outlier(spark, idf, col, split_var=None, sample_size=500000):
 </summary>
 <pre>
 ```python
-def save_stats(spark, idf, master_path, function_name, reread=False, run_type="local"):
+def save_stats(
+    spark,
+    idf,
+    master_path,
+    function_name,
+    reread=False,
+    run_type="local",
+    auth_key="NA",
+):
     """
 
     Parameters
@@ -1600,7 +1627,9 @@ def save_stats(spark, idf, master_path, function_name, reread=False, run_type="l
     reread
         option to reread. Default value is kept as False
     run_type
-        local or emr or databricks based on the mode of execution. Default value is kept as local
+        local or emr or databricks or ak8s based on the mode of execution. Default value is kept as local
+    auth_key
+        Option to pass an authorization key to write to filesystems. Currently applicable only for ak8s run_type. Default value is kept as "NA"
 
     Returns
     -------
@@ -1609,8 +1638,8 @@ def save_stats(spark, idf, master_path, function_name, reread=False, run_type="l
     if run_type == "local":
         local_path = master_path
     elif run_type == "databricks":
-        local_path = master_to_local(master_path)
-    elif run_type == "emr":
+        local_path = output_to_local(master_path)
+    elif run_type in ("emr", "ak8s"):
         local_path = "report_stats"
     else:
         raise ValueError("Invalid run_type")
@@ -1628,6 +1657,19 @@ def save_stats(spark, idf, master_path, function_name, reread=False, run_type="l
             + ends_with(master_path)
         )
 
+        subprocess.check_output(["bash", "-c", bash_cmd])
+
+    if run_type == "ak8s":
+        output_path_mod = path_ak8s_modify(master_path)
+        bash_cmd = (
+            'azcopy cp "'
+            + ends_with(local_path)
+            + function_name
+            + '.csv" "'
+            + ends_with(output_path_mod)
+            + str(auth_key)
+            + '"'
+        )
         subprocess.check_output(["bash", "-c", bash_cmd])
 
     if reread:

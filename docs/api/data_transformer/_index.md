@@ -6,6 +6,10 @@
 <div class="desc"><p>Datetime module supports various transformations related to date and timestamp datatype columns.
 All available functions in this release can be …</p></div>
 </dd>
+<dt><code class="name"><a title="anovos.data_transformer.geospatial" href="geospatial.html">anovos.data_transformer.geospatial</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
 <dt><code class="name"><a title="anovos.data_transformer.transformers" href="transformers.html">anovos.data_transformer.transformers</a></code></dt>
 <dd>
 <div class="desc"><p>The data transformer module supports selected pre-processing &amp; transformation functions, such as binning, encoding,
