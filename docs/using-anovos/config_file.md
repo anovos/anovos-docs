@@ -1718,7 +1718,7 @@ autoencoder_latentFeatures:
 
 ## 📑 `write_feast_features`
 
-🔎 _Corresponds to [`??.??`](../api/??#??)_
+🔎 _Corresponds to [`feature_store.feast_exporter`](../api/feature_store/feast_exporter.md)_
 
 📖 _For details, see the_
 _[Feature Store Integration documentation](https://sparkbyexamples.com/pyspark/pyspark-read-csv-file-into-dataframe/)_
