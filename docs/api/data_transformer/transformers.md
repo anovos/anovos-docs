@@ -56,10 +56,12 @@ import copy
 import os
 import pickle
 import random
+import platform
 import subprocess
 import tempfile
 import warnings
 from itertools import chain
+
 import numpy as np
 import pandas as pd
 import pyspark
@@ -71,39 +73,42 @@ if version.parse(pyspark.__version__) < version.parse("3.0.0"):
 else:
     from pyspark.ml.feature import OneHotEncoder
 
+from pyspark.ml.evaluation import RegressionEvaluator
+from pyspark.ml.feature import (
+    PCA,
+    Imputer,
+    ImputerModel,
+    IndexToString,
+    MinMaxScaler,
+    MinMaxScalerModel,
+    PCAModel,
+    StringIndexer,
+    StringIndexerModel,
+    VectorAssembler,
+)
+from pyspark.ml.linalg import DenseVector
+from pyspark.ml.recommendation import ALS
+from pyspark.mllib.stat import Statistics
 from pyspark.sql import functions as F
 from pyspark.sql import types as T
 from pyspark.sql.window import Window
-from pyspark.mllib.stat import Statistics
-from pyspark.ml.feature import StringIndexerModel
-from pyspark.ml.recommendation import ALS
-from pyspark.ml.evaluation import RegressionEvaluator
-from pyspark.ml.feature import Imputer, ImputerModel, StringIndexer, IndexToString
-from pyspark.ml.feature import (
-    VectorAssembler,
-    MinMaxScaler,
-    MinMaxScalerModel,
-    PCA,
-    PCAModel,
-)
-from pyspark.ml.linalg import DenseVector
 
 from anovos.data_analyzer.stats_generator import (
     missingCount_computation,
     uniqueCount_computation,
 )
 from anovos.data_ingest.data_ingest import read_dataset, recast_column
-from anovos.shared.utils import attributeType_segregation, get_dtype
-from ..shared.utils import platform_root_path
+from anovos.shared.utils import ends_with, attributeType_segregation, get_dtype
 
 # enable_iterative_imputer is prequisite for importing IterativeImputer
 # check the following issue for more details https://github.com/scikit-learn/scikit-learn/issues/16833
 from sklearn.experimental import enable_iterative_imputer  # noqa
 from sklearn.impute import KNNImputer, IterativeImputer
 
-import tensorflow
-from tensorflow.keras.models import load_model, Model
-from tensorflow.keras.layers import Dense, Input, BatchNormalization, LeakyReLU
+if "arm64" not in platform.version().lower():
+    import tensorflow
+    from tensorflow.keras.models import load_model, Model
+    from tensorflow.keras.layers import Dense, Input, BatchNormalization, LeakyReLU
 
 
 def attribute_binning(
@@ -235,36 +240,31 @@ def attribute_binning(
             for j in range(1, bin_size):
                 pctile_cutoff.append(j * pctile_width)
             bin_cutoffs = idf.approxQuantile(list_of_cols, pctile_cutoff, 0.01)
-
         else:
+            funs = [F.max, F.min]
+            exprs = [f(F.col(c)) for f in funs for c in list_of_cols]
+            list_result = idf.groupby().agg(*exprs).rdd.flatMap(lambda x: x).collect()
             bin_cutoffs = []
-            for i in list_of_cols:
-                max_val = (
-                    idf.select(F.col(i))
-                    .groupBy()
-                    .max()
-                    .rdd.flatMap(lambda x: x)
-                    .collect()
-                    + [None]
-                )[0]
-
-                min_val = (
-                    idf.select(F.col(i))
-                    .groupBy()
-                    .min()
-                    .rdd.flatMap(lambda x: x)
-                    .collect()
-                    + [None]
-                )[0]
-
+            drop_col_process = []
+            for i in range(int(len(list_result) / 2)):
                 bin_cutoff = []
-
-                if max_val is not None:
-                    bin_width = (max_val - min_val) / bin_size
-                    for j in range(1, bin_size):
-                        bin_cutoff.append(min_val + j * bin_width)
+                max_val = list_result[i]
+                min_val = list_result[i + int(len(list_result) / 2)]
+                if not max_val and max_val != 0:
+                    drop_col_process.append(list_of_cols[i])
+                    continue
+                bin_width = (max_val - min_val) / bin_size
+                for j in range(1, bin_size):
+                    bin_cutoff.append(min_val + j * bin_width)
                 bin_cutoffs.append(bin_cutoff)
-
+            if drop_col_process:
+                warnings.warn(
+                    "Columns contains too much null values. Dropping "
+                    + ", ".join(drop_col_process)
+                )
+                list_of_cols = list(
+                    set([e for e in list_of_cols if e not in drop_col_process])
+                )
         if model_path != "NA":
             df_model = spark.createDataFrame(
                 zip(list_of_cols, bin_cutoffs), schema=["attribute", "parameters"]
@@ -306,13 +306,9 @@ def attribute_binning(
     for idx, i in enumerate(list_of_cols):
         odf = odf.withColumn(i + "_binned", f_bucket_label(F.col(i), F.lit(idx)))
 
-        if idx % 5 == 0:
-            odf.persist(pyspark.StorageLevel.MEMORY_AND_DISK).count()
-
     if output_mode == "replace":
         for col in list_of_cols:
             odf = odf.drop(col).withColumnRenamed(col + "_binned", col)
-
     if print_impact:
         if output_mode == "replace":
             output_cols = list_of_cols
@@ -401,19 +397,6 @@ def monotonic_binning(
     if any(x not in num_cols for x in list_of_cols):
         raise TypeError("Invalid input for Column(s)")
 
-    attribute_binning(
-        spark,
-        idf,
-        list_of_cols="all",
-        drop_cols=[],
-        method_type="equal_range",
-        bin_size=10,
-        pre_existing_model=False,
-        model_path="NA",
-        output_mode="replace",
-        print_impact=False,
-    )
-
     odf = idf
     for col in list_of_cols:
         n = 20
@@ -474,7 +457,7 @@ def cat_to_num_unsupervised(
     idf,
     list_of_cols="all",
     drop_cols=[],
-    method_type=1,
+    method_type="label_encoding",
     index_order="frequencyDesc",
     cardinality_threshold=100,
     pre_existing_model=False,
@@ -516,7 +499,7 @@ def cat_to_num_unsupervised(
         It is most useful when coupled with the “all” value of list_of_cols, when we need to consider all columns except
         a few handful of them. (Default value = [])
     method_type
-        1 for Label Encoding or 0 for One hot encoding.
+        "label_encoding" or "onehot_encoding"
         In label encoding, each categorical value is assigned a unique integer based on alphabetical
         or frequency ordering (both ascending & descending options are available that can be selected by index_order argument).
         In one-hot encoding, every unique value in the column will be added in a form of dummy/binary column. (Default value = 1)
@@ -563,7 +546,7 @@ def cat_to_num_unsupervised(
     if any(x not in cat_cols for x in list_of_cols):
         raise TypeError("Invalid input for Column(s)")
 
-    if method_type not in (0, 1):
+    if method_type not in ("onehot_encoding", "label_encoding"):
         raise TypeError("Invalid input for method_type")
     if index_order not in (
         "frequencyDesc",
@@ -576,7 +559,7 @@ def cat_to_num_unsupervised(
         raise TypeError("Invalid input for output_mode")
 
     skip_cols = []
-    if method_type == 0:
+    if method_type == "onehot_encoding":
         if stats_unique == {}:
             skip_cols = (
                 uniqueCount_computation(spark, idf, list_of_cols)
@@ -666,7 +649,7 @@ def cat_to_num_unsupervised(
     ).drop("tempID")
     odf_indexed.persist(pyspark.StorageLevel.MEMORY_AND_DISK).count()
 
-    if method_type == 0:
+    if method_type == "onehot_encoding":
         if pre_existing_model:
             encoder = OneHotEncoder.load(
                 model_path + "/cat_to_num_unsupervised/encoder"
@@ -730,7 +713,7 @@ def cat_to_num_unsupervised(
                 odf = odf.drop(i).withColumnRenamed(i + "_index", i)
             odf = odf.select(idf.columns)
 
-    if print_impact and method_type == 1:
+    if print_impact and method_type == "label_encoding":
         print("Before")
         idf.describe().where(F.col("summary").isin("count", "min", "max")).show(
             3, False
@@ -739,7 +722,7 @@ def cat_to_num_unsupervised(
         odf.describe().where(F.col("summary").isin("count", "min", "max")).show(
             3, False
         )
-    if print_impact and method_type == 0:
+    if print_impact and method_type == "onehot_encoding":
         print("Before")
         idf.printSchema()
         print("After")
@@ -759,6 +742,7 @@ def cat_to_num_supervised(
     model_path="NA",
     output_mode="replace",
     run_type="local",
+    auth_key="NA",
     print_impact=False,
 ):
     """
@@ -811,7 +795,9 @@ def cat_to_num_supervised(
         “replace” option replaces original columns with transformed column. “append” option append transformed
         column to the input dataset with a postfix "_encoded" e.g. column X is appended as X_encoded. (Default value = "replace")
     run_type
-        "local", "emr", "databricks" (Default value = "local")
+        "local", "emr", "databricks", "ak8s" (Default value = "local")
+    auth_key
+        Option to pass an authorization key to write to filesystems. Currently applicable only for ak8s run_type. Default value is kept as "NA"
     print_impact
         True, False (Default value = False)
         This argument is to print out the descriptive statistics of encoded columns.
@@ -867,13 +853,8 @@ def cat_to_num_supervised(
                 .drop(*["1", "0"])
             )
 
-            if run_type in list(platform_root_path.keys()):
-                root_path = platform_root_path[run_type]
-            else:
-                root_path = ""
-
             if model_path == "NA":
-                model_path = root_path + "intermediate_data"
+                model_path = "intermediate_data"
 
             df_tmp.coalesce(1).write.csv(
                 model_path + "/cat_to_num_supervised/" + i,
@@ -1641,6 +1622,7 @@ def imputation_sklearn(
     output_mode="replace",
     stats_missing={},
     run_type="local",
+    auth_key="NA",
     print_impact=False,
 ):
     """
@@ -1704,7 +1686,9 @@ def imputation_sklearn(
         to read pre-saved statistics on missing count/pct i.e. if measures_of_counts or
         missingCount_computation (data_analyzer.stats_generator module) has been computed & saved before. (Default value = {})
     run_type
-        "local", "emr", "databricks" (Default value = "local")
+        "local", "emr", "databricks", "ak8s" (Default value = "local")
+    auth_key
+        Option to pass an authorization key to write to filesystems. Currently applicable only for ak8s run_type. Default value is kept as "NA"
     print_impact
         True, False (Default value = False)
         This argument is to print out before and after missing counts of imputed columns.
@@ -1792,6 +1776,16 @@ def imputation_sklearn(
             bash_cmd = "aws s3 cp " + model_path + "/imputation_sklearn.sav ."
             output = subprocess.check_output(["bash", "-c", bash_cmd])
             imputer = pickle.load(open("imputation_sklearn.sav", "rb"))
+        elif run_type == "ak8s":
+            bash_cmd = (
+                'azcopy cp "'
+                + model_path
+                + "/imputation_sklearn.sav"
+                + str(auth_key)
+                + '" .'
+            )
+            output = subprocess.check_output(["bash", "-c", bash_cmd])
+            imputer = pickle.load(open("imputation_sklearn.sav", "rb"))
         else:
             imputer = pickle.load(open(model_path + "/imputation_sklearn.sav", "rb"))
         idf_rest = idf
@@ -1815,6 +1809,17 @@ def imputation_sklearn(
                     "aws s3 cp imputation_sklearn.sav "
                     + model_path
                     + "/imputation_sklearn.sav"
+                )
+                output = subprocess.check_output(["bash", "-c", bash_cmd])
+                imputer = pickle.load(open("imputation_sklearn.sav", "rb"))
+            elif run_type == "ak8s":
+                pickle.dump(imputer, open("imputation_sklearn.sav", "wb"))
+                bash_cmd = (
+                    'azcopy cp "imputation_sklearn.sav" "'
+                    + ends_with(model_path)
+                    + "imputation_sklearn.sav"
+                    + str(auth_key)
+                    + '"'
                 )
                 output = subprocess.check_output(["bash", "-c", bash_cmd])
                 imputer = pickle.load(open("imputation_sklearn.sav", "rb"))
@@ -2131,6 +2136,8 @@ def auto_imputation(
     stats_missing={},
     output_mode="replace",
     run_type="local",
+    root_path="",
+    auth_key="NA",
     print_impact=True,
 ):
     """
@@ -2186,7 +2193,11 @@ def auto_imputation(
         “replace” option replaces original columns with transformed column. “append” option append transformed
         column to the input dataset with a postfix "_imputed" e.g. column X is appended as X_imputed. (Default value = "replace")
     run_type
-        "local", "emr", "databricks" (Default value = "local")
+        "local", "emr", "databricks", "ak8s" (Default value = "local")
+    root_path
+        This argument takes in a base folder path for writing out intermediate_data/ folder to. Default value is ""
+    auth_key
+        Option to pass an authorization key to write to filesystems. Currently applicable only for ak8s run_type. Default value is kept as "NA"
     print_impact
         True, False (Default value = False)
         This argument is to print out before and after missing counts of imputed columns. It also print the name of best
@@ -2198,11 +2209,6 @@ def auto_imputation(
         Imputed Dataframe
 
     """
-
-    if run_type in list(platform_root_path.keys()):
-        root_path = platform_root_path[run_type]
-    else:
-        root_path = ""
 
     if stats_missing == {}:
         missing_df = missingCount_computation(spark, idf)
@@ -2321,6 +2327,7 @@ def auto_imputation(
             method_type="KNN",
             stats_missing=stats_missing,
             output_mode=output_mode,
+            auth_key=auth_key,
         )
         method4 = imputation_sklearn(
             spark,
@@ -2329,6 +2336,7 @@ def auto_imputation(
             method_type="regression",
             stats_missing=stats_missing,
             output_mode=output_mode,
+            auth_key=auth_key,
         )
         method5 = imputation_matrixFactorization(
             spark,
@@ -2400,6 +2408,8 @@ def autoencoder_latentFeatures(
     stats_missing={},
     output_mode="replace",
     run_type="local",
+    root_path="",
+    auth_key="NA",
     print_impact=False,
 ):
     """
@@ -2480,7 +2490,11 @@ def autoencoder_latentFeatures(
         “append” option append transformed columns with format latent_<col_index> to the input dataset,
         e.g. latent_0, latent_1 will be appended if reduction_params=2. (Default value = "replace")
     run_type
-        "local", "emr", "databricks" (Default value = "local")
+        "local", "emr", "databricks", "ak8s" (Default value = "local")
+    root_path
+        This argument takes in a base folder path for writing out intermediate_data/ folder to. Default value is ""
+    auth_key
+        Option to pass an authorization key to write to filesystems. Currently applicable only for ak8s run_type. Default value is kept as "NA"
     print_impact
         True, False
         This argument is to print descriptive statistics of the latest features (Default value = False)
@@ -2491,6 +2505,11 @@ def autoencoder_latentFeatures(
         Dataframe with Latent Features
 
     """
+    if "arm64" in platform.version().lower():
+        warnings.warn(
+            "This function is currently not supported for ARM64 - Mac M1 Machine"
+        )
+        return idf
 
     num_cols = attributeType_segregation(idf)[0]
     if list_of_cols == "all":
@@ -2506,11 +2525,6 @@ def autoencoder_latentFeatures(
     if len(list_of_cols) == 0:
         warnings.warn("No Latent Features Generated - No Column(s) to Transform")
         return idf
-
-    if run_type in list(platform_root_path.keys()):
-        root_path = platform_root_path[run_type]
-    else:
-        root_path = ""
 
     if stats_missing == {}:
         missing_df = missingCount_computation(spark, idf, list_of_cols)
@@ -2612,6 +2626,25 @@ def autoencoder_latentFeatures(
             output = subprocess.check_output(["bash", "-c", bash_cmd])
             encoder = load_model("encoder.h5")
             model = load_model("model.h5")
+        elif run_type == "ak8s":
+            bash_cmd = (
+                'azcopy cp "'
+                + model_path
+                + "/autoencoders_latentFeatures/encoder.h5"
+                + str(auth_key)
+                + '" .'
+            )
+            output = subprocess.check_output(["bash", "-c", bash_cmd])
+            bash_cmd = (
+                'azcopy cp "'
+                + model_path
+                + "/autoencoders_latentFeatures/model.h5"
+                + str(auth_key)
+                + '" .'
+            )
+            output = subprocess.check_output(["bash", "-c", bash_cmd])
+            encoder = load_model("encoder.h5")
+            model = load_model("model.h5")
         else:
             encoder = load_model(model_path + "/autoencoders_latentFeatures/encoder.h5")
             model = load_model(model_path + "/autoencoders_latentFeatures/model.h5")
@@ -2670,6 +2703,25 @@ def autoencoder_latentFeatures(
                     + "/autoencoders_latentFeatures/model.h5"
                 )
                 output = subprocess.check_output(["bash", "-c", bash_cmd])
+            elif run_type == "ak8s":
+                encoder.save("encoder.h5")
+                model.save("model.h5")
+                bash_cmd = (
+                    'azcopy cp "encoder.h5" "'
+                    + model_path
+                    + "/autoencoders_latentFeatures/encoder.h5"
+                    + str(auth_key)
+                    + '" '
+                )
+                output = subprocess.check_output(["bash", "-c", bash_cmd])
+                bash_cmd = (
+                    'azcopy cp "model.h5" "'
+                    + model_path
+                    + "/autoencoders_latentFeatures/model.h5"
+                    + str(auth_key)
+                    + '" '
+                )
+                output = subprocess.check_output(["bash", "-c", bash_cmd])
             else:
                 if not os.path.exists(model_path + "/autoencoders_latentFeatures/"):
                     os.makedirs(model_path + "/autoencoders_latentFeatures/")
@@ -2716,6 +2768,9 @@ def autoencoder_latentFeatures(
         .toDF(schema=odf_schema)
         .drop("predicted_output")
     )
+
+    odf = odf.drop(*list_of_cols_scaled)
+
     if output_mode == "replace":
         odf = odf.drop(*list_of_cols)
 
@@ -2741,6 +2796,8 @@ def PCA_latentFeatures(
     stats_missing={},
     output_mode="replace",
     run_type="local",
+    root_path="",
+    auth_key="NA",
     print_impact=False,
 ):
     """
@@ -2808,7 +2865,11 @@ def PCA_latentFeatures(
         “append” option append transformed columns with format latent_<col_index> to the input dataset,
         e.g. latent_0, latent_1. (Default value = "replace")
     run_type
-        "local", "emr", "databricks" (Default value = "local")
+        "local", "emr", "databricks", "ak8s" (Default value = "local")
+    root_path
+        This argument takes in a base folder path for writing out intermediate_data/ folder to. Default value is ""
+    auth_key
+        Option to pass an authorization key to write to filesystems. Currently applicable only for ak8s run_type. Default value is kept as "NA"
     print_impact
         True, False
         This argument is to print descriptive statistics of the latest features (Default value = False)
@@ -2834,11 +2895,6 @@ def PCA_latentFeatures(
     if len(list_of_cols) == 0:
         warnings.warn("No Latent Features Generated - No Column(s) to Transform")
         return idf
-
-    if run_type in list(platform_root_path.keys()):
-        root_path = platform_root_path[run_type]
-    else:
-        root_path = ""
 
     if stats_missing == {}:
         missing_df = missingCount_computation(spark, idf, list_of_cols)
@@ -3313,14 +3369,16 @@ def outlier_categories(
 ):
     """
     This function replaces less frequently seen values (called as outlier values in the current context) in a
-    categorical column by 'others'. Outlier values can be defined in two ways –
-    a) Max N categories, where N is used defined value. In this method, top N-1 frequently seen categories are considered
-    and rest are clubbed under single category 'others'. or Alternatively,
+    categorical column by 'outlier_categories'. Outlier values can be defined in two ways –
+    a) Max N categories, where N is user defined value. In this method, top N-1 frequently seen categories are considered
+    and rest are clubbed under single category 'outlier_categories'. or Alternatively,
     b) Coverage – top frequently seen categories are considered till it covers minimum N% of rows and rest lesser seen values
-    are mapped to mapped to others. Even if the Coverage is less, maximum category constraint is given priority. Further,
+    are mapped to 'outlier_categories'. Even if the Coverage is less, maximum category constraint is given priority. Further,
     there is a caveat that when multiple categories have same rank. Then, number of categorical values can be more than
     max_category defined by the user.
 
+    This function performs better when distinct values, in any column, are not more than 100. It is recommended that to drop those
+    columns from the computation which has more than 100 distinct values, to get better performance out of this function.
 
     Parameters
     ----------
@@ -3343,10 +3401,10 @@ def outlier_categories(
         a few handful of them. (Default value = [])
     coverage
         Defines the minimum % of rows that will be mapped to actual category name and the rest to be mapped
-        to others and takes value between 0 to 1. Coverage of 0.8 can be interpreted as top frequently seen
-        categories are considered till it covers minimum 80% of rows and rest lesser seen values are mapped to others. (Default value = 1.0)
+        to 'outlier_categories' and takes value between 0 to 1. Coverage of 0.8 can be interpreted as top frequently seen
+        categories are considered till it covers minimum 80% of rows and rest lesser seen values are mapped to 'outlier_categories'. (Default value = 1.0)
     max_category
-        Even if coverage is less, only (max_category - 1) categories will be mapped to actual name and rest to others.
+        Even if coverage is less, only (max_category - 1) categories will be mapped to actual name and rest to 'outlier_categories'.
         Caveat is when multiple categories have same rank, then #categories can be more than max_category. (Default value = 50)
     pre_existing_model
         Boolean argument – True or False. True if the model with the outlier/other values
@@ -3369,7 +3427,6 @@ def outlier_categories(
         Transformed Dataframe
 
     """
-
     cat_cols = attributeType_segregation(idf)[1]
     if list_of_cols == "all":
         list_of_cols = cat_cols
@@ -3395,6 +3452,8 @@ def outlier_categories(
     if output_mode not in ("replace", "append"):
         raise TypeError("Invalid input for output_mode")
 
+    idf = idf.persist(pyspark.StorageLevel.MEMORY_AND_DISK)
+
     if pre_existing_model:
         df_model = spark.read.csv(
             model_path + "/outlier_categories", header=True, inferSchema=True
@@ -3403,7 +3462,8 @@ def outlier_categories(
         for index, i in enumerate(list_of_cols):
             window = Window.partitionBy().orderBy(F.desc("count_pct"))
             df_cats = (
-                idf.groupBy(i)
+                idf.select(i)
+                .groupBy(i)
                 .count()
                 .dropna()
                 .withColumn(
@@ -3428,27 +3488,34 @@ def outlier_categories(
             else:
                 df_model = df_model.union(df_cats)
 
+    df_params = df_model.rdd.groupByKey().mapValues(list).collect()
+    dict_params = dict(df_params)
+    broadcast_params = spark.sparkContext.broadcast(dict_params)
+
+    def get_params(key):
+        parameters = list()
+        dict_params = broadcast_params.value
+        params = dict_params.get(key)
+        if params:
+            parameters = params
+        return parameters
+
     odf = idf
     for i in list_of_cols:
-        parameters = (
-            df_model.where(F.col("attribute") == i)
-            .select("parameters")
-            .rdd.flatMap(lambda x: x)
-            .collect()
-        )
+        parameters = get_params(i)
         if output_mode == "replace":
             odf = odf.withColumn(
                 i,
                 F.when(
                     (F.col(i).isin(parameters)) | (F.col(i).isNull()), F.col(i)
-                ).otherwise("others"),
+                ).otherwise("outlier_categories"),
             )
         else:
             odf = odf.withColumn(
                 i + "_outliered",
                 F.when(
                     (F.col(i).isin(parameters)) | (F.col(i).isNull()), F.col(i)
-                ).otherwise("others"),
+                ).otherwise("outlier_categories"),
             )
 
     if (not pre_existing_model) & (model_path != "NA"):
@@ -3467,6 +3534,8 @@ def outlier_categories(
         uniqueCount_computation(spark, odf, output_cols).select(
             "attribute", F.col("unique_values").alias("uniqueValues_after")
         ).show(len(list_of_cols), False)
+
+    idf.unpersist()
 
     return odf
 
@@ -3757,7 +3826,7 @@ def IQR_standardization(
 </details>
 </dd>
 <dt id="anovos.data_transformer.transformers.PCA_latentFeatures"><code class="name flex hljs csharp">
-<span class="k">def</span> <span class="nf"><span class="ident">PCA_latentFeatures</span></span>(<span class="n">spark, idf, list_of_cols='all', drop_cols=[], explained_variance_cutoff=0.95, pre_existing_model=False, model_path='NA', standardization=True, standardization_configs={'pre_existing_model': False, 'model_path': 'NA'}, imputation=False, imputation_configs={'imputation_function': 'imputation_MMM'}, stats_missing={}, output_mode='replace', run_type='local', print_impact=False)</span>
+<span class="k">def</span> <span class="nf"><span class="ident">PCA_latentFeatures</span></span>(<span class="n">spark, idf, list_of_cols='all', drop_cols=[], explained_variance_cutoff=0.95, pre_existing_model=False, model_path='NA', standardization=True, standardization_configs={'pre_existing_model': False, 'model_path': 'NA'}, imputation=False, imputation_configs={'imputation_function': 'imputation_MMM'}, stats_missing={}, output_mode='replace', run_type='local', root_path='', auth_key='NA', print_impact=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Similar to autoencoder_latentFeatures, PCA_latentFeatures also generates latent features which reduces the
@@ -3821,7 +3890,11 @@ missingCount_computation (data_analyzer.stats_generator module) has been compute
 “append” option append transformed columns with format latent_<col_index> to the input dataset,
 e.g. latent_0, latent_1. (Default value = "replace")</dd>
 <dt><strong><code>run_type</code></strong></dt>
-<dd>"local", "emr", "databricks" (Default value = "local")</dd>
+<dd>"local", "emr", "databricks", "ak8s" (Default value = "local")</dd>
+<dt><strong><code>root_path</code></strong></dt>
+<dd>This argument takes in a base folder path for writing out intermediate_data/ folder to. Default value is ""</dd>
+<dt><strong><code>auth_key</code></strong></dt>
+<dd>Option to pass an authorization key to write to filesystems. Currently applicable only for ak8s run_type. Default value is kept as "NA"</dd>
 <dt><strong><code>print_impact</code></strong></dt>
 <dd>True, False
 This argument is to print descriptive statistics of the latest features (Default value = False)</dd>
@@ -3852,6 +3925,8 @@ def PCA_latentFeatures(
     stats_missing={},
     output_mode="replace",
     run_type="local",
+    root_path="",
+    auth_key="NA",
     print_impact=False,
 ):
     """
@@ -3919,7 +3994,11 @@ def PCA_latentFeatures(
         “append” option append transformed columns with format latent_<col_index> to the input dataset,
         e.g. latent_0, latent_1. (Default value = "replace")
     run_type
-        "local", "emr", "databricks" (Default value = "local")
+        "local", "emr", "databricks", "ak8s" (Default value = "local")
+    root_path
+        This argument takes in a base folder path for writing out intermediate_data/ folder to. Default value is ""
+    auth_key
+        Option to pass an authorization key to write to filesystems. Currently applicable only for ak8s run_type. Default value is kept as "NA"
     print_impact
         True, False
         This argument is to print descriptive statistics of the latest features (Default value = False)
@@ -3945,11 +4024,6 @@ def PCA_latentFeatures(
     if len(list_of_cols) == 0:
         warnings.warn("No Latent Features Generated - No Column(s) to Transform")
         return idf
-
-    if run_type in list(platform_root_path.keys()):
-        root_path = platform_root_path[run_type]
-    else:
-        root_path = ""
 
     if stats_missing == {}:
         missing_df = missingCount_computation(spark, idf, list_of_cols)
@@ -4294,36 +4368,31 @@ def attribute_binning(
             for j in range(1, bin_size):
                 pctile_cutoff.append(j * pctile_width)
             bin_cutoffs = idf.approxQuantile(list_of_cols, pctile_cutoff, 0.01)
-
         else:
+            funs = [F.max, F.min]
+            exprs = [f(F.col(c)) for f in funs for c in list_of_cols]
+            list_result = idf.groupby().agg(*exprs).rdd.flatMap(lambda x: x).collect()
             bin_cutoffs = []
-            for i in list_of_cols:
-                max_val = (
-                    idf.select(F.col(i))
-                    .groupBy()
-                    .max()
-                    .rdd.flatMap(lambda x: x)
-                    .collect()
-                    + [None]
-                )[0]
-
-                min_val = (
-                    idf.select(F.col(i))
-                    .groupBy()
-                    .min()
-                    .rdd.flatMap(lambda x: x)
-                    .collect()
-                    + [None]
-                )[0]
-
+            drop_col_process = []
+            for i in range(int(len(list_result) / 2)):
                 bin_cutoff = []
-
-                if max_val is not None:
-                    bin_width = (max_val - min_val) / bin_size
-                    for j in range(1, bin_size):
-                        bin_cutoff.append(min_val + j * bin_width)
+                max_val = list_result[i]
+                min_val = list_result[i + int(len(list_result) / 2)]
+                if not max_val and max_val != 0:
+                    drop_col_process.append(list_of_cols[i])
+                    continue
+                bin_width = (max_val - min_val) / bin_size
+                for j in range(1, bin_size):
+                    bin_cutoff.append(min_val + j * bin_width)
                 bin_cutoffs.append(bin_cutoff)
-
+            if drop_col_process:
+                warnings.warn(
+                    "Columns contains too much null values. Dropping "
+                    + ", ".join(drop_col_process)
+                )
+                list_of_cols = list(
+                    set([e for e in list_of_cols if e not in drop_col_process])
+                )
         if model_path != "NA":
             df_model = spark.createDataFrame(
                 zip(list_of_cols, bin_cutoffs), schema=["attribute", "parameters"]
@@ -4365,13 +4434,9 @@ def attribute_binning(
     for idx, i in enumerate(list_of_cols):
         odf = odf.withColumn(i + "_binned", f_bucket_label(F.col(i), F.lit(idx)))
 
-        if idx % 5 == 0:
-            odf.persist(pyspark.StorageLevel.MEMORY_AND_DISK).count()
-
     if output_mode == "replace":
         for col in list_of_cols:
             odf = odf.drop(col).withColumnRenamed(col + "_binned", col)
-
     if print_impact:
         if output_mode == "replace":
             output_cols = list_of_cols
@@ -4384,7 +4449,7 @@ def attribute_binning(
 </details>
 </dd>
 <dt id="anovos.data_transformer.transformers.auto_imputation"><code class="name flex hljs csharp">
-<span class="k">def</span> <span class="nf"><span class="ident">auto_imputation</span></span>(<span class="n">spark, idf, list_of_cols='missing', drop_cols=[], id_col='', null_pct=0.1, stats_missing={}, output_mode='replace', run_type='local', print_impact=True)</span>
+<span class="k">def</span> <span class="nf"><span class="ident">auto_imputation</span></span>(<span class="n">spark, idf, list_of_cols='missing', drop_cols=[], id_col='', null_pct=0.1, stats_missing={}, output_mode='replace', run_type='local', root_path='', auth_key='NA', print_impact=True)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>auto_imputation tests for 5 imputation methods using the other imputation functions provided in this module
@@ -4435,7 +4500,11 @@ missingCount_computation (data_analyzer.stats_generator module) has been compute
 “replace” option replaces original columns with transformed column. “append” option append transformed
 column to the input dataset with a postfix "_imputed" e.g. column X is appended as X_imputed. (Default value = "replace")</dd>
 <dt><strong><code>run_type</code></strong></dt>
-<dd>"local", "emr", "databricks" (Default value = "local")</dd>
+<dd>"local", "emr", "databricks", "ak8s" (Default value = "local")</dd>
+<dt><strong><code>root_path</code></strong></dt>
+<dd>This argument takes in a base folder path for writing out intermediate_data/ folder to. Default value is ""</dd>
+<dt><strong><code>auth_key</code></strong></dt>
+<dd>Option to pass an authorization key to write to filesystems. Currently applicable only for ak8s run_type. Default value is kept as "NA"</dd>
 <dt><strong><code>print_impact</code></strong></dt>
 <dd>True, False (Default value = False)
 This argument is to print out before and after missing counts of imputed columns. It also print the name of best
@@ -4462,6 +4531,8 @@ def auto_imputation(
     stats_missing={},
     output_mode="replace",
     run_type="local",
+    root_path="",
+    auth_key="NA",
     print_impact=True,
 ):
     """
@@ -4517,7 +4588,11 @@ def auto_imputation(
         “replace” option replaces original columns with transformed column. “append” option append transformed
         column to the input dataset with a postfix "_imputed" e.g. column X is appended as X_imputed. (Default value = "replace")
     run_type
-        "local", "emr", "databricks" (Default value = "local")
+        "local", "emr", "databricks", "ak8s" (Default value = "local")
+    root_path
+        This argument takes in a base folder path for writing out intermediate_data/ folder to. Default value is ""
+    auth_key
+        Option to pass an authorization key to write to filesystems. Currently applicable only for ak8s run_type. Default value is kept as "NA"
     print_impact
         True, False (Default value = False)
         This argument is to print out before and after missing counts of imputed columns. It also print the name of best
@@ -4529,11 +4604,6 @@ def auto_imputation(
         Imputed Dataframe
 
     """
-
-    if run_type in list(platform_root_path.keys()):
-        root_path = platform_root_path[run_type]
-    else:
-        root_path = ""
 
     if stats_missing == {}:
         missing_df = missingCount_computation(spark, idf)
@@ -4652,6 +4722,7 @@ def auto_imputation(
             method_type="KNN",
             stats_missing=stats_missing,
             output_mode=output_mode,
+            auth_key=auth_key,
         )
         method4 = imputation_sklearn(
             spark,
@@ -4660,6 +4731,7 @@ def auto_imputation(
             method_type="regression",
             stats_missing=stats_missing,
             output_mode=output_mode,
+            auth_key=auth_key,
         )
         method5 = imputation_matrixFactorization(
             spark,
@@ -4716,7 +4788,7 @@ def auto_imputation(
 </details>
 </dd>
 <dt id="anovos.data_transformer.transformers.autoencoder_latentFeatures"><code class="name flex hljs csharp">
-<span class="k">def</span> <span class="nf"><span class="ident">autoencoder_latentFeatures</span></span>(<span class="n">spark, idf, list_of_cols='all', drop_cols=[], reduction_params=0.5, sample_size=500000, epochs=100, batch_size=256, pre_existing_model=False, model_path='NA', standardization=True, standardization_configs={'pre_existing_model': False, 'model_path': 'NA'}, imputation=False, imputation_configs={'imputation_function': 'imputation_MMM'}, stats_missing={}, output_mode='replace', run_type='local', print_impact=False)</span>
+<span class="k">def</span> <span class="nf"><span class="ident">autoencoder_latentFeatures</span></span>(<span class="n">spark, idf, list_of_cols='all', drop_cols=[], reduction_params=0.5, sample_size=500000, epochs=100, batch_size=256, pre_existing_model=False, model_path='NA', standardization=True, standardization_configs={'pre_existing_model': False, 'model_path': 'NA'}, imputation=False, imputation_configs={'imputation_function': 'imputation_MMM'}, stats_missing={}, output_mode='replace', run_type='local', root_path='', auth_key='NA', print_impact=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Many machine learning models suffer from "the curse of dimensionality" when the number of features is too
@@ -4791,7 +4863,11 @@ missingCount_computation (data_analyzer.stats_generator module) has been compute
 “append” option append transformed columns with format latent_<col_index> to the input dataset,
 e.g. latent_0, latent_1 will be appended if reduction_params=2. (Default value = "replace")</dd>
 <dt><strong><code>run_type</code></strong></dt>
-<dd>"local", "emr", "databricks" (Default value = "local")</dd>
+<dd>"local", "emr", "databricks", "ak8s" (Default value = "local")</dd>
+<dt><strong><code>root_path</code></strong></dt>
+<dd>This argument takes in a base folder path for writing out intermediate_data/ folder to. Default value is ""</dd>
+<dt><strong><code>auth_key</code></strong></dt>
+<dd>Option to pass an authorization key to write to filesystems. Currently applicable only for ak8s run_type. Default value is kept as "NA"</dd>
 <dt><strong><code>print_impact</code></strong></dt>
 <dd>True, False
 This argument is to print descriptive statistics of the latest features (Default value = False)</dd>
@@ -4825,6 +4901,8 @@ def autoencoder_latentFeatures(
     stats_missing={},
     output_mode="replace",
     run_type="local",
+    root_path="",
+    auth_key="NA",
     print_impact=False,
 ):
     """
@@ -4905,7 +4983,11 @@ def autoencoder_latentFeatures(
         “append” option append transformed columns with format latent_<col_index> to the input dataset,
         e.g. latent_0, latent_1 will be appended if reduction_params=2. (Default value = "replace")
     run_type
-        "local", "emr", "databricks" (Default value = "local")
+        "local", "emr", "databricks", "ak8s" (Default value = "local")
+    root_path
+        This argument takes in a base folder path for writing out intermediate_data/ folder to. Default value is ""
+    auth_key
+        Option to pass an authorization key to write to filesystems. Currently applicable only for ak8s run_type. Default value is kept as "NA"
     print_impact
         True, False
         This argument is to print descriptive statistics of the latest features (Default value = False)
@@ -4916,6 +4998,11 @@ def autoencoder_latentFeatures(
         Dataframe with Latent Features
 
     """
+    if "arm64" in platform.version().lower():
+        warnings.warn(
+            "This function is currently not supported for ARM64 - Mac M1 Machine"
+        )
+        return idf
 
     num_cols = attributeType_segregation(idf)[0]
     if list_of_cols == "all":
@@ -4931,11 +5018,6 @@ def autoencoder_latentFeatures(
     if len(list_of_cols) == 0:
         warnings.warn("No Latent Features Generated - No Column(s) to Transform")
         return idf
-
-    if run_type in list(platform_root_path.keys()):
-        root_path = platform_root_path[run_type]
-    else:
-        root_path = ""
 
     if stats_missing == {}:
         missing_df = missingCount_computation(spark, idf, list_of_cols)
@@ -5037,6 +5119,25 @@ def autoencoder_latentFeatures(
             output = subprocess.check_output(["bash", "-c", bash_cmd])
             encoder = load_model("encoder.h5")
             model = load_model("model.h5")
+        elif run_type == "ak8s":
+            bash_cmd = (
+                'azcopy cp "'
+                + model_path
+                + "/autoencoders_latentFeatures/encoder.h5"
+                + str(auth_key)
+                + '" .'
+            )
+            output = subprocess.check_output(["bash", "-c", bash_cmd])
+            bash_cmd = (
+                'azcopy cp "'
+                + model_path
+                + "/autoencoders_latentFeatures/model.h5"
+                + str(auth_key)
+                + '" .'
+            )
+            output = subprocess.check_output(["bash", "-c", bash_cmd])
+            encoder = load_model("encoder.h5")
+            model = load_model("model.h5")
         else:
             encoder = load_model(model_path + "/autoencoders_latentFeatures/encoder.h5")
             model = load_model(model_path + "/autoencoders_latentFeatures/model.h5")
@@ -5095,6 +5196,25 @@ def autoencoder_latentFeatures(
                     + "/autoencoders_latentFeatures/model.h5"
                 )
                 output = subprocess.check_output(["bash", "-c", bash_cmd])
+            elif run_type == "ak8s":
+                encoder.save("encoder.h5")
+                model.save("model.h5")
+                bash_cmd = (
+                    'azcopy cp "encoder.h5" "'
+                    + model_path
+                    + "/autoencoders_latentFeatures/encoder.h5"
+                    + str(auth_key)
+                    + '" '
+                )
+                output = subprocess.check_output(["bash", "-c", bash_cmd])
+                bash_cmd = (
+                    'azcopy cp "model.h5" "'
+                    + model_path
+                    + "/autoencoders_latentFeatures/model.h5"
+                    + str(auth_key)
+                    + '" '
+                )
+                output = subprocess.check_output(["bash", "-c", bash_cmd])
             else:
                 if not os.path.exists(model_path + "/autoencoders_latentFeatures/"):
                     os.makedirs(model_path + "/autoencoders_latentFeatures/")
@@ -5141,6 +5261,9 @@ def autoencoder_latentFeatures(
         .toDF(schema=odf_schema)
         .drop("predicted_output")
     )
+
+    odf = odf.drop(*list_of_cols_scaled)
+
     if output_mode == "replace":
         odf = odf.drop(*list_of_cols)
 
@@ -5377,7 +5500,7 @@ def boxcox_transformation(
 </details>
 </dd>
 <dt id="anovos.data_transformer.transformers.cat_to_num_supervised"><code class="name flex hljs csharp">
-<span class="k">def</span> <span class="nf"><span class="ident">cat_to_num_supervised</span></span>(<span class="n">spark, idf, list_of_cols='all', drop_cols=[], label_col='label', event_label=1, pre_existing_model=False, model_path='NA', output_mode='replace', run_type='local', print_impact=False)</span>
+<span class="k">def</span> <span class="nf"><span class="ident">cat_to_num_supervised</span></span>(<span class="n">spark, idf, list_of_cols='all', drop_cols=[], label_col='label', event_label=1, pre_existing_model=False, model_path='NA', output_mode='replace', run_type='local', auth_key='NA', print_impact=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>This is a supervised method to convert a categorical attribute into a numerical attribute. It takes a
@@ -5426,7 +5549,9 @@ Default "NA" is used to save the model in "intermediate_data/" folder for optimi
 “replace” option replaces original columns with transformed column. “append” option append transformed
 column to the input dataset with a postfix "_encoded" e.g. column X is appended as X_encoded. (Default value = "replace")</dd>
 <dt><strong><code>run_type</code></strong></dt>
-<dd>"local", "emr", "databricks" (Default value = "local")</dd>
+<dd>"local", "emr", "databricks", "ak8s" (Default value = "local")</dd>
+<dt><strong><code>auth_key</code></strong></dt>
+<dd>Option to pass an authorization key to write to filesystems. Currently applicable only for ak8s run_type. Default value is kept as "NA"</dd>
 <dt><strong><code>print_impact</code></strong></dt>
 <dd>True, False (Default value = False)
 This argument is to print out the descriptive statistics of encoded columns.</dd>
@@ -5453,6 +5578,7 @@ def cat_to_num_supervised(
     model_path="NA",
     output_mode="replace",
     run_type="local",
+    auth_key="NA",
     print_impact=False,
 ):
     """
@@ -5505,7 +5631,9 @@ def cat_to_num_supervised(
         “replace” option replaces original columns with transformed column. “append” option append transformed
         column to the input dataset with a postfix "_encoded" e.g. column X is appended as X_encoded. (Default value = "replace")
     run_type
-        "local", "emr", "databricks" (Default value = "local")
+        "local", "emr", "databricks", "ak8s" (Default value = "local")
+    auth_key
+        Option to pass an authorization key to write to filesystems. Currently applicable only for ak8s run_type. Default value is kept as "NA"
     print_impact
         True, False (Default value = False)
         This argument is to print out the descriptive statistics of encoded columns.
@@ -5561,13 +5689,8 @@ def cat_to_num_supervised(
                 .drop(*["1", "0"])
             )
 
-            if run_type in list(platform_root_path.keys()):
-                root_path = platform_root_path[run_type]
-            else:
-                root_path = ""
-
             if model_path == "NA":
-                model_path = root_path + "intermediate_data"
+                model_path = "intermediate_data"
 
             df_tmp.coalesce(1).write.csv(
                 model_path + "/cat_to_num_supervised/" + i,
@@ -5614,7 +5737,7 @@ def cat_to_num_supervised(
 </details>
 </dd>
 <dt id="anovos.data_transformer.transformers.cat_to_num_unsupervised"><code class="name flex hljs csharp">
-<span class="k">def</span> <span class="nf"><span class="ident">cat_to_num_unsupervised</span></span>(<span class="n">spark, idf, list_of_cols='all', drop_cols=[], method_type=1, index_order='frequencyDesc', cardinality_threshold=100, pre_existing_model=False, model_path='NA', stats_unique={}, output_mode='replace', print_impact=False)</span>
+<span class="k">def</span> <span class="nf"><span class="ident">cat_to_num_unsupervised</span></span>(<span class="n">spark, idf, list_of_cols='all', drop_cols=[], method_type='label_encoding', index_order='frequencyDesc', cardinality_threshold=100, pre_existing_model=False, model_path='NA', stats_unique={}, output_mode='replace', print_impact=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>This is unsupervised method of converting a categorical attribute into numerical attribute(s). This is among
@@ -5647,7 +5770,7 @@ where different column names are separated by pipe delimiter “|” e.g., "col1
 It is most useful when coupled with the “all” value of list_of_cols, when we need to consider all columns except
 a few handful of them. (Default value = [])</dd>
 <dt><strong><code>method_type</code></strong></dt>
-<dd>1 for Label Encoding or 0 for One hot encoding.
+<dd>"label_encoding" or "onehot_encoding"
 In label encoding, each categorical value is assigned a unique integer based on alphabetical
 or frequency ordering (both ascending &amp; descending options are available that can be selected by index_order argument).
 In one-hot encoding, every unique value in the column will be added in a form of dummy/binary column. (Default value = 1)</dd>
@@ -5692,7 +5815,7 @@ def cat_to_num_unsupervised(
     idf,
     list_of_cols="all",
     drop_cols=[],
-    method_type=1,
+    method_type="label_encoding",
     index_order="frequencyDesc",
     cardinality_threshold=100,
     pre_existing_model=False,
@@ -5734,7 +5857,7 @@ def cat_to_num_unsupervised(
         It is most useful when coupled with the “all” value of list_of_cols, when we need to consider all columns except
         a few handful of them. (Default value = [])
     method_type
-        1 for Label Encoding or 0 for One hot encoding.
+        "label_encoding" or "onehot_encoding"
         In label encoding, each categorical value is assigned a unique integer based on alphabetical
         or frequency ordering (both ascending & descending options are available that can be selected by index_order argument).
         In one-hot encoding, every unique value in the column will be added in a form of dummy/binary column. (Default value = 1)
@@ -5781,7 +5904,7 @@ def cat_to_num_unsupervised(
     if any(x not in cat_cols for x in list_of_cols):
         raise TypeError("Invalid input for Column(s)")
 
-    if method_type not in (0, 1):
+    if method_type not in ("onehot_encoding", "label_encoding"):
         raise TypeError("Invalid input for method_type")
     if index_order not in (
         "frequencyDesc",
@@ -5794,7 +5917,7 @@ def cat_to_num_unsupervised(
         raise TypeError("Invalid input for output_mode")
 
     skip_cols = []
-    if method_type == 0:
+    if method_type == "onehot_encoding":
         if stats_unique == {}:
             skip_cols = (
                 uniqueCount_computation(spark, idf, list_of_cols)
@@ -5884,7 +6007,7 @@ def cat_to_num_unsupervised(
     ).drop("tempID")
     odf_indexed.persist(pyspark.StorageLevel.MEMORY_AND_DISK).count()
 
-    if method_type == 0:
+    if method_type == "onehot_encoding":
         if pre_existing_model:
             encoder = OneHotEncoder.load(
                 model_path + "/cat_to_num_unsupervised/encoder"
@@ -5948,7 +6071,7 @@ def cat_to_num_unsupervised(
                 odf = odf.drop(i).withColumnRenamed(i + "_index", i)
             odf = odf.select(idf.columns)
 
-    if print_impact and method_type == 1:
+    if print_impact and method_type == "label_encoding":
         print("Before")
         idf.describe().where(F.col("summary").isin("count", "min", "max")).show(
             3, False
@@ -5957,7 +6080,7 @@ def cat_to_num_unsupervised(
         odf.describe().where(F.col("summary").isin("count", "min", "max")).show(
             3, False
         )
-    if print_impact and method_type == 0:
+    if print_impact and method_type == "onehot_encoding":
         print("Before")
         idf.printSchema()
         print("After")
@@ -6999,7 +7122,7 @@ def imputation_matrixFactorization(
 </details>
 </dd>
 <dt id="anovos.data_transformer.transformers.imputation_sklearn"><code class="name flex hljs csharp">
-<span class="k">def</span> <span class="nf"><span class="ident">imputation_sklearn</span></span>(<span class="n">spark, idf, list_of_cols='missing', drop_cols=[], method_type='KNN', sample_size=500000, pre_existing_model=False, model_path='NA', output_mode='replace', stats_missing={}, run_type='local', print_impact=False)</span>
+<span class="k">def</span> <span class="nf"><span class="ident">imputation_sklearn</span></span>(<span class="n">spark, idf, list_of_cols='missing', drop_cols=[], method_type='KNN', sample_size=500000, pre_existing_model=False, model_path='NA', output_mode='replace', stats_missing={}, run_type='local', auth_key='NA', print_impact=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>The function "imputation_sklearn" leverages sklearn imputer algorithms. Two methods are supported via this function:
@@ -7058,7 +7181,9 @@ column to the input dataset with a postfix "_imputed" e.g. column X is appended 
 to read pre-saved statistics on missing count/pct i.e. if measures_of_counts or
 missingCount_computation (data_analyzer.stats_generator module) has been computed &amp; saved before. (Default value = {})</dd>
 <dt><strong><code>run_type</code></strong></dt>
-<dd>"local", "emr", "databricks" (Default value = "local")</dd>
+<dd>"local", "emr", "databricks", "ak8s" (Default value = "local")</dd>
+<dt><strong><code>auth_key</code></strong></dt>
+<dd>Option to pass an authorization key to write to filesystems. Currently applicable only for ak8s run_type. Default value is kept as "NA"</dd>
 <dt><strong><code>print_impact</code></strong></dt>
 <dd>True, False (Default value = False)
 This argument is to print out before and after missing counts of imputed columns.</dd>
@@ -7086,6 +7211,7 @@ def imputation_sklearn(
     output_mode="replace",
     stats_missing={},
     run_type="local",
+    auth_key="NA",
     print_impact=False,
 ):
     """
@@ -7149,7 +7275,9 @@ def imputation_sklearn(
         to read pre-saved statistics on missing count/pct i.e. if measures_of_counts or
         missingCount_computation (data_analyzer.stats_generator module) has been computed & saved before. (Default value = {})
     run_type
-        "local", "emr", "databricks" (Default value = "local")
+        "local", "emr", "databricks", "ak8s" (Default value = "local")
+    auth_key
+        Option to pass an authorization key to write to filesystems. Currently applicable only for ak8s run_type. Default value is kept as "NA"
     print_impact
         True, False (Default value = False)
         This argument is to print out before and after missing counts of imputed columns.
@@ -7237,6 +7365,16 @@ def imputation_sklearn(
             bash_cmd = "aws s3 cp " + model_path + "/imputation_sklearn.sav ."
             output = subprocess.check_output(["bash", "-c", bash_cmd])
             imputer = pickle.load(open("imputation_sklearn.sav", "rb"))
+        elif run_type == "ak8s":
+            bash_cmd = (
+                'azcopy cp "'
+                + model_path
+                + "/imputation_sklearn.sav"
+                + str(auth_key)
+                + '" .'
+            )
+            output = subprocess.check_output(["bash", "-c", bash_cmd])
+            imputer = pickle.load(open("imputation_sklearn.sav", "rb"))
         else:
             imputer = pickle.load(open(model_path + "/imputation_sklearn.sav", "rb"))
         idf_rest = idf
@@ -7260,6 +7398,17 @@ def imputation_sklearn(
                     "aws s3 cp imputation_sklearn.sav "
                     + model_path
                     + "/imputation_sklearn.sav"
+                )
+                output = subprocess.check_output(["bash", "-c", bash_cmd])
+                imputer = pickle.load(open("imputation_sklearn.sav", "rb"))
+            elif run_type == "ak8s":
+                pickle.dump(imputer, open("imputation_sklearn.sav", "wb"))
+                bash_cmd = (
+                    'azcopy cp "imputation_sklearn.sav" "'
+                    + ends_with(model_path)
+                    + "imputation_sklearn.sav"
+                    + str(auth_key)
+                    + '"'
                 )
                 output = subprocess.check_output(["bash", "-c", bash_cmd])
                 imputer = pickle.load(open("imputation_sklearn.sav", "rb"))
@@ -7468,19 +7617,6 @@ def monotonic_binning(
 
     if any(x not in num_cols for x in list_of_cols):
         raise TypeError("Invalid input for Column(s)")
-
-    attribute_binning(
-        spark,
-        idf,
-        list_of_cols="all",
-        drop_cols=[],
-        method_type="equal_range",
-        bin_size=10,
-        pre_existing_model=False,
-        model_path="NA",
-        output_mode="replace",
-        print_impact=False,
-    )
 
     odf = idf
     for col in list_of_cols:
@@ -7728,13 +7864,15 @@ def normalization(
 </code></dt>
 <dd>
 <div class="desc"><p>This function replaces less frequently seen values (called as outlier values in the current context) in a
-categorical column by 'others'. Outlier values can be defined in two ways –
-a) Max N categories, where N is used defined value. In this method, top N-1 frequently seen categories are considered
-and rest are clubbed under single category 'others'. or Alternatively,
+categorical column by 'outlier_categories'. Outlier values can be defined in two ways –
+a) Max N categories, where N is user defined value. In this method, top N-1 frequently seen categories are considered
+and rest are clubbed under single category 'outlier_categories'. or Alternatively,
 b) Coverage – top frequently seen categories are considered till it covers minimum N% of rows and rest lesser seen values
-are mapped to mapped to others. Even if the Coverage is less, maximum category constraint is given priority. Further,
+are mapped to 'outlier_categories'. Even if the Coverage is less, maximum category constraint is given priority. Further,
 there is a caveat that when multiple categories have same rank. Then, number of categorical values can be more than
 max_category defined by the user.</p>
+<p>This function performs better when distinct values, in any column, are not more than 100. It is recommended that to drop those
+columns from the computation which has more than 100 distinct values, to get better performance out of this function.</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>spark</code></strong></dt>
@@ -7756,10 +7894,10 @@ It is most useful when coupled with the “all” value of list_of_cols, when we
 a few handful of them. (Default value = [])</dd>
 <dt><strong><code>coverage</code></strong></dt>
 <dd>Defines the minimum % of rows that will be mapped to actual category name and the rest to be mapped
-to others and takes value between 0 to 1. Coverage of 0.8 can be interpreted as top frequently seen
-categories are considered till it covers minimum 80% of rows and rest lesser seen values are mapped to others. (Default value = 1.0)</dd>
+to 'outlier_categories' and takes value between 0 to 1. Coverage of 0.8 can be interpreted as top frequently seen
+categories are considered till it covers minimum 80% of rows and rest lesser seen values are mapped to 'outlier_categories'. (Default value = 1.0)</dd>
 <dt><strong><code>max_category</code></strong></dt>
-<dd>Even if coverage is less, only (max_category - 1) categories will be mapped to actual name and rest to others.
+<dd>Even if coverage is less, only (max_category - 1) categories will be mapped to actual name and rest to 'outlier_categories'.
 Caveat is when multiple categories have same rank, then #categories can be more than max_category. (Default value = 50)</dd>
 <dt><strong><code>pre_existing_model</code></strong></dt>
 <dd>Boolean argument – True or False. True if the model with the outlier/other values
@@ -7801,14 +7939,16 @@ def outlier_categories(
 ):
     """
     This function replaces less frequently seen values (called as outlier values in the current context) in a
-    categorical column by 'others'. Outlier values can be defined in two ways –
-    a) Max N categories, where N is used defined value. In this method, top N-1 frequently seen categories are considered
-    and rest are clubbed under single category 'others'. or Alternatively,
+    categorical column by 'outlier_categories'. Outlier values can be defined in two ways –
+    a) Max N categories, where N is user defined value. In this method, top N-1 frequently seen categories are considered
+    and rest are clubbed under single category 'outlier_categories'. or Alternatively,
     b) Coverage – top frequently seen categories are considered till it covers minimum N% of rows and rest lesser seen values
-    are mapped to mapped to others. Even if the Coverage is less, maximum category constraint is given priority. Further,
+    are mapped to 'outlier_categories'. Even if the Coverage is less, maximum category constraint is given priority. Further,
     there is a caveat that when multiple categories have same rank. Then, number of categorical values can be more than
     max_category defined by the user.
 
+    This function performs better when distinct values, in any column, are not more than 100. It is recommended that to drop those
+    columns from the computation which has more than 100 distinct values, to get better performance out of this function.
 
     Parameters
     ----------
@@ -7831,10 +7971,10 @@ def outlier_categories(
         a few handful of them. (Default value = [])
     coverage
         Defines the minimum % of rows that will be mapped to actual category name and the rest to be mapped
-        to others and takes value between 0 to 1. Coverage of 0.8 can be interpreted as top frequently seen
-        categories are considered till it covers minimum 80% of rows and rest lesser seen values are mapped to others. (Default value = 1.0)
+        to 'outlier_categories' and takes value between 0 to 1. Coverage of 0.8 can be interpreted as top frequently seen
+        categories are considered till it covers minimum 80% of rows and rest lesser seen values are mapped to 'outlier_categories'. (Default value = 1.0)
     max_category
-        Even if coverage is less, only (max_category - 1) categories will be mapped to actual name and rest to others.
+        Even if coverage is less, only (max_category - 1) categories will be mapped to actual name and rest to 'outlier_categories'.
         Caveat is when multiple categories have same rank, then #categories can be more than max_category. (Default value = 50)
     pre_existing_model
         Boolean argument – True or False. True if the model with the outlier/other values
@@ -7857,7 +7997,6 @@ def outlier_categories(
         Transformed Dataframe
 
     """
-
     cat_cols = attributeType_segregation(idf)[1]
     if list_of_cols == "all":
         list_of_cols = cat_cols
@@ -7883,6 +8022,8 @@ def outlier_categories(
     if output_mode not in ("replace", "append"):
         raise TypeError("Invalid input for output_mode")
 
+    idf = idf.persist(pyspark.StorageLevel.MEMORY_AND_DISK)
+
     if pre_existing_model:
         df_model = spark.read.csv(
             model_path + "/outlier_categories", header=True, inferSchema=True
@@ -7891,7 +8032,8 @@ def outlier_categories(
         for index, i in enumerate(list_of_cols):
             window = Window.partitionBy().orderBy(F.desc("count_pct"))
             df_cats = (
-                idf.groupBy(i)
+                idf.select(i)
+                .groupBy(i)
                 .count()
                 .dropna()
                 .withColumn(
@@ -7916,27 +8058,34 @@ def outlier_categories(
             else:
                 df_model = df_model.union(df_cats)
 
+    df_params = df_model.rdd.groupByKey().mapValues(list).collect()
+    dict_params = dict(df_params)
+    broadcast_params = spark.sparkContext.broadcast(dict_params)
+
+    def get_params(key):
+        parameters = list()
+        dict_params = broadcast_params.value
+        params = dict_params.get(key)
+        if params:
+            parameters = params
+        return parameters
+
     odf = idf
     for i in list_of_cols:
-        parameters = (
-            df_model.where(F.col("attribute") == i)
-            .select("parameters")
-            .rdd.flatMap(lambda x: x)
-            .collect()
-        )
+        parameters = get_params(i)
         if output_mode == "replace":
             odf = odf.withColumn(
                 i,
                 F.when(
                     (F.col(i).isin(parameters)) | (F.col(i).isNull()), F.col(i)
-                ).otherwise("others"),
+                ).otherwise("outlier_categories"),
             )
         else:
             odf = odf.withColumn(
                 i + "_outliered",
                 F.when(
                     (F.col(i).isin(parameters)) | (F.col(i).isNull()), F.col(i)
-                ).otherwise("others"),
+                ).otherwise("outlier_categories"),
             )
 
     if (not pre_existing_model) & (model_path != "NA"):
@@ -7955,6 +8104,8 @@ def outlier_categories(
         uniqueCount_computation(spark, odf, output_cols).select(
             "attribute", F.col("unique_values").alias("uniqueValues_after")
         ).show(len(list_of_cols), False)
+
+    idf.unpersist()
 
     return odf
 ```

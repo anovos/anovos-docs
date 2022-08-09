@@ -12,19 +12,18 @@ from __future__ import division, print_function
 import numpy as np
 import pandas as pd
 import pyspark
+import sympy as sp
 from loguru import logger
-from pyspark.sql import SparkSession, DataFrame
+from pyspark.sql import DataFrame, SparkSession
 from pyspark.sql import functions as F
 from pyspark.sql import types as T
 from scipy.stats import variation
-import sympy as sp
 
 from anovos.data_ingest.data_ingest import concatenate_dataset
 from anovos.data_transformer.transformers import attribute_binning
 from anovos.shared.utils import attributeType_segregation
-from .distances import hellinger, psi, js_divergence, ks
+from .distances import hellinger, js_divergence, ks, psi
 from .validations import check_distance_method, check_list_of_columns
-from ..shared.utils import platform_root_path
 
 
 @check_distance_method
@@ -154,13 +153,8 @@ def statistics(
     drop_cols = drop_cols or []
     num_cols = attributeType_segregation(idf_target.select(list_of_cols))[0]
 
-    if run_type in list(platform_root_path.keys()):
-        root_path = platform_root_path[run_type]
-    else:
-        root_path = ""
-
     if source_path == "NA":
-        source_path = root_path + "intermediate_data"
+        source_path = "intermediate_data"
 
     if not pre_existing_source:
         source_bin = attribute_binning(
@@ -1856,13 +1850,8 @@ def statistics(
     drop_cols = drop_cols or []
     num_cols = attributeType_segregation(idf_target.select(list_of_cols))[0]
 
-    if run_type in list(platform_root_path.keys()):
-        root_path = platform_root_path[run_type]
-    else:
-        root_path = ""
-
     if source_path == "NA":
-        source_path = root_path + "intermediate_data"
+        source_path = "intermediate_data"
 
     if not pre_existing_source:
         source_bin = attribute_binning(

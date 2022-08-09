@@ -2,12 +2,12 @@
 <p>This module generates all the descriptive statistics related to the ingested data. Descriptive statistics are
 split into different metric types, and each function below corresponds to one metric type:</p>
 <ul>
-<li>global_summary </li>
-<li>measures_of_counts </li>
-<li>measures_of_centralTendency </li>
-<li>measures_of_cardinality </li>
-<li>measures_of_dispersion </li>
-<li>measures_of_percentiles </li>
+<li>global_summary</li>
+<li>measures_of_counts</li>
+<li>measures_of_centralTendency</li>
+<li>measures_of_cardinality</li>
+<li>measures_of_dispersion</li>
+<li>measures_of_percentiles</li>
 <li>measures_of_shape</li>
 </ul>
 <p>Above primary functions are supported by below functions, which can be used independently as well:</p>
@@ -28,12 +28,12 @@ split into different metric types, and each function below corresponds to one me
 This module generates all the descriptive statistics related to the ingested data. Descriptive statistics are
 split into different metric types, and each function below corresponds to one metric type:
 
-- global_summary 
-- measures_of_counts 
-- measures_of_centralTendency 
-- measures_of_cardinality 
-- measures_of_dispersion 
-- measures_of_percentiles 
+- global_summary
+- measures_of_counts
+- measures_of_centralTendency
+- measures_of_cardinality
+- measures_of_dispersion
+- measures_of_percentiles
 - measures_of_shape
 
 Above primary functions are supported by below functions, which can be used independently as well:
@@ -42,14 +42,17 @@ Above primary functions are supported by below functions, which can be used inde
 - nonzeroCount_computation
 - mode_computation
 - uniqueCount_computation
- 
+
 """
 import warnings
+
 from pyspark.mllib.linalg import Vectors
 from pyspark.mllib.stat import Statistics
 from pyspark.sql import functions as F
 from pyspark.sql import types as T
-from anovos.shared.utils import transpose_dataframe, attributeType_segregation
+import pyspark
+
+from anovos.shared.utils import attributeType_segregation, transpose_dataframe
 
 
 def global_summary(spark, idf, list_of_cols="all", drop_cols=[], print_impact=False):
@@ -389,9 +392,6 @@ def mode_computation(spark, idf, list_of_cols="all", drop_cols=[], print_impact=
         drop_cols = [x.strip() for x in drop_cols.split("|")]
 
     list_of_cols = list(set([e for e in list_of_cols if e not in drop_cols]))
-    for i in idf.select(list_of_cols).dtypes:
-        if i[1] not in ("string", "int", "bigint", "long"):
-            list_of_cols.remove(i[0])
 
     if any(x not in idf.columns for x in list_of_cols):
         raise TypeError("Invalid input for Column(s)")
@@ -408,30 +408,41 @@ def mode_computation(spark, idf, list_of_cols="all", drop_cols=[], print_impact=
         odf = spark.sparkContext.emptyRDD().toDF(schema)
         return odf
 
-    mode = [
-        list(
-            idf.select(i)
+    idf = idf.persist(pyspark.StorageLevel.MEMORY_AND_DISK)
+    list_df = []
+    for col in list_of_cols:
+        out_df = (
+            idf.select(col)
             .dropna()
-            .groupby(i)
+            .groupby(col)
             .count()
             .orderBy("count", ascending=False)
-            .first()
-            or [None, None]
+            .limit(1)
+            .select(
+                F.lit(col).alias("attribute"),
+                F.col(col).alias("mode"),
+                F.col("count").alias("mode_rows"),
+            )
         )
-        for i in list_of_cols
-    ]
-    mode = [(str(i), str(j)) for i, j in mode]
+        list_df.append(out_df)
 
-    odf = spark.createDataFrame(
-        zip(list_of_cols, mode), schema=("attribute", "metric")
-    ).select(
-        "attribute",
-        (F.col("metric")["_1"]).alias("mode"),
-        (F.col("metric")["_2"]).cast("long").alias("mode_rows"),
-    )
+    def unionAll(dfs):
+        first, *_ = dfs
+        schema = T.StructType(
+            [
+                T.StructField("attribute", T.StringType(), True),
+                T.StructField("mode", T.StringType(), True),
+                T.StructField("mode_rows", T.LongType(), True),
+            ]
+        )
+        return first.sql_ctx.createDataFrame(
+            first.sql_ctx._sc.union([df.rdd for df in dfs]), schema
+        )
 
+    odf = unionAll(list_df)
     if print_impact:
         odf.show(len(list_of_cols))
+    idf.unpersist()
     return odf
 
 
@@ -494,6 +505,8 @@ def measures_of_centralTendency(
     if any(x not in idf.columns for x in list_of_cols) | (len(list_of_cols) == 0):
         raise TypeError("Invalid input for Column(s)")
 
+    df_mode_compute = mode_computation(spark, idf, list_of_cols)
+    idf = idf.persist(pyspark.StorageLevel.MEMORY_AND_DISK)
     odf = (
         transpose_dataframe(
             idf.select(list_of_cols).summary("mean", "50%", "count"), "summary"
@@ -513,7 +526,7 @@ def measures_of_centralTendency(
             ).otherwise(None),
         )
         .withColumnRenamed("key", "attribute")
-        .join(mode_computation(spark, idf, list_of_cols), "attribute", "full_outer")
+        .join(df_mode_compute, "attribute", "full_outer")
         .withColumn(
             "mode_pct",
             F.round(F.col("mode_rows") / F.col("count").cast(T.DoubleType()), 4),
@@ -523,6 +536,7 @@ def measures_of_centralTendency(
 
     if print_impact:
         odf.show(len(list_of_cols))
+    idf.unpersist()
     return odf
 
 
@@ -946,10 +960,17 @@ def measures_of_shape(spark, idf, list_of_cols="all", drop_cols=[], print_impact
         odf = spark.sparkContext.emptyRDD().toDF(schema)
         return odf
 
+    exprs = [f(F.col(c)) for f in [F.skewness, F.kurtosis] for c in list_of_cols]
+    list_result = idf.groupby().agg(*exprs).rdd.flatMap(lambda x: x).collect()
     shapes = []
-    for i in list_of_cols:
-        s, k = idf.select(F.skewness(i), F.kurtosis(i)).first()
-        shapes.append([i, s, k])
+    for i in range(int(len(list_result) / 2)):
+        shapes.append(
+            [
+                list_of_cols[i],
+                list_result[i],
+                list_result[i + int(len(list_result) / 2)],
+            ]
+        )
     odf = (
         spark.createDataFrame(shapes, schema=("attribute", "skewness", "kurtosis"))
         .withColumn("skewness", F.round(F.col("skewness"), 4))
@@ -1340,6 +1361,8 @@ def measures_of_centralTendency(
     if any(x not in idf.columns for x in list_of_cols) | (len(list_of_cols) == 0):
         raise TypeError("Invalid input for Column(s)")
 
+    df_mode_compute = mode_computation(spark, idf, list_of_cols)
+    idf = idf.persist(pyspark.StorageLevel.MEMORY_AND_DISK)
     odf = (
         transpose_dataframe(
             idf.select(list_of_cols).summary("mean", "50%", "count"), "summary"
@@ -1359,7 +1382,7 @@ def measures_of_centralTendency(
             ).otherwise(None),
         )
         .withColumnRenamed("key", "attribute")
-        .join(mode_computation(spark, idf, list_of_cols), "attribute", "full_outer")
+        .join(df_mode_compute, "attribute", "full_outer")
         .withColumn(
             "mode_pct",
             F.round(F.col("mode_rows") / F.col("count").cast(T.DoubleType()), 4),
@@ -1369,6 +1392,7 @@ def measures_of_centralTendency(
 
     if print_impact:
         odf.show(len(list_of_cols))
+    idf.unpersist()
     return odf
 ```
 </pre>
@@ -1915,10 +1939,17 @@ def measures_of_shape(spark, idf, list_of_cols="all", drop_cols=[], print_impact
         odf = spark.sparkContext.emptyRDD().toDF(schema)
         return odf
 
+    exprs = [f(F.col(c)) for f in [F.skewness, F.kurtosis] for c in list_of_cols]
+    list_result = idf.groupby().agg(*exprs).rdd.flatMap(lambda x: x).collect()
     shapes = []
-    for i in list_of_cols:
-        s, k = idf.select(F.skewness(i), F.kurtosis(i)).first()
-        shapes.append([i, s, k])
+    for i in range(int(len(list_result) / 2)):
+        shapes.append(
+            [
+                list_of_cols[i],
+                list_result[i],
+                list_result[i + int(len(list_result) / 2)],
+            ]
+        )
     odf = (
         spark.createDataFrame(shapes, schema=("attribute", "skewness", "kurtosis"))
         .withColumn("skewness", F.round(F.col("skewness"), 4))
@@ -2115,9 +2146,6 @@ def mode_computation(spark, idf, list_of_cols="all", drop_cols=[], print_impact=
         drop_cols = [x.strip() for x in drop_cols.split("|")]
 
     list_of_cols = list(set([e for e in list_of_cols if e not in drop_cols]))
-    for i in idf.select(list_of_cols).dtypes:
-        if i[1] not in ("string", "int", "bigint", "long"):
-            list_of_cols.remove(i[0])
 
     if any(x not in idf.columns for x in list_of_cols):
         raise TypeError("Invalid input for Column(s)")
@@ -2134,30 +2162,41 @@ def mode_computation(spark, idf, list_of_cols="all", drop_cols=[], print_impact=
         odf = spark.sparkContext.emptyRDD().toDF(schema)
         return odf
 
-    mode = [
-        list(
-            idf.select(i)
+    idf = idf.persist(pyspark.StorageLevel.MEMORY_AND_DISK)
+    list_df = []
+    for col in list_of_cols:
+        out_df = (
+            idf.select(col)
             .dropna()
-            .groupby(i)
+            .groupby(col)
             .count()
             .orderBy("count", ascending=False)
-            .first()
-            or [None, None]
+            .limit(1)
+            .select(
+                F.lit(col).alias("attribute"),
+                F.col(col).alias("mode"),
+                F.col("count").alias("mode_rows"),
+            )
         )
-        for i in list_of_cols
-    ]
-    mode = [(str(i), str(j)) for i, j in mode]
+        list_df.append(out_df)
 
-    odf = spark.createDataFrame(
-        zip(list_of_cols, mode), schema=("attribute", "metric")
-    ).select(
-        "attribute",
-        (F.col("metric")["_1"]).alias("mode"),
-        (F.col("metric")["_2"]).cast("long").alias("mode_rows"),
-    )
+    def unionAll(dfs):
+        first, *_ = dfs
+        schema = T.StructType(
+            [
+                T.StructField("attribute", T.StringType(), True),
+                T.StructField("mode", T.StringType(), True),
+                T.StructField("mode_rows", T.LongType(), True),
+            ]
+        )
+        return first.sql_ctx.createDataFrame(
+            first.sql_ctx._sc.union([df.rdd for df in dfs]), schema
+        )
 
+    odf = unionAll(list_df)
     if print_impact:
         odf.show(len(list_of_cols))
+    idf.unpersist()
     return odf
 ```
 </pre>

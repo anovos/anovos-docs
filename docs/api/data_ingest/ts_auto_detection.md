@@ -1,6 +1,6 @@
 # <code>ts_auto_detection</code>
 <p>This module help produce the output containing a transformation through auto timestamp / date detection by reading the ingested dataframe from source.</p>
-<p>As a part of generation of the auto detection output, there are various functions created such as - </p>
+<p>As a part of generation of the auto detection output, there are various functions created such as -</p>
 <ul>
 <li>regex_date_time_parser</li>
 <li>ts_loop_cols_pre</li>
@@ -17,7 +17,7 @@
 
 """This module help produce the output containing a transformation through auto timestamp / date detection by reading the ingested dataframe from source.
 
-As a part of generation of the auto detection output, there are various functions created such as - 
+As a part of generation of the auto detection output, there are various functions created such as -
 
 - regex_date_time_parser
 - ts_loop_cols_pre
@@ -27,30 +27,37 @@ Respective functions have sections containing the detailed definition of the par
 
 """
 
-import pyspark
-import datetime
+import calendar
 import csv
+import datetime
 import io
 import os
 import re
-import warnings
 import subprocess
+import warnings
+from pathlib import Path
+
+import dateutil.parser
+import numpy as np
+import pandas as pd
+import pyspark
+from loguru import logger
+from pyspark.sql import Window
 from pyspark.sql import functions as F
 from pyspark.sql import types as T
-from pyspark.sql import Window
-from loguru import logger
 import calendar
-from anovos.shared.utils import attributeType_segregation, ends_with, output_to_local
+from anovos.shared.utils import (
+    attributeType_segregation,
+    ends_with,
+    output_to_local,
+    path_ak8s_modify,
+)
 from anovos.data_analyzer.stats_generator import measures_of_percentiles
 from anovos.data_transformer.datetime import (
+    lagged_ts,
     timeUnits_extraction,
     unix_to_timestamp,
-    lagged_ts,
 )
-from pathlib import Path
-import dateutil.parser
-import pandas as pd
-import numpy as np
 
 ###regex based ts parser function
 
@@ -626,7 +633,9 @@ def ts_loop_cols_pre(idf, id_col):
     return lc1, lc2, lc3
 
 
-def ts_preprocess(spark, idf, id_col, output_path, tz_offset="local", run_type="local"):
+def ts_preprocess(
+    spark, idf, id_col, output_path, tz_offset="local", run_type="local", auth_key="NA"
+):
 
     """
 
@@ -646,7 +655,10 @@ def ts_preprocess(spark, idf, id_col, output_path, tz_offset="local", run_type="
     tz_offset
         Timezone offset (Option to chose between options like Local, GMT, UTC, etc.). Default option is set as "Local".
     run_type
-        Option to choose between run type "Local" or "EMR" or "Azure" basis the user flexibility. Default option is set as "Local".
+        Option to choose between run type "local" or "emr" or "databricks" or "ak8s" basis the user flexibility. Default option is set as "local".
+    auth_key
+        Option to pass an authorization key to write to filesystems. Currently applicable only for "ak8s" run_type.
+
 
     Returns
     -------
@@ -657,7 +669,7 @@ def ts_preprocess(spark, idf, id_col, output_path, tz_offset="local", run_type="
         local_path = output_path
     elif run_type == "databricks":
         local_path = output_to_local(output_path)
-    elif run_type == "emr":
+    elif run_type in ("emr", "ak8s"):
         local_path = "report_stats"
     else:
         raise ValueError("Invalid run_type")
@@ -733,6 +745,18 @@ def ts_preprocess(spark, idf, id_col, output_path, tz_offset="local", run_type="
             + ends_with(local_path)
             + " "
             + ends_with(output_path)
+        )
+        output = subprocess.check_output(["bash", "-c", bash_cmd])
+
+    if run_type == "ak8s":
+        output_path_mod = path_ak8s_modify(output_path)
+        bash_cmd = (
+            'azcopy cp "'
+            + ends_with(local_path)
+            + '" "'
+            + ends_with(output_path_mod)
+            + str(auth_key)
+            + '" --recursive=true '
         )
         output = subprocess.check_output(["bash", "-c", bash_cmd])
 
@@ -1378,7 +1402,7 @@ def ts_loop_cols_pre(idf, id_col):
 </details>
 </dd>
 <dt id="anovos.data_ingest.ts_auto_detection.ts_preprocess"><code class="name flex hljs csharp">
-<span class="k">def</span> <span class="nf"><span class="ident">ts_preprocess</span></span>(<span class="n">spark, idf, id_col, output_path, tz_offset='local', run_type='local')</span>
+<span class="k">def</span> <span class="nf"><span class="ident">ts_preprocess</span></span>(<span class="n">spark, idf, id_col, output_path, tz_offset='local', run_type='local', auth_key='NA')</span>
 </code></dt>
 <dd>
 <div class="desc"><p>This function helps to read the input spark dataframe as source and do all the necessary processing. All the intermediate data created through this step foro the Time Series Analyzer.</p>
@@ -1395,7 +1419,9 @@ def ts_loop_cols_pre(idf, id_col):
 <dt><strong><code>tz_offset</code></strong></dt>
 <dd>Timezone offset (Option to chose between options like Local, GMT, UTC, etc.). Default option is set as "Local".</dd>
 <dt><strong><code>run_type</code></strong></dt>
-<dd>Option to choose between run type "Local" or "EMR" or "Azure" basis the user flexibility. Default option is set as "Local".</dd>
+<dd>Option to choose between run type "local" or "emr" or "databricks" or "ak8s" basis the user flexibility. Default option is set as "local".</dd>
+<dt><strong><code>auth_key</code></strong></dt>
+<dd>Option to pass an authorization key to write to filesystems. Currently applicable only for "ak8s" run_type.</dd>
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
@@ -1408,7 +1434,9 @@ def ts_loop_cols_pre(idf, id_col):
 </summary>
 <pre>
 ```python
-def ts_preprocess(spark, idf, id_col, output_path, tz_offset="local", run_type="local"):
+def ts_preprocess(
+    spark, idf, id_col, output_path, tz_offset="local", run_type="local", auth_key="NA"
+):
 
     """
 
@@ -1428,7 +1456,10 @@ def ts_preprocess(spark, idf, id_col, output_path, tz_offset="local", run_type="
     tz_offset
         Timezone offset (Option to chose between options like Local, GMT, UTC, etc.). Default option is set as "Local".
     run_type
-        Option to choose between run type "Local" or "EMR" or "Azure" basis the user flexibility. Default option is set as "Local".
+        Option to choose between run type "local" or "emr" or "databricks" or "ak8s" basis the user flexibility. Default option is set as "local".
+    auth_key
+        Option to pass an authorization key to write to filesystems. Currently applicable only for "ak8s" run_type.
+
 
     Returns
     -------
@@ -1439,7 +1470,7 @@ def ts_preprocess(spark, idf, id_col, output_path, tz_offset="local", run_type="
         local_path = output_path
     elif run_type == "databricks":
         local_path = output_to_local(output_path)
-    elif run_type == "emr":
+    elif run_type in ("emr", "ak8s"):
         local_path = "report_stats"
     else:
         raise ValueError("Invalid run_type")
@@ -1515,6 +1546,18 @@ def ts_preprocess(spark, idf, id_col, output_path, tz_offset="local", run_type="
             + ends_with(local_path)
             + " "
             + ends_with(output_path)
+        )
+        output = subprocess.check_output(["bash", "-c", bash_cmd])
+
+    if run_type == "ak8s":
+        output_path_mod = path_ak8s_modify(output_path)
+        bash_cmd = (
+            'azcopy cp "'
+            + ends_with(local_path)
+            + '" "'
+            + ends_with(output_path_mod)
+            + str(auth_key)
+            + '" --recursive=true '
         )
         output = subprocess.check_output(["bash", "-c", bash_cmd])
 

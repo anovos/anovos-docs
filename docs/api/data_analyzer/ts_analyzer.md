@@ -1,6 +1,6 @@
 # <code>ts_analyzer</code>
-<p>This module generates the intermediate output specific to the inspection of Time series analysis. </p>
-<p>As a part of generation of final output, there are various functions created such as - </p>
+<p>This module generates the intermediate output specific to the inspection of Time series analysis.</p>
+<p>As a part of generation of final output, there are various functions created such as -</p>
 <ul>
 <li>ts_processed_feats</li>
 <li>ts_eligiblity_check</li>
@@ -17,9 +17,9 @@
 ```python
 # coding=utf-8
 
-"""This module generates the intermediate output specific to the inspection of Time series analysis. 
+"""This module generates the intermediate output specific to the inspection of Time series analysis.
 
-As a part of generation of final output, there are various functions created such as - 
+As a part of generation of final output, there are various functions created such as -
 
 - ts_processed_feats
 - ts_eligiblity_check
@@ -31,14 +31,13 @@ Respective functions have sections containing the detailed definition of the par
 
 """
 
-import pyspark
-import datetime
-from pyspark.sql import functions as F
-from pyspark.sql import types as T
-from pyspark.sql import Window
-from loguru import logger
 import calendar
-from anovos.shared.utils import attributeType_segregation, ends_with, output_to_local
+from anovos.shared.utils import (
+    attributeType_segregation,
+    ends_with,
+    output_to_local,
+    path_ak8s_modify,
+)
 from anovos.data_analyzer.stats_generator import measures_of_percentiles
 from anovos.data_ingest.ts_auto_detection import ts_preprocess
 from anovos.data_transformer.datetime import (
@@ -48,16 +47,23 @@ from anovos.data_transformer.datetime import (
 )
 
 import csv
+import datetime
 import io
 import os
 import re
-import warnings
 import subprocess
+import warnings
 from pathlib import Path
+
 import dateutil.parser
-from statsmodels.tsa.seasonal import seasonal_decompose
-import pandas as pd
 import numpy as np
+import pandas as pd
+import pyspark
+from loguru import logger
+from pyspark.sql import Window
+from pyspark.sql import functions as F
+from pyspark.sql import types as T
+from statsmodels.tsa.seasonal import seasonal_decompose
 
 
 def daypart_cat(column):
@@ -425,6 +431,7 @@ def ts_analyzer(
     output_type="daily",
     tz_offset="local",
     run_type="local",
+    auth_key="NA",
 ):
 
     """
@@ -449,7 +456,9 @@ def ts_analyzer(
     tz_offset
         Timezone offset (Option to chose between options like Local, GMT, UTC, etc.). Default option is set as "Local".
     run_type
-        Option to choose between run type "Local" or "EMR" or "Azure" basis the user flexibility. Default option is set as "Local".
+        Option to choose between run type "local" or "emr" or "databricks" or "ak8s" basis the user flexibility. Default option is set as "Local".
+    auth_key
+        Option to pass an authorization key to write to filesystems. Currently applicable only for ak8s run_type. Default value is kept as "NA"
 
     Returns
     -------
@@ -460,7 +469,7 @@ def ts_analyzer(
         local_path = output_path
     elif run_type == "databricks":
         local_path = output_to_local(output_path)
-    elif run_type == "emr":
+    elif run_type in ("emr", "ak8s"):
         local_path = "report_stats"
     else:
         raise ValueError("Invalid run_type")
@@ -542,6 +551,18 @@ def ts_analyzer(
             + ends_with(local_path)
             + " "
             + ends_with(output_path)
+        )
+        output = subprocess.check_output(["bash", "-c", bash_cmd])
+
+    if run_type == "ak8s":
+        output_path_mod = path_ak8s_modify(output_path)
+        bash_cmd = (
+            'azcopy cp "'
+            + ends_with(local_path)
+            + '" "'
+            + ends_with(output_path_mod)
+            + str(auth_key)
+            + '" --recursive=true '
         )
         output = subprocess.check_output(["bash", "-c", bash_cmd])
 ```
@@ -660,7 +681,7 @@ def daypart_cat(column):
 </details>
 </dd>
 <dt id="anovos.data_analyzer.ts_analyzer.ts_analyzer"><code class="name flex hljs csharp">
-<span class="k">def</span> <span class="nf"><span class="ident">ts_analyzer</span></span>(<span class="n">spark, idf, id_col, max_days, output_path, output_type='daily', tz_offset='local', run_type='local')</span>
+<span class="k">def</span> <span class="nf"><span class="ident">ts_analyzer</span></span>(<span class="n">spark, idf, id_col, max_days, output_path, output_type='daily', tz_offset='local', run_type='local', auth_key='NA')</span>
 </code></dt>
 <dd>
 <div class="desc"><p>This function helps to produce the processed output in an aggregate form considering the input dataframe with processed timestamp / date column. The aggregation happens across Mean, Median, Min &amp; Max for the Numerical / Categorical column.</p>
@@ -681,7 +702,9 @@ def daypart_cat(column):
 <dt><strong><code>tz_offset</code></strong></dt>
 <dd>Timezone offset (Option to chose between options like Local, GMT, UTC, etc.). Default option is set as "Local".</dd>
 <dt><strong><code>run_type</code></strong></dt>
-<dd>Option to choose between run type "Local" or "EMR" or "Azure" basis the user flexibility. Default option is set as "Local".</dd>
+<dd>Option to choose between run type "local" or "emr" or "databricks" or "ak8s" basis the user flexibility. Default option is set as "Local".</dd>
+<dt><strong><code>auth_key</code></strong></dt>
+<dd>Option to pass an authorization key to write to filesystems. Currently applicable only for ak8s run_type. Default value is kept as "NA"</dd>
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
@@ -703,6 +726,7 @@ def ts_analyzer(
     output_type="daily",
     tz_offset="local",
     run_type="local",
+    auth_key="NA",
 ):
 
     """
@@ -727,7 +751,9 @@ def ts_analyzer(
     tz_offset
         Timezone offset (Option to chose between options like Local, GMT, UTC, etc.). Default option is set as "Local".
     run_type
-        Option to choose between run type "Local" or "EMR" or "Azure" basis the user flexibility. Default option is set as "Local".
+        Option to choose between run type "local" or "emr" or "databricks" or "ak8s" basis the user flexibility. Default option is set as "Local".
+    auth_key
+        Option to pass an authorization key to write to filesystems. Currently applicable only for ak8s run_type. Default value is kept as "NA"
 
     Returns
     -------
@@ -738,7 +764,7 @@ def ts_analyzer(
         local_path = output_path
     elif run_type == "databricks":
         local_path = output_to_local(output_path)
-    elif run_type == "emr":
+    elif run_type in ("emr", "ak8s"):
         local_path = "report_stats"
     else:
         raise ValueError("Invalid run_type")
@@ -820,6 +846,18 @@ def ts_analyzer(
             + ends_with(local_path)
             + " "
             + ends_with(output_path)
+        )
+        output = subprocess.check_output(["bash", "-c", bash_cmd])
+
+    if run_type == "ak8s":
+        output_path_mod = path_ak8s_modify(output_path)
+        bash_cmd = (
+            'azcopy cp "'
+            + ends_with(local_path)
+            + '" "'
+            + ends_with(output_path_mod)
+            + str(auth_key)
+            + '" --recursive=true '
         )
         output = subprocess.check_output(["bash", "-c", bash_cmd])
 ```
