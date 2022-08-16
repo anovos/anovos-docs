@@ -4,6 +4,13 @@
       "line_length": 120,
       "heading_line_length": 120,
       "code_block_line_length": 120
+    },
+    "no-duplicate-heading": {
+      "enabled": false
+    },
+    "ul-indent": {
+      "enabled": false,
+      "indent": 4
     }
   }
 }

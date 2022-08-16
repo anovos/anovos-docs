@@ -3370,6 +3370,7 @@ def outlier_categories(
     """
     This function replaces less frequently seen values (called as outlier values in the current context) in a
     categorical column by 'outlier_categories'. Outlier values can be defined in two ways –
+
     a) Max N categories, where N is user defined value. In this method, top N-1 frequently seen categories are considered
     and rest are clubbed under single category 'outlier_categories'. or Alternatively,
     b) Coverage – top frequently seen categories are considered till it covers minimum N% of rows and rest lesser seen values
@@ -3386,7 +3387,7 @@ def outlier_categories(
         Spark Session
     idf
         Input Dataframe
-        list_of_cols
+    list_of_cols
         List of categorical columns to transform e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
@@ -7865,6 +7866,7 @@ def normalization(
 <dd>
 <div class="desc"><p>This function replaces less frequently seen values (called as outlier values in the current context) in a
 categorical column by 'outlier_categories'. Outlier values can be defined in two ways –
+
 a) Max N categories, where N is user defined value. In this method, top N-1 frequently seen categories are considered
 and rest are clubbed under single category 'outlier_categories'. or Alternatively,
 b) Coverage – top frequently seen categories are considered till it covers minimum N% of rows and rest lesser seen values
@@ -7940,6 +7942,7 @@ def outlier_categories(
     """
     This function replaces less frequently seen values (called as outlier values in the current context) in a
     categorical column by 'outlier_categories'. Outlier values can be defined in two ways –
+
     a) Max N categories, where N is user defined value. In this method, top N-1 frequently seen categories are considered
     and rest are clubbed under single category 'outlier_categories'. or Alternatively,
     b) Coverage – top frequently seen categories are considered till it covers minimum N% of rows and rest lesser seen values
