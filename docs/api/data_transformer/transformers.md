@@ -3370,13 +3370,16 @@ def outlier_categories(
     """
     This function replaces less frequently seen values (called as outlier values in the current context) in a
     categorical column by 'outlier_categories'. Outlier values can be defined in two ways –
-    a) Max N categories, where N is used defined value. In this method, top N-1 frequently seen categories are considered
+
+    a) Max N categories, where N is user defined value. In this method, top N-1 frequently seen categories are considered
     and rest are clubbed under single category 'outlier_categories'. or Alternatively,
     b) Coverage – top frequently seen categories are considered till it covers minimum N% of rows and rest lesser seen values
-    are mapped to mapped to 'outlier_categories'. Even if the Coverage is less, maximum category constraint is given priority. Further,
+    are mapped to 'outlier_categories'. Even if the Coverage is less, maximum category constraint is given priority. Further,
     there is a caveat that when multiple categories have same rank. Then, number of categorical values can be more than
     max_category defined by the user.
 
+    This function performs better when distinct values, in any column, are not more than 100. It is recommended that to drop those
+    columns from the computation which has more than 100 distinct values, to get better performance out of this function.
 
     Parameters
     ----------
@@ -3384,7 +3387,7 @@ def outlier_categories(
         Spark Session
     idf
         Input Dataframe
-        list_of_cols
+    list_of_cols
         List of categorical columns to transform e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
@@ -3425,7 +3428,6 @@ def outlier_categories(
         Transformed Dataframe
 
     """
-
     cat_cols = attributeType_segregation(idf)[1]
     if list_of_cols == "all":
         list_of_cols = cat_cols
@@ -3451,6 +3453,8 @@ def outlier_categories(
     if output_mode not in ("replace", "append"):
         raise TypeError("Invalid input for output_mode")
 
+    idf = idf.persist(pyspark.StorageLevel.MEMORY_AND_DISK)
+
     if pre_existing_model:
         df_model = spark.read.csv(
             model_path + "/outlier_categories", header=True, inferSchema=True
@@ -3459,7 +3463,8 @@ def outlier_categories(
         for index, i in enumerate(list_of_cols):
             window = Window.partitionBy().orderBy(F.desc("count_pct"))
             df_cats = (
-                idf.groupBy(i)
+                idf.select(i)
+                .groupBy(i)
                 .count()
                 .dropna()
                 .withColumn(
@@ -3484,14 +3489,21 @@ def outlier_categories(
             else:
                 df_model = df_model.union(df_cats)
 
+    df_params = df_model.rdd.groupByKey().mapValues(list).collect()
+    dict_params = dict(df_params)
+    broadcast_params = spark.sparkContext.broadcast(dict_params)
+
+    def get_params(key):
+        parameters = list()
+        dict_params = broadcast_params.value
+        params = dict_params.get(key)
+        if params:
+            parameters = params
+        return parameters
+
     odf = idf
     for i in list_of_cols:
-        parameters = (
-            df_model.where(F.col("attribute") == i)
-            .select("parameters")
-            .rdd.flatMap(lambda x: x)
-            .collect()
-        )
+        parameters = get_params(i)
         if output_mode == "replace":
             odf = odf.withColumn(
                 i,
@@ -3523,6 +3535,8 @@ def outlier_categories(
         uniqueCount_computation(spark, odf, output_cols).select(
             "attribute", F.col("unique_values").alias("uniqueValues_after")
         ).show(len(list_of_cols), False)
+
+    idf.unpersist()
 
     return odf
 
@@ -7852,12 +7866,15 @@ def normalization(
 <dd>
 <div class="desc"><p>This function replaces less frequently seen values (called as outlier values in the current context) in a
 categorical column by 'outlier_categories'. Outlier values can be defined in two ways –
-a) Max N categories, where N is used defined value. In this method, top N-1 frequently seen categories are considered
+
+a) Max N categories, where N is user defined value. In this method, top N-1 frequently seen categories are considered
 and rest are clubbed under single category 'outlier_categories'. or Alternatively,
 b) Coverage – top frequently seen categories are considered till it covers minimum N% of rows and rest lesser seen values
-are mapped to mapped to 'outlier_categories'. Even if the Coverage is less, maximum category constraint is given priority. Further,
+are mapped to 'outlier_categories'. Even if the Coverage is less, maximum category constraint is given priority. Further,
 there is a caveat that when multiple categories have same rank. Then, number of categorical values can be more than
 max_category defined by the user.</p>
+<p>This function performs better when distinct values, in any column, are not more than 100. It is recommended that to drop those
+columns from the computation which has more than 100 distinct values, to get better performance out of this function.</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>spark</code></strong></dt>
@@ -7925,13 +7942,16 @@ def outlier_categories(
     """
     This function replaces less frequently seen values (called as outlier values in the current context) in a
     categorical column by 'outlier_categories'. Outlier values can be defined in two ways –
-    a) Max N categories, where N is used defined value. In this method, top N-1 frequently seen categories are considered
+
+    a) Max N categories, where N is user defined value. In this method, top N-1 frequently seen categories are considered
     and rest are clubbed under single category 'outlier_categories'. or Alternatively,
     b) Coverage – top frequently seen categories are considered till it covers minimum N% of rows and rest lesser seen values
-    are mapped to mapped to 'outlier_categories'. Even if the Coverage is less, maximum category constraint is given priority. Further,
+    are mapped to 'outlier_categories'. Even if the Coverage is less, maximum category constraint is given priority. Further,
     there is a caveat that when multiple categories have same rank. Then, number of categorical values can be more than
     max_category defined by the user.
 
+    This function performs better when distinct values, in any column, are not more than 100. It is recommended that to drop those
+    columns from the computation which has more than 100 distinct values, to get better performance out of this function.
 
     Parameters
     ----------
@@ -7980,7 +8000,6 @@ def outlier_categories(
         Transformed Dataframe
 
     """
-
     cat_cols = attributeType_segregation(idf)[1]
     if list_of_cols == "all":
         list_of_cols = cat_cols
@@ -8006,6 +8025,8 @@ def outlier_categories(
     if output_mode not in ("replace", "append"):
         raise TypeError("Invalid input for output_mode")
 
+    idf = idf.persist(pyspark.StorageLevel.MEMORY_AND_DISK)
+
     if pre_existing_model:
         df_model = spark.read.csv(
             model_path + "/outlier_categories", header=True, inferSchema=True
@@ -8014,7 +8035,8 @@ def outlier_categories(
         for index, i in enumerate(list_of_cols):
             window = Window.partitionBy().orderBy(F.desc("count_pct"))
             df_cats = (
-                idf.groupBy(i)
+                idf.select(i)
+                .groupBy(i)
                 .count()
                 .dropna()
                 .withColumn(
@@ -8039,14 +8061,21 @@ def outlier_categories(
             else:
                 df_model = df_model.union(df_cats)
 
+    df_params = df_model.rdd.groupByKey().mapValues(list).collect()
+    dict_params = dict(df_params)
+    broadcast_params = spark.sparkContext.broadcast(dict_params)
+
+    def get_params(key):
+        parameters = list()
+        dict_params = broadcast_params.value
+        params = dict_params.get(key)
+        if params:
+            parameters = params
+        return parameters
+
     odf = idf
     for i in list_of_cols:
-        parameters = (
-            df_model.where(F.col("attribute") == i)
-            .select("parameters")
-            .rdd.flatMap(lambda x: x)
-            .collect()
-        )
+        parameters = get_params(i)
         if output_mode == "replace":
             odf = odf.withColumn(
                 i,
@@ -8078,6 +8107,8 @@ def outlier_categories(
         uniqueCount_computation(spark, odf, output_cols).select(
             "attribute", F.col("unique_values").alias("uniqueValues_after")
         ).show(len(list_of_cols), False)
+
+    idf.unpersist()
 
     return odf
 ```
