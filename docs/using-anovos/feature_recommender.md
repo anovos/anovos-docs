@@ -21,7 +21,7 @@ With Feature Explorer and Mapper module, we mainly address two problems:
   Industries/Domain and Use cases
 - Mapper module helps identify better features for Data Scientists to address cold-start problems (based on the data they have in hand)
 
-Feature Explorer and Explorer utilizes Semantic similarity based Language Modeling in
+Feature Explorer and Mapper utilizes Semantic similarity based Language Modeling in
 Natural Language Processing (NLP).
 Semantic matching techniques aims to determine the similarity between words, lines,
 and sentences through multiple metrics.
