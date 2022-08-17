@@ -41,6 +41,6 @@ Our solution consists of 3 main steps:
   (Anovos Feature Corpus & User Data Dictionary Corpus)
 - Sort the results and get the matches for each input feature based on their scores
 
-See below for the solution workflow of Feature Explorer and mapper for further understanding of our solution.
+See below for the solution workflow of Feature Explorer and Mapper for further understanding of our solution.
 
 ![Solution Details Diagram](../assets/Feature_Recommender_Workflow.png)
