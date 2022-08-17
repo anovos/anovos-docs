@@ -147,11 +147,6 @@ $ pip3 install pyspark==3.2.1
 $ pip3 install py4j
 ```
 
--   Install Anovos
-```
-$ pip3 install git+https://github.com/anovos/anovos.git@add_ak8s_support_anovos
-```
-
 -   Install Jupyter Notebook
 ```
 $ pip3 install jupyter
@@ -176,6 +171,19 @@ $ tar -xvf spark-3.2.1-bin-hadoop3.2.tgz
 -   Clone Anovos Repo
 ```
 $ git clone https://github.com/anovos/anovos.git
+```
+
+-   Install Anovos
+(This step is required everytime when we want to use the updated Anovos code)
+```
+# go to the root folder of Anovos repo and build python wheel file 
+$ python3 -m build --wheel --outdir dist/ .
+
+# uninstall the old version of Anovos
+$ pip3 uninstall anovos
+
+# install the latest Anovos from .whl 
+$ pip3 install dist/xxx.whl
 ```
 
 -   Configure env variables for `azureuser`
@@ -220,7 +228,8 @@ $ kubectl create clusterrolebinding spark-role --clusterrole=edit --serviceaccou
 
 ## Step 2: Build Anovos Spark Container
 We need to custom build a docker image to be used by K8s to run the spark executor pods. 
-! Substitute correct values for variables within `< >`
+
+**Substitute correct values for variables within `<>`**
 
 -   Authenticate using Azure Managed Identity
 ```
@@ -241,10 +250,10 @@ $ cp dist/anovos-0.3.0-py2.py3-none-any.whl /home/azureuser/spark-3.2.1-bin-hado
 $ cd /home/azureuser/spark-3.2.1-bin-hadoop3.2 
 
 # build Dockerfile as image. Replace the Dockerfile path with the correct one if required
-$ sudo ./bin/docker-image-tool.sh -r <registryname>.azurecr.io -t <tag> -p ../Dockerfile --build-arg base_img=ubuntu:20.04 build
+$ sudo ./bin/docker-image-tool.sh -r <registryname>.azurecr.io -t <tag> -p ../Dockerfile build
 
 # push Docker image to registry
-$ sudo ./bin/docker-image-tool.sh -r <registryname>.azurecr.io -t <tag> push
+$ sudo docker push <registryname>.azurecr.io/spark-py:<tag>
 ```
 NOTE: **Dockerfile is provided at the end of this document.**
 
