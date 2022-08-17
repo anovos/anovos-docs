@@ -11,7 +11,7 @@ Building features from scratch is a cold-start problem for any Data Scientists t
 would be used to help them in creating their models.
 
 There are many tools to help Data Scientist to narrow down the features, but they are either not scalable,
-or very comprehensive to understand and operate. Here, within ANOVOS V0.2, we launch an open-source tool,
+or very comprehensive to understand and operate. Here, within ANOVOS, we launch an open-source tool,
 Feature Explorer and Mapper (FER) module, in order to help the Machine Learning community with these cold
 start Feature Engineering problems. 
 
