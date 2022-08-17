@@ -11,17 +11,17 @@ Building features from scratch is a cold-start problem for any Data Scientists t
 would be used to help them in creating their models.
 
 There are many tools to help Data Scientist to narrow down the features, but they are either not scalable,
-or very comprehensive to understand and operate. Here, within ANOVOS V0.2, we launch an open-source tool,
-Feature Explorer and Recommender (FER) module, in order to help the Machine Learning community with these cold
+or very comprehensive to understand and operate. Here, within ANOVOS, we launch an open-source tool,
+Feature Explorer and Mapper (FER) module, in order to help the Machine Learning community with these cold
 start Feature Engineering problems. 
 
-With Feature Explorer and Recommender module, we mainly address two problems:
+With Feature Explorer and Mapper module, we mainly address two problems:
 
 - Create a platform for Data Scientists to explore available/already used features based on their interest of
   Industries/Domain and Use cases
-- Recommend better features for Data Scientists to address cold-start problems (based on the data they have in hand)
+- Mapper module helps identify better features for Data Scientists to address cold-start problems (based on the data they have in hand)
 
-Feature Explorer and Recommender utilizes Semantic similarity based Language Modeling in
+Feature Explorer and Mapper utilizes Semantic similarity based Language Modeling in
 Natural Language Processing (NLP).
 Semantic matching techniques aims to determine the similarity between words, lines,
 and sentences through multiple metrics.
@@ -41,6 +41,6 @@ Our solution consists of 3 main steps:
   (Anovos Feature Corpus & User Data Dictionary Corpus)
 - Sort the results and get the matches for each input feature based on their scores
 
-See below for the solution workflow of FER for further understanding of our solution.
+See below for the solution workflow of Feature Explorer and Mapper for further understanding of our solution.
 
 ![Solution Details Diagram](../assets/Feature_Recommender_Workflow.png)
