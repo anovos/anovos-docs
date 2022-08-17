@@ -1,7 +1,8 @@
 # Setting up Anovos on Azure Kubernetes (AKS)
+In this section we detailed how to run on Anovos on Azure Kubernetes Environment (AKS).
 
 ## Azure Cloud Infrastructure
-Although cloud architectures can vary depending on custom configurations, the following diagram represents the most common structure and flow of data for the Anovos on Azure K8s.
+Firstly we detail  why the cloud architecture plays a cruclai role in AKS setup. Although cloud architectures can vary depending on custom configurations, the following diagram represents the most common structure and flow of data for the Anovos on Azure K8s.
 ![Architecture](../../assets/aks_images/image1.png)
 
  - `anovos-client` is a Azure VM. It serves as the platform from which the Spark jobs are submitted to the K8s cluster.
