@@ -20,6 +20,8 @@ Generally, we recommend the first option, as it requires slightly less configura
 However, if you're already storing your datasets on Azure Blob Storage, mounting the respective containers
 to DBFS allows you to directly process them with _Anovos_.
 
+### How to mount Azure Blob Storage to DBFS
+
 ## _Anovos_ on Azure Databricks using DBFS
 
 The following steps are required for running _Anovos_ workloads on Azure Databricks that process datasets stored
