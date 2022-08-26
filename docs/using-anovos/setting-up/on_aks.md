@@ -191,6 +191,9 @@ $ pip3 uninstall anovos
 
 # install the latest Anovos from .whl 
 $ pip3 install dist/anovos-0.3.0-py3-none-any.whl
+
+# The following command is required if you encounter ERROR: Cannot uninstall 'PyYAML'
+$ pip3 install --ignore-installed PyYAML
 ```
 
 -   Configure env variables for `azureuser`
