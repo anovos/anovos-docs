@@ -173,7 +173,7 @@ $ tar -xvf spark-3.2.1-bin-hadoop3.2.tgz
 ```
 $ jupyter notebook --generate-config  
 
-# add the following line in jupyter_notebook_config.py
+# add the following line in .jupyter/jupyter_notebook_config.py
 c.NotebookApp.ip = '*'
 
 $ jupyter notebook password
@@ -345,6 +345,13 @@ More in depth documentation in each of the modules and api docs can be found at 
 ## Using Jupyter Notebook
 Running Anovos on Jupyter notebook is straightforward as using any python package.   
 Kindly refer to the https://github.com/anovos/anovos/tree/main/examples in repo for sample notebooks for each module or the startup-guide for anovos to do a quick run on Jupyter.
+
+ - Open Jupyter Notebook
+```
+$ jupyter notebook
+```
+We can now access the Jupyter Notebook Web UI by http://<ip-address>:8888
+
 Here is an example of how to set SparkConf in Notebook
 ```
 # set run type variable
