@@ -344,7 +344,7 @@ More in depth documentation in each of the modules and api docs can be found at 
 
 ## Using Jupyter Notebook
 Running Anovos on Jupyter notebook is straightforward as using any python package.   
-Kindly refer to the https://github.com/anovos/anovos/tree/main/examples in repo for sample notebooks for each module or the startup-guide for anovos to do a quick run on Jupyter.
+Kindly refer to the https://github.com/anovos/anovos/tree/main/examples/notebook in repo for sample notebooks for each module or the startup-guide for anovos to do a quick run on Jupyter.
 
  - Open Jupyter Notebook
 ```
