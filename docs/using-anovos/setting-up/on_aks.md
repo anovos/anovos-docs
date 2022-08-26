@@ -48,6 +48,7 @@ Although cloud architectures can vary depending on custom configurations, the fo
     - Docker
     - Anovos
 
+### Part 1
 -   Switch to root user
 ```
 # Switch to root user
@@ -152,6 +153,15 @@ $ pip3 install py4j
 $ pip3 install jupyter
 ```
 
+### Part 2
+**Entire Part 2 setup to be done as `azureuser` user.**
+
+-   Install Spark
+```
+$ wget https://archive.apache.org/dist/spark/spark-3.2.1/spark-3.2.1-bin-hadoop3.2.tgz
+$ tar -xvf spark-3.2.1-bin-hadoop3.2.tgz
+```
+
 -   Configure Jupyter
 ```
 $ jupyter notebook --generate-config  
@@ -162,12 +172,6 @@ c.NotebookApp.ip = '*'
 $ jupyter notebook password
 ```
 
--   Install Spark
-```
-$ wget https://dlcdn.apache.org/spark/spark-3.2.1/spark-3.2.1-bin-hadoop3.2.tgz
-$ tar -xvf spark-3.2.1-bin-hadoop3.2.tgz
-```
-
 -   Clone Anovos Repo
 ```
 $ git clone https://github.com/anovos/anovos.git
@@ -176,6 +180,9 @@ $ git clone https://github.com/anovos/anovos.git
 -   Install Anovos
 (This step is required everytime when we want to use the updated Anovos code)
 ```
+# install build, required only the first time
+$ pip3 install build
+
 # go to the root folder of Anovos repo and build python wheel file 
 $ python3 -m build --wheel --outdir dist/ .
 
@@ -183,7 +190,7 @@ $ python3 -m build --wheel --outdir dist/ .
 $ pip3 uninstall anovos
 
 # install the latest Anovos from .whl 
-$ pip3 install dist/xxx.whl
+$ pip3 install dist/anovos-0.3.0-py3-none-any.whl
 ```
 
 -   Configure env variables for `azureuser`
@@ -205,7 +212,7 @@ $ echo -e 'export PATH="$SPARK_HOME/bin:$PATH"' >> ~/.profile
 $ source ~/.profile
 ```
 
--   Configure kubectl (NOTE: **Substitute correct values for variables within `< >`**)
+-   Configure kubectl (NOTE: **Substitute correct values for variables within `<>`**)
 ```
 $ az login --identity 
 $ az aks get-credentials --resource-group <resource-grp> --name <k8s-name> --subscription <subscription>
@@ -233,7 +240,7 @@ We need to custom build a docker image to be used by K8s to run the spark execut
 
 -   Authenticate using Azure Managed Identity
 ```
-$ sudo az login –-identity
+$ sudo az login --identity
 ```
 
 -   Login to the Azure Container Registry 
@@ -245,7 +252,7 @@ $ sudo az acr login --name <registryname>
 ```
 # build Python wheel file, can copy .whl file under /home/azureuser/spark-3.2.1-bin-hadoop3.2/python
 $ python3 -m build --wheel --outdir dist/ .
-$ cp dist/anovos-0.3.0-py2.py3-none-any.whl /home/azureuser/spark-3.2.1-bin-hadoop3.2/pythonanovos-0.3.0-py2.py3-none-any.whl
+$ cp dist/anovos-0.3.0-py3-none-any.whl /home/azureuser/spark-3.2.1-bin-hadoop3.2/pythonanovos-0.3.0-py3-none-any.whl
 
 $ cd /home/azureuser/spark-3.2.1-bin-hadoop3.2 
 
@@ -255,7 +262,7 @@ $ sudo ./bin/docker-image-tool.sh -r <registryname>.azurecr.io -t <tag> -p ../Do
 # push Docker image to registry
 $ sudo docker push <registryname>.azurecr.io/spark-py:<tag>
 ```
-NOTE: **Dockerfile is provided at the end of this document.**
+**NOTE: Dockerfile is provided at the end of this document.**
 
 ## Step 3: Run Anovos
 ### Using Spark-Submit
@@ -292,14 +299,14 @@ Here is an example of spark-submit script (NOTE: **Substitute correct values for
 ak8s \
 '{"fs.azure.sas. <container>.<storageaccount>.blob.core.windows.net":"<sas_token>"}'
 ```
-	- main.py is available from anovos/src/main/main.py
-	- sample pre-set configs.yaml file from anovos/config/configs.yaml. 
-		- Edit configs.yaml to enter correct values for  Azure storage @ wasbs://….
+	- main.py is available from `anovos/src/main/main.py`
+	- sample pre-set configs.yaml file from `anovos/config/configs.yaml`
+		- Edit configs.yaml to enter correct values for  Azure storage @ wasbs://…
 		![config.yaml](../../assets/aks_images/image2.png)
-	- Anovos uses few external third party packages for some of its sub modules and we specify its jars using the --jars tag. This is found from anovos/jars/*.jar in the repo.     
+	- Anovos uses few external third party packages for some of its sub modules and we specify its jars using the --jars tag. This is found from `anovos/jars/*.jar` in the repo.     
 
 2.	There is a keyword passed as argument to the main.py along with config file specifying the run-type for Anovos. Current options are
-	- local – for local run
+	- local - for local run
 	- emr – for AWS EMR based run
 	- databricks – for runs using a DBFS file system
 	- ak8s – for runs on Azure K8s setup reading and writing data to Azure Blob Storage.
@@ -370,11 +377,11 @@ WORKDIR /
 USER 0
 
 RUN mkdir ${SPARK_HOME}/python
-COPY python/anovos-0.3.0-py2.py3-none-any.whl ${SPARK_HOME}/python/anovos-0.3.0-py2.py3-none-any.whl
+COPY python/anovos-0.3.0-py3-none-any.whl ${SPARK_HOME}/python/anovos-0.3.0-py3-none-any.whl
 RUN apt-get update && \
     apt install -y wget python3 python3-pip && \
     pip3 install --upgrade pip setuptools && \
-    pip3 install ${SPARK_HOME}/python/anovos-0.3.0-py2.py3-none-any.whl && \
+    pip3 install ${SPARK_HOME}/python/anovos-0.3.0-py3-none-any.whl && \
     rm -r /root/.cache && rm -rf /var/cache/apt/*
 
 COPY python/pyspark ${SPARK_HOME}/python/pyspark
