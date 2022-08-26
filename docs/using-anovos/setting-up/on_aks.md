@@ -154,6 +154,12 @@ $ pip3 install py4j
 $ pip3 install jupyter
 ```
 
+-   Install Zip
+```
+# This command is required if you wnat to run `make clean build` to build Anovos
+$ apt install zip
+```
+
 ### Part 2
 **Entire Part 2 setup to be done as `azureuser` user.**
 
@@ -269,6 +275,18 @@ $ sudo docker push <registryname>.azurecr.io/spark-py:<tag>
 **NOTE: Dockerfile is provided at the end of this document.**
 
 ## Step 3: Run Anovos
+-   Build Anovos
+```
+# Create log4j.properties under /home/azureuser/spark-3.2.1-bin-hadoop3.2/conf, you can also customise your log4j configuration inside this file
+$ mv /home/azureuser/spark-3.2.1-bin-hadoop3.2/conf/log4j.properties.template /home/azureuser/spark-3.2.1-bin-hadoop3.2/conf/log4j.properties
+
+# Go to Anovos repo
+$ cd /home/azureuser/anovos
+
+# Build Anovos. After building Anovos, you can see a new folder `dist/`.
+$ make clean build
+```
+
 ### Using Spark-Submit
 To run Anovos, we can write our own workflow file to call the different modules and submodules of Anovos, as per our need and execute in any spark application by just importing Anovos and using it. 
 Alternatively, there is also a ready-made workflow file in the repo that can be modified to call the different modules in a pre-set order based on the config file and this can be used to executed via spark-submit. 
@@ -297,17 +315,19 @@ Here is an example of spark-submit script (NOTE: **Substitute correct values for
 --conf spark.executor.extraJavaOptions="-Dlog4j.configuration=file://$SPARK_HOME/conf/log4j.properties" \
 --conf spark.driver.extraJavaOptions="-Dlog4j.configuration=file://$SPARK_HOME/conf/log4j.properties"  \
 --conf spark.kubernetes.file.upload.path=wasbs://<container>@<storageaccount>.blob.core.windows.net \
---jars /home/azureuser/anovos/jars/${histogrammar_jar},/home/azureuser/anovos/jars/${histogrammar_sql_jar} \
-/home/azureuser/anovos/main.py \
-/home/azureuser/anovos/config/configs_income_azure_ak8s.yaml \
+--jars /home/azureuser/anovos/jars/${histogrammar_jar},/home/azureuser/anovos/jars/${histogrammar_sql_jar} \    ❶
+/home/azureuser/anovos/dist/main.py \    ❷
+/home/azureuser/anovos/config/configs.yaml \    ❸    
 ak8s \
 '{"fs.azure.sas. <container>.<storageaccount>.blob.core.windows.net":"<sas_token>"}'
 ```
-	- main.py is available from `anovos/src/main/main.py`
-	- sample pre-set configs.yaml file from `anovos/config/configs.yaml`
+	❶ Anovos uses few external third party packages for some of its sub modules and we specify its jars using the `--jars` tag. This is found from `anovos/jars/*.jar` in the repo.     
+    
+    ❷ you can use the main.py file from either `anovos/src/main/main.py` or `anovos/dist/main.py`.
+    
+    ❸ you can find sample configs.yaml file from `anovos/config/configs.yaml`
 		- Edit configs.yaml to enter correct values for  Azure storage @ wasbs://…
 		![config.yaml](../../assets/aks_images/image2.png)
-	- Anovos uses few external third party packages for some of its sub modules and we specify its jars using the --jars tag. This is found from `anovos/jars/*.jar` in the repo.     
 
 2.	There is a keyword passed as argument to the main.py along with config file specifying the run-type for Anovos. Current options are
 	- local - for local run
