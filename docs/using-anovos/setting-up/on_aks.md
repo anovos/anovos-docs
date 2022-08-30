@@ -319,7 +319,7 @@ Here is an example of spark-submit script (NOTE: **Substitute correct values for
 /home/azureuser/anovos/dist/main.py \    ❷
 /home/azureuser/anovos/config/configs.yaml \    ❸    
 ak8s \
-'{"fs.azure.sas. <container>.<storageaccount>.blob.core.windows.net":"<sas_token>"}'
+'{"fs.azure.sas.<container>.<storageaccount>.blob.core.windows.net":"<sas_token>"}'
 ```
 	❶ Anovos uses few external third party packages for some of its sub modules and we specify its jars using the `--jars` tag. This is found from `anovos/jars/*.jar` in the repo.     
     
@@ -395,6 +395,7 @@ else:
     from anovos.shared.spark import *
     auth_key = "NA"
 ```
+**Please note that you can only use the files in Azure Blob Storage (`wasbs://<container>@<storageaccount>.blob.core.windows.net/`). If you use local file, it will throw error.**
 
 
 ## Dockerfile
