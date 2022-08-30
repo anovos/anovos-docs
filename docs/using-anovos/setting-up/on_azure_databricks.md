@@ -265,6 +265,10 @@ If you chose the default way of obtaining _Anovos_ directly from the Python Pack
 select "PyPI" as the "Library Source" and enter `anovos` as the "Package":
 ![Adding Anovos through PyPI](../../assets/azure_databricks_images/image8.png)
 
+**Note:** In case you get error "ImportError: cannot import name 'soft_unicode' from 'markupsafe'" while running the job, 
+then you also add markupsafe==2.0.1 as another dependency from PyPI.
+![Adding Anovos through PyPI](../../assets/azure_databricks_images/image18.png)
+
 If you chose to provide your own wheel file, select "Upload" as the library source and follow the instructions.
 
 In addition to the _Anovos_ wheel file, we need to provide the `histogrammar` package to Azure Databricks.
