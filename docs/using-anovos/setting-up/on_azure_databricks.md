@@ -393,8 +393,8 @@ For more details regarding accessing files on DBFS, see the instructions on uplo
 ## 2. Anovos on Azure Databricks using an Azure Blob Storage container mounted to DBFS
 
 ### Step 2.1: Installing/Downloading Anovos
-This step is exactly similar to the [Step 1.1: Installing _Anovos_ on Azure Databricks](/using-anovos/setting-up/on_azure_databricks.md#step-1-1-installing-anovos-on-azure-databricks) 
-under the main heading [1. Anovos on Azure Databricks using DBFS](/using-anovos/setting-up/on_azure_databricks.md#1-anovos-on-azure-databricks-using-dbfs)
+This step is exactly similar to the [Step 1.1: Installing _Anovos_ on Azure Databricks](https://docs.anovos.ai/using-anovos/setting-up/on_azure_databricks.html#step-1-1-installing-anovos-on-azure-databricks) 
+under the main heading [1. Anovos on Azure Databricks using DBFS](https://docs.anovos.ai/using-anovos/setting-up/on_azure_databricks.html#1-anovos-on-azure-databricks-using-dbfs)
 
 ### Step 2.2: Copy the dataset to an Azure Blob Storage container
 
@@ -478,6 +478,6 @@ This is the sample yaml configuration file which sets the argument for all funct
 
 Users can copy updated config file using UI or from azure command in similar way like in step 2.2 in the same container that was mounted to DBFS
 
-### Rest of the steps are similar to the steps 1.3, 1.4 and 1.5 as mentioned above under the main heading [1. Anovos on Azure Databricks using DBFS](/using-anovos/setting-up/on_azure_databricks.md#1-anovos-on-azure-databricks-using-dbfs)
+### Rest of the steps are similar to the steps 1.3, 1.4 and 1.5 as mentioned above under the main heading [1. Anovos on Azure Databricks using DBFS](https://docs.anovos.ai/using-anovos/setting-up/on_azure_databricks.html#1-anovos-on-azure-databricks-using-dbfs)
 
 
