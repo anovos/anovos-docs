@@ -262,7 +262,7 @@ $ sudo az acr login --name <registryname>
 ```
 # build Python wheel file, can copy .whl file under /home/azureuser/spark-3.2.1-bin-hadoop3.2/python
 $ python3 -m build --wheel --outdir dist/ .
-$ cp dist/anovos-0.3.0-py3-none-any.whl /home/azureuser/spark-3.2.1-bin-hadoop3.2/pythonanovos-0.3.0-py3-none-any.whl
+$ cp dist/anovos-0.3.0-py3-none-any.whl /home/azureuser/spark-3.2.1-bin-hadoop3.2/python/anovos-0.3.0-py3-none-any.whl
 
 $ cd /home/azureuser/spark-3.2.1-bin-hadoop3.2 
 
