@@ -480,5 +480,4 @@ Users can copy updated config file using UI or from azure command in similar way
 
 ### Rest of the steps are similar to the steps 1.3, 1.4 and 1.5 as mentioned above under the main heading [1. Anovos on Azure Databricks using DBFS](/using-anovos/setting-up/on_azure_databricks.md#1-anovos-on-azure-databricks-using-dbfs)
 
-##
 
