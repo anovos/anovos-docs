@@ -318,8 +318,8 @@ Here is an example of spark-submit script (NOTE: **Substitute correct values for
 --jars /home/azureuser/anovos/jars/${histogrammar_jar},/home/azureuser/anovos/jars/${histogrammar_sql_jar} \    ❶
 /home/azureuser/anovos/dist/main.py \    ❷
 /home/azureuser/anovos/config/configs.yaml \    ❸    
-ak8s \
-'{"fs.azure.sas.<container>.<storageaccount>.blob.core.windows.net":"<sas_token>"}'
+ak8s \     ❹
+'{"fs.azure.sas.<container>.<storageaccount>.blob.core.windows.net":"<sas_token>"}'     ❺
 ```
 	❶ Anovos uses few external third party packages for some of its sub modules and we specify its jars using the `--jars` tag. This is found from `anovos/jars/*.jar` in the repo.     
     
@@ -329,13 +329,15 @@ ak8s \
 		- Edit configs.yaml to enter correct values for  Azure storage @ wasbs://…
 		![config.yaml](../../assets/aks_images/image2.png)
 
-2.	There is a keyword passed as argument to the main.py along with config file specifying the run-type for Anovos. Current options are
-	- local - for local run
-	- emr – for AWS EMR based run
-	- databricks – for runs using a DBFS file system
-	- ak8s – for runs on Azure K8s setup reading and writing data to Azure Blob Storage.
+    ❹ There is a keyword passed as argument to the main.py along with config file specifying the run-type for Anovos. Current options are
+	   - local - for local run
+	   - emr – for AWS EMR based run
+	   - databricks – for runs using a DBFS file system
+	   - ak8s – for runs on Azure K8s setup reading and writing data to Azure Blob Storage.
 
-3.	The final report should be generated at two places
+    ❺ This is an argument specific to Azure K8s run. Specify the container, storage account name and the sas token with permission to read input/write output in the mentioned paths in the configs.yaml file. For other run_types can set this value as "NA".
+
+2.	The final report should be generated at two places
 	- local path where spark-submit is being executed from, as "ml_anovos_report.html" which can be opened in Google Chrome browser 
 	- in the final_report path specified in the configs.yaml file.
 
@@ -397,6 +399,24 @@ else:
 ```
 **Please note that you can only use the files in Azure Blob Storage (`wasbs://<container>@<storageaccount>.blob.core.windows.net/`). If you use local file, it will throw error.**
 
+## Verification 
+
+**This is applicable for both by spark-submit or using Jupyter notebooks** 
+
+There are a few steps that can be executed to confirm the run is happening in distirbuted manner using Kubernetes services.
+
+```shell
+kubectl get pods -n anovos
+```
+or 
+```shell
+kubectl get all
+```
+
+The above commands can be used to view the current running pods for the namespace. 
+
+![running_pods_screenshot](../../assets/aks_images/image3.png)
+
 
 ## Dockerfile
 ```
@@ -441,4 +461,3 @@ RUN wget --quiet https://repo1.maven.org/maven2/com/google/guava/guava/20.0/guav
 
 ENTRYPOINT [ "/opt/entrypoint.sh" ]
 ```
-
