@@ -37,7 +37,7 @@ jobs:
           hadoop-version: '2.7'
 
       - name: Pip cache
-        uses: actions/cache@v3.0.5
+        uses: actions/cache@v3.0.8
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-anovos-${{ hashFiles('./requirements.txt') }}
