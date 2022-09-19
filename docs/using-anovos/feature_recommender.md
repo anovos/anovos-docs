@@ -1,46 +1,48 @@
 # Feature Recommender
 
-Feature engineering has always played a crucial role in solving any Machine learning (ML) related problems.
-Features/Predictors decide whether the Machine Learning projects are successful or not.
+Feature engineering has always played a crucial role in solving problems related to machine learning (ML).
+Features and predictors determine whether machine learning projects are successful or not.
 
-However, coming up with good & intuitive features is not an easy task.
-Identifying list of potential features to build is a very hard to come up and requires both expertise in domain
-knowledge and technical aspects of Machine learning. In fact, 80% of Data Scientists' time are being spent on data 
-wrangling and Feature Engineering tasks, and only 20% is for fine-tuning the model and testing out.
-Building features from scratch is a cold-start problem for any Data Scientists to figure out what features
-would be used to help them in creating their models.
+However, coming up with intuitive features is not an easy task.
+Identifying the right features to build is challenging and requires both domain knowledge and expertise in the
+technical aspects of machine learning.
+In fact, 80% of data scientists' time is spent on data wrangling and feature engineering,
+while only 20% is spent on fine-tuning and testing the models.
+Building features from scratch and figuring out what features they should use to create models is a
+daunting cold-start problem for any data scientist.
 
-There are many tools to help Data Scientist to narrow down the features, but they are either not scalable,
-or very comprehensive to understand and operate. Here, within ANOVOS, we launch an open-source tool,
-Feature Explorer and Mapper (FER) module, in order to help the Machine Learning community with these cold
-start Feature Engineering problems. 
+There are many tools that help data scientists to narrow down the features,
+but they are always either not scalable, or complicated to understand and operate.
+Within _Anovos_, we've launched an open-source tool, the Feature Explorer and Mapper (FER) module,
+to help the machine learning community tackle the cold-start problem.
 
-With Feature Explorer and Mapper module, we mainly address two problems:
+With Feature Explorer and Mapper, we mainly address two problems:
 
-- Create a platform for Data Scientists to explore available/already used features based on their interest of
-  Industries/Domain and Use cases
-- Mapper module helps identify better features for Data Scientists to address cold-start problems (based on the data they have in hand)
+- Create a platform for data scientists to explore available and already used features based on their
+  in industries/domains and use cases of interest
+- The Feature Mapper helps data scientists in identifying better features based on the data they have on hand
 
-Feature Explorer and Mapper utilizes Semantic similarity based Language Modeling in
-Natural Language Processing (NLP).
-Semantic matching techniques aims to determine the similarity between words, lines,
-and sentences through multiple metrics.
+The Feature Explorer and Mapper both use semantic-similarity-based language modeling based
+on recent Natural Language Processing (NLP) techniques.
+Semantic matching aims to determine the similarity between words, lines, and sentences through multiple metrics.
 
 In this module, we use [all-mpnet-base-v2](https://huggingface.co/sentence-transformers/all-mpnet-base-v2)
-for our semantic model. This model is built based upon Microsoft [Mpnet](https://arxiv.org/abs/2004.09297) base model,
-masked and permuted pre-training for language understanding. Its performance triumphs BERT, XLNet, RoBERTa for 
-language modeling and text recognition. The importance features of this model are,
+as our semantic model.
+This model is based on Microsoft’s [Mpnet](https://arxiv.org/abs/2004.09297) base model
+that offers masked and permuted pre-training for language understanding.
+Its performance beats BERT, XLNet, and RoBERTa in language modeling and text recognition.
 
-- Trained on more than 1 billion training pairs, including around 300 millions research paper citation pairs
+The important features of this model are:
+
+- Trained on more than a billion training pairs, including approximately 300 million research paper citation pairs
 - Fine-tuned using cosine similarity from sentence pairs, then apply cross entropy loss by comparing true pairs
 
-Our solution consists of 3 main steps:
+Our solution consists of three main steps:
 
-- Using the pretrained model, convert textual data into tensors (Text Embedding Technique)
-- Compute similarity scores of each input attribute name & description across both corpora
-  (Anovos Feature Corpus & User Data Dictionary Corpus)
-- Sort the results and get the matches for each input feature based on their scores
+- Convert textual data into tensors using the pretrained model
+- Compute similarity scores of each input attribute name and description across both corpora
+  (_Anovos_ Feature Corpus & the user-defined data dictionary corpus)
+- Sort the results and get the matches for each input feature based on its scores
 
-See below for the solution workflow of Feature Explorer and Mapper for further understanding of our solution.
-
+The following diagram illustrates this workflow of the Feature Explorer and Mapper:
 ![Solution Details Diagram](../assets/Feature_Recommender_Workflow.png)

@@ -1,20 +1,20 @@
 # Setting Up Anovos on Google Colab
 
-[Colab](https://colab.research.google.com/) is an offer by Google Research 
-that provides access to cloud-hosted [Jupyter notebooks](https://jupyter.org/) 
+[Colab](https://colab.research.google.com/) is an offer by Google Research
+that provides access to cloud-hosted [Jupyter notebooks](https://jupyter.org/)
 for collaborating on and sharing data science work.
 
 Colab offers substantial compute resources even in its free tier and is integrated with
-[Google Drive](https://drive.google.com/), 
+[Google Drive](https://drive.google.com/),
 making it an excellent place to explore libraries like _Anovos_ without setting up anything
 on your local machine.
 
 If you're not yet familiar with Google Colab, the following selection of introductory tutorials
 are an excellent starting point to familiarize yourself with this platform:
 
-- [Google Colab — The Beginner’s Guide](https://medium.com/lean-in-women-in-tech-india/google-colab-the-beginners-guide-5ad3b417dfa) (Lean In Women In Tech India)
-- [How to use Google Colab](https://www.geeksforgeeks.org/how-to-use-google-colab/) (GeeksforGeeks)
-- [Google Colab Tutorial for Data Scientists](https://www.datacamp.com/community/tutorials/tutorial-google-colab-for-data-scientists) (Datacamp)
+- LeanIn Women In Tech India: [Google Colab — The Beginner’s Guide](https://medium.com/lean-in-women-in-tech-india/google-colab-the-beginners-guide-5ad3b417dfa)
+- GeeksForGeeks: [How to use Google Colab](https://www.geeksforgeeks.org/how-to-use-google-colab/)
+- DataCamp: [Google Colab Tutorial for Data Scientists](https://www.datacamp.com/community/tutorials/tutorial-google-colab-for-data-scientists)
 
 ## Step-by-step Instructions for Using _Anovos_ on Google Colab
 
@@ -40,9 +40,9 @@ Then, we can download Spark:
 !wget https://archive.apache.org/dist/spark/spark-2.4.8/spark-2.4.8-bin-hadoop2.7.tgz
 ```
 
-_**Note**: In this tutorial, we use Java 8 and Spark 2.4.8. You can use more recent versions as well._
-_See the [list of currently supported versions](locally.md#software-prerequisites) to learn about available options._
-   
+💡 _In this tutorial, we use Java 8 and Spark 2.4.8. You can use more recent versions as well._
+   _See the [list of currently supported versions](locally.md#software-prerequisites) to learn about available options._
+
 Next, unzip the downloaded Spark archive to the current folder:
 
 ```shell
@@ -60,43 +60,48 @@ os.environ["SPARK_HOME"] = "/content/spark-2.4.8-bin-hadoop2.7"
 
 To access Spark through Python, we need the `pyspark` library as well as the `findspark` utility:
 
-```shell    
+```shell
 !pip install findspark pyspark==2.4.8
 ```
-_**Note**: Make sure that the version of `pyspark` matches the Spark versions you downloaded._
+
+💡 _Make sure that the version of `pyspark` matches the Spark versions you downloaded._
 
 ### Step 2: Installing _Anovos_ and its dependencies
 
 Clone the _Anovos_ GitHub repository to Google Colab:
 
 ```shell
-!git clone --branch v0.2.2 https://github.com/anovos/anovos.git
+!git clone --branch v1.0.1 https://github.com/anovos/anovos.git
 ```
-_**Note**: Using the `--branch` flag allows you to select the desired release of Anovos._
-_If you omit the flag, you will get the latest development version of Anovos, which might not_
-_be fully functional or exhibit unexpected behavior._
+
+💡 _Using the `--branch` flag allows you to select the desired release of Anovos._
+   _If you omit the flag, you will get the latest development version of Anovos, which might not_
+   _be fully functional or exhibit unexpected behavior._
 
 After cloning, let's enter the newly created _Anovos_ directory:
+
 ```shell
 cd anovos
 ```
+
 As indicated by the output shown, _Anovos_ was placed in the folder `/content/anovos`,
 which you can also access through the sidebar:
 
 ![You can view and access Anovos' files through the sidebar](../../assets/google_colab_notebook_images/image1_colab.png)
 
 The next step is to build _Anovos_:
+
 ```shell
 !make clean build
 ```
-    
+
 As the final step before we can start working with _Anovos_,
 we need to install the required Python dependencies:
 
 ```shell
 !pip install -r requirements.txt
 ```
-    
+
 ### Step 3: Configuring an _Anovos_ workflow
 
 _Anovos_ workflows are configured through a YAML configuration file.
@@ -141,38 +146,46 @@ you can edit this file.
 For example, in case of a very large dataset of several GB in size,
 you might want to allocate more memory to the _Anovos_ workflow.
 Let's go ahead and change the executor memory from the pre-defined `20g` to `32g`:
+
 ```bash
 spark-submit \
 ...
 --executor-memory 32g \
 ...
 ```
-To make this or any other change, you need to download and upload the `spark-submit.sh` file similarly 
+
+To make this or any other change, you need to download and upload the `spark-submit.sh` file similarly
 to the `configs.yaml` file as described in the previous section.
 
 Once the adapted `spark-submit.sh` has been uploaded, we can trigger the _Anovos_ workflow run by
 entering the `dist` directory and running `spark-submit.sh`:
+
 ```shell
 cd dist
 !nohup ./spark-submit.sh > run.txt &
 ```
+
 The `nohup` command together with the `&` at the end of line ensures that the workflow is executed
 in the background, allowing us to continue working in the Colab notebook.
 
 To see what your workflow is doing, have a look at `run.txt`, where all logs are collected:
+
 ```shell
 !tail -f run.txt
 ```
+
 Once the run completes, the reports generated by _Anovos_ and all intermediate outputs are
 stored at the specified path.
 
 The intermediate data and the report data are saved at the `master_path` and the `final_report_path`
 as specified by the user inside the `configs.yaml` file.
 By default, these are set to `report_stats` and you should find all output files in this folder:
+
 ```shell
 !cd report_stats
 !ls -l
 ```
+
 To view the HTML report, you'll have to download the `basic_report.html` file to your local machine,
 using the same steps you took to download the `configs.yaml` and `spark-submit.sh` files.
 
@@ -180,7 +193,7 @@ using the same steps you took to download the `configs.yaml` and `spark-submit.s
 
 In this tutorial, you've learned the basics of running _Anovos_ workflows on Google Colab.
 
-- To learn all about the different modules and functions of _Anovos_, have a look at the 
+- To learn all about the different modules and functions of _Anovos_, have a look at the
   [API documentation](../../api/_index.md).
 - The [Configuring Workflows](../config_file.md) documentation contains a complete list of all
   possible configuration options.

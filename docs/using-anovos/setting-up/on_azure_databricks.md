@@ -46,9 +46,10 @@ you can make _Anovos_ available by downloading the respective wheel file
 from PyPI yourself and manually uploading it to Azure Databricks.
 
 You'll find the link to the latest wheel file on
-[the "Download files" tab](https://pypi.org/project/anovos/#files), ***the file with extension *.whl*****(example: anovos-0.3.0-py3-none-any.whl ).
+[the "Download files" tab](https://pypi.org/project/anovos/#files), it's the file with the extension `.whl`
+(for example: `anovos-1.0.1-py3-none-any.whl`).
 If you'd like to use an older version, you can navigate to the respective version in the
-[Release history](https://pypi.org/project/anovos/#history) and access the "Download files" tab
+[release history](https://pypi.org/project/anovos/#history) and access the "Download files" tab
 from there.
 
 Download the _Anovos_ wheel file to your local machine and move on to Step 2.
@@ -65,10 +66,10 @@ First, clone the _Anovos_ GitHub repository to your local machine:
 git clone --depth 1 <https://github.com/anovos/anovos.git>
 ```
 
-_**Note**: Using the `--branch` flag allows you to select a specific release of Anovos._
-_For example, adding `--branch v0.2.2` will give you the state of the 0.2.2 release._
-_If you omit the flag, you will get the latest development version of Anovos, which might not_
-_be fully functional or exhibit unexpected behavior._
+💡 _Using the `--branch` flag allows you to select a specific release of Anovos._
+   _For example, adding `--branch v1.0.1` will give you the state of the 1.0.1 release._
+   _If you omit the flag, you will get the latest development version of Anovos, which might not_
+   _be fully functional or exhibit unexpected behavior._
 
 After cloning, go to the `anovos` directory that was automatically created in the process
 and execute the following command to clean and prepare the environment:
@@ -80,8 +81,8 @@ make clean
 It is a good practice to always run this command prior to generating a wheel file or another kind
 of build artifact.
 
-_**Note**: To be able to create a wheel file, `wheel`, `build`, and `setuptools` need to be installed_
-_in the current Python environment. You can do so by running `pip install build wheel setuptools`._
+💡 _To be able to create a wheel file, `wheel`, `build`, and `setuptools` need to be installed_
+   _in the current Python environment. You can do so by running `pip install build wheel setuptools`._
 
 Then, to create the wheel file, run the following command directly inside the `anovos` folder:
 
@@ -92,10 +93,10 @@ python -m build --wheel --outdir dist/ .
 Once the process is finished, the folder `dist` will contain the wheel file.
 It will have the file extension `*.whl` and might carry the latest version in its name.
 
-_**Note:** The version in the file name will be that of the latest version of Anovos,_
-_even if you cloned the repository yourself and used the latest state of the code._
-_This is due to the fact that the version is only updated right before new release is published._
-_To avoid confusion, it's a good practice to rename the wheel file to a custom name._
+💡 _The version in the file name will be that of the latest version of Anovos,_
+   _even if you cloned the repository yourself and used the latest state of the code._
+   _This is due to the fact that the version is only updated right before new release is published._
+   _To avoid confusion, it's a good practice to rename the wheel file to a custom name._
 
 ### Step 1.2: Prepare and copy the workflow configuration and data to DBFS
 
@@ -105,13 +106,14 @@ need to be stored on DBFS.
 You can either use the UI or the CLI to copy files from your local machine to DBFS.
 For detailed instructions, see the respective subsections below.
 
-In this tutorial, we will use "income dataset" and an accompanying pre-defined workflow.
+In this tutorial, we will use the "income dataset" and an accompanying pre-defined workflow.
 
 You can obtain these files by cloning the _Anovos_ GitHub repository:
 
-**Imporant Note:** You need to use example dataset (income dataset) and accompanying pre-defined workflow configuration
-files etc. from the same Anovos version which you have used in _`Step 1.1: Installing Anovos on Azure Databricks`_. 
-Sometimes PyPI (pip install anovos) version is older than the latest version on github. 
+💡 _Note that you need to use the dataset version and workflow configuration files from the same _Anovos_ version_
+   _that you have set up in Step 2.1._
+   _Sometimes the version on PyPI that you obtain when running `pip install anovos` version is older than the latest_
+   _development version on GitHub._
 
 ```shell
 git clone https://github.com/anovos/anovos.git
@@ -259,14 +261,15 @@ Here's an example of a cluster configuration for this tutorials:
 For more detailed information, refer to the
 [Databricks documentation](https://docs.microsoft.com/azure/databricks/clusters/configure#cluster-configurations).
 
-To give the Databricks platform access to _Anovos_, click on "Advanced options" and select "Add dependent libraries" on _Job Configuration Window_.
+To give the Databricks platform access to _Anovos_, click on "Advanced options" and select "Add dependent libraries"
+in the _Job Configuration Window_.
 
 If you chose the default way of obtaining _Anovos_ directly from the Python Package Index,
 select "PyPI" as the "Library Source" and enter `anovos` as the "Package":
 ![Adding Anovos through PyPI](../../assets/azure_databricks_images/image8.png)
 
-**Note:** In case you get error "ImportError: cannot import name 'soft_unicode' from 'markupsafe'" while running the job, 
-then you also add markupsafe==2.0.1 as another dependency from PyPI.
+💡 _In case you encounter the error `"ImportError: cannot import name 'soft_unicode' from 'markupsafe'"`_
+   _while running the job, then you need to add `markupsafe==2.0.1` as another dependency from PyPI._
 ![Adding Anovos through PyPI](../../assets/azure_databricks_images/image18.png)
 
 If you chose to provide your own wheel file, select "Upload" as the library source and follow the instructions.
@@ -278,7 +281,7 @@ Following the same procedure as for _Anovos_, you can add `histogrammar` as a de
 This time, we use "Maven" as the "Library Source".
 
 Then, select `io.github.histogrammar:histogrammar-sparksql_2.12:1.0.20`
-and `io.github.histogrammar:histogrammar_2.12:1.0.20` as the "Coordinates" 
+and `io.github.histogrammar:histogrammar_2.12:1.0.20` as the "Coordinates"
 (copy the coordinate one by one, paste in Coordinates box and then add it by clicking on Install button):
 ![Adding Histogrammar through Maven](../../assets/azure_databricks_images/image9.png)
 
@@ -353,7 +356,7 @@ Note that you should specify the version of _Anovos_ if you're running productio
 to ensure reproducibility:
 
 ```bash
-sudo pip3 install anovos==0.3.0
+sudo pip3 install anovos==1.0.1
 ```
 
 Place this script on DBFS as well.
@@ -393,95 +396,107 @@ dbfs cp -r dbfs:/FileStore/tables/report_stats/ ./
 
 For more details regarding accessing files on DBFS, see the instructions on uploading files to DBFS in Step 2.
 
-
-## 2. Anovos on Azure Databricks using an Azure Blob Storage container mounted to DBFS
+## 2. Anovos on Azure Databricks Using an Azure Blob Storage Container Mounted to DBFS
 
 ### Step 2.1: Installing/Downloading Anovos
-This step is exactly similar to the [Step 1.1: Installing _Anovos_ on Azure Databricks](https://docs.anovos.ai/using-anovos/setting-up/on_azure_databricks.html#step-1-1-installing-anovos-on-azure-databricks) 
-under the main heading [1. Anovos on Azure Databricks using DBFS](https://docs.anovos.ai/using-anovos/setting-up/on_azure_databricks.html#1-anovos-on-azure-databricks-using-dbfs)
+
+This step is identical to
+[Step 1.1: Installing _Anovos_ on Azure Databricks](#step-11-installing-anovos-on-azure-databricks).
 
 ### Step 2.2: Copy the dataset to an Azure Blob Storage container
 
 To run an _Anovos_ workflow, the dataset needs to be stored on an Azure Blob Storage container.
-
-You can either use the UI by clicking upload button or the CLI to copy files from your local machine to an Azure Blob Storage container.
+You can either use the UI by clicking the upload button or the CLI to copy files from your local machine
+to an Azure Blob Storage container.
 For detailed instructions, see the respective subsections below.
 
-In this tutorial, we will use "income dataset" and an accompanying pre-defined workflow.
-
-**Imporant Note:** You need to use example dataset (income dataset) and accompanying pre-defined workflow configuration
-files etc. from the same Anovos version which you have used in _`Step 1.1: Installing Anovos on Azure Databricks`_.
-Sometimes PyPI (pip install anovos) version is older than the latest version on github.
-
+In this tutorial, we will use the "income dataset" provided with _Anovos_ and an accompanying pre-defined workflow.
 You can obtain these files by cloning the _Anovos_ GitHub repository:
+
 ```shell
 git clone https://github.com/anovos/anovos.git
 ```
 
-You'll find the dataset under `examples/data/income_dataset`
+Afterwards, you'll find the dataset under `examples/data/income_dataset`
 
-The syntax to upload a file using command line are as follows:
+💡 _Note that you need to use the dataset version and workflow configuration files from the same _Anovos_ version_
+   _that you have set up in Step 2.1._
+   _Sometimes the version on PyPI that you obtain when running `pip install anovos` version is older than the latest_
+   _development version on GitHub._
 
-azcopy copy " **SourceFile**" "**storage_account_name**.**blob**.core.windows.net/**containername**?**SAStoken**"
+The syntax to upload a file using the command line are as follows:
 
-Note: Attaching link that details about transfering data with AzCopy command line utility and file storage for reference.
-[Transfer data with AzCopy and file storage](https://docs.microsoft.com/en-us/azure/storage/common/storage-use-azcopy-files)
+```shell
+azcopy copy source_file "<storage-account-name>.blob.core.windows.net/<container-name>?<sas-token>"
+```
 
-### Step 2.3: Mount a container of Azure Blob Storage as a dbfs path in Azure Databricks
+To learn more about transferring data to Azure Blob Storage containers, please refer to the
+[Azure documentation](https://docs.microsoft.com/en-us/azure/storage/common/storage-use-azcopy-files).
 
-For accessing files from azure blob storage container for running anovos in Azure databricks platform, we need to mount that container in dbfs path.
+### Step 2.3: Mount an Azure Blob Storage Container as a DBFS path in Azure Databricks
 
-Mounting Azure blob storage container by executing the following commands in Azure databricks notebook by starting the cluster.
+To access files in an Azure Blob Storage container for running _Anovos_ in Azure Databricks platform,
+you need to mount that container in the DBFS path.
 
-    dbutils.fs.mount(
-        source = "wasbs://<container-name>@<storage-account-name>.blob.core.windows.net",
-        mount_point = "/mnt/<mount-name>",
-        extra_configs = {"fs.azure.sas.<container-name>.<storage-account-name>.blob.core.windows.net":"<sas_token>"})
+To mount the Azure Blob Storage container, execute the following commands in an Azure Databricks notebook:
 
-here,
-- **storage-account-name:** is the name of your Azure Blob storage account.
-- **container-name:** is the name of a container in your Azure Blob storage account.
-- **mount-name:** is a DBFS path representing where the Blob storage container or a folder inside the container will be mounted in DBFS.
-- **sas_token:** is the SAS Token for that storage account
+```python
+dbutils.fs.mount(
+    source = "wasbs://<container-name>@<storage-account-name>.blob.core.windows.net",
+    mount_point = "/mnt/<mount-name>",
+    extra_configs = {"fs.azure.sas.<container-name>.<storage-account-name>.blob.core.windows.net":"<sas-token>"})
+```
 
-Attaching some links to get more information about mounting azure blob storage container in dbfs path.
-- [Azure Blob storage](https://docs.microsoft.com/en-us/azure/databricks/data/data-sources/azure/azure-storage#:~:text=Mount%20Azure%20Blob%20storage%20containers%20to%20DBFS,-You%20can%20mount&text=All%20users%20have%20read%20and,immediately%20access%20the%20mount%20point)
+Here,
+- `<storage-account-name>` is the name of your Azure Blob Storage account
+- `<container-name>` is the name of a container in your Azure Blob Storage account
+- `<mount-name>` is the DBFS path where the Blob Storage container or a folder inside the container will be mounted to
+- `<sas_token>` is the SAS token for that storage account
 
-**Note:**
-Mounting needs to be done only one time when we are using the same mount_name for mounting in dbfs. No need to mount when we are running again using same mount_name as it is already mounted.
-To unmount a mount point, use the following command in Azure databricks notebook:
+To learn more about mounting Azure Blob Storage containers in DBFS, please refer to
+[the Azure Blob Storage documentation](https://docs.microsoft.com/en-us/azure/databricks/data/data-sources/azure/azure-storage).
 
-    dbutils.fs.unmount("/mnt/<mount-name>")
+💡 _Note that you only need to mount the container once._
+   _The container will remain mounted at the given mount point._
+   _To unmount a container, you can run `dbutils.fs.unmount("/mnt/<mount-name>")` in an Azure Databricks notebook._
 
-### Step 2.4: Update config file for all input and output path according to dbfs mount path
+### Step 2.4: Update the workflow configuration for all input and output paths according to the DBFS mount point
 
-Once mounting is completed, the data is present in the required dbfs path where we have given in mount_point. All the operations happened during running anovos by using this mount dbfs path and that automatically get updated in azure blob storage container too.
+Once mounting is completed, the data is present in DBFS at the path specified as the mount point.
+All operations performed by _Anovos_ when running a workflow will result in changes in the data stored in the
+Azure Blob Storage container.
 
-Config.yaml file that is available in local machine which is present under - config/configs_income_azure_blob_mount.yaml needs to be updated accordingly using path which we have given in mount_point.
-Input and Output Paths should be updated everywhere in config file that starts like this
+The example configuration file we use in this tutorial can be found at `config/configs_income_azure_blob_mount.yaml`
+in the _Anovos_ repository.
+It will need to be updated to reflect the path of the mount point set above.
 
-    "dbfs:/mnt/mount-name/folder_name/"
+In order for _Anovos_ to be able to find the input data and write the output to the correct location,
+update all paths to contain the path of the mount point:
 
-**Example:**
+```yaml
+file_path: "dbfs:/mnt/<mount-name>/..."
+```
+
+🤓 _Example:_
+
 ```yaml
   read_dataset:
     file_path: "dbfs:/mnt/anovos1/income_dataset/csv/"
     file_type: csv
 ```
 
-here mount-name refers to anovos1 and income_dataset is the folder name that is present in azure blob storage container.
+Here, the mount points is `dbfs:/mnt/anovos1` and the input dataset is stored in a folder called `income_dataset/csv`
+within the Azure Blob Storage container.
 
-**Note** Attaching config file description link to get more information about updating input,output path and threshold settings according to use case.
-[config_file_description](../config_file.md)
+To learn more about the _Anovos_ workflow configuration file and specifying paths for input and output data,
+have a look at the [Configuring Workloads](../config_file.md) page.
 
-### Step 2.5: Copy updated config file from local machine to Azure Blob Storage container
+### Step 2.5: Copy the updated configuration file from the local machine to the Azure Blob Storage container
 
-Updated config file present under this in local machine - config/configs_income_azure_blob_mount.yaml
+Once you have updated the configuration file, copy it to Azure Databricks using the same command that was used
+in [Step 2.2](#step-22-copy-the-dataset-to-an-azure-blob-storage-container).
 
-This is the sample yaml configuration file which sets the argument for all functions for running anovos in Azure Databricks using Azure Bolb Storage Container
+### Remaining Steps
 
-Users can copy updated config file using UI or from azure command in similar way like in step 2.2 in the same container that was mounted to DBFS
-
-### Rest of the steps are similar to the steps 1.3, 1.4 and 1.5 as mentioned above under the main heading [1. Anovos on Azure Databricks using DBFS](https://docs.anovos.ai/using-anovos/setting-up/on_azure_databricks.html#1-anovos-on-azure-databricks-using-dbfs)
-
-
+The remaining steps are the same as above, so please continue with
+[Step 1.4](#step-14-configure-and-launch-an-anovos-workflow-as-a-databricks-job)
