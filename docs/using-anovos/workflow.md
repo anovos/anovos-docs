@@ -25,3 +25,15 @@ We have created a series of videos that walk through a typical _Anovos_ feature 
   [![Feature Composition in Anovos](../assets/youtube/thumbs/video_4.jpg)](https://www.youtube.com/watch?v=Tgp974LcLcc)
 - Video 5: [**Producing Model Ready Features**](https://www.youtube.com/watch?v=A0-Rdy5mnl4)\
   [![Feature Composition in Anovos](../assets/youtube/thumbs/video_5.jpg)](https://www.youtube.com/watch?v=A0-Rdy5mnl4)
+
+## _Anovos_ Workshop
+
+You can find the material for a comprehensive introductory workshop as part of the _Anovos_ GitHub repository:
+[https://github.com/anovos/anovos/tree/main/tutorial](https://github.com/anovos/anovos/tree/main/tutorial).
+
+The accompanying
+[documentation](https://github.com/anovos/anovos/blob/main/tutorial/Documentation/ANOVOS_Workshop_Doc_2_0.pdf)
+walks you through installing _Anovos_ and using it as part of an end-to-end feature engineering workflow.
+
+If you would like to receive hands-on training in _Anovos_ for your team, don't hesitate to
+[reach out to us](../community/communication.md).
