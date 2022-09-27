@@ -1,4 +1,4 @@
-# Feature Recommender
+# Feature Mapper
 
 Feature engineering has always played a crucial role in solving problems related to machine learning (ML).
 Features and predictors determine whether machine learning projects are successful or not.
@@ -45,4 +45,4 @@ Our solution consists of three main steps:
 - Sort the results and get the matches for each input feature based on its scores
 
 The following diagram illustrates this workflow of the Feature Explorer and Mapper:
-![Solution Details Diagram](../assets/Feature_Recommender_Workflow.png)
+![Solution Details Diagram](../assets/feature_mapper_workflow.png)
