@@ -86,7 +86,7 @@ like Microsoft Azure.
 The release also added mechanisms to read and write different file formats such as Avro and nested JSON.
 
 The key differentiating functionality of this release is the
-[Feature Explorer & Feature Recommender](feature_recommender.md)
+[Feature Explorer & Feature Mapper](feature_mapper.md)
 for data scientists and end-users to resolve their cold-start problems,
 which will immensely reduce their literature review time.
 
