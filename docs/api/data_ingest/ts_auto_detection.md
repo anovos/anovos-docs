@@ -569,7 +569,7 @@ def ts_loop_cols_pre(idf, id_col):
 
     """
 
-    This function helps to analyze the potential columns which can be passed for tiime series check. The columns are passed on to the auto-detection block.
+    This function helps to analyze the potential columns which can be passed for time series check. The columns are passed on to the auto-detection block.
 
     Parameters
     ----------
@@ -1312,7 +1312,7 @@ def regex_date_time_parser(
 <span class="k">def</span> <span class="nf"><span class="ident">ts_loop_cols_pre</span></span>(<span class="n">idf, id_col)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>This function helps to analyze the potential columns which can be passed for tiime series check. The columns are passed on to the auto-detection block.</p>
+<div class="desc"><p>This function helps to analyze the potential columns which can be passed for time series check. The columns are passed on to the auto-detection block.</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>idf</code></strong></dt>
@@ -1335,7 +1335,7 @@ def ts_loop_cols_pre(idf, id_col):
 
     """
 
-    This function helps to analyze the potential columns which can be passed for tiime series check. The columns are passed on to the auto-detection block.
+    This function helps to analyze the potential columns which can be passed for time series check. The columns are passed on to the auto-detection block.
 
     Parameters
     ----------
