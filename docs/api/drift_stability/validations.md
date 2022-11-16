@@ -99,12 +99,87 @@ def check_distance_method(func=None, param="method_type"):
         return func(*args, **kwargs)
 
     return validate
+
+
+def compute_score(value, method_type, cv_thresholds=[0.03, 0.1, 0.2, 0.5]):
+    """
+    This function maps CV or SD to a score between 0 and 4.
+    """
+    if value is None:
+        return None
+
+    if method_type == "cv":
+        cv = abs(value)
+        stability_index = [4, 3, 2, 1, 0]
+        for i, thresh in enumerate(cv_thresholds):
+            if cv < thresh:
+                return float(stability_index[i])
+        return float(stability_index[-1])
+
+    elif method_type == "sd":
+        sd = value
+        if sd <= 0.005:
+            return 4.0
+        elif sd <= 0.01:
+            return round(-100 * sd + 4.5, 1)
+        elif sd <= 0.05:
+            return round(-50 * sd + 4, 1)
+        elif sd <= 0.1:
+            return round(-30 * sd + 3, 1)
+        else:
+            return 0.0
+
+    else:
+        raise TypeError("method_type must be either 'cv' or 'sd'.")
+
+
+def compute_si(metric_weightages):
+    def compute_si_(attr_type, mean_stddev, mean_cv, stddev_cv, kurtosis_cv):
+        if attr_type == "Binary":
+            mean_si = compute_score(mean_stddev, "sd")
+            stability_index = mean_si
+            stddev_si, kurtosis_si = None, None
+        else:
+            mean_si = compute_score(mean_cv, "cv")
+            stddev_si = compute_score(stddev_cv, "cv")
+            kurtosis_si = compute_score(kurtosis_cv, "cv")
+            stability_index = round(
+                mean_si * metric_weightages.get("mean", 0)
+                + stddev_si * metric_weightages.get("stddev", 0)
+                + kurtosis_si * metric_weightages.get("kurtosis", 0),
+                4,
+            )
+        return [mean_si, stddev_si, kurtosis_si, stability_index]
+
+    return compute_si_
+
+
+def check_metric_weightages(metric_weightages):
+    if (
+        round(
+            metric_weightages.get("mean", 0)
+            + metric_weightages.get("stddev", 0)
+            + metric_weightages.get("kurtosis", 0),
+            3,
+        )
+        != 1
+    ):
+        raise ValueError(
+            "Invalid input for metric weightages. Either metric name is incorrect or sum of metric weightages is not 1.0."
+        )
+
+
+def check_threshold(threshold):
+    if (threshold < 0) or (threshold > 4):
+        raise ValueError(
+            "Invalid input for metric threshold. It must be a number between 0 and 4."
+        )
 ```
 </pre>
 </details>
 ## Functions
 <dl>
-<dt id="anovos.drift.validations.check_distance_method"><code class="name flex hljs csharp">
+<dt id="anovos.drift_stability.validations.check_distance_method"><code class="name flex hljs csharp">
 <span class="k">def</span> <span class="nf"><span class="ident">check_distance_method</span></span>(<span class="n">func=None, param='method_type')</span>
 </code></dt>
 <dd>
@@ -143,7 +218,7 @@ def check_distance_method(func=None, param="method_type"):
 </pre>
 </details>
 </dd>
-<dt id="anovos.drift.validations.check_list_of_columns"><code class="name flex hljs csharp">
+<dt id="anovos.drift_stability.validations.check_list_of_columns"><code class="name flex hljs csharp">
 <span class="k">def</span> <span class="nf"><span class="ident">check_list_of_columns</span></span>(<span class="n">func=None, columns='list_of_cols', target_idx: int = 1, target: str = 'idf_target', drop='drop_cols')</span>
 </code></dt>
 <dd>
@@ -215,6 +290,133 @@ def check_list_of_columns(
         return func(*args, **kwargs)
 
     return validate
+```
+</pre>
+</details>
+</dd>
+<dt id="anovos.drift_stability.validations.check_metric_weightages"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">check_metric_weightages</span></span>(<span class="n">metric_weightages)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre>
+```python
+def check_metric_weightages(metric_weightages):
+    if (
+        round(
+            metric_weightages.get("mean", 0)
+            + metric_weightages.get("stddev", 0)
+            + metric_weightages.get("kurtosis", 0),
+            3,
+        )
+        != 1
+    ):
+        raise ValueError(
+            "Invalid input for metric weightages. Either metric name is incorrect or sum of metric weightages is not 1.0."
+        )
+```
+</pre>
+</details>
+</dd>
+<dt id="anovos.drift_stability.validations.check_threshold"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">check_threshold</span></span>(<span class="n">threshold)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre>
+```python
+def check_threshold(threshold):
+    if (threshold < 0) or (threshold > 4):
+        raise ValueError(
+            "Invalid input for metric threshold. It must be a number between 0 and 4."
+        )
+```
+</pre>
+</details>
+</dd>
+<dt id="anovos.drift_stability.validations.compute_score"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">compute_score</span></span>(<span class="n">value, method_type, cv_thresholds=[0.03, 0.1, 0.2, 0.5])</span>
+</code></dt>
+<dd>
+<div class="desc"><p>This function maps CV or SD to a score between 0 and 4.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre>
+```python
+def compute_score(value, method_type, cv_thresholds=[0.03, 0.1, 0.2, 0.5]):
+    """
+    This function maps CV or SD to a score between 0 and 4.
+    """
+    if value is None:
+        return None
+
+    if method_type == "cv":
+        cv = abs(value)
+        stability_index = [4, 3, 2, 1, 0]
+        for i, thresh in enumerate(cv_thresholds):
+            if cv < thresh:
+                return float(stability_index[i])
+        return float(stability_index[-1])
+
+    elif method_type == "sd":
+        sd = value
+        if sd <= 0.005:
+            return 4.0
+        elif sd <= 0.01:
+            return round(-100 * sd + 4.5, 1)
+        elif sd <= 0.05:
+            return round(-50 * sd + 4, 1)
+        elif sd <= 0.1:
+            return round(-30 * sd + 3, 1)
+        else:
+            return 0.0
+
+    else:
+        raise TypeError("method_type must be either 'cv' or 'sd'.")
+```
+</pre>
+</details>
+</dd>
+<dt id="anovos.drift_stability.validations.compute_si"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">compute_si</span></span>(<span class="n">metric_weightages)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre>
+```python
+def compute_si(metric_weightages):
+    def compute_si_(attr_type, mean_stddev, mean_cv, stddev_cv, kurtosis_cv):
+        if attr_type == "Binary":
+            mean_si = compute_score(mean_stddev, "sd")
+            stability_index = mean_si
+            stddev_si, kurtosis_si = None, None
+        else:
+            mean_si = compute_score(mean_cv, "cv")
+            stddev_si = compute_score(stddev_cv, "cv")
+            kurtosis_si = compute_score(kurtosis_cv, "cv")
+            stability_index = round(
+                mean_si * metric_weightages.get("mean", 0)
+                + stddev_si * metric_weightages.get("stddev", 0)
+                + kurtosis_si * metric_weightages.get("kurtosis", 0),
+                4,
+            )
+        return [mean_si, stddev_si, kurtosis_si, stability_index]
+
+    return compute_si_
 ```
 </pre>
 </details>

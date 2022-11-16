@@ -5,6 +5,7 @@ supported through this modules are listed below:</p>
 <ul>
 <li>attribute_binning</li>
 <li>monotonic_binning</li>
+<li>cat_to_num_transformer</li>
 <li>cat_to_num_unsupervised</li>
 <li>cat_to_num_supervised</li>
 <li>z_standardization</li>
@@ -35,6 +36,7 @@ supported through this modules are listed below:
 
 - attribute_binning
 - monotonic_binning
+- cat_to_num_transformer
 - cat_to_num_unsupervised
 - cat_to_num_supervised
 - z_standardization
@@ -98,6 +100,7 @@ from anovos.data_analyzer.stats_generator import (
     uniqueCount_computation,
 )
 from anovos.data_ingest.data_ingest import read_dataset, recast_column
+from anovos.data_ingest.data_sampling import data_sample
 from anovos.shared.utils import ends_with, attributeType_segregation, get_dtype
 
 # enable_iterative_imputer is prequisite for importing IterativeImputer
@@ -452,6 +455,84 @@ def monotonic_binning(
     return odf
 
 
+def cat_to_num_transformer(
+    spark, idf, list_of_cols, drop_cols, method_type, encoding, label_col, event_label
+):
+
+    """
+    This is method which helps converting a categorical attribute into numerical attribute(s) based on the analysis dataset. If there's a presence of label column then the relevant processing would happen through cat_to_num_supervised. However, for unsupervised scenario, the processing would happen through cat_to_num_unsupervised. Computation details can be referred from the respective functions.
+
+    Parameters
+    ----------
+    spark
+        Spark Session
+    idf
+        Input Dataframe
+    list_of_cols
+        List of categorical columns to transform e.g., ["col1","col2"].
+        Alternatively, columns can be specified in a string format,
+        where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
+        "all" can be passed to include all categorical columns for analysis. This is super useful instead of specifying all column names manually.
+        Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
+        drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols.
+    drop_cols
+        List of columns to be dropped e.g., ["col1","col2"].
+        Alternatively, columns can be specified in a string format,
+        where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
+        It is most useful when coupled with the “all” value of list_of_cols, when we need to consider all columns except
+        a few handful of them.
+    method_type
+        Depending upon the use case the method type can be either Supervised or Unsupervised. For Supervised use case, label_col is mandatory.
+    encoding
+        "label_encoding" or "onehot_encoding"
+        In label encoding, each categorical value is assigned a unique integer based on alphabetical
+        or frequency ordering (both ascending & descending options are available that can be selected by index_order argument).
+        In one-hot encoding, every unique value in the column will be added in a form of dummy/binary column.
+    label_col
+        Label/Target column
+    event_label
+        Value of (positive) event
+    """
+
+    num_cols, cat_cols, other_cols = attributeType_segregation(idf)
+
+    if len(cat_cols) > 0:
+        if list_of_cols == "all":
+            list_of_cols = cat_cols
+        if isinstance(list_of_cols, str):
+            list_of_cols = [x.strip() for x in list_of_cols.split("|")]
+        if isinstance(drop_cols, str):
+            drop_cols = [x.strip() for x in drop_cols.split("|")]
+
+        if any(x not in cat_cols for x in list_of_cols):
+            raise TypeError("Invalid input for Column(s)")
+
+        if (method_type == "supervised") & (label_col is not None):
+
+            odf = cat_to_num_supervised(
+                spark, idf, label_col=label_col, event_label=event_label
+            )
+            odf = odf.withColumn(
+                label_col,
+                F.when(F.col(label_col) == event_label, F.lit(1)).otherwise(F.lit(0)),
+            )
+
+            return odf
+
+        elif (method_type == "unsupervised") & (label_col is None):
+            odf = cat_to_num_unsupervised(
+                spark,
+                idf,
+                method_type=encoding,
+                index_order="frequencyDesc",
+            )
+
+            return odf
+    else:
+
+        return idf
+
+
 def cat_to_num_unsupervised(
     spark,
     idf,
@@ -459,7 +540,7 @@ def cat_to_num_unsupervised(
     drop_cols=[],
     method_type="label_encoding",
     index_order="frequencyDesc",
-    cardinality_threshold=100,
+    cardinality_threshold=50,
     pre_existing_model=False,
     model_path="NA",
     stats_unique={},
@@ -507,9 +588,9 @@ def cat_to_num_unsupervised(
         "frequencyDesc", "frequencyAsc", "alphabetDesc", "alphabetAsc".
         Valid only for Label Encoding method_type. (Default value = "frequencyDesc")
     cardinality_threshold
-        Defines threshold to skip columns with higher cardinality values from encoding (Warning is issued). (Default value = 100)
+        Defines threshold to skip columns with higher cardinality values from encoding - a warning is issued. (Default value = 50)
     pre_existing_model
-        Boolean argument – True or False. True if encoding model exists already, False Otherwise. (Default value = False)
+        Boolean argument - True or False. True if encoding model exists already, False Otherwise. (Default value = False)
     model_path
         If pre_existing_model is True, this argument is path for referring the pre-saved model.
         If pre_existing_model is False, this argument can be used for saving the model.
@@ -558,33 +639,31 @@ def cat_to_num_unsupervised(
     if output_mode not in ("replace", "append"):
         raise TypeError("Invalid input for output_mode")
 
-    skip_cols = []
-    if method_type == "onehot_encoding":
-        if stats_unique == {}:
-            skip_cols = (
-                uniqueCount_computation(spark, idf, list_of_cols)
-                .where(F.col("unique_values") > cardinality_threshold)
-                .select("attribute")
-                .rdd.flatMap(lambda x: x)
-                .collect()
-            )
-        else:
-            skip_cols = (
-                read_dataset(spark, **stats_unique)
-                .where(F.col("unique_values") > cardinality_threshold)
-                .select("attribute")
-                .rdd.flatMap(lambda x: x)
-                .collect()
-            )
-        skip_cols = list(
-            set([e for e in skip_cols if e in list_of_cols and e not in drop_cols])
+    if stats_unique == {}:
+        skip_cols = (
+            uniqueCount_computation(spark, idf, list_of_cols)
+            .where(F.col("unique_values") > cardinality_threshold)
+            .select("attribute")
+            .rdd.flatMap(lambda x: x)
+            .collect()
         )
+    else:
+        skip_cols = (
+            read_dataset(spark, **stats_unique)
+            .where(F.col("unique_values") > cardinality_threshold)
+            .select("attribute")
+            .rdd.flatMap(lambda x: x)
+            .collect()
+        )
+    skip_cols = list(
+        set([e for e in skip_cols if e in list_of_cols and e not in drop_cols])
+    )
 
-        if skip_cols:
-            warnings.warn(
-                "Columns dropped from one-hot encoding due to high cardinality: "
-                + ",".join(skip_cols)
-            )
+    if skip_cols:
+        warnings.warn(
+            "Columns dropped from encoding due to high cardinality: "
+            + ",".join(skip_cols)
+        )
 
     list_of_cols = list(
         set([e for e in list_of_cols if e not in drop_cols + skip_cols])
@@ -599,8 +678,8 @@ def cat_to_num_unsupervised(
     for i in list_of_cols:
         list_of_cols_vec.append(i + "_vec")
         list_of_cols_idx.append(i + "_index")
-    idf_id = idf.withColumn("tempID", F.monotonically_increasing_id())
-    idf_indexed = idf_id.select(["tempID"] + list_of_cols)
+
+    odf_indexed = idf
     if version.parse(pyspark.__version__) < version.parse("3.0.0"):
         for idx, i in enumerate(list_of_cols):
             if pre_existing_model:
@@ -621,9 +700,7 @@ def cat_to_num_unsupervised(
                         model_path + "/cat_to_num_unsupervised/indexer-model/" + i
                     )
 
-            idf_indexed = indexerModel.transform(idf_indexed)
-            if idx % 5 == 0:
-                idf_indexed.persist(pyspark.StorageLevel.MEMORY_AND_DISK).count()
+            odf_indexed = indexerModel.transform(odf_indexed)
 
     else:
         if pre_existing_model:
@@ -637,17 +714,12 @@ def cat_to_num_unsupervised(
                 stringOrderType=index_order,
                 handleInvalid="keep",
             )
-            indexerModel = stringIndexer.fit(idf_indexed)
+            indexerModel = stringIndexer.fit(odf_indexed)
             if model_path != "NA":
                 indexerModel.write().overwrite().save(
                     model_path + "/cat_to_num_unsupervised/indexer"
                 )
-        idf_indexed = indexerModel.transform(idf_indexed)
-
-    odf_indexed = idf_id.join(
-        idf_indexed.drop(*list_of_cols), "tempID", "left_outer"
-    ).drop("tempID")
-    odf_indexed.persist(pyspark.StorageLevel.MEMORY_AND_DISK).count()
+        odf_indexed = indexerModel.transform(odf_indexed)
 
     if method_type == "onehot_encoding":
         if pre_existing_model:
@@ -665,39 +737,30 @@ def cat_to_num_unsupervised(
                     model_path + "/cat_to_num_unsupervised/encoder"
                 )
 
-        odf_encoded = encoder.fit(odf_indexed).transform(odf_indexed)
+        odf = encoder.fit(odf_indexed).transform(odf_indexed)
 
-        odf = odf_encoded
-
-        def vector_to_array(v):
-            v = DenseVector(v)
-            new_array = list([int(x) for x in v])
-            return new_array
-
-        f_vector_to_array = F.udf(vector_to_array, T.ArrayType(T.IntegerType()))
-
+        new_cols = []
         odf_sample = odf.take(1)
         for i in list_of_cols:
+            odf_schema = odf.schema
             uniq_cats = odf_sample[0].asDict()[i + "_vec"].size
-            odf_schema = odf.schema.add(
-                T.StructField("tmp", T.ArrayType(T.IntegerType()))
-            )
-
             for j in range(0, uniq_cats):
                 odf_schema = odf_schema.add(
                     T.StructField(i + "_" + str(j), T.IntegerType())
                 )
+                new_cols.append(i + "_" + str(j))
 
-            odf = (
-                odf.withColumn("tmp", f_vector_to_array(i + "_vec"))
-                .rdd.map(lambda x: (*x, *x["tmp"]))
-                .toDF(schema=odf_schema)
-            )
+            odf = odf.rdd.map(
+                lambda x: (
+                    *x,
+                    *(DenseVector(x[i + "_vec"]).toArray().astype(int).tolist()),
+                )
+            ).toDF(schema=odf_schema)
 
             if output_mode == "replace":
-                odf = odf.drop(i, i + "_vec", i + "_index", "tmp")
+                odf = odf.drop(i, i + "_vec", i + "_index")
             else:
-                odf = odf.drop(i + "_vec", i + "_index", "tmp")
+                odf = odf.drop(i + "_vec", i + "_index")
 
     else:
         odf = odf_indexed
@@ -713,21 +776,30 @@ def cat_to_num_unsupervised(
                 odf = odf.drop(i).withColumnRenamed(i + "_index", i)
             odf = odf.select(idf.columns)
 
-    if print_impact and method_type == "label_encoding":
-        print("Before")
-        idf.describe().where(F.col("summary").isin("count", "min", "max")).show(
-            3, False
-        )
-        print("After")
-        odf.describe().where(F.col("summary").isin("count", "min", "max")).show(
-            3, False
-        )
-    if print_impact and method_type == "onehot_encoding":
-        print("Before")
-        idf.printSchema()
-        print("After")
-        odf.printSchema()
+    if print_impact:
+        if method_type == "label_encoding":
+            if output_mode == "append":
+                new_cols = [i + "_index" for i in list_of_cols]
+            else:
+                new_cols = list_of_cols
+            print("Before")
+            idf.select(list_of_cols).summary("count", "min", "max").show(3, False)
+            print("After")
+            odf.select(new_cols).summary("count", "min", "max").show(3, False)
 
+        if method_type == "onehot_encoding":
+            print("Before")
+            idf.select(list_of_cols).printSchema()
+            print("After")
+            if output_mode == "append":
+                odf.select(list_of_cols + new_cols).printSchema()
+            else:
+                odf.select(new_cols).printSchema()
+        if skip_cols:
+            print(
+                "Columns dropped from encoding due to high cardinality: "
+                + ",".join(skip_cols)
+            )
     return odf
 
 
@@ -741,8 +813,8 @@ def cat_to_num_supervised(
     pre_existing_model=False,
     model_path="NA",
     output_mode="replace",
-    run_type="local",
-    auth_key="NA",
+    persist=False,
+    persist_option=pyspark.StorageLevel.MEMORY_AND_DISK,
     print_impact=False,
 ):
     """
@@ -794,10 +866,15 @@ def cat_to_num_supervised(
         "replace", "append".
         “replace” option replaces original columns with transformed column. “append” option append transformed
         column to the input dataset with a postfix "_encoded" e.g. column X is appended as X_encoded. (Default value = "replace")
-    run_type
-        "local", "emr", "databricks", "ak8s" (Default value = "local")
-    auth_key
-        Option to pass an authorization key to write to filesystems. Currently applicable only for ak8s run_type. Default value is kept as "NA"
+    persist
+        Boolean argument - True or False. This parameter is for optimization purpose. If True, repeatedly used dataframe
+        will be persisted (StorageLevel can be specified in persist_option). We recommend setting this parameter as True
+        if at least one of the following criteria is True:
+        (1) The underlying data source is in csv format
+        (2) The transformation will be applicable to most columns. (Default value = False)
+    persist_option
+        A pyspark.StorageLevel instance. This parameter is useful only when persist is True.
+        (Default value = pyspark.StorageLevel.MEMORY_AND_DISK)
     print_impact
         True, False (Default value = False)
         This argument is to print out the descriptive statistics of encoded columns.
@@ -827,9 +904,22 @@ def cat_to_num_supervised(
     if label_col not in idf.columns:
         raise TypeError("Invalid input for Label Column")
 
-    idf_id = idf.withColumn("tempID", F.monotonically_increasing_id())
-    odf_partial = idf_id.select(["tempID"] + list_of_cols)
+    odf = idf
+    label_col_bool = label_col + "_cat_to_num_sup_temp"
+    idf = idf.withColumn(
+        label_col_bool,
+        F.when(F.col(label_col) == event_label, "1").otherwise("0"),
+    )
 
+    if model_path == "NA":
+        skip_if_error = True
+        model_path = "intermediate_data"
+    else:
+        skip_if_error = False
+    save_model = True
+
+    if persist:
+        idf = idf.persist(persist_option)
     for index, i in enumerate(list_of_cols):
         if pre_existing_model:
             df_tmp = spark.read.csv(
@@ -839,12 +929,9 @@ def cat_to_num_supervised(
             )
         else:
             df_tmp = (
-                idf.withColumn(
-                    label_col,
-                    F.when(F.col(label_col) == event_label, "1").otherwise("0"),
-                )
+                idf.select(i, label_col_bool)
                 .groupBy(i)
-                .pivot(label_col)
+                .pivot(label_col_bool)
                 .count()
                 .fillna(0)
                 .withColumn(
@@ -853,33 +940,42 @@ def cat_to_num_supervised(
                 .drop(*["1", "0"])
             )
 
-            if model_path == "NA":
-                model_path = "intermediate_data"
-
-            df_tmp.coalesce(1).write.csv(
-                model_path + "/cat_to_num_supervised/" + i,
-                header=True,
-                mode="overwrite",
-            )
-            df_tmp = spark.read.csv(
-                model_path + "/cat_to_num_supervised/" + i,
-                header=True,
-                inferSchema=True,
-            )
+            if save_model:
+                try:
+                    df_tmp.coalesce(1).write.csv(
+                        model_path + "/cat_to_num_supervised/" + i,
+                        header=True,
+                        mode="overwrite",
+                        ignoreLeadingWhiteSpace=False,
+                        ignoreTrailingWhiteSpace=False,
+                    )
+                    df_tmp = spark.read.csv(
+                        model_path + "/cat_to_num_supervised/" + i,
+                        header=True,
+                        inferSchema=True,
+                    )
+                except Exception as error:
+                    if skip_if_error:
+                        warnings.warn(
+                            "For optimization purpose, we recommend specifying a valid model_path value to save the intermediate data. Saving to the default path - '"
+                            + model_path
+                            + "/cat_to_num_supervised/"
+                            + i
+                            + "' faced an error."
+                        )
+                        save_model = False
+                    else:
+                        raise error
 
         if df_tmp.count() > 1:
-            odf_partial = odf_partial.join(df_tmp, i, "left_outer")
+            odf = odf.join(df_tmp, i, "left_outer")
         else:
-            odf_partial = odf_partial.crossJoin(df_tmp)
-
-    odf = idf_id.join(odf_partial.drop(*list_of_cols), "tempID", "left_outer").drop(
-        "tempID"
-    )
+            odf = odf.crossJoin(df_tmp)
 
     if output_mode == "replace":
         for i in list_of_cols:
             odf = odf.drop(i).withColumnRenamed(i + "_encoded", i)
-        odf = odf.select(idf.columns)
+        odf = odf.select([i for i in idf.columns if i != label_col_bool])
 
     if print_impact:
         if output_mode == "replace":
@@ -887,14 +983,12 @@ def cat_to_num_supervised(
         else:
             output_cols = [(i + "_encoded") for i in list_of_cols]
         print("Before: ")
-        idf.select(list_of_cols).describe().where(
-            F.col("summary").isin("count", "min", "max")
-        ).show(3, False)
+        idf.select(list_of_cols).summary("count", "min", "max").show(3, False)
         print("After: ")
-        odf.select(output_cols).describe().where(
-            F.col("summary").isin("count", "min", "max")
-        ).show(3, False)
+        odf.select(output_cols).summary("count", "min", "max").show(3, False)
 
+    if persist:
+        idf.unpersist()
     return odf
 
 
@@ -1615,8 +1709,16 @@ def imputation_sklearn(
     idf,
     list_of_cols="missing",
     drop_cols=[],
-    method_type="KNN",
-    sample_size=500000,
+    missing_threshold=1.0,
+    method_type="regression",
+    use_sampling=True,
+    sample_method="random",
+    strata_cols="all",
+    stratified_type="population",
+    sample_size=10000,
+    sample_seed=42,
+    persist=True,
+    persist_option=pyspark.StorageLevel.MEMORY_AND_DISK,
     pre_existing_model=False,
     model_path="NA",
     output_mode="replace",
@@ -1636,7 +1738,8 @@ def imputation_sklearn(
     of missing values to most. All the hyperparameters used in the above mentioned imputers are their default values.
 
     However, sklearn imputers are not scalable, which might be slow if the size of the input dataframe is large.
-    Thus, an input sample_size (the default value is 500,000) can be set to control the number of samples to be used
+    In fact, if the input dataframe size exceeds 10 GigaBytes, the model fitting step powered by sklearn might fail.
+    Thus, an input sample_size (the default value is 10,000) can be set to control the number of samples to be used
     to train the imputer. If the total number of input dataset exceeds sample_size, the rest of the samples will be imputed
     using the trained imputer in a scalable manner. This is one of the way to demonstrate how Anovos has been
     designed as a scalable feature engineering library.
@@ -1666,11 +1769,47 @@ def imputation_sklearn(
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
         It is most useful when coupled with the “all” value of list_of_cols, when we need to consider all columns except
         a few handful of them. (Default value = [])
+    missing_threshold
+        Float argument - If list_of_cols is "missing", this argument is used to determined the missing threshold
+        for every column. The column that has more (count of missing value/ count of total value) >= missing_threshold
+        will be excluded from the list of columns to be imputed. (Default value = 1.0)
     method_type
         "KNN", "regression".
-        "KNN" option trains a sklearn.impute.KNNImputer. "regression" option trains a sklearn.impute.IterativeImputer (Default value = "KNN")
+        "KNN" option trains a sklearn.impute.KNNImputer. "regression" option trains a sklearn.impute.IterativeImputer
+        (Default value = "regression")
+    use_sampling
+        Boolean argument - True or False. This argument is used to determine whether to use sampling on
+        source and target dataset, True will enable the use of sample method, otherwise False.
+        It is recommended to set this as True for large datasets. (Default value = True)
+    sample_method
+        If use_sampling is True, this argument is used to determine the sampling method.
+        "stratified" for Stratified sampling, "random" for Random Sampling.
+        For more details, please refer to https://docs.anovos.ai/api/data_ingest/data_sampling.html.
+        (Default value = "random")
+    strata_cols
+        If use_sampling is True and sample_method is "stratified", this argument is used to determine the list
+        of columns used to be treated as strata. For more details, please refer to
+        https://docs.anovos.ai/api/data_ingest/data_sampling.html. (Default value = "all")
+    stratified_type
+        If use_sampling is True and sample_method is "stratified", this argument is used to determine the stratified
+        sampling method. "population" stands for Proportionate Stratified Sampling,
+        "balanced" stands for Optimum Stratified Sampling. For more details, please refer to
+        https://docs.anovos.ai/api/data_ingest/data_sampling.html. (Default value = "population")
     sample_size
-        Maximum rows for training the sklearn imputer (Default value = 500000)
+        If use_sampling is True, this argument is used to determine maximum rows for training the sklearn imputer
+        (Default value = 10000)
+    sample_seed
+        If use_sampling is True, this argument is used to determine the seed of sampling method.
+        (Default value = 42)
+    persist
+        Boolean argument - True or False. This argument is used to determine whether to persist on
+        binning result of source and target dataset, True will enable the use of persist, otherwise False.
+        It is recommended to set this as True for large datasets. (Default value = True)
+    persist_option
+        If persist is True, this argument is used to determine the type of persist.
+        For all the pyspark.StorageLevel option available in persist, please refer to
+        https://spark.apache.org/docs/latest/api/python/reference/api/pyspark.StorageLevel.html
+        (Default value = pyspark.StorageLevel.MEMORY_AND_DISK)
     pre_existing_model
         Boolean argument – True or False. True if imputation model exists already, False otherwise. (Default value = False)
     model_path
@@ -1700,6 +1839,8 @@ def imputation_sklearn(
 
     """
 
+    if persist:
+        idf = idf.persist(persist_option)
     num_cols = attributeType_segregation(idf)[0]
     if stats_missing == {}:
         missing_df = missingCount_computation(spark, idf, num_cols)
@@ -1723,7 +1864,7 @@ def imputation_sklearn(
 
     missing_cols = (
         missing_df.where(F.col("missing_count") > 0)
-        .where(F.col("missing_pct") < 1.0)
+        .where(F.col("missing_pct") < missing_threshold)
         .select("attribute")
         .rdd.flatMap(lambda x: x)
         .collect()
@@ -1788,10 +1929,22 @@ def imputation_sklearn(
             imputer = pickle.load(open("imputation_sklearn.sav", "rb"))
         else:
             imputer = pickle.load(open(model_path + "/imputation_sklearn.sav", "rb"))
-        idf_rest = idf
     else:
-        sample_ratio = min(1.0, float(sample_size) / idf.count())
-        idf_model = idf.sample(False, sample_ratio, 0)
+        if use_sampling:
+            count_idf = idf.count()
+            if count_idf > sample_size:
+                idf_model = data_sample(
+                    idf,
+                    strata_cols=strata_cols,
+                    fraction=sample_size / count_idf,
+                    method_type=sample_method,
+                    stratified_type=stratified_type,
+                    seed_value=sample_seed,
+                )
+        else:
+            idf_model = idf
+        if persist:
+            idf_model = idf_model.persist(persist_option)
         idf_pd = idf_model.select(list_of_cols).toPandas()
 
         if method_type == "KNN":
@@ -1833,17 +1986,18 @@ def imputation_sklearn(
 
     @F.pandas_udf(returnType=T.ArrayType(T.DoubleType()))
     def prediction(*cols):
-        X = pd.concat(cols, axis=1)
-        return pd.Series(row.tolist() for row in imputer.transform(X))
+        input_pdf = pd.concat(cols, axis=1)
+        return pd.Series(row.tolist() for row in imputer.transform(input_pdf))
 
-    odf = idf.withColumn("features", prediction(*list_of_cols))
-    odf.persist(pyspark.StorageLevel.MEMORY_AND_DISK).count()
+    result_df = idf.withColumn("features", prediction(*list_of_cols))
+    if persist:
+        result_df = result_df.persist(persist_option)
 
-    odf_schema = odf.schema
+    odf_schema = result_df.schema
     for i in list_of_cols:
         odf_schema = odf_schema.add(T.StructField(i + "_imputed", T.FloatType()))
     odf = (
-        odf.rdd.map(lambda x: (*x, *x["features"]))
+        result_df.rdd.map(lambda x: (*x, *x["features"]))
         .toDF(schema=odf_schema)
         .drop("features")
     )
@@ -1885,6 +2039,10 @@ def imputation_sklearn(
                 "inner",
             )
         odf_print.show(len(list_of_cols), False)
+    if persist:
+        idf.unpersist()
+        idf_model.unpersist()
+        result_df.unpersist()
     return odf
 
 
@@ -3370,7 +3528,6 @@ def outlier_categories(
     """
     This function replaces less frequently seen values (called as outlier values in the current context) in a
     categorical column by 'outlier_categories'. Outlier values can be defined in two ways –
-
     a) Max N categories, where N is user defined value. In this method, top N-1 frequently seen categories are considered
     and rest are clubbed under single category 'outlier_categories'. or Alternatively,
     b) Coverage – top frequently seen categories are considered till it covers minimum N% of rows and rest lesser seen values
@@ -3387,7 +3544,7 @@ def outlier_categories(
         Spark Session
     idf
         Input Dataframe
-    list_of_cols
+        list_of_cols
         List of categorical columns to transform e.g., ["col1","col2"].
         Alternatively, columns can be specified in a string format,
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
@@ -5501,7 +5658,7 @@ def boxcox_transformation(
 </details>
 </dd>
 <dt id="anovos.data_transformer.transformers.cat_to_num_supervised"><code class="name flex hljs csharp">
-<span class="k">def</span> <span class="nf"><span class="ident">cat_to_num_supervised</span></span>(<span class="n">spark, idf, list_of_cols='all', drop_cols=[], label_col='label', event_label=1, pre_existing_model=False, model_path='NA', output_mode='replace', run_type='local', auth_key='NA', print_impact=False)</span>
+<span class="k">def</span> <span class="nf"><span class="ident">cat_to_num_supervised</span></span>(<span class="n">spark, idf, list_of_cols='all', drop_cols=[], label_col='label', event_label=1, pre_existing_model=False, model_path='NA', output_mode='replace', persist=False, persist_option=StorageLevel(True, True, False, False, 1), print_impact=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>This is a supervised method to convert a categorical attribute into a numerical attribute. It takes a
@@ -5549,10 +5706,15 @@ Default "NA" is used to save the model in "intermediate_data/" folder for optimi
 <dd>"replace", "append".
 “replace” option replaces original columns with transformed column. “append” option append transformed
 column to the input dataset with a postfix "_encoded" e.g. column X is appended as X_encoded. (Default value = "replace")</dd>
-<dt><strong><code>run_type</code></strong></dt>
-<dd>"local", "emr", "databricks", "ak8s" (Default value = "local")</dd>
-<dt><strong><code>auth_key</code></strong></dt>
-<dd>Option to pass an authorization key to write to filesystems. Currently applicable only for ak8s run_type. Default value is kept as "NA"</dd>
+<dt><strong><code>persist</code></strong></dt>
+<dd>Boolean argument - True or False. This parameter is for optimization purpose. If True, repeatedly used dataframe
+will be persisted (StorageLevel can be specified in persist_option). We recommend setting this parameter as True
+if at least one of the following criteria is True:
+(1) The underlying data source is in csv format
+(2) The transformation will be applicable to most columns. (Default value = False)</dd>
+<dt><strong><code>persist_option</code></strong></dt>
+<dd>A pyspark.StorageLevel instance. This parameter is useful only when persist is True.
+(Default value = pyspark.StorageLevel.MEMORY_AND_DISK)</dd>
 <dt><strong><code>print_impact</code></strong></dt>
 <dd>True, False (Default value = False)
 This argument is to print out the descriptive statistics of encoded columns.</dd>
@@ -5578,8 +5740,8 @@ def cat_to_num_supervised(
     pre_existing_model=False,
     model_path="NA",
     output_mode="replace",
-    run_type="local",
-    auth_key="NA",
+    persist=False,
+    persist_option=pyspark.StorageLevel.MEMORY_AND_DISK,
     print_impact=False,
 ):
     """
@@ -5631,10 +5793,15 @@ def cat_to_num_supervised(
         "replace", "append".
         “replace” option replaces original columns with transformed column. “append” option append transformed
         column to the input dataset with a postfix "_encoded" e.g. column X is appended as X_encoded. (Default value = "replace")
-    run_type
-        "local", "emr", "databricks", "ak8s" (Default value = "local")
-    auth_key
-        Option to pass an authorization key to write to filesystems. Currently applicable only for ak8s run_type. Default value is kept as "NA"
+    persist
+        Boolean argument - True or False. This parameter is for optimization purpose. If True, repeatedly used dataframe
+        will be persisted (StorageLevel can be specified in persist_option). We recommend setting this parameter as True
+        if at least one of the following criteria is True:
+        (1) The underlying data source is in csv format
+        (2) The transformation will be applicable to most columns. (Default value = False)
+    persist_option
+        A pyspark.StorageLevel instance. This parameter is useful only when persist is True.
+        (Default value = pyspark.StorageLevel.MEMORY_AND_DISK)
     print_impact
         True, False (Default value = False)
         This argument is to print out the descriptive statistics of encoded columns.
@@ -5664,9 +5831,22 @@ def cat_to_num_supervised(
     if label_col not in idf.columns:
         raise TypeError("Invalid input for Label Column")
 
-    idf_id = idf.withColumn("tempID", F.monotonically_increasing_id())
-    odf_partial = idf_id.select(["tempID"] + list_of_cols)
+    odf = idf
+    label_col_bool = label_col + "_cat_to_num_sup_temp"
+    idf = idf.withColumn(
+        label_col_bool,
+        F.when(F.col(label_col) == event_label, "1").otherwise("0"),
+    )
 
+    if model_path == "NA":
+        skip_if_error = True
+        model_path = "intermediate_data"
+    else:
+        skip_if_error = False
+    save_model = True
+
+    if persist:
+        idf = idf.persist(persist_option)
     for index, i in enumerate(list_of_cols):
         if pre_existing_model:
             df_tmp = spark.read.csv(
@@ -5676,12 +5856,9 @@ def cat_to_num_supervised(
             )
         else:
             df_tmp = (
-                idf.withColumn(
-                    label_col,
-                    F.when(F.col(label_col) == event_label, "1").otherwise("0"),
-                )
+                idf.select(i, label_col_bool)
                 .groupBy(i)
-                .pivot(label_col)
+                .pivot(label_col_bool)
                 .count()
                 .fillna(0)
                 .withColumn(
@@ -5690,33 +5867,42 @@ def cat_to_num_supervised(
                 .drop(*["1", "0"])
             )
 
-            if model_path == "NA":
-                model_path = "intermediate_data"
-
-            df_tmp.coalesce(1).write.csv(
-                model_path + "/cat_to_num_supervised/" + i,
-                header=True,
-                mode="overwrite",
-            )
-            df_tmp = spark.read.csv(
-                model_path + "/cat_to_num_supervised/" + i,
-                header=True,
-                inferSchema=True,
-            )
+            if save_model:
+                try:
+                    df_tmp.coalesce(1).write.csv(
+                        model_path + "/cat_to_num_supervised/" + i,
+                        header=True,
+                        mode="overwrite",
+                        ignoreLeadingWhiteSpace=False,
+                        ignoreTrailingWhiteSpace=False,
+                    )
+                    df_tmp = spark.read.csv(
+                        model_path + "/cat_to_num_supervised/" + i,
+                        header=True,
+                        inferSchema=True,
+                    )
+                except Exception as error:
+                    if skip_if_error:
+                        warnings.warn(
+                            "For optimization purpose, we recommend specifying a valid model_path value to save the intermediate data. Saving to the default path - '"
+                            + model_path
+                            + "/cat_to_num_supervised/"
+                            + i
+                            + "' faced an error."
+                        )
+                        save_model = False
+                    else:
+                        raise error
 
         if df_tmp.count() > 1:
-            odf_partial = odf_partial.join(df_tmp, i, "left_outer")
+            odf = odf.join(df_tmp, i, "left_outer")
         else:
-            odf_partial = odf_partial.crossJoin(df_tmp)
-
-    odf = idf_id.join(odf_partial.drop(*list_of_cols), "tempID", "left_outer").drop(
-        "tempID"
-    )
+            odf = odf.crossJoin(df_tmp)
 
     if output_mode == "replace":
         for i in list_of_cols:
             odf = odf.drop(i).withColumnRenamed(i + "_encoded", i)
-        odf = odf.select(idf.columns)
+        odf = odf.select([i for i in idf.columns if i != label_col_bool])
 
     if print_impact:
         if output_mode == "replace":
@@ -5724,21 +5910,141 @@ def cat_to_num_supervised(
         else:
             output_cols = [(i + "_encoded") for i in list_of_cols]
         print("Before: ")
-        idf.select(list_of_cols).describe().where(
-            F.col("summary").isin("count", "min", "max")
-        ).show(3, False)
+        idf.select(list_of_cols).summary("count", "min", "max").show(3, False)
         print("After: ")
-        odf.select(output_cols).describe().where(
-            F.col("summary").isin("count", "min", "max")
-        ).show(3, False)
+        odf.select(output_cols).summary("count", "min", "max").show(3, False)
 
+    if persist:
+        idf.unpersist()
     return odf
 ```
 </pre>
 </details>
 </dd>
+<dt id="anovos.data_transformer.transformers.cat_to_num_transformer"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">cat_to_num_transformer</span></span>(<span class="n">spark, idf, list_of_cols, drop_cols, method_type, encoding, label_col, event_label)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>This is method which helps converting a categorical attribute into numerical attribute(s) based on the analysis dataset. If there's a presence of label column then the relevant processing would happen through cat_to_num_supervised. However, for unsupervised scenario, the processing would happen through cat_to_num_unsupervised. Computation details can be referred from the respective functions.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>spark</code></strong></dt>
+<dd>Spark Session</dd>
+<dt><strong><code>idf</code></strong></dt>
+<dd>Input Dataframe</dd>
+<dt><strong><code>list_of_cols</code></strong></dt>
+<dd>List of categorical columns to transform e.g., ["col1","col2"].
+Alternatively, columns can be specified in a string format,
+where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
+"all" can be passed to include all categorical columns for analysis. This is super useful instead of specifying all column names manually.
+Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
+drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols.</dd>
+<dt><strong><code>drop_cols</code></strong></dt>
+<dd>List of columns to be dropped e.g., ["col1","col2"].
+Alternatively, columns can be specified in a string format,
+where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
+It is most useful when coupled with the “all” value of list_of_cols, when we need to consider all columns except
+a few handful of them.</dd>
+<dt><strong><code>method_type</code></strong></dt>
+<dd>Depending upon the use case the method type can be either Supervised or Unsupervised. For Supervised use case, label_col is mandatory.</dd>
+<dt><strong><code>encoding</code></strong></dt>
+<dd>"label_encoding" or "onehot_encoding"
+In label encoding, each categorical value is assigned a unique integer based on alphabetical
+or frequency ordering (both ascending &amp; descending options are available that can be selected by index_order argument).
+In one-hot encoding, every unique value in the column will be added in a form of dummy/binary column.</dd>
+<dt><strong><code>label_col</code></strong></dt>
+<dd>Label/Target column</dd>
+<dt><strong><code>event_label</code></strong></dt>
+<dd>Value of (positive) event</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre>
+```python
+def cat_to_num_transformer(
+    spark, idf, list_of_cols, drop_cols, method_type, encoding, label_col, event_label
+):
+
+    """
+    This is method which helps converting a categorical attribute into numerical attribute(s) based on the analysis dataset. If there's a presence of label column then the relevant processing would happen through cat_to_num_supervised. However, for unsupervised scenario, the processing would happen through cat_to_num_unsupervised. Computation details can be referred from the respective functions.
+
+    Parameters
+    ----------
+    spark
+        Spark Session
+    idf
+        Input Dataframe
+    list_of_cols
+        List of categorical columns to transform e.g., ["col1","col2"].
+        Alternatively, columns can be specified in a string format,
+        where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
+        "all" can be passed to include all categorical columns for analysis. This is super useful instead of specifying all column names manually.
+        Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
+        drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols.
+    drop_cols
+        List of columns to be dropped e.g., ["col1","col2"].
+        Alternatively, columns can be specified in a string format,
+        where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
+        It is most useful when coupled with the “all” value of list_of_cols, when we need to consider all columns except
+        a few handful of them.
+    method_type
+        Depending upon the use case the method type can be either Supervised or Unsupervised. For Supervised use case, label_col is mandatory.
+    encoding
+        "label_encoding" or "onehot_encoding"
+        In label encoding, each categorical value is assigned a unique integer based on alphabetical
+        or frequency ordering (both ascending & descending options are available that can be selected by index_order argument).
+        In one-hot encoding, every unique value in the column will be added in a form of dummy/binary column.
+    label_col
+        Label/Target column
+    event_label
+        Value of (positive) event
+    """
+
+    num_cols, cat_cols, other_cols = attributeType_segregation(idf)
+
+    if len(cat_cols) > 0:
+        if list_of_cols == "all":
+            list_of_cols = cat_cols
+        if isinstance(list_of_cols, str):
+            list_of_cols = [x.strip() for x in list_of_cols.split("|")]
+        if isinstance(drop_cols, str):
+            drop_cols = [x.strip() for x in drop_cols.split("|")]
+
+        if any(x not in cat_cols for x in list_of_cols):
+            raise TypeError("Invalid input for Column(s)")
+
+        if (method_type == "supervised") & (label_col is not None):
+
+            odf = cat_to_num_supervised(
+                spark, idf, label_col=label_col, event_label=event_label
+            )
+            odf = odf.withColumn(
+                label_col,
+                F.when(F.col(label_col) == event_label, F.lit(1)).otherwise(F.lit(0)),
+            )
+
+            return odf
+
+        elif (method_type == "unsupervised") & (label_col is None):
+            odf = cat_to_num_unsupervised(
+                spark,
+                idf,
+                method_type=encoding,
+                index_order="frequencyDesc",
+            )
+
+            return odf
+    else:
+
+        return idf
+```
+</pre>
+</details>
+</dd>
 <dt id="anovos.data_transformer.transformers.cat_to_num_unsupervised"><code class="name flex hljs csharp">
-<span class="k">def</span> <span class="nf"><span class="ident">cat_to_num_unsupervised</span></span>(<span class="n">spark, idf, list_of_cols='all', drop_cols=[], method_type='label_encoding', index_order='frequencyDesc', cardinality_threshold=100, pre_existing_model=False, model_path='NA', stats_unique={}, output_mode='replace', print_impact=False)</span>
+<span class="k">def</span> <span class="nf"><span class="ident">cat_to_num_unsupervised</span></span>(<span class="n">spark, idf, list_of_cols='all', drop_cols=[], method_type='label_encoding', index_order='frequencyDesc', cardinality_threshold=50, pre_existing_model=False, model_path='NA', stats_unique={}, output_mode='replace', print_impact=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>This is unsupervised method of converting a categorical attribute into numerical attribute(s). This is among
@@ -5779,9 +6085,9 @@ In one-hot encoding, every unique value in the column will be added in a form of
 <dd>"frequencyDesc", "frequencyAsc", "alphabetDesc", "alphabetAsc".
 Valid only for Label Encoding method_type. (Default value = "frequencyDesc")</dd>
 <dt><strong><code>cardinality_threshold</code></strong></dt>
-<dd>Defines threshold to skip columns with higher cardinality values from encoding (Warning is issued). (Default value = 100)</dd>
+<dd>Defines threshold to skip columns with higher cardinality values from encoding - a warning is issued. (Default value = 50)</dd>
 <dt><strong><code>pre_existing_model</code></strong></dt>
-<dd>Boolean argument – True or False. True if encoding model exists already, False Otherwise. (Default value = False)</dd>
+<dd>Boolean argument - True or False. True if encoding model exists already, False Otherwise. (Default value = False)</dd>
 <dt><strong><code>model_path</code></strong></dt>
 <dd>If pre_existing_model is True, this argument is path for referring the pre-saved model.
 If pre_existing_model is False, this argument can be used for saving the model.
@@ -5818,7 +6124,7 @@ def cat_to_num_unsupervised(
     drop_cols=[],
     method_type="label_encoding",
     index_order="frequencyDesc",
-    cardinality_threshold=100,
+    cardinality_threshold=50,
     pre_existing_model=False,
     model_path="NA",
     stats_unique={},
@@ -5866,9 +6172,9 @@ def cat_to_num_unsupervised(
         "frequencyDesc", "frequencyAsc", "alphabetDesc", "alphabetAsc".
         Valid only for Label Encoding method_type. (Default value = "frequencyDesc")
     cardinality_threshold
-        Defines threshold to skip columns with higher cardinality values from encoding (Warning is issued). (Default value = 100)
+        Defines threshold to skip columns with higher cardinality values from encoding - a warning is issued. (Default value = 50)
     pre_existing_model
-        Boolean argument – True or False. True if encoding model exists already, False Otherwise. (Default value = False)
+        Boolean argument - True or False. True if encoding model exists already, False Otherwise. (Default value = False)
     model_path
         If pre_existing_model is True, this argument is path for referring the pre-saved model.
         If pre_existing_model is False, this argument can be used for saving the model.
@@ -5917,33 +6223,31 @@ def cat_to_num_unsupervised(
     if output_mode not in ("replace", "append"):
         raise TypeError("Invalid input for output_mode")
 
-    skip_cols = []
-    if method_type == "onehot_encoding":
-        if stats_unique == {}:
-            skip_cols = (
-                uniqueCount_computation(spark, idf, list_of_cols)
-                .where(F.col("unique_values") > cardinality_threshold)
-                .select("attribute")
-                .rdd.flatMap(lambda x: x)
-                .collect()
-            )
-        else:
-            skip_cols = (
-                read_dataset(spark, **stats_unique)
-                .where(F.col("unique_values") > cardinality_threshold)
-                .select("attribute")
-                .rdd.flatMap(lambda x: x)
-                .collect()
-            )
-        skip_cols = list(
-            set([e for e in skip_cols if e in list_of_cols and e not in drop_cols])
+    if stats_unique == {}:
+        skip_cols = (
+            uniqueCount_computation(spark, idf, list_of_cols)
+            .where(F.col("unique_values") > cardinality_threshold)
+            .select("attribute")
+            .rdd.flatMap(lambda x: x)
+            .collect()
         )
+    else:
+        skip_cols = (
+            read_dataset(spark, **stats_unique)
+            .where(F.col("unique_values") > cardinality_threshold)
+            .select("attribute")
+            .rdd.flatMap(lambda x: x)
+            .collect()
+        )
+    skip_cols = list(
+        set([e for e in skip_cols if e in list_of_cols and e not in drop_cols])
+    )
 
-        if skip_cols:
-            warnings.warn(
-                "Columns dropped from one-hot encoding due to high cardinality: "
-                + ",".join(skip_cols)
-            )
+    if skip_cols:
+        warnings.warn(
+            "Columns dropped from encoding due to high cardinality: "
+            + ",".join(skip_cols)
+        )
 
     list_of_cols = list(
         set([e for e in list_of_cols if e not in drop_cols + skip_cols])
@@ -5958,8 +6262,8 @@ def cat_to_num_unsupervised(
     for i in list_of_cols:
         list_of_cols_vec.append(i + "_vec")
         list_of_cols_idx.append(i + "_index")
-    idf_id = idf.withColumn("tempID", F.monotonically_increasing_id())
-    idf_indexed = idf_id.select(["tempID"] + list_of_cols)
+
+    odf_indexed = idf
     if version.parse(pyspark.__version__) < version.parse("3.0.0"):
         for idx, i in enumerate(list_of_cols):
             if pre_existing_model:
@@ -5980,9 +6284,7 @@ def cat_to_num_unsupervised(
                         model_path + "/cat_to_num_unsupervised/indexer-model/" + i
                     )
 
-            idf_indexed = indexerModel.transform(idf_indexed)
-            if idx % 5 == 0:
-                idf_indexed.persist(pyspark.StorageLevel.MEMORY_AND_DISK).count()
+            odf_indexed = indexerModel.transform(odf_indexed)
 
     else:
         if pre_existing_model:
@@ -5996,17 +6298,12 @@ def cat_to_num_unsupervised(
                 stringOrderType=index_order,
                 handleInvalid="keep",
             )
-            indexerModel = stringIndexer.fit(idf_indexed)
+            indexerModel = stringIndexer.fit(odf_indexed)
             if model_path != "NA":
                 indexerModel.write().overwrite().save(
                     model_path + "/cat_to_num_unsupervised/indexer"
                 )
-        idf_indexed = indexerModel.transform(idf_indexed)
-
-    odf_indexed = idf_id.join(
-        idf_indexed.drop(*list_of_cols), "tempID", "left_outer"
-    ).drop("tempID")
-    odf_indexed.persist(pyspark.StorageLevel.MEMORY_AND_DISK).count()
+        odf_indexed = indexerModel.transform(odf_indexed)
 
     if method_type == "onehot_encoding":
         if pre_existing_model:
@@ -6024,39 +6321,30 @@ def cat_to_num_unsupervised(
                     model_path + "/cat_to_num_unsupervised/encoder"
                 )
 
-        odf_encoded = encoder.fit(odf_indexed).transform(odf_indexed)
+        odf = encoder.fit(odf_indexed).transform(odf_indexed)
 
-        odf = odf_encoded
-
-        def vector_to_array(v):
-            v = DenseVector(v)
-            new_array = list([int(x) for x in v])
-            return new_array
-
-        f_vector_to_array = F.udf(vector_to_array, T.ArrayType(T.IntegerType()))
-
+        new_cols = []
         odf_sample = odf.take(1)
         for i in list_of_cols:
+            odf_schema = odf.schema
             uniq_cats = odf_sample[0].asDict()[i + "_vec"].size
-            odf_schema = odf.schema.add(
-                T.StructField("tmp", T.ArrayType(T.IntegerType()))
-            )
-
             for j in range(0, uniq_cats):
                 odf_schema = odf_schema.add(
                     T.StructField(i + "_" + str(j), T.IntegerType())
                 )
+                new_cols.append(i + "_" + str(j))
 
-            odf = (
-                odf.withColumn("tmp", f_vector_to_array(i + "_vec"))
-                .rdd.map(lambda x: (*x, *x["tmp"]))
-                .toDF(schema=odf_schema)
-            )
+            odf = odf.rdd.map(
+                lambda x: (
+                    *x,
+                    *(DenseVector(x[i + "_vec"]).toArray().astype(int).tolist()),
+                )
+            ).toDF(schema=odf_schema)
 
             if output_mode == "replace":
-                odf = odf.drop(i, i + "_vec", i + "_index", "tmp")
+                odf = odf.drop(i, i + "_vec", i + "_index")
             else:
-                odf = odf.drop(i + "_vec", i + "_index", "tmp")
+                odf = odf.drop(i + "_vec", i + "_index")
 
     else:
         odf = odf_indexed
@@ -6072,21 +6360,30 @@ def cat_to_num_unsupervised(
                 odf = odf.drop(i).withColumnRenamed(i + "_index", i)
             odf = odf.select(idf.columns)
 
-    if print_impact and method_type == "label_encoding":
-        print("Before")
-        idf.describe().where(F.col("summary").isin("count", "min", "max")).show(
-            3, False
-        )
-        print("After")
-        odf.describe().where(F.col("summary").isin("count", "min", "max")).show(
-            3, False
-        )
-    if print_impact and method_type == "onehot_encoding":
-        print("Before")
-        idf.printSchema()
-        print("After")
-        odf.printSchema()
+    if print_impact:
+        if method_type == "label_encoding":
+            if output_mode == "append":
+                new_cols = [i + "_index" for i in list_of_cols]
+            else:
+                new_cols = list_of_cols
+            print("Before")
+            idf.select(list_of_cols).summary("count", "min", "max").show(3, False)
+            print("After")
+            odf.select(new_cols).summary("count", "min", "max").show(3, False)
 
+        if method_type == "onehot_encoding":
+            print("Before")
+            idf.select(list_of_cols).printSchema()
+            print("After")
+            if output_mode == "append":
+                odf.select(list_of_cols + new_cols).printSchema()
+            else:
+                odf.select(new_cols).printSchema()
+        if skip_cols:
+            print(
+                "Columns dropped from encoding due to high cardinality: "
+                + ",".join(skip_cols)
+            )
     return odf
 ```
 </pre>
@@ -7123,7 +7420,7 @@ def imputation_matrixFactorization(
 </details>
 </dd>
 <dt id="anovos.data_transformer.transformers.imputation_sklearn"><code class="name flex hljs csharp">
-<span class="k">def</span> <span class="nf"><span class="ident">imputation_sklearn</span></span>(<span class="n">spark, idf, list_of_cols='missing', drop_cols=[], method_type='KNN', sample_size=500000, pre_existing_model=False, model_path='NA', output_mode='replace', stats_missing={}, run_type='local', auth_key='NA', print_impact=False)</span>
+<span class="k">def</span> <span class="nf"><span class="ident">imputation_sklearn</span></span>(<span class="n">spark, idf, list_of_cols='missing', drop_cols=[], missing_threshold=1.0, method_type='regression', use_sampling=True, sample_method='random', strata_cols='all', stratified_type='population', sample_size=10000, sample_seed=42, persist=True, persist_option=StorageLevel(True, True, False, False, 1), pre_existing_model=False, model_path='NA', output_mode='replace', stats_missing={}, run_type='local', auth_key='NA', print_impact=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>The function "imputation_sklearn" leverages sklearn imputer algorithms. Two methods are supported via this function:
@@ -7134,7 +7431,8 @@ trains a sklearn.impute.IterativeImputer which models attribute to impute as a f
 and imputes using the estimation. Imputation is performed in an iterative way from attributes with fewest number
 of missing values to most. All the hyperparameters used in the above mentioned imputers are their default values.</p>
 <p>However, sklearn imputers are not scalable, which might be slow if the size of the input dataframe is large.
-Thus, an input sample_size (the default value is 500,000) can be set to control the number of samples to be used
+In fact, if the input dataframe size exceeds 10 GigaBytes, the model fitting step powered by sklearn might fail.
+Thus, an input sample_size (the default value is 10,000) can be set to control the number of samples to be used
 to train the imputer. If the total number of input dataset exceeds sample_size, the rest of the samples will be imputed
 using the trained imputer in a scalable manner. This is one of the way to demonstrate how Anovos has been
 designed as a scalable feature engineering library.</p>
@@ -7162,11 +7460,47 @@ Alternatively, columns can be specified in a string format,
 where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
 It is most useful when coupled with the “all” value of list_of_cols, when we need to consider all columns except
 a few handful of them. (Default value = [])</dd>
+<dt><strong><code>missing_threshold</code></strong></dt>
+<dd>Float argument - If list_of_cols is "missing", this argument is used to determined the missing threshold
+for every column. The column that has more (count of missing value/ count of total value) &gt;= missing_threshold
+will be excluded from the list of columns to be imputed. (Default value = 1.0)</dd>
 <dt><strong><code>method_type</code></strong></dt>
 <dd>"KNN", "regression".
-"KNN" option trains a sklearn.impute.KNNImputer. "regression" option trains a sklearn.impute.IterativeImputer (Default value = "KNN")</dd>
+"KNN" option trains a sklearn.impute.KNNImputer. "regression" option trains a sklearn.impute.IterativeImputer
+(Default value = "regression")</dd>
+<dt><strong><code>use_sampling</code></strong></dt>
+<dd>Boolean argument - True or False. This argument is used to determine whether to use sampling on
+source and target dataset, True will enable the use of sample method, otherwise False.
+It is recommended to set this as True for large datasets. (Default value = True)</dd>
+<dt><strong><code>sample_method</code></strong></dt>
+<dd>If use_sampling is True, this argument is used to determine the sampling method.
+"stratified" for Stratified sampling, "random" for Random Sampling.
+For more details, please refer to <a href="https://docs.anovos.ai/api/data_ingest/data_sampling.html.">https://docs.anovos.ai/api/data_ingest/data_sampling.html.</a>
+(Default value = "random")</dd>
+<dt><strong><code>strata_cols</code></strong></dt>
+<dd>If use_sampling is True and sample_method is "stratified", this argument is used to determine the list
+of columns used to be treated as strata. For more details, please refer to
+<a href="https://docs.anovos.ai/api/data_ingest/data_sampling.html.">https://docs.anovos.ai/api/data_ingest/data_sampling.html.</a> (Default value = "all")</dd>
+<dt><strong><code>stratified_type</code></strong></dt>
+<dd>If use_sampling is True and sample_method is "stratified", this argument is used to determine the stratified
+sampling method. "population" stands for Proportionate Stratified Sampling,
+"balanced" stands for Optimum Stratified Sampling. For more details, please refer to
+<a href="https://docs.anovos.ai/api/data_ingest/data_sampling.html.">https://docs.anovos.ai/api/data_ingest/data_sampling.html.</a> (Default value = "population")</dd>
 <dt><strong><code>sample_size</code></strong></dt>
-<dd>Maximum rows for training the sklearn imputer (Default value = 500000)</dd>
+<dd>If use_sampling is True, this argument is used to determine maximum rows for training the sklearn imputer
+(Default value = 10000)</dd>
+<dt><strong><code>sample_seed</code></strong></dt>
+<dd>If use_sampling is True, this argument is used to determine the seed of sampling method.
+(Default value = 42)</dd>
+<dt><strong><code>persist</code></strong></dt>
+<dd>Boolean argument - True or False. This argument is used to determine whether to persist on
+binning result of source and target dataset, True will enable the use of persist, otherwise False.
+It is recommended to set this as True for large datasets. (Default value = True)</dd>
+<dt><strong><code>persist_option</code></strong></dt>
+<dd>If persist is True, this argument is used to determine the type of persist.
+For all the pyspark.StorageLevel option available in persist, please refer to
+<a href="https://spark.apache.org/docs/latest/api/python/reference/api/pyspark.StorageLevel.html">https://spark.apache.org/docs/latest/api/python/reference/api/pyspark.StorageLevel.html</a>
+(Default value = pyspark.StorageLevel.MEMORY_AND_DISK)</dd>
 <dt><strong><code>pre_existing_model</code></strong></dt>
 <dd>Boolean argument – True or False. True if imputation model exists already, False otherwise. (Default value = False)</dd>
 <dt><strong><code>model_path</code></strong></dt>
@@ -7205,8 +7539,16 @@ def imputation_sklearn(
     idf,
     list_of_cols="missing",
     drop_cols=[],
-    method_type="KNN",
-    sample_size=500000,
+    missing_threshold=1.0,
+    method_type="regression",
+    use_sampling=True,
+    sample_method="random",
+    strata_cols="all",
+    stratified_type="population",
+    sample_size=10000,
+    sample_seed=42,
+    persist=True,
+    persist_option=pyspark.StorageLevel.MEMORY_AND_DISK,
     pre_existing_model=False,
     model_path="NA",
     output_mode="replace",
@@ -7226,7 +7568,8 @@ def imputation_sklearn(
     of missing values to most. All the hyperparameters used in the above mentioned imputers are their default values.
 
     However, sklearn imputers are not scalable, which might be slow if the size of the input dataframe is large.
-    Thus, an input sample_size (the default value is 500,000) can be set to control the number of samples to be used
+    In fact, if the input dataframe size exceeds 10 GigaBytes, the model fitting step powered by sklearn might fail.
+    Thus, an input sample_size (the default value is 10,000) can be set to control the number of samples to be used
     to train the imputer. If the total number of input dataset exceeds sample_size, the rest of the samples will be imputed
     using the trained imputer in a scalable manner. This is one of the way to demonstrate how Anovos has been
     designed as a scalable feature engineering library.
@@ -7256,11 +7599,47 @@ def imputation_sklearn(
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
         It is most useful when coupled with the “all” value of list_of_cols, when we need to consider all columns except
         a few handful of them. (Default value = [])
+    missing_threshold
+        Float argument - If list_of_cols is "missing", this argument is used to determined the missing threshold
+        for every column. The column that has more (count of missing value/ count of total value) >= missing_threshold
+        will be excluded from the list of columns to be imputed. (Default value = 1.0)
     method_type
         "KNN", "regression".
-        "KNN" option trains a sklearn.impute.KNNImputer. "regression" option trains a sklearn.impute.IterativeImputer (Default value = "KNN")
+        "KNN" option trains a sklearn.impute.KNNImputer. "regression" option trains a sklearn.impute.IterativeImputer
+        (Default value = "regression")
+    use_sampling
+        Boolean argument - True or False. This argument is used to determine whether to use sampling on
+        source and target dataset, True will enable the use of sample method, otherwise False.
+        It is recommended to set this as True for large datasets. (Default value = True)
+    sample_method
+        If use_sampling is True, this argument is used to determine the sampling method.
+        "stratified" for Stratified sampling, "random" for Random Sampling.
+        For more details, please refer to https://docs.anovos.ai/api/data_ingest/data_sampling.html.
+        (Default value = "random")
+    strata_cols
+        If use_sampling is True and sample_method is "stratified", this argument is used to determine the list
+        of columns used to be treated as strata. For more details, please refer to
+        https://docs.anovos.ai/api/data_ingest/data_sampling.html. (Default value = "all")
+    stratified_type
+        If use_sampling is True and sample_method is "stratified", this argument is used to determine the stratified
+        sampling method. "population" stands for Proportionate Stratified Sampling,
+        "balanced" stands for Optimum Stratified Sampling. For more details, please refer to
+        https://docs.anovos.ai/api/data_ingest/data_sampling.html. (Default value = "population")
     sample_size
-        Maximum rows for training the sklearn imputer (Default value = 500000)
+        If use_sampling is True, this argument is used to determine maximum rows for training the sklearn imputer
+        (Default value = 10000)
+    sample_seed
+        If use_sampling is True, this argument is used to determine the seed of sampling method.
+        (Default value = 42)
+    persist
+        Boolean argument - True or False. This argument is used to determine whether to persist on
+        binning result of source and target dataset, True will enable the use of persist, otherwise False.
+        It is recommended to set this as True for large datasets. (Default value = True)
+    persist_option
+        If persist is True, this argument is used to determine the type of persist.
+        For all the pyspark.StorageLevel option available in persist, please refer to
+        https://spark.apache.org/docs/latest/api/python/reference/api/pyspark.StorageLevel.html
+        (Default value = pyspark.StorageLevel.MEMORY_AND_DISK)
     pre_existing_model
         Boolean argument – True or False. True if imputation model exists already, False otherwise. (Default value = False)
     model_path
@@ -7290,6 +7669,8 @@ def imputation_sklearn(
 
     """
 
+    if persist:
+        idf = idf.persist(persist_option)
     num_cols = attributeType_segregation(idf)[0]
     if stats_missing == {}:
         missing_df = missingCount_computation(spark, idf, num_cols)
@@ -7313,7 +7694,7 @@ def imputation_sklearn(
 
     missing_cols = (
         missing_df.where(F.col("missing_count") > 0)
-        .where(F.col("missing_pct") < 1.0)
+        .where(F.col("missing_pct") < missing_threshold)
         .select("attribute")
         .rdd.flatMap(lambda x: x)
         .collect()
@@ -7378,10 +7759,22 @@ def imputation_sklearn(
             imputer = pickle.load(open("imputation_sklearn.sav", "rb"))
         else:
             imputer = pickle.load(open(model_path + "/imputation_sklearn.sav", "rb"))
-        idf_rest = idf
     else:
-        sample_ratio = min(1.0, float(sample_size) / idf.count())
-        idf_model = idf.sample(False, sample_ratio, 0)
+        if use_sampling:
+            count_idf = idf.count()
+            if count_idf > sample_size:
+                idf_model = data_sample(
+                    idf,
+                    strata_cols=strata_cols,
+                    fraction=sample_size / count_idf,
+                    method_type=sample_method,
+                    stratified_type=stratified_type,
+                    seed_value=sample_seed,
+                )
+        else:
+            idf_model = idf
+        if persist:
+            idf_model = idf_model.persist(persist_option)
         idf_pd = idf_model.select(list_of_cols).toPandas()
 
         if method_type == "KNN":
@@ -7423,17 +7816,18 @@ def imputation_sklearn(
 
     @F.pandas_udf(returnType=T.ArrayType(T.DoubleType()))
     def prediction(*cols):
-        X = pd.concat(cols, axis=1)
-        return pd.Series(row.tolist() for row in imputer.transform(X))
+        input_pdf = pd.concat(cols, axis=1)
+        return pd.Series(row.tolist() for row in imputer.transform(input_pdf))
 
-    odf = idf.withColumn("features", prediction(*list_of_cols))
-    odf.persist(pyspark.StorageLevel.MEMORY_AND_DISK).count()
+    result_df = idf.withColumn("features", prediction(*list_of_cols))
+    if persist:
+        result_df = result_df.persist(persist_option)
 
-    odf_schema = odf.schema
+    odf_schema = result_df.schema
     for i in list_of_cols:
         odf_schema = odf_schema.add(T.StructField(i + "_imputed", T.FloatType()))
     odf = (
-        odf.rdd.map(lambda x: (*x, *x["features"]))
+        result_df.rdd.map(lambda x: (*x, *x["features"]))
         .toDF(schema=odf_schema)
         .drop("features")
     )
@@ -7475,6 +7869,10 @@ def imputation_sklearn(
                 "inner",
             )
         odf_print.show(len(list_of_cols), False)
+    if persist:
+        idf.unpersist()
+        idf_model.unpersist()
+        result_df.unpersist()
     return odf
 ```
 </pre>
@@ -7866,7 +8264,6 @@ def normalization(
 <dd>
 <div class="desc"><p>This function replaces less frequently seen values (called as outlier values in the current context) in a
 categorical column by 'outlier_categories'. Outlier values can be defined in two ways –
-
 a) Max N categories, where N is user defined value. In this method, top N-1 frequently seen categories are considered
 and rest are clubbed under single category 'outlier_categories'. or Alternatively,
 b) Coverage – top frequently seen categories are considered till it covers minimum N% of rows and rest lesser seen values
@@ -7942,7 +8339,6 @@ def outlier_categories(
     """
     This function replaces less frequently seen values (called as outlier values in the current context) in a
     categorical column by 'outlier_categories'. Outlier values can be defined in two ways –
-
     a) Max N categories, where N is user defined value. In this method, top N-1 frequently seen categories are considered
     and rest are clubbed under single category 'outlier_categories'. or Alternatively,
     b) Coverage – top frequently seen categories are considered till it covers minimum N% of rows and rest lesser seen values

@@ -6,6 +6,10 @@
 <div class="desc"><p>Datetime module supports various transformations related to date and timestamp datatype columns.
 All available functions in this release can be …</p></div>
 </dd>
+<dt><code class="name"><a title="anovos.data_transformer.geo_utils" href="geo_utils.html">anovos.data_transformer.geo_utils</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
 <dt><code class="name"><a title="anovos.data_transformer.geospatial" href="geospatial.html">anovos.data_transformer.geospatial</a></code></dt>
 <dd>
 <div class="desc"></div>
