@@ -76,7 +76,7 @@ def regex_date_time_parser(
 
     """
 
-    This function helps to produce the transformed output (if applicable) based on the auto-detection of timestamp / date type. The output from this function is decoupled as a part of ingestion.
+    This function helps to produce the transformed output in timestamp (if auto-detected) based on the input data.
 
 
     Parameters
@@ -569,7 +569,7 @@ def ts_loop_cols_pre(idf, id_col):
 
     """
 
-    This function helps to analyze the potential columns which can be passed for tiime series check. The columns are passed on to the auto-detection block.
+    This function helps to analyze the potential columns which can be passed for the time series check. The columns are passed on to the auto-detection block.
 
     Parameters
     ----------
@@ -770,7 +770,7 @@ def ts_preprocess(
 <span class="k">def</span> <span class="nf"><span class="ident">regex_date_time_parser</span></span>(<span class="n">spark, idf, id_col, col, tz, val_unique_cat, trans_cat, save_output=None, output_mode='replace')</span>
 </code></dt>
 <dd>
-<div class="desc"><p>This function helps to produce the transformed output (if applicable) based on the auto-detection of timestamp / date type. The output from this function is decoupled as a part of ingestion.</p>
+<div class="desc"><p>This function helps to produce the transformed output in timestamp (if auto-detected) based on the input data.</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>spark</code></strong></dt>
@@ -817,7 +817,7 @@ def regex_date_time_parser(
 
     """
 
-    This function helps to produce the transformed output (if applicable) based on the auto-detection of timestamp / date type. The output from this function is decoupled as a part of ingestion.
+    This function helps to produce the transformed output in timestamp (if auto-detected) based on the input data.
 
 
     Parameters
@@ -1312,7 +1312,7 @@ def regex_date_time_parser(
 <span class="k">def</span> <span class="nf"><span class="ident">ts_loop_cols_pre</span></span>(<span class="n">idf, id_col)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>This function helps to analyze the potential columns which can be passed for tiime series check. The columns are passed on to the auto-detection block.</p>
+<div class="desc"><p>This function helps to analyze the potential columns which can be passed for the time series check. The columns are passed on to the auto-detection block.</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>idf</code></strong></dt>
@@ -1335,7 +1335,7 @@ def ts_loop_cols_pre(idf, id_col):
 
     """
 
-    This function helps to analyze the potential columns which can be passed for tiime series check. The columns are passed on to the auto-detection block.
+    This function helps to analyze the potential columns which can be passed for the time series check. The columns are passed on to the auto-detection block.
 
     Parameters
     ----------

@@ -1,268 +1,35 @@
-# <code>detector</code>
+# <code>stability</code>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre>
 ```python
-# coding=utf-8
-
-from __future__ import division, print_function
-
 import numpy as np
-import pandas as pd
 import pyspark
 import sympy as sp
 from loguru import logger
-from pyspark.sql import DataFrame, SparkSession
+from pyspark.sql import DataFrame
 from pyspark.sql import functions as F
 from pyspark.sql import types as T
 from scipy.stats import variation
 
-from anovos.data_ingest.data_ingest import concatenate_dataset
 from anovos.data_transformer.transformers import attribute_binning
 from anovos.shared.utils import attributeType_segregation
-from .distances import hellinger, js_divergence, ks, psi
-from .validations import check_distance_method, check_list_of_columns
-
-
-@check_distance_method
-@check_list_of_columns
-def statistics(
-    spark: SparkSession,
-    idf_target: DataFrame,
-    idf_source: DataFrame,
-    *,
-    list_of_cols: list = "all",
-    drop_cols: list = None,
-    method_type: str = "PSI",
-    bin_method: str = "equal_range",
-    bin_size: int = 10,
-    threshold: float = 0.1,
-    pre_existing_source: bool = False,
-    source_path: str = "NA",
-    model_directory: str = "drift_statistics",
-    run_type: str = "local",
-    print_impact: bool = False,
-):
-    """
-    When the performance of a deployed machine learning model degrades in production, one potential reason is that
-    the data used in training and prediction are not following the same distribution.
-
-    Data drift mainly includes the following manifestations:
-
-    - Covariate shift: training and test data follow different distributions. For example, An algorithm predicting
-    income that is trained on younger population but tested on older population.
-    - Prior probability shift: change of prior probability. For example in a spam classification problem,
-    the proportion of spam emails changes from 0.2
-    in training data to 0.6 in testing data.
-    - Concept shift: the distribution of the target variable changes given fixed input values. For example in
-    the same spam classification problem, emails tagged as spam in training data are more likely to be tagged
-    as non-spam in testing data.
-
-    In our module, we mainly focus on covariate shift detection.
-
-    In summary, given 2 datasets, source and target datasets, we would like to quantify the drift of some numerical
-    attributes from source to target datasets. The whole process can be broken down into 2 steps: (1) convert each
-    attribute of interest in source and target datasets into source and target probability distributions. (2)
-    calculate the statistical distance between source and target distributions for each attribute.
-
-    In the first step, attribute_binning is firstly performed to bin the numerical attributes of the source dataset,
-    which requires two input variables: bin_method and bin_size. The same binning method is applied on the target
-    dataset to align two results. The probability distributions are computed by dividing the frequency of each bin by
-    the total frequency.
-
-    In the second step, 4 choices of statistical metrics are provided to measure the data drift of an attribute from
-    source to target distribution: Population Stability Index (PSI), Jensen-Shannon Divergence (JSD),
-    Hellinger Distance (HD) and Kolmogorov-Smirnov Distance (KS).
-
-    They are calculated as below:
-    For two discrete probability distributions *P=(p_1,…,p_k)* and *Q=(q_1,…,q_k),*
-
-    ![https://raw.githubusercontent.com/anovos/anovos-docs/main/docs/assets/drift_stats_formulae.png](https://raw.githubusercontent.com/anovos/anovos-docs/main/docs/assets/drift_stats_formulae.png)
-
-    A threshold can be set to flag out drifted attributes. If multiple statistical metrics have been calculated,
-    an attribute will be marked as drifted if any of its statistical metric is larger than the threshold.
-
-    This function can be used in many scenarios. For example:
-
-    1. Attribute level data drift can be analysed together with the attribute importance of a machine learning model.
-    The more important an attribute is, the more attention it needs to be given if drift presents.
-    2. To analyse data drift over time, one can treat one dataset as the source / baseline dataset and multiple
-    datasets as the target datasets. Drift analysis can be performed between the source dataset and each of the
-    target dataset to quantify the drift over time.
-
-    Parameters
-    ----------
-    spark
-        Spark Session
-    idf_target
-        Input Dataframe
-    idf_source
-        Baseline/Source Dataframe. This argument is ignored if pre_existing_source is True.
-    list_of_cols
-        List of columns to check drift e.g., ["col1","col2"].
-        Alternatively, columns can be specified in a string format,
-        where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
-        "all" can be passed to include all (non-array) columns for analysis.
-        Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
-        drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
-    drop_cols
-        List of columns to be dropped e.g., ["col1","col2"].
-        Alternatively, columns can be specified in a string format,
-        where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = None)
-    method_type
-        "PSI", "JSD", "HD", "KS","all".
-        "all" can be passed to calculate all drift metrics.
-        One or more methods can be passed in a form of list or string where different metrics are separated
-        by pipe delimiter “|” e.g. ["PSI", "JSD"] or "PSI|JSD". (Default value = "PSI")
-    bin_method
-        "equal_frequency", "equal_range".
-        In "equal_range" method, each bin is of equal size/width and in "equal_frequency", each bin
-        has equal no. of rows, though the width of bins may vary. (Default value = "equal_range")
-    bin_size
-        Number of bins for creating histogram. (Default value = 10)
-    threshold
-        A column is flagged if any drift metric is above the threshold. (Default value = 0.1)
-    pre_existing_source
-        Boolean argument – True or False. True if the drift_statistics folder (binning model &
-        frequency counts for each attribute) exists already, False Otherwise. (Default value = False)
-    source_path
-        If pre_existing_source is False, this argument can be used for saving the drift_statistics folder.
-        The drift_statistics folder will have attribute_binning (binning model) & frequency_counts sub-folders.
-        If pre_existing_source is True, this argument is path for referring the drift_statistics folder.
-        Default "NA" for temporarily saving data in "intermediate_data/" folder. (Default value = "NA")
-    model_directory
-        If pre_existing_source is False, this argument can be used for saving the drift stats to folder.
-        The default drift statics directory is drift_statistics folder will have attribute_binning
-        If pre_existing_source is True, this argument is model_directory for referring the drift statistics dir.
-        Default "drift_statistics" for temporarily saving source dataset attribute_binning folder. (Default value = "drift_statistics")
-    run_type
-        "local", "emr", "databricks" (Default value = "local")
-    print_impact
-        True, False. (Default value = False)
-        This argument is to print out the drift statistics of all attributes and attributes meeting the threshold.
-
-    Returns
-    -------
-    DataFrame
-        [attribute, *metric, flagged]
-        Number of columns will be dependent on method argument. There will be one column for each drift method/metric.
-
-    """
-    drop_cols = drop_cols or []
-    num_cols = attributeType_segregation(idf_target.select(list_of_cols))[0]
-
-    if source_path == "NA":
-        source_path = "intermediate_data"
-
-    if not pre_existing_source:
-        source_bin = attribute_binning(
-            spark,
-            idf_source,
-            list_of_cols=num_cols,
-            method_type=bin_method,
-            bin_size=bin_size,
-            pre_existing_model=False,
-            model_path=source_path + "/" + model_directory,
-        )
-        source_bin.persist(pyspark.StorageLevel.MEMORY_AND_DISK).count()
-
-    target_bin = attribute_binning(
-        spark,
-        idf_target,
-        list_of_cols=num_cols,
-        method_type=bin_method,
-        bin_size=bin_size,
-        pre_existing_model=True,
-        model_path=source_path + "/" + model_directory,
-    )
-
-    target_bin.persist(pyspark.StorageLevel.MEMORY_AND_DISK).count()
-    result = {"attribute": [], "flagged": []}
-
-    for method in method_type:
-        result[method] = []
-
-    for i in list_of_cols:
-        if pre_existing_source:
-            x = spark.read.csv(
-                source_path + "/" + model_directory + "/frequency_counts/" + i,
-                header=True,
-                inferSchema=True,
-            )
-        else:
-            x = (
-                source_bin.groupBy(i)
-                .agg((F.count(i) / idf_source.count()).alias("p"))
-                .fillna(-1)
-            )
-            x.coalesce(1).write.csv(
-                source_path + "/" + model_directory + "/frequency_counts/" + i,
-                header=True,
-                mode="overwrite",
-            )
-
-        y = (
-            target_bin.groupBy(i)
-            .agg((F.count(i) / idf_target.count()).alias("q"))
-            .fillna(-1)
-        )
-
-        xy = (
-            x.join(y, i, "full_outer")
-            .fillna(0.0001, subset=["p", "q"])
-            .replace(0, 0.0001)
-            .orderBy(i)
-        )
-        p = np.array(xy.select("p").rdd.flatMap(lambda x: x).collect())
-        q = np.array(xy.select("q").rdd.flatMap(lambda x: x).collect())
-
-        result["attribute"].append(i)
-        counter = 0
-
-        for idx, method in enumerate(method_type):
-            drift_function = {
-                "PSI": psi,
-                "JSD": js_divergence,
-                "HD": hellinger,
-                "KS": ks,
-            }
-            metric = float(round(drift_function[method](p, q), 4))
-            result[method].append(metric)
-            if counter == 0:
-                if metric > threshold:
-                    result["flagged"].append(1)
-                    counter = 1
-            if (idx == (len(method_type) - 1)) & (counter == 0):
-                result["flagged"].append(0)
-
-    odf = (
-        spark.createDataFrame(
-            pd.DataFrame.from_dict(result, orient="index").transpose()
-        )
-        .select(["attribute"] + method_type + ["flagged"])
-        .orderBy(F.desc("flagged"))
-    )
-
-    if print_impact:
-        logger.info("All Attributes:")
-        odf.show(len(list_of_cols))
-        logger.info("Attributes meeting Data Drift threshold:")
-        drift = odf.where(F.col("flagged") == 1)
-        drift.show(drift.count())
-
-    return odf
+from .validations import compute_si, check_metric_weightages, check_threshold
 
 
 def stability_index_computation(
     spark,
-    *idfs,
+    idfs,
     list_of_cols="all",
     drop_cols=[],
     metric_weightages={"mean": 0.5, "stddev": 0.3, "kurtosis": 0.2},
+    binary_cols=[],
     existing_metric_path="",
     appended_metric_path="",
+    persist: bool = True,
+    persist_option=pyspark.StorageLevel.MEMORY_AND_DISK,
     threshold=1,
     print_impact=False,
 ):
@@ -386,7 +153,14 @@ def stability_index_computation(
     metric_weightages
         Takes input in dictionary format with keys being the metric name - "mean","stdev","kurtosis"
         and value being the weightage of the metric (between 0 and 1). Sum of all weightages must be 1.
-         (Default value = {"mean": 0.5, "stddev": 0.3, "kurtosis": 0.2})
+        (Default value = {"mean": 0.5, "stddev": 0.3, "kurtosis": 0.2})
+    binary_cols
+        List of numerical columns to be treated as binary columns e.g., ["col1","col2"].
+        Alternatively, columns can be specified in a string format, where different column names are
+        separated by pipe delimiter “|”. For the specified binary columns,
+        only the mean value will be used as the statistical metric (standard deviation and kurtosis will be skipped).
+        In addition, standard deviation will be used to measure the stability of mean instead of CV.
+        (Default value = [])
     existing_metric_path
         This argument is path for referring pre-existing metrics of historical datasets and is
         of schema [idx, attribute, mean, stdev, kurtosis].
@@ -394,6 +168,13 @@ def stability_index_computation(
     appended_metric_path
         This argument is path for saving input dataframes metrics after appending to the
         historical datasets' metrics. (Default value = "")
+    persist
+        Boolean argument - True or False. This argument is used to determine whether to persist on
+        binning result of source and target dataset, True will enable the use of persist, otherwise False.
+        It is recommended to set this as True for large datasets. (Default value = True)
+    persist_option
+        If persist is True, this argument is used to determine the type of persist.
+        (Default value = pyspark.StorageLevel.MEMORY_AND_DISK)
     threshold
         A column is flagged if the stability index is below the threshold, which varies between 0 to 4.
         The following criteria can be used to classifiy stability_index (SI): very unstable: 0≤SI<1,
@@ -405,7 +186,7 @@ def stability_index_computation(
     Returns
     -------
     DataFrame
-        [attribute, mean_si, stddev_si, kurtosis_si, mean_cv, stddev_cv, kurtosis_cv, stability_index].
+        [attribute, mean_stddev, mean_si, stddev_si, kurtosis_si, mean_cv, stddev_cv, kurtosis_cv, stability_index].
         *_cv is coefficient of variation for each metric. *_si is stability index for each metric.
         stability_index is net weighted stability index based on the individual metrics' stability index.
 
@@ -418,120 +199,117 @@ def stability_index_computation(
         list_of_cols = [x.strip() for x in list_of_cols.split("|")]
     if isinstance(drop_cols, str):
         drop_cols = [x.strip() for x in drop_cols.split("|")]
+    if isinstance(binary_cols, str):
+        binary_cols = [x.strip() for x in binary_cols.split("|")]
 
     list_of_cols = list(set([e for e in list_of_cols if e not in drop_cols]))
 
     if any(x not in num_cols for x in list_of_cols) | (len(list_of_cols) == 0):
         raise TypeError("Invalid input for Column(s)")
 
-    if (
-        round(
-            metric_weightages.get("mean", 0)
-            + metric_weightages.get("stddev", 0)
-            + metric_weightages.get("kurtosis", 0),
-            3,
-        )
-        != 1
-    ):
-        raise ValueError(
-            "Invalid input for metric weightages. Either metric name is incorrect or sum of metric weightages is not 1.0"
-        )
+    if any(x not in list_of_cols for x in binary_cols):
+        raise TypeError("Invalid input for Binary Column(s)")
+
+    check_metric_weightages(metric_weightages)
+    check_threshold(threshold)
 
     if existing_metric_path:
         existing_metric_df = spark.read.csv(
             existing_metric_path, header=True, inferSchema=True
         )
-        dfs_count = existing_metric_df.select(F.max(F.col("idx"))).first()[0]
+        dfs_count = int(existing_metric_df.select(F.max(F.col("idx"))).first()[0]) + 1
     else:
-        schema = T.StructType(
-            [
-                T.StructField("idx", T.IntegerType(), True),
-                T.StructField("attribute", T.StringType(), True),
-                T.StructField("mean", T.DoubleType(), True),
-                T.StructField("stddev", T.DoubleType(), True),
-                T.StructField("kurtosis", T.DoubleType(), True),
-            ]
+        existing_metric_df = None
+        dfs_count = 1
+
+    def unionAll(dfs):
+        first, *_ = dfs
+        return first.sql_ctx.createDataFrame(
+            first.sql_ctx._sc.union([df.rdd for df in dfs]), first.schema
         )
-        existing_metric_df = spark.sparkContext.emptyRDD().toDF(schema)
-        dfs_count = 0
 
-    metric_ls = []
-    for idf in idfs:
-        for i in list_of_cols:
-            mean, stddev, kurtosis = idf.select(
-                F.mean(i), F.stddev(i), F.kurtosis(i)
-            ).first()
-            metric_ls.append(
-                [dfs_count + 1, i, mean, stddev, kurtosis + 3.0 if kurtosis else None]
-            )
-        dfs_count += 1
+    if persist:
+        for i in range(len(idfs)):
+            idfs[i] = idfs[i].select(list_of_cols)
+            idfs[i].persist(persist_option)
 
-    new_metric_df = spark.createDataFrame(
-        metric_ls, schema=("idx", "attribute", "mean", "stddev", "kurtosis")
-    )
-    appended_metric_df = concatenate_dataset(existing_metric_df, new_metric_df)
-
+    list_temp_all_col = []
     if appended_metric_path:
-        appended_metric_df.coalesce(1).write.csv(
+        list_append_all = []
+    for i in list_of_cols:
+        if i in binary_cols:
+            col_type = "Binary"
+        else:
+            col_type = "Numerical"
+        count_idf = dfs_count
+        list_temp_col_in_idf = []
+        for idf in idfs:
+            df_stat_each = idf.select(
+                F.mean(i).alias("mean"),
+                F.stddev(i).alias("stddev"),
+                (F.kurtosis(i) + F.lit(3)).alias("kurtosis"),
+            )
+            list_temp_col_in_idf.append(df_stat_each)
+            if appended_metric_path:
+                df_append_single = df_stat_each.select(
+                    F.lit(str(count_idf)).alias("idx"),
+                    F.lit(str(i)).alias("attribute"),
+                    F.lit(col_type).alias("type"),
+                    "mean",
+                    "stddev",
+                    "kurtosis",
+                )
+                list_append_all.append(df_append_single)
+                count_idf += 1
+        if existing_metric_df:
+            existing_df_for_single_col = existing_metric_df.where(
+                F.col("attribute") == str(i)
+            ).select("mean", "stddev", "kurtosis")
+            if existing_df_for_single_col.count() > 0:
+                list_temp_col_in_idf.append(existing_df_for_single_col)
+        df_stat_col = (
+            unionAll(list_temp_col_in_idf)
+            .select(
+                F.stddev("mean").alias("std_of_mean"),
+                F.mean("mean").alias("mean_of_mean"),
+                F.stddev("stddev").alias("std_of_stddev"),
+                F.mean("stddev").alias("mean_of_stddev"),
+                F.stddev("kurtosis").alias("std_of_kurtosis"),
+                F.mean("kurtosis").alias("mean_of_kurtosis"),
+            )
+            .select(
+                F.lit(str(i)).alias("attribute"),
+                F.lit(col_type).alias("type"),
+                F.col("std_of_mean").alias("mean_stddev"),
+                (F.col("std_of_mean") / F.col("mean_of_mean")).alias("mean_cv"),
+                (F.col("std_of_stddev") / F.col("mean_of_stddev")).alias("stddev_cv"),
+                (F.col("std_of_kurtosis") / F.col("mean_of_kurtosis")).alias(
+                    "kurtosis_cv"
+                ),
+            )
+        )
+        list_temp_all_col.append(df_stat_col)
+    odf = unionAll(list_temp_all_col)
+    if appended_metric_path:
+        if existing_metric_df:
+            list_append_all.append(existing_metric_df)
+        df_append = unionAll(list_append_all).orderBy(F.col("idx"))
+        df_append.coalesce(1).write.csv(
             appended_metric_path, header=True, mode="overwrite"
         )
 
-    result = []
-    for i in list_of_cols:
-        i_output = [i]
-        for metric in ["mean", "stddev", "kurtosis"]:
-            metric_stats = (
-                appended_metric_df.where(F.col("attribute") == i)
-                .orderBy("idx")
-                .select(metric)
-                .fillna(np.nan)
-                .rdd.flatMap(list)
-                .collect()
-            )
-            metric_cv = round(float(variation([a for a in metric_stats])), 4) or None
-            i_output.append(metric_cv)
-        result.append(i_output)
-
-    schema = T.StructType(
-        [
-            T.StructField("attribute", T.StringType(), True),
-            T.StructField("mean_cv", T.FloatType(), True),
-            T.StructField("stddev_cv", T.FloatType(), True),
-            T.StructField("kurtosis_cv", T.FloatType(), True),
-        ]
-    )
-
-    odf = spark.createDataFrame(result, schema=schema)
-
-    def score_cv(cv, thresholds=[0.03, 0.1, 0.2, 0.5]):
-        if cv is None:
-            return None
-        else:
-            cv = abs(cv)
-            stability_index = [4, 3, 2, 1, 0]
-            for i, thresh in enumerate(thresholds):
-                if cv < thresh:
-                    return stability_index[i]
-            return stability_index[-1]
-
-    f_score_cv = F.udf(score_cv, T.IntegerType())
+    f_compute_si = F.udf(compute_si(metric_weightages), T.ArrayType(T.FloatType()))
 
     odf = (
         odf.replace(np.nan, None)
-        .withColumn("mean_si", f_score_cv(F.col("mean_cv")))
-        .withColumn("stddev_si", f_score_cv(F.col("stddev_cv")))
-        .withColumn("kurtosis_si", f_score_cv(F.col("kurtosis_cv")))
         .withColumn(
-            "stability_index",
-            F.round(
-                (
-                    F.col("mean_si") * metric_weightages.get("mean", 0)
-                    + F.col("stddev_si") * metric_weightages.get("stddev", 0)
-                    + F.col("kurtosis_si") * metric_weightages.get("kurtosis", 0)
-                ),
-                4,
-            ),
+            "si_array",
+            f_compute_si("type", "mean_stddev", "mean_cv", "stddev_cv", "kurtosis_cv"),
         )
+        .withColumn("mean_si", F.col("si_array").getItem(0))
+        .withColumn("stddev_si", F.col("si_array").getItem(1))
+        .withColumn("kurtosis_si", F.col("si_array").getItem(2))
+        .withColumn("stability_index", F.col("si_array").getItem(3))
         .withColumn(
             "flagged",
             F.when(
@@ -540,6 +318,11 @@ def stability_index_computation(
                 1,
             ).otherwise(0),
         )
+        .withColumn("mean_stddev", F.round(F.col("mean_stddev"), 4))
+        .withColumn("mean_cv", F.round(F.col("mean_cv"), 4))
+        .withColumn("stddev_cv", F.round(F.col("stddev_cv"), 4))
+        .withColumn("kurtosis_cv", F.round(F.col("kurtosis_cv"), 4))
+        .drop("si_array")
     )
 
     if print_impact:
@@ -548,6 +331,10 @@ def stability_index_computation(
         logger.info("Potential Unstable Attributes:")
         unstable = odf.where(F.col("flagged") == 1)
         unstable.show(unstable.count())
+
+    if persist:
+        for i in range(len(idfs)):
+            idfs[i].unpersist()
 
     return odf
 
@@ -625,6 +412,18 @@ def feature_stability_estimation(
         and upper bounds for stability index.
 
     """
+    if (
+        round(
+            metric_weightages.get("mean", 0)
+            + metric_weightages.get("stddev", 0)
+            + metric_weightages.get("kurtosis", 0),
+            3,
+        )
+        != 1
+    ):
+        raise ValueError(
+            "Invalid input for metric weightages. Either metric name is incorrect or sum of metric weightages is not 1.0."
+        )
 
     def stats_estimation(attributes, transformation, mean, stddev):
         attribute_means = list(zip(attributes, mean))
@@ -720,7 +519,7 @@ def feature_stability_estimation(
                 .rdd.flatMap(list)
                 .collect()
             )
-            metric_cv = round(float(variation([a for a in metric_stats])), 4) or None
+            metric_cv = round(float(variation([a for a in metric_stats])), 4)
             i_output.append(metric_cv)
         output.append(i_output)
 
@@ -800,7 +599,7 @@ def feature_stability_estimation(
 </details>
 ## Functions
 <dl>
-<dt id="anovos.drift.detector.feature_stability_estimation"><code class="name flex hljs csharp">
+<dt id="anovos.drift_stability.stability.feature_stability_estimation"><code class="name flex hljs csharp">
 <span class="k">def</span> <span class="nf"><span class="ident">feature_stability_estimation</span></span>(<span class="n">spark, attribute_stats, attribute_transformation, metric_weightages={'mean': 0.5, 'stddev': 0.3, 'kurtosis': 0.2}, threshold=1, print_impact=False)</span>
 </code></dt>
 <dd>
@@ -942,6 +741,18 @@ def feature_stability_estimation(
         and upper bounds for stability index.
 
     """
+    if (
+        round(
+            metric_weightages.get("mean", 0)
+            + metric_weightages.get("stddev", 0)
+            + metric_weightages.get("kurtosis", 0),
+            3,
+        )
+        != 1
+    ):
+        raise ValueError(
+            "Invalid input for metric weightages. Either metric name is incorrect or sum of metric weightages is not 1.0."
+        )
 
     def stats_estimation(attributes, transformation, mean, stddev):
         attribute_means = list(zip(attributes, mean))
@@ -1037,7 +848,7 @@ def feature_stability_estimation(
                 .rdd.flatMap(list)
                 .collect()
             )
-            metric_cv = round(float(variation([a for a in metric_stats])), 4) or None
+            metric_cv = round(float(variation([a for a in metric_stats])), 4)
             i_output.append(metric_cv)
         output.append(i_output)
 
@@ -1116,8 +927,8 @@ def feature_stability_estimation(
 </pre>
 </details>
 </dd>
-<dt id="anovos.drift.detector.stability_index_computation"><code class="name flex hljs csharp">
-<span class="k">def</span> <span class="nf"><span class="ident">stability_index_computation</span></span>(<span class="n">spark, *idfs, list_of_cols='all', drop_cols=[], metric_weightages={'mean': 0.5, 'stddev': 0.3, 'kurtosis': 0.2}, existing_metric_path='', appended_metric_path='', threshold=1, print_impact=False)</span>
+<dt id="anovos.drift_stability.stability.stability_index_computation"><code class="name flex hljs csharp">
+<span class="k">def</span> <span class="nf"><span class="ident">stability_index_computation</span></span>(<span class="n">spark, idfs, list_of_cols='all', drop_cols=[], metric_weightages={'mean': 0.5, 'stddev': 0.3, 'kurtosis': 0.2}, binary_cols=[], existing_metric_path='', appended_metric_path='', persist: bool = True, persist_option=StorageLevel(True, True, False, False, 1), threshold=1, print_impact=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>The data stability is represented by a single metric to summarise the stability of an attribute over multiple
@@ -1291,6 +1102,13 @@ where different column names are separated by pipe delimiter “|” e.g., "col1
 <dd>Takes input in dictionary format with keys being the metric name - "mean","stdev","kurtosis"
 and value being the weightage of the metric (between 0 and 1). Sum of all weightages must be 1.
 (Default value = {"mean": 0.5, "stddev": 0.3, "kurtosis": 0.2})</dd>
+<dt><strong><code>binary_cols</code></strong></dt>
+<dd>List of numerical columns to be treated as binary columns e.g., ["col1","col2"].
+Alternatively, columns can be specified in a string format, where different column names are
+separated by pipe delimiter “|”. For the specified binary columns,
+only the mean value will be used as the statistical metric (standard deviation and kurtosis will be skipped).
+In addition, standard deviation will be used to measure the stability of mean instead of CV.
+(Default value = [])</dd>
 <dt><strong><code>existing_metric_path</code></strong></dt>
 <dd>This argument is path for referring pre-existing metrics of historical datasets and is
 of schema [idx, attribute, mean, stdev, kurtosis].
@@ -1298,6 +1116,13 @@ idx is index number of historical datasets assigned in chronological order. (Def
 <dt><strong><code>appended_metric_path</code></strong></dt>
 <dd>This argument is path for saving input dataframes metrics after appending to the
 historical datasets' metrics. (Default value = "")</dd>
+<dt><strong><code>persist</code></strong></dt>
+<dd>Boolean argument - True or False. This argument is used to determine whether to persist on
+binning result of source and target dataset, True will enable the use of persist, otherwise False.
+It is recommended to set this as True for large datasets. (Default value = True)</dd>
+<dt><strong><code>persist_option</code></strong></dt>
+<dd>If persist is True, this argument is used to determine the type of persist.
+(Default value = pyspark.StorageLevel.MEMORY_AND_DISK)</dd>
 <dt><strong><code>threshold</code></strong></dt>
 <dd>A column is flagged if the stability index is below the threshold, which varies between 0 to 4.
 The following criteria can be used to classifiy stability_index (SI): very unstable: 0≤SI&lt;1,
@@ -1309,7 +1134,7 @@ This argument is to print out the stability metrics of all attributes and potent
 <h2 id="returns">Returns</h2>
 <dl>
 <dt><code>DataFrame</code></dt>
-<dd>[attribute, mean_si, stddev_si, kurtosis_si, mean_cv, stddev_cv, kurtosis_cv, stability_index].
+<dd>[attribute, mean_stddev, mean_si, stddev_si, kurtosis_si, mean_cv, stddev_cv, kurtosis_cv, stability_index].
 <em>_cv is coefficient of variation for each metric. </em>_si is stability index for each metric.
 stability_index is net weighted stability index based on the individual metrics' stability index.</dd>
 </dl></div>
@@ -1321,12 +1146,15 @@ stability_index is net weighted stability index based on the individual metrics'
 ```python
 def stability_index_computation(
     spark,
-    *idfs,
+    idfs,
     list_of_cols="all",
     drop_cols=[],
     metric_weightages={"mean": 0.5, "stddev": 0.3, "kurtosis": 0.2},
+    binary_cols=[],
     existing_metric_path="",
     appended_metric_path="",
+    persist: bool = True,
+    persist_option=pyspark.StorageLevel.MEMORY_AND_DISK,
     threshold=1,
     print_impact=False,
 ):
@@ -1450,7 +1278,14 @@ def stability_index_computation(
     metric_weightages
         Takes input in dictionary format with keys being the metric name - "mean","stdev","kurtosis"
         and value being the weightage of the metric (between 0 and 1). Sum of all weightages must be 1.
-         (Default value = {"mean": 0.5, "stddev": 0.3, "kurtosis": 0.2})
+        (Default value = {"mean": 0.5, "stddev": 0.3, "kurtosis": 0.2})
+    binary_cols
+        List of numerical columns to be treated as binary columns e.g., ["col1","col2"].
+        Alternatively, columns can be specified in a string format, where different column names are
+        separated by pipe delimiter “|”. For the specified binary columns,
+        only the mean value will be used as the statistical metric (standard deviation and kurtosis will be skipped).
+        In addition, standard deviation will be used to measure the stability of mean instead of CV.
+        (Default value = [])
     existing_metric_path
         This argument is path for referring pre-existing metrics of historical datasets and is
         of schema [idx, attribute, mean, stdev, kurtosis].
@@ -1458,6 +1293,13 @@ def stability_index_computation(
     appended_metric_path
         This argument is path for saving input dataframes metrics after appending to the
         historical datasets' metrics. (Default value = "")
+    persist
+        Boolean argument - True or False. This argument is used to determine whether to persist on
+        binning result of source and target dataset, True will enable the use of persist, otherwise False.
+        It is recommended to set this as True for large datasets. (Default value = True)
+    persist_option
+        If persist is True, this argument is used to determine the type of persist.
+        (Default value = pyspark.StorageLevel.MEMORY_AND_DISK)
     threshold
         A column is flagged if the stability index is below the threshold, which varies between 0 to 4.
         The following criteria can be used to classifiy stability_index (SI): very unstable: 0≤SI<1,
@@ -1469,7 +1311,7 @@ def stability_index_computation(
     Returns
     -------
     DataFrame
-        [attribute, mean_si, stddev_si, kurtosis_si, mean_cv, stddev_cv, kurtosis_cv, stability_index].
+        [attribute, mean_stddev, mean_si, stddev_si, kurtosis_si, mean_cv, stddev_cv, kurtosis_cv, stability_index].
         *_cv is coefficient of variation for each metric. *_si is stability index for each metric.
         stability_index is net weighted stability index based on the individual metrics' stability index.
 
@@ -1482,120 +1324,117 @@ def stability_index_computation(
         list_of_cols = [x.strip() for x in list_of_cols.split("|")]
     if isinstance(drop_cols, str):
         drop_cols = [x.strip() for x in drop_cols.split("|")]
+    if isinstance(binary_cols, str):
+        binary_cols = [x.strip() for x in binary_cols.split("|")]
 
     list_of_cols = list(set([e for e in list_of_cols if e not in drop_cols]))
 
     if any(x not in num_cols for x in list_of_cols) | (len(list_of_cols) == 0):
         raise TypeError("Invalid input for Column(s)")
 
-    if (
-        round(
-            metric_weightages.get("mean", 0)
-            + metric_weightages.get("stddev", 0)
-            + metric_weightages.get("kurtosis", 0),
-            3,
-        )
-        != 1
-    ):
-        raise ValueError(
-            "Invalid input for metric weightages. Either metric name is incorrect or sum of metric weightages is not 1.0"
-        )
+    if any(x not in list_of_cols for x in binary_cols):
+        raise TypeError("Invalid input for Binary Column(s)")
+
+    check_metric_weightages(metric_weightages)
+    check_threshold(threshold)
 
     if existing_metric_path:
         existing_metric_df = spark.read.csv(
             existing_metric_path, header=True, inferSchema=True
         )
-        dfs_count = existing_metric_df.select(F.max(F.col("idx"))).first()[0]
+        dfs_count = int(existing_metric_df.select(F.max(F.col("idx"))).first()[0]) + 1
     else:
-        schema = T.StructType(
-            [
-                T.StructField("idx", T.IntegerType(), True),
-                T.StructField("attribute", T.StringType(), True),
-                T.StructField("mean", T.DoubleType(), True),
-                T.StructField("stddev", T.DoubleType(), True),
-                T.StructField("kurtosis", T.DoubleType(), True),
-            ]
+        existing_metric_df = None
+        dfs_count = 1
+
+    def unionAll(dfs):
+        first, *_ = dfs
+        return first.sql_ctx.createDataFrame(
+            first.sql_ctx._sc.union([df.rdd for df in dfs]), first.schema
         )
-        existing_metric_df = spark.sparkContext.emptyRDD().toDF(schema)
-        dfs_count = 0
 
-    metric_ls = []
-    for idf in idfs:
-        for i in list_of_cols:
-            mean, stddev, kurtosis = idf.select(
-                F.mean(i), F.stddev(i), F.kurtosis(i)
-            ).first()
-            metric_ls.append(
-                [dfs_count + 1, i, mean, stddev, kurtosis + 3.0 if kurtosis else None]
-            )
-        dfs_count += 1
+    if persist:
+        for i in range(len(idfs)):
+            idfs[i] = idfs[i].select(list_of_cols)
+            idfs[i].persist(persist_option)
 
-    new_metric_df = spark.createDataFrame(
-        metric_ls, schema=("idx", "attribute", "mean", "stddev", "kurtosis")
-    )
-    appended_metric_df = concatenate_dataset(existing_metric_df, new_metric_df)
-
+    list_temp_all_col = []
     if appended_metric_path:
-        appended_metric_df.coalesce(1).write.csv(
+        list_append_all = []
+    for i in list_of_cols:
+        if i in binary_cols:
+            col_type = "Binary"
+        else:
+            col_type = "Numerical"
+        count_idf = dfs_count
+        list_temp_col_in_idf = []
+        for idf in idfs:
+            df_stat_each = idf.select(
+                F.mean(i).alias("mean"),
+                F.stddev(i).alias("stddev"),
+                (F.kurtosis(i) + F.lit(3)).alias("kurtosis"),
+            )
+            list_temp_col_in_idf.append(df_stat_each)
+            if appended_metric_path:
+                df_append_single = df_stat_each.select(
+                    F.lit(str(count_idf)).alias("idx"),
+                    F.lit(str(i)).alias("attribute"),
+                    F.lit(col_type).alias("type"),
+                    "mean",
+                    "stddev",
+                    "kurtosis",
+                )
+                list_append_all.append(df_append_single)
+                count_idf += 1
+        if existing_metric_df:
+            existing_df_for_single_col = existing_metric_df.where(
+                F.col("attribute") == str(i)
+            ).select("mean", "stddev", "kurtosis")
+            if existing_df_for_single_col.count() > 0:
+                list_temp_col_in_idf.append(existing_df_for_single_col)
+        df_stat_col = (
+            unionAll(list_temp_col_in_idf)
+            .select(
+                F.stddev("mean").alias("std_of_mean"),
+                F.mean("mean").alias("mean_of_mean"),
+                F.stddev("stddev").alias("std_of_stddev"),
+                F.mean("stddev").alias("mean_of_stddev"),
+                F.stddev("kurtosis").alias("std_of_kurtosis"),
+                F.mean("kurtosis").alias("mean_of_kurtosis"),
+            )
+            .select(
+                F.lit(str(i)).alias("attribute"),
+                F.lit(col_type).alias("type"),
+                F.col("std_of_mean").alias("mean_stddev"),
+                (F.col("std_of_mean") / F.col("mean_of_mean")).alias("mean_cv"),
+                (F.col("std_of_stddev") / F.col("mean_of_stddev")).alias("stddev_cv"),
+                (F.col("std_of_kurtosis") / F.col("mean_of_kurtosis")).alias(
+                    "kurtosis_cv"
+                ),
+            )
+        )
+        list_temp_all_col.append(df_stat_col)
+    odf = unionAll(list_temp_all_col)
+    if appended_metric_path:
+        if existing_metric_df:
+            list_append_all.append(existing_metric_df)
+        df_append = unionAll(list_append_all).orderBy(F.col("idx"))
+        df_append.coalesce(1).write.csv(
             appended_metric_path, header=True, mode="overwrite"
         )
 
-    result = []
-    for i in list_of_cols:
-        i_output = [i]
-        for metric in ["mean", "stddev", "kurtosis"]:
-            metric_stats = (
-                appended_metric_df.where(F.col("attribute") == i)
-                .orderBy("idx")
-                .select(metric)
-                .fillna(np.nan)
-                .rdd.flatMap(list)
-                .collect()
-            )
-            metric_cv = round(float(variation([a for a in metric_stats])), 4) or None
-            i_output.append(metric_cv)
-        result.append(i_output)
-
-    schema = T.StructType(
-        [
-            T.StructField("attribute", T.StringType(), True),
-            T.StructField("mean_cv", T.FloatType(), True),
-            T.StructField("stddev_cv", T.FloatType(), True),
-            T.StructField("kurtosis_cv", T.FloatType(), True),
-        ]
-    )
-
-    odf = spark.createDataFrame(result, schema=schema)
-
-    def score_cv(cv, thresholds=[0.03, 0.1, 0.2, 0.5]):
-        if cv is None:
-            return None
-        else:
-            cv = abs(cv)
-            stability_index = [4, 3, 2, 1, 0]
-            for i, thresh in enumerate(thresholds):
-                if cv < thresh:
-                    return stability_index[i]
-            return stability_index[-1]
-
-    f_score_cv = F.udf(score_cv, T.IntegerType())
+    f_compute_si = F.udf(compute_si(metric_weightages), T.ArrayType(T.FloatType()))
 
     odf = (
         odf.replace(np.nan, None)
-        .withColumn("mean_si", f_score_cv(F.col("mean_cv")))
-        .withColumn("stddev_si", f_score_cv(F.col("stddev_cv")))
-        .withColumn("kurtosis_si", f_score_cv(F.col("kurtosis_cv")))
         .withColumn(
-            "stability_index",
-            F.round(
-                (
-                    F.col("mean_si") * metric_weightages.get("mean", 0)
-                    + F.col("stddev_si") * metric_weightages.get("stddev", 0)
-                    + F.col("kurtosis_si") * metric_weightages.get("kurtosis", 0)
-                ),
-                4,
-            ),
+            "si_array",
+            f_compute_si("type", "mean_stddev", "mean_cv", "stddev_cv", "kurtosis_cv"),
         )
+        .withColumn("mean_si", F.col("si_array").getItem(0))
+        .withColumn("stddev_si", F.col("si_array").getItem(1))
+        .withColumn("kurtosis_si", F.col("si_array").getItem(2))
+        .withColumn("stability_index", F.col("si_array").getItem(3))
         .withColumn(
             "flagged",
             F.when(
@@ -1604,6 +1443,11 @@ def stability_index_computation(
                 1,
             ).otherwise(0),
         )
+        .withColumn("mean_stddev", F.round(F.col("mean_stddev"), 4))
+        .withColumn("mean_cv", F.round(F.col("mean_cv"), 4))
+        .withColumn("stddev_cv", F.round(F.col("stddev_cv"), 4))
+        .withColumn("kurtosis_cv", F.round(F.col("kurtosis_cv"), 4))
+        .drop("si_array")
     )
 
     if print_impact:
@@ -1613,341 +1457,9 @@ def stability_index_computation(
         unstable = odf.where(F.col("flagged") == 1)
         unstable.show(unstable.count())
 
-    return odf
-```
-</pre>
-</details>
-</dd>
-<dt id="anovos.drift.detector.statistics"><code class="name flex hljs csharp">
-<span class="k">def</span> <span class="nf"><span class="ident">statistics</span></span>(<span class="n">spark: pyspark.sql.session.SparkSession, idf_target: pyspark.sql.dataframe.DataFrame, idf_source: pyspark.sql.dataframe.DataFrame, *, list_of_cols: list = 'all', drop_cols: list = None, method_type: str = 'PSI', bin_method: str = 'equal_range', bin_size: int = 10, threshold: float = 0.1, pre_existing_source: bool = False, source_path: str = 'NA', model_directory: str = 'drift_statistics', run_type: str = 'local', print_impact: bool = False)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>When the performance of a deployed machine learning model degrades in production, one potential reason is that
-the data used in training and prediction are not following the same distribution.</p>
-<p>Data drift mainly includes the following manifestations:</p>
-<ul>
-<li>Covariate shift: training and test data follow different distributions. For example, An algorithm predicting
-income that is trained on younger population but tested on older population.</li>
-<li>Prior probability shift: change of prior probability. For example in a spam classification problem,
-the proportion of spam emails changes from 0.2
-in training data to 0.6 in testing data.</li>
-<li>Concept shift: the distribution of the target variable changes given fixed input values. For example in
-the same spam classification problem, emails tagged as spam in training data are more likely to be tagged
-as non-spam in testing data.</li>
-</ul>
-<p>In our module, we mainly focus on covariate shift detection.</p>
-<p>In summary, given 2 datasets, source and target datasets, we would like to quantify the drift of some numerical
-attributes from source to target datasets. The whole process can be broken down into 2 steps: (1) convert each
-attribute of interest in source and target datasets into source and target probability distributions. (2)
-calculate the statistical distance between source and target distributions for each attribute.</p>
-<p>In the first step, attribute_binning is firstly performed to bin the numerical attributes of the source dataset,
-which requires two input variables: bin_method and bin_size. The same binning method is applied on the target
-dataset to align two results. The probability distributions are computed by dividing the frequency of each bin by
-the total frequency.</p>
-<p>In the second step, 4 choices of statistical metrics are provided to measure the data drift of an attribute from
-source to target distribution: Population Stability Index (PSI), Jensen-Shannon Divergence (JSD),
-Hellinger Distance (HD) and Kolmogorov-Smirnov Distance (KS).</p>
-<p>They are calculated as below:
-For two discrete probability distributions <em>P=(p_1,…,p_k)</em> and <em>Q=(q_1,…,q_k),</em></p>
-<p><img alt="https://raw.githubusercontent.com/anovos/anovos-docs/main/docs/assets/drift_stats_formulae.png" src="https://raw.githubusercontent.com/anovos/anovos-docs/main/docs/assets/drift_stats_formulae.png"></p>
-<p>A threshold can be set to flag out drifted attributes. If multiple statistical metrics have been calculated,
-an attribute will be marked as drifted if any of its statistical metric is larger than the threshold.</p>
-<p>This function can be used in many scenarios. For example:</p>
-<ol>
-<li>Attribute level data drift can be analysed together with the attribute importance of a machine learning model.
-The more important an attribute is, the more attention it needs to be given if drift presents.</li>
-<li>To analyse data drift over time, one can treat one dataset as the source / baseline dataset and multiple
-datasets as the target datasets. Drift analysis can be performed between the source dataset and each of the
-target dataset to quantify the drift over time.</li>
-</ol>
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt><strong><code>spark</code></strong></dt>
-<dd>Spark Session</dd>
-<dt><strong><code>idf_target</code></strong></dt>
-<dd>Input Dataframe</dd>
-<dt><strong><code>idf_source</code></strong></dt>
-<dd>Baseline/Source Dataframe. This argument is ignored if pre_existing_source is True.</dd>
-<dt><strong><code>list_of_cols</code></strong></dt>
-<dd>List of columns to check drift e.g., ["col1","col2"].
-Alternatively, columns can be specified in a string format,
-where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
-"all" can be passed to include all (non-array) columns for analysis.
-Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
-drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")</dd>
-<dt><strong><code>drop_cols</code></strong></dt>
-<dd>List of columns to be dropped e.g., ["col1","col2"].
-Alternatively, columns can be specified in a string format,
-where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = None)</dd>
-<dt><strong><code>method_type</code></strong></dt>
-<dd>"PSI", "JSD", "HD", "KS","all".
-"all" can be passed to calculate all drift metrics.
-One or more methods can be passed in a form of list or string where different metrics are separated
-by pipe delimiter “|” e.g. ["PSI", "JSD"] or "PSI|JSD". (Default value = "PSI")</dd>
-<dt><strong><code>bin_method</code></strong></dt>
-<dd>"equal_frequency", "equal_range".
-In "equal_range" method, each bin is of equal size/width and in "equal_frequency", each bin
-has equal no. of rows, though the width of bins may vary. (Default value = "equal_range")</dd>
-<dt><strong><code>bin_size</code></strong></dt>
-<dd>Number of bins for creating histogram. (Default value = 10)</dd>
-<dt><strong><code>threshold</code></strong></dt>
-<dd>A column is flagged if any drift metric is above the threshold. (Default value = 0.1)</dd>
-<dt><strong><code>pre_existing_source</code></strong></dt>
-<dd>Boolean argument – True or False. True if the drift_statistics folder (binning model &amp;
-frequency counts for each attribute) exists already, False Otherwise. (Default value = False)</dd>
-<dt><strong><code>source_path</code></strong></dt>
-<dd>If pre_existing_source is False, this argument can be used for saving the drift_statistics folder.
-The drift_statistics folder will have attribute_binning (binning model) &amp; frequency_counts sub-folders.
-If pre_existing_source is True, this argument is path for referring the drift_statistics folder.
-Default "NA" for temporarily saving data in "intermediate_data/" folder. (Default value = "NA")</dd>
-<dt><strong><code>model_directory</code></strong></dt>
-<dd>If pre_existing_source is False, this argument can be used for saving the drift stats to folder.
-The default drift statics directory is drift_statistics folder will have attribute_binning
-If pre_existing_source is True, this argument is model_directory for referring the drift statistics dir.
-Default "drift_statistics" for temporarily saving source dataset attribute_binning folder. (Default value = "drift_statistics")</dd>
-<dt><strong><code>run_type</code></strong></dt>
-<dd>"local", "emr", "databricks" (Default value = "local")</dd>
-<dt><strong><code>print_impact</code></strong></dt>
-<dd>True, False. (Default value = False)
-This argument is to print out the drift statistics of all attributes and attributes meeting the threshold.</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>DataFrame</code></dt>
-<dd>[attribute, *metric, flagged]
-Number of columns will be dependent on method argument. There will be one column for each drift method/metric.</dd>
-</dl></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre>
-```python
-@check_distance_method
-@check_list_of_columns
-def statistics(
-    spark: SparkSession,
-    idf_target: DataFrame,
-    idf_source: DataFrame,
-    *,
-    list_of_cols: list = "all",
-    drop_cols: list = None,
-    method_type: str = "PSI",
-    bin_method: str = "equal_range",
-    bin_size: int = 10,
-    threshold: float = 0.1,
-    pre_existing_source: bool = False,
-    source_path: str = "NA",
-    model_directory: str = "drift_statistics",
-    run_type: str = "local",
-    print_impact: bool = False,
-):
-    """
-    When the performance of a deployed machine learning model degrades in production, one potential reason is that
-    the data used in training and prediction are not following the same distribution.
-
-    Data drift mainly includes the following manifestations:
-
-    - Covariate shift: training and test data follow different distributions. For example, An algorithm predicting
-    income that is trained on younger population but tested on older population.
-    - Prior probability shift: change of prior probability. For example in a spam classification problem,
-    the proportion of spam emails changes from 0.2
-    in training data to 0.6 in testing data.
-    - Concept shift: the distribution of the target variable changes given fixed input values. For example in
-    the same spam classification problem, emails tagged as spam in training data are more likely to be tagged
-    as non-spam in testing data.
-
-    In our module, we mainly focus on covariate shift detection.
-
-    In summary, given 2 datasets, source and target datasets, we would like to quantify the drift of some numerical
-    attributes from source to target datasets. The whole process can be broken down into 2 steps: (1) convert each
-    attribute of interest in source and target datasets into source and target probability distributions. (2)
-    calculate the statistical distance between source and target distributions for each attribute.
-
-    In the first step, attribute_binning is firstly performed to bin the numerical attributes of the source dataset,
-    which requires two input variables: bin_method and bin_size. The same binning method is applied on the target
-    dataset to align two results. The probability distributions are computed by dividing the frequency of each bin by
-    the total frequency.
-
-    In the second step, 4 choices of statistical metrics are provided to measure the data drift of an attribute from
-    source to target distribution: Population Stability Index (PSI), Jensen-Shannon Divergence (JSD),
-    Hellinger Distance (HD) and Kolmogorov-Smirnov Distance (KS).
-
-    They are calculated as below:
-    For two discrete probability distributions *P=(p_1,…,p_k)* and *Q=(q_1,…,q_k),*
-
-    ![https://raw.githubusercontent.com/anovos/anovos-docs/main/docs/assets/drift_stats_formulae.png](https://raw.githubusercontent.com/anovos/anovos-docs/main/docs/assets/drift_stats_formulae.png)
-
-    A threshold can be set to flag out drifted attributes. If multiple statistical metrics have been calculated,
-    an attribute will be marked as drifted if any of its statistical metric is larger than the threshold.
-
-    This function can be used in many scenarios. For example:
-
-    1. Attribute level data drift can be analysed together with the attribute importance of a machine learning model.
-    The more important an attribute is, the more attention it needs to be given if drift presents.
-    2. To analyse data drift over time, one can treat one dataset as the source / baseline dataset and multiple
-    datasets as the target datasets. Drift analysis can be performed between the source dataset and each of the
-    target dataset to quantify the drift over time.
-
-    Parameters
-    ----------
-    spark
-        Spark Session
-    idf_target
-        Input Dataframe
-    idf_source
-        Baseline/Source Dataframe. This argument is ignored if pre_existing_source is True.
-    list_of_cols
-        List of columns to check drift e.g., ["col1","col2"].
-        Alternatively, columns can be specified in a string format,
-        where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
-        "all" can be passed to include all (non-array) columns for analysis.
-        Please note that this argument is used in conjunction with drop_cols i.e. a column mentioned in
-        drop_cols argument is not considered for analysis even if it is mentioned in list_of_cols. (Default value = "all")
-    drop_cols
-        List of columns to be dropped e.g., ["col1","col2"].
-        Alternatively, columns can be specified in a string format,
-        where different column names are separated by pipe delimiter “|” e.g., "col1|col2". (Default value = None)
-    method_type
-        "PSI", "JSD", "HD", "KS","all".
-        "all" can be passed to calculate all drift metrics.
-        One or more methods can be passed in a form of list or string where different metrics are separated
-        by pipe delimiter “|” e.g. ["PSI", "JSD"] or "PSI|JSD". (Default value = "PSI")
-    bin_method
-        "equal_frequency", "equal_range".
-        In "equal_range" method, each bin is of equal size/width and in "equal_frequency", each bin
-        has equal no. of rows, though the width of bins may vary. (Default value = "equal_range")
-    bin_size
-        Number of bins for creating histogram. (Default value = 10)
-    threshold
-        A column is flagged if any drift metric is above the threshold. (Default value = 0.1)
-    pre_existing_source
-        Boolean argument – True or False. True if the drift_statistics folder (binning model &
-        frequency counts for each attribute) exists already, False Otherwise. (Default value = False)
-    source_path
-        If pre_existing_source is False, this argument can be used for saving the drift_statistics folder.
-        The drift_statistics folder will have attribute_binning (binning model) & frequency_counts sub-folders.
-        If pre_existing_source is True, this argument is path for referring the drift_statistics folder.
-        Default "NA" for temporarily saving data in "intermediate_data/" folder. (Default value = "NA")
-    model_directory
-        If pre_existing_source is False, this argument can be used for saving the drift stats to folder.
-        The default drift statics directory is drift_statistics folder will have attribute_binning
-        If pre_existing_source is True, this argument is model_directory for referring the drift statistics dir.
-        Default "drift_statistics" for temporarily saving source dataset attribute_binning folder. (Default value = "drift_statistics")
-    run_type
-        "local", "emr", "databricks" (Default value = "local")
-    print_impact
-        True, False. (Default value = False)
-        This argument is to print out the drift statistics of all attributes and attributes meeting the threshold.
-
-    Returns
-    -------
-    DataFrame
-        [attribute, *metric, flagged]
-        Number of columns will be dependent on method argument. There will be one column for each drift method/metric.
-
-    """
-    drop_cols = drop_cols or []
-    num_cols = attributeType_segregation(idf_target.select(list_of_cols))[0]
-
-    if source_path == "NA":
-        source_path = "intermediate_data"
-
-    if not pre_existing_source:
-        source_bin = attribute_binning(
-            spark,
-            idf_source,
-            list_of_cols=num_cols,
-            method_type=bin_method,
-            bin_size=bin_size,
-            pre_existing_model=False,
-            model_path=source_path + "/" + model_directory,
-        )
-        source_bin.persist(pyspark.StorageLevel.MEMORY_AND_DISK).count()
-
-    target_bin = attribute_binning(
-        spark,
-        idf_target,
-        list_of_cols=num_cols,
-        method_type=bin_method,
-        bin_size=bin_size,
-        pre_existing_model=True,
-        model_path=source_path + "/" + model_directory,
-    )
-
-    target_bin.persist(pyspark.StorageLevel.MEMORY_AND_DISK).count()
-    result = {"attribute": [], "flagged": []}
-
-    for method in method_type:
-        result[method] = []
-
-    for i in list_of_cols:
-        if pre_existing_source:
-            x = spark.read.csv(
-                source_path + "/" + model_directory + "/frequency_counts/" + i,
-                header=True,
-                inferSchema=True,
-            )
-        else:
-            x = (
-                source_bin.groupBy(i)
-                .agg((F.count(i) / idf_source.count()).alias("p"))
-                .fillna(-1)
-            )
-            x.coalesce(1).write.csv(
-                source_path + "/" + model_directory + "/frequency_counts/" + i,
-                header=True,
-                mode="overwrite",
-            )
-
-        y = (
-            target_bin.groupBy(i)
-            .agg((F.count(i) / idf_target.count()).alias("q"))
-            .fillna(-1)
-        )
-
-        xy = (
-            x.join(y, i, "full_outer")
-            .fillna(0.0001, subset=["p", "q"])
-            .replace(0, 0.0001)
-            .orderBy(i)
-        )
-        p = np.array(xy.select("p").rdd.flatMap(lambda x: x).collect())
-        q = np.array(xy.select("q").rdd.flatMap(lambda x: x).collect())
-
-        result["attribute"].append(i)
-        counter = 0
-
-        for idx, method in enumerate(method_type):
-            drift_function = {
-                "PSI": psi,
-                "JSD": js_divergence,
-                "HD": hellinger,
-                "KS": ks,
-            }
-            metric = float(round(drift_function[method](p, q), 4))
-            result[method].append(metric)
-            if counter == 0:
-                if metric > threshold:
-                    result["flagged"].append(1)
-                    counter = 1
-            if (idx == (len(method_type) - 1)) & (counter == 0):
-                result["flagged"].append(0)
-
-    odf = (
-        spark.createDataFrame(
-            pd.DataFrame.from_dict(result, orient="index").transpose()
-        )
-        .select(["attribute"] + method_type + ["flagged"])
-        .orderBy(F.desc("flagged"))
-    )
-
-    if print_impact:
-        logger.info("All Attributes:")
-        odf.show(len(list_of_cols))
-        logger.info("Attributes meeting Data Drift threshold:")
-        drift = odf.where(F.col("flagged") == 1)
-        drift.show(drift.count())
+    if persist:
+        for i in range(len(idfs)):
+            idfs[i].unpersist()
 
     return odf
 ```

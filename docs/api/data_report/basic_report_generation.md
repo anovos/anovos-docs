@@ -52,7 +52,7 @@ default_template = (
         </html>
         """
     ),
-    dp.Text("# Anovos Data Assessment Report"),
+    dp.Text("# ML-Anovos Report"),
 )
 
 blank_df = dp.DataTable(pd.DataFrame(columns=[" "], index=range(1)), label=" ")
@@ -79,9 +79,8 @@ def stats_args(path, func):
     mainfunc_to_args = {
         "biasedness_detection": ["stats_mode"],
         "IDness_detection": ["stats_unique"],
-        "correlation_matrix": ["stats_unique"],
         "nullColumns_detection": ["stats_unique", "stats_mode", "stats_missing"],
-        "variable_clustering": ["stats_unique", "stats_mode"],
+        "variable_clustering": ["stats_mode"],
     }
     args_to_statsfunc = {
         "stats_unique": "measures_of_cardinality",
@@ -186,7 +185,7 @@ def anovos_basic_report(
             stats = func(spark, idf)
         elif func in (QC_rows_funcs + QC_cols_funcs):
             extra_args = stats_args(output_path, func.__name__)
-            if func.__name__ == "outlier_detection":
+            if func.__name__ in ["outlier_detection", "duplicate_detection"]:
                 extra_args["print_impact"] = True
             stats = func(spark, idf, **extra_args)[1]
         elif func in AA_funcs:
@@ -693,7 +692,7 @@ def anovos_basic_report(
             stats = func(spark, idf)
         elif func in (QC_rows_funcs + QC_cols_funcs):
             extra_args = stats_args(output_path, func.__name__)
-            if func.__name__ == "outlier_detection":
+            if func.__name__ in ["outlier_detection", "duplicate_detection"]:
                 extra_args["print_impact"] = True
             stats = func(spark, idf, **extra_args)[1]
         elif func in AA_funcs:
@@ -1117,9 +1116,8 @@ def stats_args(path, func):
     mainfunc_to_args = {
         "biasedness_detection": ["stats_mode"],
         "IDness_detection": ["stats_unique"],
-        "correlation_matrix": ["stats_unique"],
         "nullColumns_detection": ["stats_unique", "stats_mode", "stats_missing"],
-        "variable_clustering": ["stats_unique", "stats_mode"],
+        "variable_clustering": ["stats_mode"],
     }
     args_to_statsfunc = {
         "stats_unique": "measures_of_cardinality",

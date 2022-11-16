@@ -127,7 +127,7 @@ from .version import __version__
 <dd>
 <div class="desc"></div>
 </dd>
-<dt><code class="name"><a title="anovos.drift" href="drift/_index.html">anovos.drift</a></code></dt>
+<dt><code class="name"><a title="anovos.drift_stability" href="drift_stability/_index.html">anovos.drift_stability</a></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
