@@ -825,14 +825,14 @@ variable_clustering:
 
 ## 📑 `drift_detector`
 
-🔎 _Corresponds to [`drift.detector`](../api/drift/detector.md)_
+🔎 _Corresponds to [`drift_stability.drift_detector`](../api/drift_stability/drift_detector.md)_
 
 This block configures the drift detector module that provides a range of methods
 to detect drift within and between datasets.
 
 ### `drift_statistics`
 
-🔎 _Corresponds to [`drift.detector.statistics`](../api/drift/detector.md#anovos.drift.detector.statistics)_
+🔎 _Corresponds to [`drift_stability.drift_detector.statistics`](../api/drift_stability/drift_detector.md#anovos.drift_stability.drift_detector.statistics)_
 
 #### `configs`
 
@@ -935,7 +935,7 @@ to be selected for further processing.
 
 ### `stability_index`
 
-🔎 _Corresponds to [`detector.stability_index_computation`](../api/drift/detector.md#anovos.drift.detector.stability_index_computation)_
+🔎 _Corresponds to [`drift_detector.stability_index_computation`](../api/drift_stability/drift_detector.md#anovos.drift_stability.drift_detector.stability_index_computation)_
 
 #### `configs`
 
