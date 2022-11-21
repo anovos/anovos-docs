@@ -45,7 +45,7 @@ To learn more about what's on the horizon, check out our [roadmap](roadmap.md).
 
 ## 🔩 Other
 
-- The [`stability index`](../api/drift/detector.md#stabilityindex_computation)
+- The [`stability index`](../api/drift_stability/drift_detector.md#stabilityindex_computation)
   can currently only be calculated for numerical columns.
 
 - Due to incompatibilities in TensorFlow and Docker, _Anovos_ may not run well on Apple's M1 chips.
