@@ -500,3 +500,80 @@ in [Step 2.2](#step-22-copy-the-dataset-to-an-azure-blob-storage-container).
 
 The remaining steps are the same as above, so please continue with
 [Step 1.4](#step-14-configure-and-launch-an-anovos-workflow-as-a-databricks-job)
+
+## 3. Anovos on Azure Databricks Using an Azure Blob Storage Container using 
+
+### Step 3.1: Installing/Downloading Anovos
+
+This step is identical to
+[Step 1.1: Installing _Anovos_ on Azure Databricks](#step-11-installing-anovos-on-azure-databricks).
+
+### Step 3.2: Copy the dataset to an Azure Blob Storage container
+
+This step is identical to
+[Step 2.2: Copy the dataset to an Azure Blob Storage container](#step-22-copy-the-dataset-to-an-azure-blob-storage-container).
+
+### Step 2.3: Mount an Azure Blob Storage Container as a DBFS path in Azure Databricks
+
+To access files in an Azure Blob Storage container for running _Anovos_ in Azure Databricks platform,
+you need to mount that container in the DBFS path.
+
+```spark.conf.set("fs.azure.account.key.<storage-account-name>.dfs.core.windows.net", <storage-account-key>```
+
+TODO: CHECKOUT IF SAS-TOKEN DOES WORK TOO
+Here,
+- `<storage-account-name>` is the name of your Azure Blob Storage account
+- `<container-name>` is the name of a container in your Azure Blob Storage account
+- `<storage-account-key>` is the value of the storage account key (TODO: this is bad practise and should be solved with a secret)
+- `<sas_token>` is the SAS token for that storage account
+
+
+To learn more about accessing Azure Blob Storage containers using the abfss protocoll, please refer to
+[the Azure Blob Storage documentation](https://docs.microsoft.com/en-us/azure/databricks/data/data-sources/azure/azure-storage).
+
+💡 _Note that you only need to mount the container once._
+   _The container will remain mounted at the given mount point._
+   _To unmount a container, you can run `dbutils.fs.unmount("/mnt/<mount-name>")` in an Azure Databricks notebook._
+
+### Step 2.4: Update the workflow configuration for all input and output paths according to the DBFS mount point
+
+Once mounting is completed, the data is present in DBFS at the path specified as the mount point.
+All operations performed by _Anovos_ when running a workflow will result in changes in the data stored in the
+Azure Blob Storage container.
+
+The example configuration file we use in this tutorial can be found at `config/configs_income_azure_blob_mount.yaml`
+in the _Anovos_ repository.
+It will need to be updated to reflect the path of the mount point set above.
+
+In order for _Anovos_ to be able to find the input data and write the output to the correct location,
+update all paths to contain the path of the mount point:
+
+```yaml
+file_path: "dbfs:/mnt/<mount-name>/..."
+```
+
+🤓 _Example:_
+
+```yaml
+  read_dataset:
+    file_path: "dbfs:/mnt/anovos1/income_dataset/csv/"
+    file_type: csv
+```
+
+Here, the mount points is `dbfs:/mnt/anovos1` and the input dataset is stored in a folder called `income_dataset/csv`
+within the Azure Blob Storage container.
+
+To learn more about the _Anovos_ workflow configuration file and specifying paths for input and output data,
+have a look at the [Configuring Workloads](../config_file.md) page.
+
+### Step 2.5: Copy the updated configuration file from the local machine to the Azure Blob Storage container
+
+Once you have updated the configuration file, copy it to Azure Databricks using the same command that was used
+in [Step 2.2](#step-22-copy-the-dataset-to-an-azure-blob-storage-container).
+
+### Remaining Steps
+
+The remaining steps are the same as above, so please continue with
+[Step 1.4](#step-14-configure-and-launch-an-anovos-workflow-as-a-databricks-job)
+
+
