@@ -1,6 +1,10 @@
 # Overview
 ## Sub-modules
 <dl>
+<dt><code class="name"><a title="anovos.data_analyzer.association_eval_varclus" href="association_eval_varclus.html">anovos.data_analyzer.association_eval_varclus</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
 <dt><code class="name"><a title="anovos.data_analyzer.association_evaluator" href="association_evaluator.html">anovos.data_analyzer.association_evaluator</a></code></dt>
 <dd>
 <div class="desc"><p>This submodule focuses on understanding the interaction between different attributes and/or the relationship

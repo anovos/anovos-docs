@@ -20,6 +20,8 @@ UNIT_FACTOR = {"m": 1.0, "km": 1000.0}
 
 def in_range(loc, loc_format="dd"):
     """
+    This function helps to check if the input location is in range based on loc_format.
+
     Parameters
     ----------
     loc
@@ -55,6 +57,7 @@ def in_range(loc, loc_format="dd"):
 
 def to_latlon_decimal_degrees(loc, input_format, radius=EARTH_RADIUS):
     """
+    This function helps to format input location into [lat,lon] format
     Parameters
     ----------
     loc
@@ -142,6 +145,7 @@ def to_latlon_decimal_degrees(loc, input_format, radius=EARTH_RADIUS):
 
 def decimal_degrees_to_degrees_minutes_seconds(dd):
     """
+    This function helps to divide float value dd in decimal degree into [degreee, minute, second]
     Parameters
     ----------
     dd
@@ -165,6 +169,7 @@ def from_latlon_decimal_degrees(
     loc, output_format, radius=EARTH_RADIUS, geohash_precision=8
 ):
     """
+    This function helps to transform [lat,lon] locations into desired output_format.
     Parameters
     ----------
     loc
@@ -229,6 +234,7 @@ def from_latlon_decimal_degrees(
 
 def haversine_distance(loc1, loc2, loc_format, unit="m", radius=EARTH_RADIUS):
     """
+    This function helps to calculate the haversine distance between loc1 and loc2.
     Parameters
     ----------
     loc1
@@ -368,7 +374,7 @@ def euclidean_distance(loc1, loc2, unit="m"):
 
 def point_in_polygon(x, y, polygon):
     """
-    Check whether (x,y) is inside a polygon
+    This function helps to check whether (x,y) is inside a polygon
 
     Parameters
     ----------
@@ -453,7 +459,7 @@ def point_in_polygon(x, y, polygon):
 
 def point_in_polygons(x, y, polygon_list, south_west_loc=[], north_east_loc=[]):
     """
-    Check whether (x,y) is inside any polygon in a list of polygon
+    This function helps to check whether (x,y) is inside any polygon in a list of polygon
 
     Parameters
     ----------
@@ -825,7 +831,9 @@ def point_in_country_approx(lat, lon, country):
 <span class="k">def</span> <span class="nf"><span class="ident">decimal_degrees_to_degrees_minutes_seconds</span></span>(<span class="n">dd)</span>
 </code></dt>
 <dd>
-<div class="desc"><h2 id="parameters">Parameters</h2>
+<div class="desc"><p>This function helps to divide float value dd in decimal degree into [degreee, minute, second]
+Parameters</p>
+<hr>
 <dl>
 <dt><strong><code>dd</code></strong></dt>
 <dd>Float value in decimal degree.</dd>
@@ -843,6 +851,7 @@ def point_in_country_approx(lat, lon, country):
 ```python
 def decimal_degrees_to_degrees_minutes_seconds(dd):
     """
+    This function helps to divide float value dd in decimal degree into [degreee, minute, second]
     Parameters
     ----------
     dd
@@ -963,7 +972,9 @@ def f_point_in_polygons(polygon_list, south_west_loc=[], north_east_loc=[]):
 <span class="k">def</span> <span class="nf"><span class="ident">from_latlon_decimal_degrees</span></span>(<span class="n">loc, output_format, radius=6371009, geohash_precision=8)</span>
 </code></dt>
 <dd>
-<div class="desc"><h2 id="parameters">Parameters</h2>
+<div class="desc"><p>This function helps to transform [lat,lon] locations into desired output_format.
+Parameters</p>
+<hr>
 <dl>
 <dt><strong><code>loc</code></strong></dt>
 <dd>Location to format with format [lat, lon].</dd>
@@ -992,6 +1003,7 @@ def from_latlon_decimal_degrees(
     loc, output_format, radius=EARTH_RADIUS, geohash_precision=8
 ):
     """
+    This function helps to transform [lat,lon] locations into desired output_format.
     Parameters
     ----------
     loc
@@ -1060,7 +1072,9 @@ def from_latlon_decimal_degrees(
 <span class="k">def</span> <span class="nf"><span class="ident">haversine_distance</span></span>(<span class="n">loc1, loc2, loc_format, unit='m', radius=6371009)</span>
 </code></dt>
 <dd>
-<div class="desc"><h2 id="parameters">Parameters</h2>
+<div class="desc"><p>This function helps to calculate the haversine distance between loc1 and loc2.
+Parameters</p>
+<hr>
 <dl>
 <dt><strong><code>loc1</code></strong></dt>
 <dd>The first location.
@@ -1091,6 +1105,7 @@ Unit of the result. (Default value = "m")</dd>
 ```python
 def haversine_distance(loc1, loc2, loc_format, unit="m", radius=EARTH_RADIUS):
     """
+    This function helps to calculate the haversine distance between loc1 and loc2.
     Parameters
     ----------
     loc1
@@ -1149,7 +1164,8 @@ def haversine_distance(loc1, loc2, loc_format, unit="m", radius=EARTH_RADIUS):
 <span class="k">def</span> <span class="nf"><span class="ident">in_range</span></span>(<span class="n">loc, loc_format='dd')</span>
 </code></dt>
 <dd>
-<div class="desc"><h2 id="parameters">Parameters</h2>
+<div class="desc"><p>This function helps to check if the input location is in range based on loc_format.</p>
+<h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>loc</code></strong></dt>
 <dd>Location to check if in range.
@@ -1169,6 +1185,8 @@ If loc_format is "geohash", string format is required.</dd>
 ```python
 def in_range(loc, loc_format="dd"):
     """
+    This function helps to check if the input location is in range based on loc_format.
+
     Parameters
     ----------
     loc
@@ -1242,7 +1260,7 @@ def point_in_country_approx(lat, lon, country):
 <span class="k">def</span> <span class="nf"><span class="ident">point_in_polygon</span></span>(<span class="n">x, y, polygon)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Check whether (x,y) is inside a polygon</p>
+<div class="desc"><p>This function helps to check whether (x,y) is inside a polygon</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>x</code></strong></dt>
@@ -1265,7 +1283,7 @@ def point_in_country_approx(lat, lon, country):
 ```python
 def point_in_polygon(x, y, polygon):
     """
-    Check whether (x,y) is inside a polygon
+    This function helps to check whether (x,y) is inside a polygon
 
     Parameters
     ----------
@@ -1354,7 +1372,7 @@ def point_in_polygon(x, y, polygon):
 <span class="k">def</span> <span class="nf"><span class="ident">point_in_polygons</span></span>(<span class="n">x, y, polygon_list, south_west_loc=[], north_east_loc=[])</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Check whether (x,y) is inside any polygon in a list of polygon</p>
+<div class="desc"><p>This function helps to check whether (x,y) is inside any polygon in a list of polygon</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>x</code></strong></dt>
@@ -1383,7 +1401,7 @@ def point_in_polygon(x, y, polygon):
 ```python
 def point_in_polygons(x, y, polygon_list, south_west_loc=[], north_east_loc=[]):
     """
-    Check whether (x,y) is inside any polygon in a list of polygon
+    This function helps to check whether (x,y) is inside any polygon in a list of polygon
 
     Parameters
     ----------
@@ -1437,7 +1455,9 @@ def point_in_polygons(x, y, polygon_list, south_west_loc=[], north_east_loc=[]):
 <span class="k">def</span> <span class="nf"><span class="ident">to_latlon_decimal_degrees</span></span>(<span class="n">loc, input_format, radius=6371009)</span>
 </code></dt>
 <dd>
-<div class="desc"><h2 id="parameters">Parameters</h2>
+<div class="desc"><p>This function helps to format input location into [lat,lon] format
+Parameters</p>
+<hr>
 <dl>
 <dt><strong><code>loc</code></strong></dt>
 <dd>Location to format.
@@ -1464,6 +1484,7 @@ If input_format is "geohash", string format is required.</dd>
 ```python
 def to_latlon_decimal_degrees(loc, input_format, radius=EARTH_RADIUS):
     """
+    This function helps to format input location into [lat,lon] format
     Parameters
     ----------
     loc

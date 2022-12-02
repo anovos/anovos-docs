@@ -38,6 +38,7 @@ import warnings
 from pathlib import Path
 
 import dateutil.parser
+import mlflow
 import numpy as np
 import pandas as pd
 import pyspark
@@ -45,18 +46,18 @@ from loguru import logger
 from pyspark.sql import Window
 from pyspark.sql import functions as F
 from pyspark.sql import types as T
-import calendar
-from anovos.shared.utils import (
-    attributeType_segregation,
-    ends_with,
-    output_to_local,
-    path_ak8s_modify,
-)
+
 from anovos.data_analyzer.stats_generator import measures_of_percentiles
 from anovos.data_transformer.datetime import (
     lagged_ts,
     timeUnits_extraction,
     unix_to_timestamp,
+)
+from anovos.shared.utils import (
+    attributeType_segregation,
+    ends_with,
+    output_to_local,
+    path_ak8s_modify,
 )
 
 ###regex based ts parser function
@@ -634,7 +635,14 @@ def ts_loop_cols_pre(idf, id_col):
 
 
 def ts_preprocess(
-    spark, idf, id_col, output_path, tz_offset="local", run_type="local", auth_key="NA"
+    spark,
+    idf,
+    id_col,
+    output_path,
+    tz_offset="local",
+    run_type="local",
+    mlflow_config=None,
+    auth_key="NA",
 ):
 
     """
@@ -656,6 +664,8 @@ def ts_preprocess(
         Timezone offset (Option to chose between options like Local, GMT, UTC, etc.). Default option is set as "Local".
     run_type
         Option to choose between run type "local" or "emr" or "databricks" or "ak8s" basis the user flexibility. Default option is set as "local".
+    mlflow_config
+        MLflow configuration. If None, all MLflow features are disabled.
     auth_key
         Option to pass an authorization key to write to filesystems. Currently applicable only for "ak8s" run_type.
 
@@ -738,6 +748,9 @@ def ts_preprocess(
     )
 
     f.to_csv(ends_with(local_path) + "ts_cols_stats.csv", index=False)
+
+    if mlflow_config is not None:
+        mlflow.log_artifact(ends_with(local_path) + "ts_cols_stats.csv")
 
     if run_type == "emr":
         bash_cmd = (
@@ -1402,7 +1415,7 @@ def ts_loop_cols_pre(idf, id_col):
 </details>
 </dd>
 <dt id="anovos.data_ingest.ts_auto_detection.ts_preprocess"><code class="name flex hljs csharp">
-<span class="k">def</span> <span class="nf"><span class="ident">ts_preprocess</span></span>(<span class="n">spark, idf, id_col, output_path, tz_offset='local', run_type='local', auth_key='NA')</span>
+<span class="k">def</span> <span class="nf"><span class="ident">ts_preprocess</span></span>(<span class="n">spark, idf, id_col, output_path, tz_offset='local', run_type='local', mlflow_config=None, auth_key='NA')</span>
 </code></dt>
 <dd>
 <div class="desc"><p>This function helps to read the input spark dataframe as source and do all the necessary processing. All the intermediate data created through this step foro the Time Series Analyzer.</p>
@@ -1420,6 +1433,8 @@ def ts_loop_cols_pre(idf, id_col):
 <dd>Timezone offset (Option to chose between options like Local, GMT, UTC, etc.). Default option is set as "Local".</dd>
 <dt><strong><code>run_type</code></strong></dt>
 <dd>Option to choose between run type "local" or "emr" or "databricks" or "ak8s" basis the user flexibility. Default option is set as "local".</dd>
+<dt><strong><code>mlflow_config</code></strong></dt>
+<dd>MLflow configuration. If None, all MLflow features are disabled.</dd>
 <dt><strong><code>auth_key</code></strong></dt>
 <dd>Option to pass an authorization key to write to filesystems. Currently applicable only for "ak8s" run_type.</dd>
 </dl>
@@ -1435,7 +1450,14 @@ def ts_loop_cols_pre(idf, id_col):
 <pre>
 ```python
 def ts_preprocess(
-    spark, idf, id_col, output_path, tz_offset="local", run_type="local", auth_key="NA"
+    spark,
+    idf,
+    id_col,
+    output_path,
+    tz_offset="local",
+    run_type="local",
+    mlflow_config=None,
+    auth_key="NA",
 ):
 
     """
@@ -1457,6 +1479,8 @@ def ts_preprocess(
         Timezone offset (Option to chose between options like Local, GMT, UTC, etc.). Default option is set as "Local".
     run_type
         Option to choose between run type "local" or "emr" or "databricks" or "ak8s" basis the user flexibility. Default option is set as "local".
+    mlflow_config
+        MLflow configuration. If None, all MLflow features are disabled.
     auth_key
         Option to pass an authorization key to write to filesystems. Currently applicable only for "ak8s" run_type.
 
@@ -1539,6 +1563,9 @@ def ts_preprocess(
     )
 
     f.to_csv(ends_with(local_path) + "ts_cols_stats.csv", index=False)
+
+    if mlflow_config is not None:
+        mlflow.log_artifact(ends_with(local_path) + "ts_cols_stats.csv")
 
     if run_type == "emr":
         bash_cmd = (

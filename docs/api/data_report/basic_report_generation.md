@@ -9,6 +9,7 @@ import subprocess
 from pathlib import Path
 
 import datapane as dp
+import mlflow
 import pandas as pd
 import plotly.express as px
 
@@ -109,6 +110,7 @@ def anovos_basic_report(
     run_type="local",
     auth_key="NA",
     print_impact=True,
+    mlflow_config=None,
 ):
     """
 
@@ -139,7 +141,8 @@ def anovos_basic_report(
     print_impact
         True, False.
         This argument is to print out the data analyzer statistics.(Default value = False)
-
+    mlflow_config
+        MLflow configuration. If None, all MLflow features are disabled.
     """
     global num_cols
     global cat_cols
@@ -161,6 +164,9 @@ def anovos_basic_report(
         biasedness_detection,
         invalidEntries_detection,
     ]
+
+    if mlflow_config is not None:
+        output_path = output_path + "/" + mlflow_config.get("run_id", "")
 
     if skip_corr_matrix:
         AA_funcs = [variable_clustering]
@@ -542,6 +548,9 @@ def anovos_basic_report(
         dp.Select(blocks=[tab1, tab2, tab3], type=dp.SelectType.TABS),
     ).save(ends_with(local_path) + "basic_report.html", open=True)
 
+    if mlflow_config is not None:
+        mlflow.log_artifacts(local_dir=local_path, artifact_path=output_path)
+
     if run_type == "emr":
         bash_cmd = (
             "aws s3 cp "
@@ -568,7 +577,7 @@ def anovos_basic_report(
 ## Functions
 <dl>
 <dt id="anovos.data_report.basic_report_generation.anovos_basic_report"><code class="name flex hljs csharp">
-<span class="k">def</span> <span class="nf"><span class="ident">anovos_basic_report</span></span>(<span class="n">spark, idf, id_col='', label_col='', event_label='', skip_corr_matrix=True, output_path='.', run_type='local', auth_key='NA', print_impact=True)</span>
+<span class="k">def</span> <span class="nf"><span class="ident">anovos_basic_report</span></span>(<span class="n">spark, idf, id_col='', label_col='', event_label='', skip_corr_matrix=True, output_path='.', run_type='local', auth_key='NA', print_impact=True, mlflow_config=None)</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
@@ -598,6 +607,8 @@ This argument is to skip correlation matrix generation in basic_report.(Default 
 <dt><strong><code>print_impact</code></strong></dt>
 <dd>True, False.
 This argument is to print out the data analyzer statistics.(Default value = False)</dd>
+<dt><strong><code>mlflow_config</code></strong></dt>
+<dd>MLflow configuration. If None, all MLflow features are disabled.</dd>
 </dl></div>
 <details class="source">
 <summary>
@@ -616,6 +627,7 @@ def anovos_basic_report(
     run_type="local",
     auth_key="NA",
     print_impact=True,
+    mlflow_config=None,
 ):
     """
 
@@ -646,7 +658,8 @@ def anovos_basic_report(
     print_impact
         True, False.
         This argument is to print out the data analyzer statistics.(Default value = False)
-
+    mlflow_config
+        MLflow configuration. If None, all MLflow features are disabled.
     """
     global num_cols
     global cat_cols
@@ -668,6 +681,9 @@ def anovos_basic_report(
         biasedness_detection,
         invalidEntries_detection,
     ]
+
+    if mlflow_config is not None:
+        output_path = output_path + "/" + mlflow_config.get("run_id", "")
 
     if skip_corr_matrix:
         AA_funcs = [variable_clustering]
@@ -1048,6 +1064,9 @@ def anovos_basic_report(
         default_template[1],
         dp.Select(blocks=[tab1, tab2, tab3], type=dp.SelectType.TABS),
     ).save(ends_with(local_path) + "basic_report.html", open=True)
+
+    if mlflow_config is not None:
+        mlflow.log_artifacts(local_dir=local_path, artifact_path=output_path)
 
     if run_type == "emr":
         bash_cmd = (
