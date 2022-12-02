@@ -9,6 +9,7 @@ import subprocess
 import warnings
 from pathlib import Path
 
+import mlflow
 import numpy as np
 import pandas as pd
 import plotly.express as px
@@ -50,6 +51,7 @@ def save_stats(
     function_name,
     reread=False,
     run_type="local",
+    mlflow_config=None,
     auth_key="NA",
 ):
     """
@@ -68,6 +70,8 @@ def save_stats(
         option to reread. Default value is kept as False
     run_type
         local or emr or databricks or ak8s based on the mode of execution. Default value is kept as local
+    mlflow_config
+        MLflow configuration. If None, all MLflow features are disabled.
     auth_key
         Option to pass an authorization key to write to filesystems. Currently applicable only for ak8s run_type. Default value is kept as "NA"
 
@@ -84,9 +88,18 @@ def save_stats(
     else:
         raise ValueError("Invalid run_type")
 
+    local_path = (
+        local_path + "/" + mlflow_config["run_id"]
+        if mlflow_config is not None and mlflow_config.get("track_reports", False)
+        else local_path
+    )
+
     Path(local_path).mkdir(parents=True, exist_ok=True)
 
     idf.toPandas().to_csv(ends_with(local_path) + function_name + ".csv", index=False)
+
+    if mlflow_config is not None:
+        mlflow.log_artifact(local_path)
 
     if run_type == "emr":
         bash_cmd = (
@@ -1576,7 +1589,7 @@ def plot_outlier(spark, idf, col, split_var=None, sample_size=500000):
 </details>
 </dd>
 <dt id="anovos.data_report.report_preprocessing.save_stats"><code class="name flex hljs csharp">
-<span class="k">def</span> <span class="nf"><span class="ident">save_stats</span></span>(<span class="n">spark, idf, master_path, function_name, reread=False, run_type='local', auth_key='NA')</span>
+<span class="k">def</span> <span class="nf"><span class="ident">save_stats</span></span>(<span class="n">spark, idf, master_path, function_name, reread=False, run_type='local', mlflow_config=None, auth_key='NA')</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="parameters">Parameters</h2>
@@ -1593,6 +1606,8 @@ def plot_outlier(spark, idf, col, split_var=None, sample_size=500000):
 <dd>option to reread. Default value is kept as False</dd>
 <dt><strong><code>run_type</code></strong></dt>
 <dd>local or emr or databricks or ak8s based on the mode of execution. Default value is kept as local</dd>
+<dt><strong><code>mlflow_config</code></strong></dt>
+<dd>MLflow configuration. If None, all MLflow features are disabled.</dd>
 <dt><strong><code>auth_key</code></strong></dt>
 <dd>Option to pass an authorization key to write to filesystems. Currently applicable only for ak8s run_type. Default value is kept as "NA"</dd>
 </dl>
@@ -1610,6 +1625,7 @@ def save_stats(
     function_name,
     reread=False,
     run_type="local",
+    mlflow_config=None,
     auth_key="NA",
 ):
     """
@@ -1628,6 +1644,8 @@ def save_stats(
         option to reread. Default value is kept as False
     run_type
         local or emr or databricks or ak8s based on the mode of execution. Default value is kept as local
+    mlflow_config
+        MLflow configuration. If None, all MLflow features are disabled.
     auth_key
         Option to pass an authorization key to write to filesystems. Currently applicable only for ak8s run_type. Default value is kept as "NA"
 
@@ -1644,9 +1662,18 @@ def save_stats(
     else:
         raise ValueError("Invalid run_type")
 
+    local_path = (
+        local_path + "/" + mlflow_config["run_id"]
+        if mlflow_config is not None and mlflow_config.get("track_reports", False)
+        else local_path
+    )
+
     Path(local_path).mkdir(parents=True, exist_ok=True)
 
     idf.toPandas().to_csv(ends_with(local_path) + function_name + ".csv", index=False)
+
+    if mlflow_config is not None:
+        mlflow.log_artifact(local_path)
 
     if run_type == "emr":
         bash_cmd = (

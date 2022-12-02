@@ -39,7 +39,7 @@
 # coding=utf-8
 
 """This module generates the final report output specific to the intermediate data generated across each of the modules. The final report, however, can be proccessed through the config.yaml file or by generating it through the respective functions.
- 
+
 Below are some of the functions used to process the final output.
 
 - line_chart_gen_stability
@@ -80,6 +80,7 @@ import warnings
 
 import datapane as dp
 import dateutil.parser
+import mlflow
 import numpy as np
 import pandas as pd
 import plotly.express as px
@@ -88,9 +89,10 @@ import plotly.tools as tls
 from loguru import logger
 from plotly.subplots import make_subplots
 from sklearn.preprocessing import PowerTransformer
-from anovos.shared.utils import ends_with, path_ak8s_modify, output_to_local
 from statsmodels.tsa.seasonal import seasonal_decompose
 from statsmodels.tsa.stattools import adfuller, kpss
+
+from anovos.shared.utils import ends_with, output_to_local, path_ak8s_modify
 
 warnings.filterwarnings("ignore")
 
@@ -3203,6 +3205,9 @@ def ts_viz_generate(master_path, id_col, print_report=False, output_type=None):
             label="Time Series Analyzer",
         )
 
+    elif output_type is None:
+        report = "null_report"
+
     else:
 
         report = dp.Group(
@@ -3267,7 +3272,7 @@ def overall_stats_gen(lat_col_list, long_col_list, geohash_col_list):
     #     for idx,i in enumerate([lat_col_list,long_col_list,geohash_col_list,polygon_col_list]):
     for idx, i in enumerate([lat_col_list, long_col_list, geohash_col_list]):
         if i is None:
-            ll = None
+            ll = []
         elif i is not None:
             ll = []
             for j in i:
@@ -3386,32 +3391,6 @@ def read_stats_ll_geo(lat_col, long_col, geohash_col, master_path, top_geo_recor
                                     ),
                                     label="Overall Summary",
                                 ),
-                                # dp.DataTable(
-                                #     pd.read_csv(
-                                #         ends_with(master_path)
-                                #         + "Top_"
-                                #         + str(top_geo_records)
-                                #         + "_Lat_1_"
-                                #         + lat_col[idx]
-                                #         + "_"
-                                #         + long_col[idx]
-                                #         + ".csv"
-                                #     ),
-                                #     label="Top " + str(top_geo_records) + "  Lat",
-                                # ),
-                                # dp.DataTable(
-                                #     pd.read_csv(
-                                #         ends_with(master_path)
-                                #         + "Top_"
-                                #         + str(top_geo_records)
-                                #         + "_Long_1_"
-                                #         + lat_col[idx]
-                                #         + "_"
-                                #         + long_col[idx]
-                                #         + ".csv"
-                                #     ),
-                                #     label="Top " + str(top_geo_records) + " Long",
-                                # ),
                                 dp.DataTable(
                                     pd.read_csv(
                                         ends_with(master_path)
@@ -3457,32 +3436,6 @@ def read_stats_ll_geo(lat_col, long_col, geohash_col, master_path, top_geo_recor
                                     ),
                                     label="Overall Summary",
                                 ),
-                                # dp.DataTable(
-                                #     pd.read_csv(
-                                #         ends_with(master_path)
-                                #         + "Top_"
-                                #         + str(top_geo_records)
-                                #         + "_Lat_1_"
-                                #         + lat_col[idx]
-                                #         + "_"
-                                #         + long_col[idx]
-                                #         + ".csv"
-                                #     ),
-                                #     label="Top " + str(top_geo_records) + "  Lat",
-                                # ),
-                                # dp.DataTable(
-                                #     pd.read_csv(
-                                #         ends_with(master_path)
-                                #         + "Top_"
-                                #         + str(top_geo_records)
-                                #         + "_Long_1_"
-                                #         + lat_col[idx]
-                                #         + "_"
-                                #         + long_col[idx]
-                                #         + ".csv"
-                                #     ),
-                                #     label="Top " + str(top_geo_records) + " Long",
-                                # ),
                                 dp.DataTable(
                                     pd.read_csv(
                                         ends_with(master_path)
@@ -4056,13 +4009,7 @@ def loc_report_gen(
 
     elif (len(lat_cols) + len(geohash_cols)) == 0:
 
-        dp2 = dp.Group(
-            dp.Text("#"),
-            dp.Text(
-                "*No further geospatial based analysis could be done owing to the unavailability of any geospatial field*"
-            ),
-        )
-        report = dp.Group(dp1, dp2, label="Geospatial Analyzer")
+        report = "null_report"
 
     if print_report:
         dp.Report(default_template[0], default_template[1], report).save(
@@ -4084,9 +4031,10 @@ def anovos_report(
     run_type="local",
     final_report_path=".",
     output_type=None,
-    lat_cols=None,
-    long_cols=None,
-    gh_cols=None,
+    mlflow_config=None,
+    lat_cols=[],
+    long_cols=[],
+    gh_cols=[],
     max_records=100000,
     top_geo_records=100,
     auth_key="NA",
@@ -4121,6 +4069,8 @@ def anovos_report(
         Path where the report will be saved. (Default value = ".")
     output_type
         Time category of analysis which can be between "Daily", "Hourly", "Weekly"
+    mlflow_config
+        MLflow configuration. If None, all MLflow features are disabled.
     lat_cols
         Latitude columns identified in the data
     long_cols
@@ -4465,11 +4415,20 @@ def anovos_report(
         else:
             final_tabs_list.append(i)
     if run_type in ("local", "databricks"):
+        run_id = (
+            mlflow_config["run_id"]
+            if mlflow_config is not None and mlflow_config["track_reports"]
+            else ""
+        )
+
+        report_run_path = ends_with(final_report_path) + run_id + "/"
         dp.Report(
             default_template[0],
             default_template[1],
             dp.Select(blocks=final_tabs_list, type=dp.SelectType.TABS),
-        ).save(ends_with(final_report_path) + "ml_anovos_report.html", open=True)
+        ).save(report_run_path + "ml_anovos_report.html", open=True)
+        if mlflow_config is not None:
+            mlflow.log_artifact(report_run_path)
     elif run_type == "emr":
         dp.Report(
             default_template[0],
@@ -4499,7 +4458,7 @@ def anovos_report(
 ## Functions
 <dl>
 <dt id="anovos.data_report.report_generation.anovos_report"><code class="name flex hljs csharp">
-<span class="k">def</span> <span class="nf"><span class="ident">anovos_report</span></span>(<span class="n">master_path, id_col=None, label_col=None, corr_threshold=0.4, iv_threshold=0.02, drift_threshold_model=0.1, dataDict_path='.', metricDict_path='.', run_type='local', final_report_path='.', output_type=None, lat_cols=None, long_cols=None, gh_cols=None, max_records=100000, top_geo_records=100, auth_key='NA')</span>
+<span class="k">def</span> <span class="nf"><span class="ident">anovos_report</span></span>(<span class="n">master_path, id_col=None, label_col=None, corr_threshold=0.4, iv_threshold=0.02, drift_threshold_model=0.1, dataDict_path='.', metricDict_path='.', run_type='local', final_report_path='.', output_type=None, mlflow_config=None, lat_cols=[], long_cols=[], gh_cols=[], max_records=100000, top_geo_records=100, auth_key='NA')</span>
 </code></dt>
 <dd>
 <div class="desc"><p>This function actually helps to produce the final report by scanning through the output processed from the data analyzer module.</p>
@@ -4529,6 +4488,8 @@ def anovos_report(
 <dd>Path where the report will be saved. (Default value = ".")</dd>
 <dt><strong><code>output_type</code></strong></dt>
 <dd>Time category of analysis which can be between "Daily", "Hourly", "Weekly"</dd>
+<dt><strong><code>mlflow_config</code></strong></dt>
+<dd>MLflow configuration. If None, all MLflow features are disabled.</dd>
 <dt><strong><code>lat_cols</code></strong></dt>
 <dd>Latitude columns identified in the data</dd>
 <dt><strong><code>long_cols</code></strong></dt>
@@ -4563,9 +4524,10 @@ def anovos_report(
     run_type="local",
     final_report_path=".",
     output_type=None,
-    lat_cols=None,
-    long_cols=None,
-    gh_cols=None,
+    mlflow_config=None,
+    lat_cols=[],
+    long_cols=[],
+    gh_cols=[],
     max_records=100000,
     top_geo_records=100,
     auth_key="NA",
@@ -4600,6 +4562,8 @@ def anovos_report(
         Path where the report will be saved. (Default value = ".")
     output_type
         Time category of analysis which can be between "Daily", "Hourly", "Weekly"
+    mlflow_config
+        MLflow configuration. If None, all MLflow features are disabled.
     lat_cols
         Latitude columns identified in the data
     long_cols
@@ -4944,11 +4908,20 @@ def anovos_report(
         else:
             final_tabs_list.append(i)
     if run_type in ("local", "databricks"):
+        run_id = (
+            mlflow_config["run_id"]
+            if mlflow_config is not None and mlflow_config["track_reports"]
+            else ""
+        )
+
+        report_run_path = ends_with(final_report_path) + run_id + "/"
         dp.Report(
             default_template[0],
             default_template[1],
             dp.Select(blocks=final_tabs_list, type=dp.SelectType.TABS),
-        ).save(ends_with(final_report_path) + "ml_anovos_report.html", open=True)
+        ).save(report_run_path + "ml_anovos_report.html", open=True)
+        if mlflow_config is not None:
+            mlflow.log_artifact(report_run_path)
     elif run_type == "emr":
         dp.Report(
             default_template[0],
@@ -7436,13 +7409,7 @@ def loc_report_gen(
 
     elif (len(lat_cols) + len(geohash_cols)) == 0:
 
-        dp2 = dp.Group(
-            dp.Text("#"),
-            dp.Text(
-                "*No further geospatial based analysis could be done owing to the unavailability of any geospatial field*"
-            ),
-        )
-        report = dp.Group(dp1, dp2, label="Geospatial Analyzer")
+        report = "null_report"
 
     if print_report:
         dp.Report(default_template[0], default_template[1], report).save(
@@ -7506,7 +7473,7 @@ def overall_stats_gen(lat_col_list, long_col_list, geohash_col_list):
     #     for idx,i in enumerate([lat_col_list,long_col_list,geohash_col_list,polygon_col_list]):
     for idx, i in enumerate([lat_col_list, long_col_list, geohash_col_list]):
         if i is None:
-            ll = None
+            ll = []
         elif i is not None:
             ll = []
             for j in i:
@@ -8341,32 +8308,6 @@ def read_stats_ll_geo(lat_col, long_col, geohash_col, master_path, top_geo_recor
                                     ),
                                     label="Overall Summary",
                                 ),
-                                # dp.DataTable(
-                                #     pd.read_csv(
-                                #         ends_with(master_path)
-                                #         + "Top_"
-                                #         + str(top_geo_records)
-                                #         + "_Lat_1_"
-                                #         + lat_col[idx]
-                                #         + "_"
-                                #         + long_col[idx]
-                                #         + ".csv"
-                                #     ),
-                                #     label="Top " + str(top_geo_records) + "  Lat",
-                                # ),
-                                # dp.DataTable(
-                                #     pd.read_csv(
-                                #         ends_with(master_path)
-                                #         + "Top_"
-                                #         + str(top_geo_records)
-                                #         + "_Long_1_"
-                                #         + lat_col[idx]
-                                #         + "_"
-                                #         + long_col[idx]
-                                #         + ".csv"
-                                #     ),
-                                #     label="Top " + str(top_geo_records) + " Long",
-                                # ),
                                 dp.DataTable(
                                     pd.read_csv(
                                         ends_with(master_path)
@@ -8412,32 +8353,6 @@ def read_stats_ll_geo(lat_col, long_col, geohash_col, master_path, top_geo_recor
                                     ),
                                     label="Overall Summary",
                                 ),
-                                # dp.DataTable(
-                                #     pd.read_csv(
-                                #         ends_with(master_path)
-                                #         + "Top_"
-                                #         + str(top_geo_records)
-                                #         + "_Lat_1_"
-                                #         + lat_col[idx]
-                                #         + "_"
-                                #         + long_col[idx]
-                                #         + ".csv"
-                                #     ),
-                                #     label="Top " + str(top_geo_records) + "  Lat",
-                                # ),
-                                # dp.DataTable(
-                                #     pd.read_csv(
-                                #         ends_with(master_path)
-                                #         + "Top_"
-                                #         + str(top_geo_records)
-                                #         + "_Long_1_"
-                                #         + lat_col[idx]
-                                #         + "_"
-                                #         + long_col[idx]
-                                #         + ".csv"
-                                #     ),
-                                #     label="Top " + str(top_geo_records) + " Long",
-                                # ),
                                 dp.DataTable(
                                     pd.read_csv(
                                         ends_with(master_path)
@@ -9729,6 +9644,9 @@ def ts_viz_generate(master_path, id_col, print_report=False, output_type=None):
             dp.Text("#"),
             label="Time Series Analyzer",
         )
+
+    elif output_type is None:
+        report = "null_report"
 
     else:
 

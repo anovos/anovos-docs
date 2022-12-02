@@ -27,21 +27,19 @@ Association between an attribute and binary target is measured by:
 - IG_calculation
 
 """
-import itertools
 import math
+import warnings
+
+import pandas as pd
 
 import pyspark
-import pandas as pd
-import warnings
-from phik.phik import spark_phik_matrix_from_hist2d_dict
-from popmon.analysis.hist_numpy import get_2dgrid
-from pyspark.sql import Window
-from pyspark.sql import functions as F
-from varclushi import VarClusHi
 from pyspark.ml.feature import VectorAssembler
 from pyspark.ml.stat import Correlation
+from pyspark.sql import Window
+from pyspark.sql import functions as F
+
 from anovos.data_analyzer.stats_generator import uniqueCount_computation
-from anovos.data_ingest.data_ingest import read_dataset
+from anovos.data_analyzer.association_eval_varclus import VarClusHiSpark
 from anovos.data_ingest.data_sampling import data_sample
 from anovos.data_transformer.transformers import (
     attribute_binning,
@@ -161,19 +159,15 @@ def variable_clustering(
     idf,
     list_of_cols="all",
     drop_cols=[],
-    sample_size=100000,
     stats_mode={},
+    persist=True,
     print_impact=False,
 ):
     """
-    Variable Clustering groups attributes that are as correlated as possible among themselves within a cluster and
-    as uncorrelated as possible with attribute in other clusters. The function is leveraging [VarClusHi] [2] library
-    to do variable clustering; however, this library is not implemented in a scalable manner due to which the
-    analysis is done on a sample dataset. Further, it is found to be a bit computational expensive especially when
-    number of columns in the input dataset is on higher side (number of pairs to analyse increases exponentially with
-    number of columns).
-
-    [2]: https://github.com/jingtt/varclushi   "VarCluShi"
+    This function performs Variable Clustering with necessary pre-processing techniques, including low-cardinality
+    columns removal, categorical-to-numerical transformation and null values imputation. It works as a wrapper of VarClusHiSpark
+    class which groups correlated attributes within a cluster and assign uncorrelated attributes into other clusters.
+    For more details on the algorithm, please check anovos.data_analyzer.association_eval_varclus
 
     It returns a Spark Dataframe with schema – Cluster, Attribute, RS_Ratio. Attributes similar to each other are grouped
     together with the same cluster id. The attribute with the lowest (1 — RS_Ratio) can be chosen as a representative of the cluster
@@ -198,14 +192,16 @@ def variable_clustering(
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
         It is most useful when coupled with the “all” value of list_of_cols, when we need to consider all columns except
         a few handful of them. (Default value = [])
-    sample_size
-        Maximum sample size (in terms of number of rows) taken for the computation.
-        Sample dataset is extracted using random sampling. (Default value = 100000)
     stats_mode
         Takes arguments for read_dataset (data_ingest module) function in a dictionary format
         to read pre-saved statistics on most frequently seen values i.e. if measures_of_centralTendency or
         mode_computation (data_analyzer.stats_generator module) has been computed & saved before.
         This is used for MMM imputation as Variable Clustering doesn’t work with missing values. (Default value = {})
+    persist
+        Boolean argument - True or False. This argument is used to determine whether to persist on pre-processing (low-cardinality
+        columns removal, categorical-to-numerical transformation and null values imputation) results of input dataset.
+        persist=True will enable the use of persist, otherwise False.
+        It is recommended to set this as True for large datasets. (Default value = True)
     print_impact
         True, False
         This argument is to print out the statistics.(Default value = False)
@@ -229,41 +225,34 @@ def variable_clustering(
 
     if any(x not in idf.columns for x in list_of_cols) | (len(list_of_cols) == 0):
         raise TypeError("Invalid input for Column(s)")
-
-    idf_sample = data_sample(
-        idf,
-        fraction=min(1.0, float(sample_size) / idf.count()),
-        method_type="random",
-        seed_value=0,
-    )
-    idf_sample.persist(pyspark.StorageLevel.MEMORY_AND_DISK).count()
-
+    if persist:
+        idf.persist(pyspark.StorageLevel.MEMORY_AND_DISK).count()
     remove_cols = (
-        uniqueCount_computation(spark, idf_sample, list_of_cols)
+        uniqueCount_computation(spark, idf, list_of_cols)
         .where(F.col("unique_values") < 2)
         .select("attribute")
         .rdd.flatMap(lambda x: x)
         .collect()
     )
     list_of_cols = [e for e in list_of_cols if e not in remove_cols]
-    idf_sample = idf_sample.select(list_of_cols)
-    cat_cols = attributeType_segregation(idf_sample)[1]
+    idf = idf.select(list_of_cols)
+    cat_cols = attributeType_segregation(idf)[1]
 
-    for i in idf_sample.dtypes:
+    for i in idf.dtypes:
         if i[1].startswith("decimal"):
-            idf_sample = idf_sample.withColumn(i[0], F.col(i[0]).cast("double"))
+            idf = idf.withColumn(i[0], F.col(i[0]).cast("double"))
     idf_encoded = cat_to_num_unsupervised(
-        spark, idf_sample, list_of_cols=cat_cols, method_type="label_encoding"
+        spark, idf, list_of_cols=cat_cols, method_type="label_encoding"
     )
     num_cols = attributeType_segregation(idf_encoded)[0]
     idf_encoded = idf_encoded.select(num_cols)
     idf_imputed = imputation_MMM(spark, idf_encoded, stats_mode=stats_mode)
-    idf_imputed.persist(pyspark.StorageLevel.MEMORY_AND_DISK).count()
-    idf_sample.unpersist()
-    idf_pd = idf_imputed.toPandas()
-    vc = VarClusHi(idf_pd, maxeigval2=1, maxclus=None)
-    vc.varclus()
-    odf_pd = vc.rsquare
+    if persist:
+        idf_imputed.persist(pyspark.StorageLevel.MEMORY_AND_DISK).count()
+        idf.unpersist()
+    vc = VarClusHiSpark(idf_imputed, maxeigval2=1, maxclus=None)
+    vc._varclusspark(spark)
+    odf_pd = vc._rsquarespark()
     odf = spark.createDataFrame(odf_pd).select(
         "Cluster",
         F.col("Variable").alias("Attribute"),
@@ -271,6 +260,8 @@ def variable_clustering(
     )
     if print_impact:
         odf.show(odf.count())
+    if persist:
+        idf_imputed.unpersist()
     return odf
 
 
@@ -1236,15 +1227,13 @@ def correlation_matrix(
 </details>
 </dd>
 <dt id="anovos.data_analyzer.association_evaluator.variable_clustering"><code class="name flex hljs csharp">
-<span class="k">def</span> <span class="nf"><span class="ident">variable_clustering</span></span>(<span class="n">spark, idf, list_of_cols='all', drop_cols=[], sample_size=100000, stats_mode={}, print_impact=False)</span>
+<span class="k">def</span> <span class="nf"><span class="ident">variable_clustering</span></span>(<span class="n">spark, idf, list_of_cols='all', drop_cols=[], stats_mode={}, persist=True, print_impact=False)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Variable Clustering groups attributes that are as correlated as possible among themselves within a cluster and
-as uncorrelated as possible with attribute in other clusters. The function is leveraging <a href="https://github.com/jingtt/varclushi" title="VarCluShi">VarClusHi</a> library
-to do variable clustering; however, this library is not implemented in a scalable manner due to which the
-analysis is done on a sample dataset. Further, it is found to be a bit computational expensive especially when
-number of columns in the input dataset is on higher side (number of pairs to analyse increases exponentially with
-number of columns).</p>
+<div class="desc"><p>This function performs Variable Clustering with necessary pre-processing techniques, including low-cardinality
+columns removal, categorical-to-numerical transformation and null values imputation. It works as a wrapper of VarClusHiSpark
+class which groups correlated attributes within a cluster and assign uncorrelated attributes into other clusters.
+For more details on the algorithm, please check anovos.data_analyzer.association_eval_varclus</p>
 <p>It returns a Spark Dataframe with schema – Cluster, Attribute, RS_Ratio. Attributes similar to each other are grouped
 together with the same cluster id. The attribute with the lowest (1 — RS_Ratio) can be chosen as a representative of the cluster
 while discarding the other attributes from that cluster. This can also help in achieving the dimension reduction, if required.</p>
@@ -1267,14 +1256,16 @@ Alternatively, columns can be specified in a string format,
 where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
 It is most useful when coupled with the “all” value of list_of_cols, when we need to consider all columns except
 a few handful of them. (Default value = [])</dd>
-<dt><strong><code>sample_size</code></strong></dt>
-<dd>Maximum sample size (in terms of number of rows) taken for the computation.
-Sample dataset is extracted using random sampling. (Default value = 100000)</dd>
 <dt><strong><code>stats_mode</code></strong></dt>
 <dd>Takes arguments for read_dataset (data_ingest module) function in a dictionary format
 to read pre-saved statistics on most frequently seen values i.e. if measures_of_centralTendency or
 mode_computation (data_analyzer.stats_generator module) has been computed &amp; saved before.
 This is used for MMM imputation as Variable Clustering doesn’t work with missing values. (Default value = {})</dd>
+<dt><strong><code>persist</code></strong></dt>
+<dd>Boolean argument - True or False. This argument is used to determine whether to persist on pre-processing (low-cardinality
+columns removal, categorical-to-numerical transformation and null values imputation) results of input dataset.
+persist=True will enable the use of persist, otherwise False.
+It is recommended to set this as True for large datasets. (Default value = True)</dd>
 <dt><strong><code>print_impact</code></strong></dt>
 <dd>True, False
 This argument is to print out the statistics.(Default value = False)</dd>
@@ -1295,19 +1286,15 @@ def variable_clustering(
     idf,
     list_of_cols="all",
     drop_cols=[],
-    sample_size=100000,
     stats_mode={},
+    persist=True,
     print_impact=False,
 ):
     """
-    Variable Clustering groups attributes that are as correlated as possible among themselves within a cluster and
-    as uncorrelated as possible with attribute in other clusters. The function is leveraging [VarClusHi] [2] library
-    to do variable clustering; however, this library is not implemented in a scalable manner due to which the
-    analysis is done on a sample dataset. Further, it is found to be a bit computational expensive especially when
-    number of columns in the input dataset is on higher side (number of pairs to analyse increases exponentially with
-    number of columns).
-
-    [2]: https://github.com/jingtt/varclushi   "VarCluShi"
+    This function performs Variable Clustering with necessary pre-processing techniques, including low-cardinality
+    columns removal, categorical-to-numerical transformation and null values imputation. It works as a wrapper of VarClusHiSpark
+    class which groups correlated attributes within a cluster and assign uncorrelated attributes into other clusters.
+    For more details on the algorithm, please check anovos.data_analyzer.association_eval_varclus
 
     It returns a Spark Dataframe with schema – Cluster, Attribute, RS_Ratio. Attributes similar to each other are grouped
     together with the same cluster id. The attribute with the lowest (1 — RS_Ratio) can be chosen as a representative of the cluster
@@ -1332,14 +1319,16 @@ def variable_clustering(
         where different column names are separated by pipe delimiter “|” e.g., "col1|col2".
         It is most useful when coupled with the “all” value of list_of_cols, when we need to consider all columns except
         a few handful of them. (Default value = [])
-    sample_size
-        Maximum sample size (in terms of number of rows) taken for the computation.
-        Sample dataset is extracted using random sampling. (Default value = 100000)
     stats_mode
         Takes arguments for read_dataset (data_ingest module) function in a dictionary format
         to read pre-saved statistics on most frequently seen values i.e. if measures_of_centralTendency or
         mode_computation (data_analyzer.stats_generator module) has been computed & saved before.
         This is used for MMM imputation as Variable Clustering doesn’t work with missing values. (Default value = {})
+    persist
+        Boolean argument - True or False. This argument is used to determine whether to persist on pre-processing (low-cardinality
+        columns removal, categorical-to-numerical transformation and null values imputation) results of input dataset.
+        persist=True will enable the use of persist, otherwise False.
+        It is recommended to set this as True for large datasets. (Default value = True)
     print_impact
         True, False
         This argument is to print out the statistics.(Default value = False)
@@ -1363,41 +1352,34 @@ def variable_clustering(
 
     if any(x not in idf.columns for x in list_of_cols) | (len(list_of_cols) == 0):
         raise TypeError("Invalid input for Column(s)")
-
-    idf_sample = data_sample(
-        idf,
-        fraction=min(1.0, float(sample_size) / idf.count()),
-        method_type="random",
-        seed_value=0,
-    )
-    idf_sample.persist(pyspark.StorageLevel.MEMORY_AND_DISK).count()
-
+    if persist:
+        idf.persist(pyspark.StorageLevel.MEMORY_AND_DISK).count()
     remove_cols = (
-        uniqueCount_computation(spark, idf_sample, list_of_cols)
+        uniqueCount_computation(spark, idf, list_of_cols)
         .where(F.col("unique_values") < 2)
         .select("attribute")
         .rdd.flatMap(lambda x: x)
         .collect()
     )
     list_of_cols = [e for e in list_of_cols if e not in remove_cols]
-    idf_sample = idf_sample.select(list_of_cols)
-    cat_cols = attributeType_segregation(idf_sample)[1]
+    idf = idf.select(list_of_cols)
+    cat_cols = attributeType_segregation(idf)[1]
 
-    for i in idf_sample.dtypes:
+    for i in idf.dtypes:
         if i[1].startswith("decimal"):
-            idf_sample = idf_sample.withColumn(i[0], F.col(i[0]).cast("double"))
+            idf = idf.withColumn(i[0], F.col(i[0]).cast("double"))
     idf_encoded = cat_to_num_unsupervised(
-        spark, idf_sample, list_of_cols=cat_cols, method_type="label_encoding"
+        spark, idf, list_of_cols=cat_cols, method_type="label_encoding"
     )
     num_cols = attributeType_segregation(idf_encoded)[0]
     idf_encoded = idf_encoded.select(num_cols)
     idf_imputed = imputation_MMM(spark, idf_encoded, stats_mode=stats_mode)
-    idf_imputed.persist(pyspark.StorageLevel.MEMORY_AND_DISK).count()
-    idf_sample.unpersist()
-    idf_pd = idf_imputed.toPandas()
-    vc = VarClusHi(idf_pd, maxeigval2=1, maxclus=None)
-    vc.varclus()
-    odf_pd = vc.rsquare
+    if persist:
+        idf_imputed.persist(pyspark.StorageLevel.MEMORY_AND_DISK).count()
+        idf.unpersist()
+    vc = VarClusHiSpark(idf_imputed, maxeigval2=1, maxclus=None)
+    vc._varclusspark(spark)
+    odf_pd = vc._rsquarespark()
     odf = spark.createDataFrame(odf_pd).select(
         "Cluster",
         F.col("Variable").alias("Attribute"),
@@ -1405,6 +1387,8 @@ def variable_clustering(
     )
     if print_impact:
         odf.show(odf.count())
+    if persist:
+        idf_imputed.unpersist()
     return odf
 ```
 </pre>

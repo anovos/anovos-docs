@@ -39,8 +39,6 @@ Respective functions have sections containing the detailed definition of the par
 
 """
 
-from anovos.data_ingest.data_ingest import read_dataset
-from anovos.shared.spark import spark
 from anovos.shared.utils import ends_with, output_to_local, path_ak8s_modify
 from anovos.data_ingest import data_sampling
 from anovos.data_ingest.geo_auto_detection import ll_gh_cols, geo_to_latlong
@@ -51,19 +49,12 @@ from sklearn.metrics import silhouette_score
 from itertools import product
 from pathlib import Path
 
-# from branca.element import Figure
-# from folium.plugins import FastMarkerCluster, HeatMapWithTime
-# from folium import plugins
+
 from pyspark.sql import functions as F
-from pyspark.sql import types as T
-import geohash2 as gh
 from sklearn.cluster import DBSCAN
-import json
-import os
 import subprocess
 import plotly.express as px
 import plotly.graph_objects as go
-from loguru import logger
 import warnings
 
 warnings.filterwarnings("ignore")
@@ -75,7 +66,6 @@ global_paper_bg_color = "rgba(0,0,0,0)"
 
 
 blank_chart = go.Figure()
-# blank_chart.update_layout(autosize=False, width=10, height=10)
 blank_chart.layout.plot_bgcolor = global_plot_bg_color
 blank_chart.layout.paper_bgcolor = global_paper_bg_color
 blank_chart.update_xaxes(visible=False)
@@ -92,108 +82,31 @@ mapbox_list = [
 ]
 
 
-# def zoom_center(
-#     lons: tuple = None,
-#     lats: tuple = None,
-#     lonlats: tuple = None,
-#     format: str = "lonlat",
-#     projection: str = "mercator",
-#     width_to_height: float = 2.0,
-# ) -> (float, dict):
-#     """Finds optimal zoom and centering for a plotly mapbox.
-#     Must be passed (lons & lats) or lonlats.
-#     Temporary solution awaiting official implementation, see:
-#     https://github.com/plotly/plotly.js/issues/3434
-
-#     Parameters
-#     --------
-#     lons: tuple, optional, longitude component of each location
-#     lats: tuple, optional, latitude component of each location
-#     lonlats: tuple, optional, gps locations
-#     format: str, specifying the order of longitud and latitude dimensions,
-#         expected values: 'lonlat' or 'latlon', only used if passed lonlats
-#     projection: str, only accepting 'mercator' at the moment,
-#         raises `NotImplementedError` if other is passed
-#     width_to_height: float, expected ratio of final graph's with to height,
-#         used to select the constrained axis.
-
-#     Returns
-#     --------
-#     zoom: float, from 1 to 20
-#     center: dict, gps position with 'lon' and 'lat' keys
-
-#     >>> print(zoom_center((-109.031387, -103.385460),
-#     ...     (25.587101, 31.784620)))
-#     (5.75, {'lon': -106.208423, 'lat': 28.685861})
-#     """
-#     if lons is None and lats is None:
-#         if isinstance(lonlats, tuple):
-#             lons, lats = zip(*lonlats)
-#         else:
-#             raise ValueError("Must pass lons & lats or lonlats")
-
-#     maxlon, minlon = max(lons), min(lons)
-#     maxlat, minlat = max(lats), min(lats)
-#     center = {
-#         "lon": round((maxlon + minlon) / 2, 6),
-#         "lat": round((maxlat + minlat) / 2, 6),
-#     }
-
-#     # longitudinal range by zoom level (20 to 1)
-#     # in degrees, if centered at equator
-#     lon_zoom_range = np.array(
-#         [
-#             0.0007,
-#             0.0014,
-#             0.003,
-#             0.006,
-#             0.012,
-#             0.024,
-#             0.048,
-#             0.096,
-#             0.192,
-#             0.3712,
-#             0.768,
-#             1.536,
-#             3.072,
-#             6.144,
-#             11.8784,
-#             23.7568,
-#             47.5136,
-#             98.304,
-#             190.0544,
-#             360.0,
-#         ]
-#     )
-
-#     if projection == "mercator":
-#         margin = 1.2
-#         height = (maxlat - minlat) * margin * width_to_height
-#         width = (maxlon - minlon) * margin
-#         lon_zoom = np.interp(width, lon_zoom_range, range(20, 0, -1))
-#         lat_zoom = np.interp(height, lon_zoom_range, range(20, 0, -1))
-#         zoom = round(min(lon_zoom, lat_zoom), 2)
-#     else:
-#         raise NotImplementedError(f"{projection} projection is not implemented")
-
-#     return zoom, center
-
-
 def descriptive_stats_gen(
     df, lat_col, long_col, geohash_col, id_col, master_path, max_val
 ):
 
     """
-
-    This function helps to produce descriptive stats for the analyzed geospatial fields
-
+    This function is the base function to produce descriptive stats for geospatial fields, and save relevant outputs
+    in csv format inside master_path.
+    If lat_col and long_col are valid, two tables will be generated
+    - An overall summary table:
+        This table has two columns: "stats" and "count", and 5 rows. These 5 rows summarizes the count of distinct
+        {lat, long} pair count, latitude and longitude and shows the most common {lat,long} pair with occurrence respectively.
+    - A top lat-long pairs table:
+        This table shows the top lat-long pairs based on occurrence, and max_val parameter determines the number of records.
+    If geohash_col is valid, two tables will be generated
+    - An overall summary table:
+        This table has two columns: "stats" and "count", and 3 rows. These 3 rows displays the total number of distinct geohashes,
+        precision level observed for geohashes and the most common geohash respectively.
+    - A top geohash distribution table:
+        This table shows the top geohash distributions based on occurrence, and max_val parameter determines the number of records.
 
     Parameters
     ----------
 
     df
-        Analysis DataFrame
-
+        DataFrame to be analyzed
     lat_col
         Latitude column
     long_col
@@ -236,28 +149,6 @@ def descriptive_stats_gen(
             .limit(max_val)
         )
 
-        # top_lat = (
-        #     df.groupBy(lat_col)
-        #     .agg(
-        #         F.countDistinct(id_col).alias("count_id"),
-        #         F.count(id_col).alias("count_records"),
-        #     )
-        #     .orderBy("count_id", ascending=False)
-        #     .limit(max_val)
-        #     .toPandas()
-        # )
-        #
-        # top_long = (
-        #     df.groupBy(long_col)
-        #     .agg(
-        #         F.countDistinct(id_col).alias("count_id"),
-        #         F.count(id_col).alias("count_records"),
-        #     )
-        #     .orderBy("count_id", ascending=False)
-        #     .limit(max_val)
-        #     .toPandas()
-        # )
-
         most_lat_long = top_lat_long.rdd.flatMap(lambda x: x).collect()[0]
         most_lat_long_cnt = top_lat_long.rdd.flatMap(lambda x: x).collect()[1]
 
@@ -277,16 +168,9 @@ def descriptive_stats_gen(
             .reset_index()
             .rename(columns={"index": "Stats", 0: "Count"})
         )
-        # l = [
-        #     "Overall_Summary",
-        #     "Top_" + str(max_val) + "_Lat",
-        #     "Top_" + str(max_val) + "_Long",
-        #     "Top_" + str(max_val) + "_Lat_Long",
-        # ]
 
         l = ["Overall_Summary", "Top_" + str(max_val) + "_Lat_Long"]
 
-        # for idx, i in enumerate([gen_stats, top_lat, top_long, top_lat_long]):
         for idx, i in enumerate([gen_stats, top_lat_long]):
 
             i.to_csv(
@@ -372,16 +256,15 @@ def descriptive_stats_gen(
 def lat_long_col_stats_gen(df, lat_col, long_col, id_col, master_path, max_val):
 
     """
-
-    This function helps to produce descriptive stats for the latitude longitude columns
-
+    This function helps to produce descriptive stats for the latitude and longitude columns.
+    If there's more than 1 latitude-longitude pair, an iteration through all pairs will be conducted. Each pair will
+    have its own descriptive statistics tables generated by "descriptive_stats_gen" function.
 
     Parameters
     ----------
 
     df
-        Analysis DataFrame
-
+        DataFrame to be analyzed
     lat_col
         Latitude column
     long_col
@@ -413,9 +296,9 @@ def lat_long_col_stats_gen(df, lat_col, long_col, id_col, master_path, max_val):
 def geohash_col_stats_gen(df, geohash_col, id_col, master_path, max_val):
 
     """
-
-    This function helps to produce descriptive stats for the geohash columns
-
+    This function helps to produce descriptive stats for the geohash columns.
+    If there's more than 1 geohash column, an iteratio through all geohash columns will be conducted. Each geohash
+    column will have its own descriptive statistics tables generated by "descriptive_stats_gen" function.
 
     Parameters
     ----------
@@ -453,9 +336,13 @@ def stats_gen_lat_long_geo(
 ):
 
     """
-
-    This function helps to produce descriptive stats for the analyzed geospatial fields
-
+    This function is the main function used when generating geospatial-analysis tab for Anovos full report.
+    It helps to produce descriptive statistics files  for the geospatial fields by calling "lat_long_col_stats_gen" and
+    "geohash_col_stats_gen" respectively, and the files will be used for generating Anovos full report's Geospatial Analyzer tab.
+    If lat_col and long_col are valid, "lat_long_col_stats_gen" function will be called and intermediate files (overall
+    summary and tables showing top lat-long pairs) will be stored inside master_path.
+    If geohash_col is valid, "geohash_col_stats_gen" function will be called and intermediate files (overall summary and
+    tables showing top geohash distribution) will be stored inside master_path.
 
     Parameters
     ----------
@@ -534,8 +421,37 @@ def geo_cluster_analysis(
 ):
 
     """
+    This function is the base function to generate cluster analysis statistics for the geospatial fields, and save 8
+    plots in JSON format inside master_path. K-Means and DBSCAN are the two clustering algorihtm used and the 8 plots
+    are divided into 4 sections as below:
+    - Cluster Identification:
+        The first plot displays the cluster-identification process using K-Means algorithm. It is an elbow curve plot
+        showing the distortion vs. number of clusters, and identifies the optimal number of clusters with a vertical line at K.
+        The second plot displays the cluster-identification process using DBSCAN algorithm. It shows the distribution of
+        silouhette scores across different parameters in a heatmap, and a darker color represents smaller scores.
 
-    This function helps to generate cluster analysis stats for the identified geospatial fields
+    - Cluster Distribution
+        The first plot shows distribution of clusters generated by K-Means algorithm in a pie-chart, and the distance
+        is calculated using Euclidean distance.
+        The second plot shows distribution of clusters generated by DBSCAN algorithm in a pie-chart, and the distance
+        is calculated using Haversine distance.
+
+    - Visualization
+        The first plow is a Mapbox scatter plot of cluster-wise geospatial datapoints using K-Means algorithm.
+        Color-coded datapoints are shown in a map which allows zoom-in, zoom-out, and latitude, longitude and cluster
+        information are displayed for each label.
+        The second plow is a Mapbox scatter plot of cluster-wise geospatial datapoints using DBSCAN algorithm.
+        Color-coded datapoints are shown in a map which allows zoom-in, zoom-out, and latitude, longitude and cluster
+        information are displayed for each label.
+        Displaying these two plots together allows users to have an intuitive impact of results generated by different
+        clustering techniques.
+
+    - Outlier Points
+        Unlike other sections, this section only contains results generated by DBSCAN algorithm.
+        The first plot is a scatter plot of outlier points captured using DBSCAN algorithm with Euclidean distance
+        calculation. The x-axis is longitude and y-axis is latitude, and outlier points will be marked as "X".
+        The second plot is a scatter plot of outlier points captured using DBSCAN algorithm with Haversine distance
+        calculation. The x-axis is longitude and y-axis is latitude, and outlier points will be marked as "X".
 
     Parameters
     ----------
@@ -620,7 +536,6 @@ def geo_cluster_analysis(
 
     # Use `hole` to create a donut-like pie chart
     cluster_dtls = df_.groupby(["cluster"]).size().reset_index(name="counts")
-    # zoom, center = zoom_center(lons=df_[long_col].values.tolist(),lats=df_[lat_col].values.tolist())
 
     f2 = go.Figure(
         go.Pie(
@@ -704,14 +619,6 @@ def geo_cluster_analysis(
     pivot_1 = pd.pivot_table(
         tmp, values="Sil_score", index="Min_samples", columns="Eps"
     )
-
-    # def df_to_plotly(df):
-    #     return {'z': df.values.tolist(),
-    #             'x': df.columns.tolist(),
-    #             'y': df.index.tolist()}
-
-    # f1_ = go.Figure(data=go.Heatmap(df_to_plotly(pivot_1),colorscale=global_theme_r,texttemplate="%{text}", textfont={"size":12}))
-    # f1_ = go.Figure(data=go.Heatmap(z=df_to_plotly(pivot_1)['z'],x = df_to_plotly(pivot_1)['x'], y = df_to_plotly(pivot_1)['y'] ,colorscale=global_theme_r))
     f1_ = px.imshow(
         pivot_1.values,
         text_auto=".3f",
@@ -770,7 +677,6 @@ def geo_cluster_analysis(
         title_text="Cluster Wise Geospatial Datapoints "
         + "<br><sup>Algorithm Used : DBSCAN</sup>"
     )
-    # f3_.update_layout(titlecoloraxis_showscale=False, autosize=False, width=1200, height=900)
     f3_.update_layout(autosize=False, width=1200, height=900)
     f3_.update_coloraxes(showscale=False)
     f3_.write_json(ends_with(master_path) + "cluster_plot_3_dbscan_" + col_name)
@@ -860,8 +766,10 @@ def geo_cluster_generator(
 ):
 
     """
-
-    This function helps to trigger cluster analysis stats for the identified geospatial fields
+    This function helps to trigger cluster analysis stats for the identified geospatial fields by calling "geo_cluster_analysis"
+    function. If lat-long pairs are available, cluster analysis of each pair will be conducted and intermediate files
+    will be saved inside master_path. If geohash columns are available, cluster analysis of each geohash column will be conducted
+    and intermediate files will be saved into master_path.
 
     Parameters
     ----------
@@ -966,8 +874,11 @@ def generate_loc_charts_processor(
 ):
 
     """
-
-    This function helps to generate the output of location charts for the analyzed geospatial fields
+    This function helps to generate the output of location charts for the geospatial fields, and save Mapbox scatter
+    plots in JSON format inside master_path.
+    If lat-long pairs are available, Mapbox scatter plot of each pair will be generated to visualize the locations of each datapoint.
+    If geohash columns are available, every geohash column will go through geohash-to-lat-long transformation, and
+    Mapbox scatter plot of the transformed lat-long pairs will be generated.
 
     Parameters
     ----------
@@ -1013,7 +924,6 @@ def generate_loc_charts_processor(
                 .limit(max_val)
                 .toPandas()
             )
-            # zoom, center = zoom_center(lons=df_[long_col[0]].values.tolist(),lats=df_[lat_col[0]].values.tolist())
             base_map = px.scatter_mapbox(
                 df_,
                 lat=lat_col[0],
@@ -1047,7 +957,6 @@ def generate_loc_charts_processor(
                     .limit(max_val)
                     .toPandas()
                 )
-                # zoom, center = zoom_center(lons=df_[long_col[i]].values.tolist(),lats=df_[lat_col[i]].values.tolist())
                 base_map = px.scatter_mapbox(
                     df_,
                     lat=lat_col[i],
@@ -1085,7 +994,6 @@ def generate_loc_charts_processor(
             )
             df_["latitude"] = df_.apply(lambda x: geo_to_latlong(x[col_], 0), axis=1)
             df_["longitude"] = df_.apply(lambda x: geo_to_latlong(x[col_], 1), axis=1)
-            # zoom, center = zoom_center(lons=df_["longitude"].values.tolist(),lats=df_["latitude"].values.tolist())
             base_map = px.scatter_mapbox(
                 df_,
                 lat="latitude",
@@ -1121,7 +1029,6 @@ def generate_loc_charts_processor(
                 df_["longitude"] = df_.apply(
                     lambda x: geo_to_latlong(x[col_], 1), axis=1
                 )
-                # zoom, center = zoom_center(lons=df_["longitude"].values.tolist(),lats=df_["latitude"].values.tolist())
                 base_map = px.scatter_mapbox(
                     df_,
                     lat="latitude",
@@ -1145,8 +1052,11 @@ def generate_loc_charts_controller(
 ):
 
     """
-
-    This function helps to trigger the output generation of location charts for the analyzed geospatial fields
+    This function helps to trigger the output generation of location charts for the geospatial fields.
+    If lat-long pairs are available, "generate_loc_charts_processor" will be called (with geohash_cols set to None) and
+    Mapbox scatter plot will be generated for each pair.
+    If geohash columns are available, "generate_loc_charts_processor" will be called (with lat_col, long_col both set to None)
+    and Mapbox scatter plot will be generated for each geohash column.
 
     Parameters
     ----------
@@ -1242,8 +1152,12 @@ def geospatial_autodetection(
 ):
 
     """
-
-    This function helps to trigger the output of intermediate data which is further used for producing the geospatial analyzer report
+    This function helps to trigger the output of intermediate data which is further used for producing the geospatial-analysis
+    tab in Anovos full report. Descriptive statistics, cluster analysis and visualization of geospatial fields will be triggered
+    in sequence for each lat-long pair and geohash column respectively.
+    Descriptive anallysis is conducted by calling "stats_gen_lat_long_geo" function, cluster analysis is conducted by calling
+    "geo_cluster_generator" fucntion and visualization of geospatial fields is generated by calling
+    "generate_loc_charts_controller" function.
 
     Parameters
     ----------
@@ -1368,11 +1282,24 @@ def geospatial_autodetection(
 <span class="k">def</span> <span class="nf"><span class="ident">descriptive_stats_gen</span></span>(<span class="n">df, lat_col, long_col, geohash_col, id_col, master_path, max_val)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>This function helps to produce descriptive stats for the analyzed geospatial fields</p>
+<div class="desc"><p>This function is the base function to produce descriptive stats for geospatial fields, and save relevant outputs
+in csv format inside master_path.
+If lat_col and long_col are valid, two tables will be generated
+- An overall summary table:
+This table has two columns: "stats" and "count", and 5 rows. These 5 rows summarizes the count of distinct
+{lat, long} pair count, latitude and longitude and shows the most common {lat,long} pair with occurrence respectively.
+- A top lat-long pairs table:
+This table shows the top lat-long pairs based on occurrence, and max_val parameter determines the number of records.
+If geohash_col is valid, two tables will be generated
+- An overall summary table:
+This table has two columns: "stats" and "count", and 3 rows. These 3 rows displays the total number of distinct geohashes,
+precision level observed for geohashes and the most common geohash respectively.
+- A top geohash distribution table:
+This table shows the top geohash distributions based on occurrence, and max_val parameter determines the number of records.</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>df</code></strong></dt>
-<dd>Analysis DataFrame</dd>
+<dd>DataFrame to be analyzed</dd>
 <dt><strong><code>lat_col</code></strong></dt>
 <dd>Latitude column</dd>
 <dt><strong><code>long_col</code></strong></dt>
@@ -1402,16 +1329,26 @@ def descriptive_stats_gen(
 ):
 
     """
-
-    This function helps to produce descriptive stats for the analyzed geospatial fields
-
+    This function is the base function to produce descriptive stats for geospatial fields, and save relevant outputs
+    in csv format inside master_path.
+    If lat_col and long_col are valid, two tables will be generated
+    - An overall summary table:
+        This table has two columns: "stats" and "count", and 5 rows. These 5 rows summarizes the count of distinct
+        {lat, long} pair count, latitude and longitude and shows the most common {lat,long} pair with occurrence respectively.
+    - A top lat-long pairs table:
+        This table shows the top lat-long pairs based on occurrence, and max_val parameter determines the number of records.
+    If geohash_col is valid, two tables will be generated
+    - An overall summary table:
+        This table has two columns: "stats" and "count", and 3 rows. These 3 rows displays the total number of distinct geohashes,
+        precision level observed for geohashes and the most common geohash respectively.
+    - A top geohash distribution table:
+        This table shows the top geohash distributions based on occurrence, and max_val parameter determines the number of records.
 
     Parameters
     ----------
 
     df
-        Analysis DataFrame
-
+        DataFrame to be analyzed
     lat_col
         Latitude column
     long_col
@@ -1454,28 +1391,6 @@ def descriptive_stats_gen(
             .limit(max_val)
         )
 
-        # top_lat = (
-        #     df.groupBy(lat_col)
-        #     .agg(
-        #         F.countDistinct(id_col).alias("count_id"),
-        #         F.count(id_col).alias("count_records"),
-        #     )
-        #     .orderBy("count_id", ascending=False)
-        #     .limit(max_val)
-        #     .toPandas()
-        # )
-        #
-        # top_long = (
-        #     df.groupBy(long_col)
-        #     .agg(
-        #         F.countDistinct(id_col).alias("count_id"),
-        #         F.count(id_col).alias("count_records"),
-        #     )
-        #     .orderBy("count_id", ascending=False)
-        #     .limit(max_val)
-        #     .toPandas()
-        # )
-
         most_lat_long = top_lat_long.rdd.flatMap(lambda x: x).collect()[0]
         most_lat_long_cnt = top_lat_long.rdd.flatMap(lambda x: x).collect()[1]
 
@@ -1495,16 +1410,9 @@ def descriptive_stats_gen(
             .reset_index()
             .rename(columns={"index": "Stats", 0: "Count"})
         )
-        # l = [
-        #     "Overall_Summary",
-        #     "Top_" + str(max_val) + "_Lat",
-        #     "Top_" + str(max_val) + "_Long",
-        #     "Top_" + str(max_val) + "_Lat_Long",
-        # ]
 
         l = ["Overall_Summary", "Top_" + str(max_val) + "_Lat_Long"]
 
-        # for idx, i in enumerate([gen_stats, top_lat, top_long, top_lat_long]):
         for idx, i in enumerate([gen_stats, top_lat_long]):
 
             i.to_csv(
@@ -1593,7 +1501,11 @@ def descriptive_stats_gen(
 <span class="k">def</span> <span class="nf"><span class="ident">generate_loc_charts_controller</span></span>(<span class="n">df, id_col, lat_col, long_col, geohash_col, max_val, global_map_box_val, master_path)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>This function helps to trigger the output generation of location charts for the analyzed geospatial fields</p>
+<div class="desc"><p>This function helps to trigger the output generation of location charts for the geospatial fields.
+If lat-long pairs are available, "generate_loc_charts_processor" will be called (with geohash_cols set to None) and
+Mapbox scatter plot will be generated for each pair.
+If geohash columns are available, "generate_loc_charts_processor" will be called (with lat_col, long_col both set to None)
+and Mapbox scatter plot will be generated for each geohash column.</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>df</code></strong></dt>
@@ -1625,8 +1537,11 @@ def generate_loc_charts_controller(
 ):
 
     """
-
-    This function helps to trigger the output generation of location charts for the analyzed geospatial fields
+    This function helps to trigger the output generation of location charts for the geospatial fields.
+    If lat-long pairs are available, "generate_loc_charts_processor" will be called (with geohash_cols set to None) and
+    Mapbox scatter plot will be generated for each pair.
+    If geohash columns are available, "generate_loc_charts_processor" will be called (with lat_col, long_col both set to None)
+    and Mapbox scatter plot will be generated for each geohash column.
 
     Parameters
     ----------
@@ -1713,7 +1628,11 @@ def generate_loc_charts_controller(
 <span class="k">def</span> <span class="nf"><span class="ident">generate_loc_charts_processor</span></span>(<span class="n">df, lat_col, long_col, geohash_col, max_val, id_col, global_map_box_val, master_path)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>This function helps to generate the output of location charts for the analyzed geospatial fields</p>
+<div class="desc"><p>This function helps to generate the output of location charts for the geospatial fields, and save Mapbox scatter
+plots in JSON format inside master_path.
+If lat-long pairs are available, Mapbox scatter plot of each pair will be generated to visualize the locations of each datapoint.
+If geohash columns are available, every geohash column will go through geohash-to-lat-long transformation, and
+Mapbox scatter plot of the transformed lat-long pairs will be generated.</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>df</code></strong></dt>
@@ -1745,8 +1664,11 @@ def generate_loc_charts_processor(
 ):
 
     """
-
-    This function helps to generate the output of location charts for the analyzed geospatial fields
+    This function helps to generate the output of location charts for the geospatial fields, and save Mapbox scatter
+    plots in JSON format inside master_path.
+    If lat-long pairs are available, Mapbox scatter plot of each pair will be generated to visualize the locations of each datapoint.
+    If geohash columns are available, every geohash column will go through geohash-to-lat-long transformation, and
+    Mapbox scatter plot of the transformed lat-long pairs will be generated.
 
     Parameters
     ----------
@@ -1792,7 +1714,6 @@ def generate_loc_charts_processor(
                 .limit(max_val)
                 .toPandas()
             )
-            # zoom, center = zoom_center(lons=df_[long_col[0]].values.tolist(),lats=df_[lat_col[0]].values.tolist())
             base_map = px.scatter_mapbox(
                 df_,
                 lat=lat_col[0],
@@ -1826,7 +1747,6 @@ def generate_loc_charts_processor(
                     .limit(max_val)
                     .toPandas()
                 )
-                # zoom, center = zoom_center(lons=df_[long_col[i]].values.tolist(),lats=df_[lat_col[i]].values.tolist())
                 base_map = px.scatter_mapbox(
                     df_,
                     lat=lat_col[i],
@@ -1864,7 +1784,6 @@ def generate_loc_charts_processor(
             )
             df_["latitude"] = df_.apply(lambda x: geo_to_latlong(x[col_], 0), axis=1)
             df_["longitude"] = df_.apply(lambda x: geo_to_latlong(x[col_], 1), axis=1)
-            # zoom, center = zoom_center(lons=df_["longitude"].values.tolist(),lats=df_["latitude"].values.tolist())
             base_map = px.scatter_mapbox(
                 df_,
                 lat="latitude",
@@ -1900,7 +1819,6 @@ def generate_loc_charts_processor(
                 df_["longitude"] = df_.apply(
                     lambda x: geo_to_latlong(x[col_], 1), axis=1
                 )
-                # zoom, center = zoom_center(lons=df_["longitude"].values.tolist(),lats=df_["latitude"].values.tolist())
                 base_map = px.scatter_mapbox(
                     df_,
                     lat="latitude",
@@ -1925,7 +1843,42 @@ def generate_loc_charts_processor(
 <span class="k">def</span> <span class="nf"><span class="ident">geo_cluster_analysis</span></span>(<span class="n">df, lat_col, long_col, max_cluster, eps, min_samples, master_path, col_name, global_map_box_val)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>This function helps to generate cluster analysis stats for the identified geospatial fields</p>
+<div class="desc"><p>This function is the base function to generate cluster analysis statistics for the geospatial fields, and save 8
+plots in JSON format inside master_path. K-Means and DBSCAN are the two clustering algorihtm used and the 8 plots
+are divided into 4 sections as below:
+- Cluster Identification:
+The first plot displays the cluster-identification process using K-Means algorithm. It is an elbow curve plot
+showing the distortion vs. number of clusters, and identifies the optimal number of clusters with a vertical line at K.
+The second plot displays the cluster-identification process using DBSCAN algorithm. It shows the distribution of
+silouhette scores across different parameters in a heatmap, and a darker color represents smaller scores.</p>
+<ul>
+<li>
+<p>Cluster Distribution
+The first plot shows distribution of clusters generated by K-Means algorithm in a pie-chart, and the distance
+is calculated using Euclidean distance.
+The second plot shows distribution of clusters generated by DBSCAN algorithm in a pie-chart, and the distance
+is calculated using Haversine distance.</p>
+</li>
+<li>
+<p>Visualization
+The first plow is a Mapbox scatter plot of cluster-wise geospatial datapoints using K-Means algorithm.
+Color-coded datapoints are shown in a map which allows zoom-in, zoom-out, and latitude, longitude and cluster
+information are displayed for each label.
+The second plow is a Mapbox scatter plot of cluster-wise geospatial datapoints using DBSCAN algorithm.
+Color-coded datapoints are shown in a map which allows zoom-in, zoom-out, and latitude, longitude and cluster
+information are displayed for each label.
+Displaying these two plots together allows users to have an intuitive impact of results generated by different
+clustering techniques.</p>
+</li>
+<li>
+<p>Outlier Points
+Unlike other sections, this section only contains results generated by DBSCAN algorithm.
+The first plot is a scatter plot of outlier points captured using DBSCAN algorithm with Euclidean distance
+calculation. The x-axis is longitude and y-axis is latitude, and outlier points will be marked as "X".
+The second plot is a scatter plot of outlier points captured using DBSCAN algorithm with Haversine distance
+calculation. The x-axis is longitude and y-axis is latitude, and outlier points will be marked as "X".</p>
+</li>
+</ul>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>df</code></strong></dt>
@@ -1967,8 +1920,37 @@ def geo_cluster_analysis(
 ):
 
     """
+    This function is the base function to generate cluster analysis statistics for the geospatial fields, and save 8
+    plots in JSON format inside master_path. K-Means and DBSCAN are the two clustering algorihtm used and the 8 plots
+    are divided into 4 sections as below:
+    - Cluster Identification:
+        The first plot displays the cluster-identification process using K-Means algorithm. It is an elbow curve plot
+        showing the distortion vs. number of clusters, and identifies the optimal number of clusters with a vertical line at K.
+        The second plot displays the cluster-identification process using DBSCAN algorithm. It shows the distribution of
+        silouhette scores across different parameters in a heatmap, and a darker color represents smaller scores.
 
-    This function helps to generate cluster analysis stats for the identified geospatial fields
+    - Cluster Distribution
+        The first plot shows distribution of clusters generated by K-Means algorithm in a pie-chart, and the distance
+        is calculated using Euclidean distance.
+        The second plot shows distribution of clusters generated by DBSCAN algorithm in a pie-chart, and the distance
+        is calculated using Haversine distance.
+
+    - Visualization
+        The first plow is a Mapbox scatter plot of cluster-wise geospatial datapoints using K-Means algorithm.
+        Color-coded datapoints are shown in a map which allows zoom-in, zoom-out, and latitude, longitude and cluster
+        information are displayed for each label.
+        The second plow is a Mapbox scatter plot of cluster-wise geospatial datapoints using DBSCAN algorithm.
+        Color-coded datapoints are shown in a map which allows zoom-in, zoom-out, and latitude, longitude and cluster
+        information are displayed for each label.
+        Displaying these two plots together allows users to have an intuitive impact of results generated by different
+        clustering techniques.
+
+    - Outlier Points
+        Unlike other sections, this section only contains results generated by DBSCAN algorithm.
+        The first plot is a scatter plot of outlier points captured using DBSCAN algorithm with Euclidean distance
+        calculation. The x-axis is longitude and y-axis is latitude, and outlier points will be marked as "X".
+        The second plot is a scatter plot of outlier points captured using DBSCAN algorithm with Haversine distance
+        calculation. The x-axis is longitude and y-axis is latitude, and outlier points will be marked as "X".
 
     Parameters
     ----------
@@ -2053,7 +2035,6 @@ def geo_cluster_analysis(
 
     # Use `hole` to create a donut-like pie chart
     cluster_dtls = df_.groupby(["cluster"]).size().reset_index(name="counts")
-    # zoom, center = zoom_center(lons=df_[long_col].values.tolist(),lats=df_[lat_col].values.tolist())
 
     f2 = go.Figure(
         go.Pie(
@@ -2137,14 +2118,6 @@ def geo_cluster_analysis(
     pivot_1 = pd.pivot_table(
         tmp, values="Sil_score", index="Min_samples", columns="Eps"
     )
-
-    # def df_to_plotly(df):
-    #     return {'z': df.values.tolist(),
-    #             'x': df.columns.tolist(),
-    #             'y': df.index.tolist()}
-
-    # f1_ = go.Figure(data=go.Heatmap(df_to_plotly(pivot_1),colorscale=global_theme_r,texttemplate="%{text}", textfont={"size":12}))
-    # f1_ = go.Figure(data=go.Heatmap(z=df_to_plotly(pivot_1)['z'],x = df_to_plotly(pivot_1)['x'], y = df_to_plotly(pivot_1)['y'] ,colorscale=global_theme_r))
     f1_ = px.imshow(
         pivot_1.values,
         text_auto=".3f",
@@ -2203,7 +2176,6 @@ def geo_cluster_analysis(
         title_text="Cluster Wise Geospatial Datapoints "
         + "<br><sup>Algorithm Used : DBSCAN</sup>"
     )
-    # f3_.update_layout(titlecoloraxis_showscale=False, autosize=False, width=1200, height=900)
     f3_.update_layout(autosize=False, width=1200, height=900)
     f3_.update_coloraxes(showscale=False)
     f3_.write_json(ends_with(master_path) + "cluster_plot_3_dbscan_" + col_name)
@@ -2285,7 +2257,10 @@ def geo_cluster_analysis(
 <span class="k">def</span> <span class="nf"><span class="ident">geo_cluster_generator</span></span>(<span class="n">df, lat_col_list, long_col_list, geo_col_list, max_cluster, eps, min_samples, master_path, global_map_box_val, max_records)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>This function helps to trigger cluster analysis stats for the identified geospatial fields</p>
+<div class="desc"><p>This function helps to trigger cluster analysis stats for the identified geospatial fields by calling "geo_cluster_analysis"
+function. If lat-long pairs are available, cluster analysis of each pair will be conducted and intermediate files
+will be saved inside master_path. If geohash columns are available, cluster analysis of each geohash column will be conducted
+and intermediate files will be saved into master_path.</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>df</code></strong></dt>
@@ -2330,8 +2305,10 @@ def geo_cluster_generator(
 ):
 
     """
-
-    This function helps to trigger cluster analysis stats for the identified geospatial fields
+    This function helps to trigger cluster analysis stats for the identified geospatial fields by calling "geo_cluster_analysis"
+    function. If lat-long pairs are available, cluster analysis of each pair will be conducted and intermediate files
+    will be saved inside master_path. If geohash columns are available, cluster analysis of each geohash column will be conducted
+    and intermediate files will be saved into master_path.
 
     Parameters
     ----------
@@ -2437,7 +2414,9 @@ def geo_cluster_generator(
 <span class="k">def</span> <span class="nf"><span class="ident">geohash_col_stats_gen</span></span>(<span class="n">df, geohash_col, id_col, master_path, max_val)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>This function helps to produce descriptive stats for the geohash columns</p>
+<div class="desc"><p>This function helps to produce descriptive stats for the geohash columns.
+If there's more than 1 geohash column, an iteratio through all geohash columns will be conducted. Each geohash
+column will have its own descriptive statistics tables generated by "descriptive_stats_gen" function.</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>df</code></strong></dt>
@@ -2461,9 +2440,9 @@ def geo_cluster_generator(
 def geohash_col_stats_gen(df, geohash_col, id_col, master_path, max_val):
 
     """
-
-    This function helps to produce descriptive stats for the geohash columns
-
+    This function helps to produce descriptive stats for the geohash columns.
+    If there's more than 1 geohash column, an iteratio through all geohash columns will be conducted. Each geohash
+    column will have its own descriptive statistics tables generated by "descriptive_stats_gen" function.
 
     Parameters
     ----------
@@ -2502,7 +2481,12 @@ def geohash_col_stats_gen(df, geohash_col, id_col, master_path, max_val):
 <span class="k">def</span> <span class="nf"><span class="ident">geospatial_autodetection</span></span>(<span class="n">df, id_col, master_path, max_records, top_geo_records, max_cluster, eps, min_samples, global_map_box_val, run_type, auth_key)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>This function helps to trigger the output of intermediate data which is further used for producing the geospatial analyzer report</p>
+<div class="desc"><p>This function helps to trigger the output of intermediate data which is further used for producing the geospatial-analysis
+tab in Anovos full report. Descriptive statistics, cluster analysis and visualization of geospatial fields will be triggered
+in sequence for each lat-long pair and geohash column respectively.
+Descriptive anallysis is conducted by calling "stats_gen_lat_long_geo" function, cluster analysis is conducted by calling
+"geo_cluster_generator" fucntion and visualization of geospatial fields is generated by calling
+"generate_loc_charts_controller" function.</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>df</code></strong></dt>
@@ -2550,8 +2534,12 @@ def geospatial_autodetection(
 ):
 
     """
-
-    This function helps to trigger the output of intermediate data which is further used for producing the geospatial analyzer report
+    This function helps to trigger the output of intermediate data which is further used for producing the geospatial-analysis
+    tab in Anovos full report. Descriptive statistics, cluster analysis and visualization of geospatial fields will be triggered
+    in sequence for each lat-long pair and geohash column respectively.
+    Descriptive anallysis is conducted by calling "stats_gen_lat_long_geo" function, cluster analysis is conducted by calling
+    "geo_cluster_generator" fucntion and visualization of geospatial fields is generated by calling
+    "generate_loc_charts_controller" function.
 
     Parameters
     ----------
@@ -2675,11 +2663,13 @@ def geospatial_autodetection(
 <span class="k">def</span> <span class="nf"><span class="ident">lat_long_col_stats_gen</span></span>(<span class="n">df, lat_col, long_col, id_col, master_path, max_val)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>This function helps to produce descriptive stats for the latitude longitude columns</p>
+<div class="desc"><p>This function helps to produce descriptive stats for the latitude and longitude columns.
+If there's more than 1 latitude-longitude pair, an iteration through all pairs will be conducted. Each pair will
+have its own descriptive statistics tables generated by "descriptive_stats_gen" function.</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>df</code></strong></dt>
-<dd>Analysis DataFrame</dd>
+<dd>DataFrame to be analyzed</dd>
 <dt><strong><code>lat_col</code></strong></dt>
 <dd>Latitude column</dd>
 <dt><strong><code>long_col</code></strong></dt>
@@ -2701,16 +2691,15 @@ def geospatial_autodetection(
 def lat_long_col_stats_gen(df, lat_col, long_col, id_col, master_path, max_val):
 
     """
-
-    This function helps to produce descriptive stats for the latitude longitude columns
-
+    This function helps to produce descriptive stats for the latitude and longitude columns.
+    If there's more than 1 latitude-longitude pair, an iteration through all pairs will be conducted. Each pair will
+    have its own descriptive statistics tables generated by "descriptive_stats_gen" function.
 
     Parameters
     ----------
 
     df
-        Analysis DataFrame
-
+        DataFrame to be analyzed
     lat_col
         Latitude column
     long_col
@@ -2745,7 +2734,14 @@ def lat_long_col_stats_gen(df, lat_col, long_col, id_col, master_path, max_val):
 <span class="k">def</span> <span class="nf"><span class="ident">stats_gen_lat_long_geo</span></span>(<span class="n">df, lat_col, long_col, geohash_col, id_col, master_path, max_val)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>This function helps to produce descriptive stats for the analyzed geospatial fields</p>
+<div class="desc"><p>This function is the main function used when generating geospatial-analysis tab for Anovos full report.
+It helps to produce descriptive statistics files
+for the geospatial fields by calling "lat_long_col_stats_gen" and
+"geohash_col_stats_gen" respectively, and the files will be used for generating Anovos full report's Geospatial Analyzer tab.
+If lat_col and long_col are valid, "lat_long_col_stats_gen" function will be called and intermediate files (overall
+summary and tables showing top lat-long pairs) will be stored inside master_path.
+If geohash_col is valid, "geohash_col_stats_gen" function will be called and intermediate files (overall summary and
+tables showing top geohash distribution) will be stored inside master_path.</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>df</code></strong></dt>
@@ -2775,9 +2771,13 @@ def stats_gen_lat_long_geo(
 ):
 
     """
-
-    This function helps to produce descriptive stats for the analyzed geospatial fields
-
+    This function is the main function used when generating geospatial-analysis tab for Anovos full report.
+    It helps to produce descriptive statistics files  for the geospatial fields by calling "lat_long_col_stats_gen" and
+    "geohash_col_stats_gen" respectively, and the files will be used for generating Anovos full report's Geospatial Analyzer tab.
+    If lat_col and long_col are valid, "lat_long_col_stats_gen" function will be called and intermediate files (overall
+    summary and tables showing top lat-long pairs) will be stored inside master_path.
+    If geohash_col is valid, "geohash_col_stats_gen" function will be called and intermediate files (overall summary and
+    tables showing top geohash distribution) will be stored inside master_path.
 
     Parameters
     ----------

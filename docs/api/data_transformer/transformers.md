@@ -1,7 +1,7 @@
 # <code>transformers</code>
 <p>The data transformer module supports selected pre-processing &amp; transformation functions, such as binning, encoding,
 scaling, imputation, to name a few, which are required for statistics generation and quality checks. Functions
-supported through this modules are listed below:</p>
+supported through this module are listed below:</p>
 <ul>
 <li>attribute_binning</li>
 <li>monotonic_binning</li>
@@ -32,7 +32,7 @@ supported through this modules are listed below:</p>
 """
 The data transformer module supports selected pre-processing & transformation functions, such as binning, encoding,
 scaling, imputation, to name a few, which are required for statistics generation and quality checks. Functions
-supported through this modules are listed below:
+supported through this module are listed below:
 
 - attribute_binning
 - monotonic_binning
@@ -1941,6 +1941,8 @@ def imputation_sklearn(
                     stratified_type=stratified_type,
                     seed_value=sample_seed,
                 )
+            else:
+                idf_model = idf
         else:
             idf_model = idf
         if persist:
@@ -2041,7 +2043,8 @@ def imputation_sklearn(
         odf_print.show(len(list_of_cols), False)
     if persist:
         idf.unpersist()
-        idf_model.unpersist()
+        if not pre_existing_model:
+            idf_model.unpersist()
         result_df.unpersist()
     return odf
 
@@ -7771,6 +7774,8 @@ def imputation_sklearn(
                     stratified_type=stratified_type,
                     seed_value=sample_seed,
                 )
+            else:
+                idf_model = idf
         else:
             idf_model = idf
         if persist:
@@ -7871,7 +7876,8 @@ def imputation_sklearn(
         odf_print.show(len(list_of_cols), False)
     if persist:
         idf.unpersist()
-        idf_model.unpersist()
+        if not pre_existing_model:
+            idf_model.unpersist()
         result_df.unpersist()
     return odf
 ```
