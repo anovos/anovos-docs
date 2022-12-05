@@ -30,7 +30,7 @@ sudo pip3 install --upgrade cython
 sudo pip3 install anovos
 ```
 
-We will use this method for installing anovos as part of Step 4 when Configuring and launching an Anovos workflow as an AWS EMR Job.
+Note : We will use these methods for installing anovos as part of Step 4 (during bootstrapping actions) when Configuring and launching an Anovos workflow as an AWS EMR Job.
 
 
 ## Create a workflow script
@@ -50,9 +50,9 @@ workflow runner, together with the `run_type` specific to AWS EMR.
 
 ## Copy all required files into an S3 bucket
 
-Copy the `main.py` script created in the previous step and the following files to [AWS S3](https://aws.amazon.com/s3/):
+Copy the `main.py` script created in the previous step to [AWS S3](https://aws.amazon.com/s3/):
 
-For copying the below files, we need to clone the Anovos repository into your local environment using the following command:
+For copying the below files, we need to firstly clone the Anovos repository into your local environment using the following command:
 
 ```shell
 git clone --depth 1 https://github.com/anovos/anovos.git
@@ -60,7 +60,7 @@ git clone --depth 1 https://github.com/anovos/anovos.git
 
 _**Note**: Using the `--branch` flag allows you to select a specific release of Anovos._
 _For example, adding `--branch v1.0.1` will give you the state of the 1.0.1 release._
-_If you omit the flag, you will get the latest development version of Anovos
+_If you omit the flag, you will get the latest development version of Anovos._
 
 After cloning, go to the `anovos` directory and execute the following command to clean and
 build the latest modules in the `dist` folder:
@@ -68,19 +68,21 @@ build the latest modules in the `dist` folder:
 ```shell
 make clean build
 ```
-Now all files which we are going to copy in to s3 bucket are avaialable in the local environment. We can copy the following below files :
+Now all files which we are going to copy in to s3 bucket are avaialable in the local environment. We can copy the following below files to [AWS S3](https://aws.amazon.com/s3/) :
 
 - `/anovos/dist/anovos.zip`
   This file contains all Anovos modules. You will need the compressed (.zip) file for importing the modules as –py-files.
-  Note: we can use this file only when we are trying to install Anovos by installing Anovos dependency packages from Anovos developmental github version as mentioned above in downloading and installing anovos section.
+  - **Note**: we can use this file only when we are trying to install Anovos by installing Anovos dependency packages from Anovos developmental github version as mentioned above in downloading and installing anovos section.
 - `/anovos/dist/data/income_dataset` (optional)
   This folder contains our demo dataset, the `income dataset`. We have used this dataset here as an example for this tutorials.
 - `/anovos/dist/configs.yaml`
   This is the sample _Anovos_ configuration file that describes how the `income dataset`
   should be analyzed and processed.
+  
   Ensure that all input and output paths in `configs.yaml`, such as `final_report_path`, `file_path`,
   `appended_metric_path` or `output_path`, are set to the desired S3 locations.
-  You can also make other changes to the workflow. For example, you can define which columns from the input dataset are used in the workflow. To try it yourself, find the delete_column configuration in the input_dataset block and add the column workclass to the list of columns to be deleted:
+  You can also make other changes to the workflow. For example, you can define which columns from the input dataset are used in the workflow. 
+  To try it yourself, find the delete_column configuration in the input_dataset block and add the column workclass to the list of columns to be deleted:
 
   ```yaml
   delete_column: ['logfnl','workclass']
@@ -95,7 +97,7 @@ Now all files which we are going to copy in to s3 bucket are avaialable in the l
   Now you can use it as a bootstrap file for AWS EMR. 
   This file will be useful when installing Anovos dependency packages from Anovos developmental github version.
 
--`/anovos/bin/aws_bootstrap_files/setup_on_aws_emr_5_30_and_above_latest_release_version.sh`
+- `/anovos/bin/aws_bootstrap_files/setup_on_aws_emr_5_30_and_above_latest_release_version.sh`
   We can only use this file as part of the bootstrap actions when we are installing anovos through PyPI(latest release version).
 
 - `/anovos/data/metric_dictionary.csv`
@@ -182,7 +184,7 @@ Example machines: - r5.2xlarge - 8 core, 64 GB.
 
 The above histogram jars version and avro package version should follow the Scala and pyspark version.
 
-Note: We can use python files (--py-files) only when we are installing anovos by installing Anovos dependency packages from Anovos developmental github version
+**Note**: We can use python files (--py-files) only when we are installing anovos by installing Anovos dependency packages from Anovos developmental github version
 
 - Application location: S3 path of main.py file
 - Arguments for main.py file - `s3://<s3-bucket>/configs.yaml emr`. Here 1st argument is the s3 bucket path of config file and 2nd argument is run_type. 2nd argument is optional if we have already given in main.py file.
@@ -204,13 +206,19 @@ For more information about purchasing options, you can learn from
 [instance purchasing options documentation](https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-instance-purchasing-options.html) 
 
 ### Step 4: General cluster Settings and bootstrap Actions
-Once Cluster Nodes and Instances set up, we can go to next page for providing cluster name and Tags.You can give name of the cluster in cluster name section which is related to your project.A tag consists of a case-sensitive key-value pair. Tags on EMR clusters are propagated to the underlying EC2 instances.
+Once Cluster Nodes and Instances set up, we can go to next page for providing cluster name and Tags.You can give name of the cluster in cluster name section which is related to your project.
+
+A tag consists of a case-sensitive key-value pair. Tags on EMR clusters are propagated to the underlying EC2 instances.
+
 Here in this example,the below image shows tags for reference.Users can give tags as per their own task and project.
 
 ![Tags Setting](../../assets/aws_emr_images/image9.png)
 
 Once general cluster Settings completed, we can move to Bootstapping Action section.Bootstrap actions are scripts that are executed during setup before Hadoop starts on every cluster node. You can use them to install software dependencies and customize your applications.
-Here we are using bootstrap actions to installs all the packages that are required to run _Anovos_ on EMR.We have used two bootstrap files, first is for installing Anovos dependency packages from Anovos developmental github version and second is when we want to install anovos through PyPI(latest released version).We can also take the reference from installing and downloading Anovos section where we have described which bootstrap files will be used in which condition.
+
+Here we are using bootstrap actions to installs all the packages that are required to run _Anovos_ on EMR.We have used two bootstrap files, first is for installing Anovos dependency packages from Anovos developmental github version and second is when we want to install anovos through PyPI(latest released version).
+We can also take the reference from installing and downloading Anovos section where we have described which bootstrap files will be used in which condition.
+
 Give the s3 bucket path of .sh script in script location as shown in the example and then click on save to add this script.
 
 ![Bootstrapping steps](../../assets/aws_emr_images/image7.png)
