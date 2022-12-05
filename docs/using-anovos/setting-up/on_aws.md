@@ -30,7 +30,7 @@ sudo pip3 install --upgrade cython
 sudo pip3 install anovos
 ```
 
-Note : We will use these methods for installing anovos as part of Step 4 (during bootstrapping actions) when Configuring and launching an Anovos workflow as an AWS EMR Job.
+**Note** : We will use these methods for installing anovos as part of Step 4 (during bootstrapping actions) when Configuring and launching an Anovos workflow as an AWS EMR Job.
 
 
 ## Create a workflow script
@@ -72,7 +72,7 @@ Now all files which we are going to copy in to s3 bucket are avaialable in the l
 
 - `/anovos/dist/anovos.zip`
   This file contains all Anovos modules. You will need the compressed (.zip) file for importing the modules as –py-files.
-  - **Note**: we can use this file only when we are trying to install Anovos by installing Anovos dependency packages from Anovos developmental github version as mentioned above in downloading and installing anovos section.
+  **Note**: we can use this file only when we are trying to install Anovos by installing Anovos dependency packages from Anovos developmental github version as mentioned above in downloading and installing anovos section.
 - `/anovos/dist/data/income_dataset` (optional)
   This folder contains our demo dataset, the `income dataset`. We have used this dataset here as an example for this tutorials.
 - `/anovos/dist/configs.yaml`
@@ -81,6 +81,7 @@ Now all files which we are going to copy in to s3 bucket are avaialable in the l
   
   Ensure that all input and output paths in `configs.yaml`, such as `final_report_path`, `file_path`,
   `appended_metric_path` or `output_path`, are set to the desired S3 locations.
+  
   You can also make other changes to the workflow. For example, you can define which columns from the input dataset are used in the workflow. 
   To try it yourself, find the delete_column configuration in the input_dataset block and add the column workclass to the list of columns to be deleted:
 
@@ -144,6 +145,7 @@ We have used Emr-5.36.0 for this example. we can select following softwares as s
 
 ### Step2: Addition of steps for anovos workflow
 Choose step type as "Spark application" and click on add step. Add step box will appear and there we can fill spark submit and argument details for launching the anovos workflow in aws emr.
+
 A step is a unit of work you submit to the cluster. For instance, a step might contain one or more Hadoop or Spark jobs. You can also submit additional steps to a cluster after it is running.
 
 Here is an example of spark submit and argument details for reference.
