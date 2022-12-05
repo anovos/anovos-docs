@@ -143,7 +143,9 @@ We have used Emr-5.36.0 for this example. we can select following softwares as s
 - TensorFlow
 
 ### Step2: Addition of steps for anovos workflow
-Choose step type as "Spark application" and click on add step. Add step box will appear and there we can fill spark submit and argument details for launching the anovos workflow in aws emr.A step is a unit of work you submit to the cluster. For instance, a step might contain one or more Hadoop or Spark jobs. You can also submit additional steps to a cluster after it is running.
+Choose step type as "Spark application" and click on add step. Add step box will appear and there we can fill spark submit and argument details for launching the anovos workflow in aws emr.
+A step is a unit of work you submit to the cluster. For instance, a step might contain one or more Hadoop or Spark jobs. You can also submit additional steps to a cluster after it is running.
+
 Here is an example of spark submit and argument details for reference.
 
 ![Add Step Details](../../assets/aws_emr_images/image2.png)
@@ -202,6 +204,7 @@ After that we can come to Cluster Nodes and Instances section where we can choos
 ![Cluster Nodes and Instances](../../assets/aws_emr_images/image4.png)
 
 In this example , we have set Instance type as r5.2xlarge with 1 instance count of master node type and 5 instance count of Core node type having On-demand Purchasing option.We can choose instance type and no of instances as per dataset size and jobs complexity.
+
 For more information about purchasing options, you can learn from 
 [instance purchasing options documentation](https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-instance-purchasing-options.html) 
 
@@ -217,9 +220,10 @@ Here in this example,the below image shows tags for reference.Users can give tag
 Once general cluster Settings completed, we can move to Bootstapping Action section.Bootstrap actions are scripts that are executed during setup before Hadoop starts on every cluster node. You can use them to install software dependencies and customize your applications.
 
 Here we are using bootstrap actions to installs all the packages that are required to run _Anovos_ on EMR.We have used two bootstrap files, first is for installing Anovos dependency packages from Anovos developmental github version and second is when we want to install anovos through PyPI(latest released version).
+
 We can also take the reference from installing and downloading Anovos section where we have described which bootstrap files will be used in which condition.
 
-Give the s3 bucket path of .sh script in script location as shown in the example and then click on save to add this script.
+Give the s3 bucket path of .sh script in script location as shown in the example and then click on add to add this script.
 
 ![Bootstrapping steps](../../assets/aws_emr_images/image7.png)
 
