@@ -174,7 +174,7 @@ This section gives the descriptive summary of the geospatial features ( both Lat
  - **Overall Summary**
     1. For Lat-Long-Stats: Distinct {Lat,Long} pair, Distinct latitude, Distinct Longitude, Most Common {Lat,Long} Pair, Most Common {Lat,Long} pair occurence.
     2. For Geohash-Stats: Total number of Distinct Geohashes, The Precision level observed for the Geohashes, The Most Common Geohash. 
- - **Top 100 Lat Long/Geohasg Distribution** gives the count of the Top 100 frequently seen lat-long pairs/geohash features in the dataset. The pairs are ranked by frequency of occurence.
+ - **Top 100 Lat Long/Geohash Distribution** gives the count of the Top 100 frequently seen lat-long pairs/geohash features in the dataset. The pairs are ranked by frequency of occurence.
 
 ![](../../assets/html-reports/descriptive_analysis_by_location_1.png)
 ![](../../assets/html-reports/descriptive_analysis_by_location_2.png)
