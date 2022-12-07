@@ -1,4 +1,3 @@
-
 # Creating Data Reports with Anovos
 
 _Anovos_ includes capabilities to generate comprehensive _Data Reports_ that describe a dataset
