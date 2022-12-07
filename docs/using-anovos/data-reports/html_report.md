@@ -200,16 +200,22 @@ This section gives the descriptive summary of the geospatial features ( both Lat
  - **Visualization** 
 ![](../../assets/html-reports/visualization_1.png)
  This sub section helps in visualization of the latitude-longitude pairs on a interactive map for both the underlying algorithms - K-Means and DBSCAN. Here the colours represent different clusters. 
+  1. K-Means
 ![](../../assets/html-reports/visualization_2.png)
+  2. DBSCAN
 ![](../../assets/html-reports/visualization_3.png)
 
  - **Outlier Points** 
  ![](../../assets/html-reports/outlier_1.png)
  This sub section gives the graphical represenation based on lat-long (longitude on x-axis and latitude on y-axis) of the outlier points captured by cluster analysis based on DBSCAN algorithm for two types of distance measures - Euclidean and Haversine. 
+  1. Based on Euclidean distance
  ![](../../assets/html-reports/outlier_2.png)
+  2. Based on Haversine distance
  ![](../../assets/html-reports/outlier_3.png)
 
 
 - **Visualization by Geospatial Fields** Under this section, the raw data points are simply plotted inside a map for both Lat-Long and Geohash pairs. This does not have cluster wise differentiation. 
+   - **Lat-Long pairs**
 ![](../../assets/html-reports/visualization_geospatial_latlong_2.png)
+   - **Geohash**
 ![](../../assets/html-reports/visualization_geospatial_geohash_2.png)
