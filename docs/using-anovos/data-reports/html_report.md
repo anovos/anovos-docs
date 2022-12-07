@@ -181,7 +181,7 @@ This section gives the descriptive summary of the geospatial features ( both Lat
 
 
 - **Clustering Geospatial Field**
- - **Cluster Identification** 
+   - **Cluster Identification** 
 ![](../../assets/html-reports/cluster_identification_1.png)
      **Elbow Curve** showing the optimal number of clusters based on the lat-long and the geohash features. The elbow method uses the sum of squared distance (SSE) to choose an ideal value of k based on the distance between the data points and their assigned clusters. The dataset is grouped into different clusters to find the optimal number of clusters. Here the optimal number of clusters (K) is 10. The underlying algorithm used is KMeans.
      ![](../../assets/html-reports/cluster_identification_2.png)
@@ -189,15 +189,15 @@ This section gives the descriptive summary of the geospatial features ( both Lat
      **Distribution of Silhouette scores across different parameters**: A silhouette provides a graphical representation of how well each feature has been matched to its own cluster. The silhouette ranges from -1 to +1, where a high value indicates that the feature is well matched to its own cluster and poorly matched to its neighbouring clusters. Underlying algorithm used is DBSCAN.
      ![](../../assets/html-reports/cluster_identification_3.png)
 
- - **Cluster Distribution** 
+   - **Cluster Distribution** 
  ![](../../assets/html-reports/cluster_distribution_1.png)
-  - Distribution of Clusters(K-Means): This section gives a pie chart representing the distribution of clusters for K-Means alogorithm and Euclidean distance. For eg, in the figure below, cluster 7 contains 31.2% of the observations of the raw dataset. 
+  1. Distribution of Clusters(K-Means): This section gives a pie chart representing the distribution of clusters for K-Means alogorithm and Euclidean distance. For eg, in the figure below, cluster 7 contains 31.2% of the observations of the raw dataset. 
  ![](../../ssets/html-reports/cluster_distribution_2.png)
-  - Distribution of Clusters(DBSCAN): This section gives a similar pie chart for the algorithm DBSCAN and distance Haversine. Here cluster 0 has 99.8% of the observations. 
+  2. Distribution of Clusters(DBSCAN): This section gives a similar pie chart for the algorithm DBSCAN and distance Haversine. Here cluster 0 has 99.8% of the observations. 
  ![](../../assets/html-reports/cluster_distribution_3.png)  
 
 
- - **Visualization** 
+   - **Visualization** 
 ![](../../assets/html-reports/visualization_1.png)
  This sub section helps in visualization of the latitude-longitude pairs on a interactive map for both the underlying algorithms - K-Means and DBSCAN. Here the colours represent different clusters. 
   1. K-Means
@@ -205,14 +205,13 @@ This section gives the descriptive summary of the geospatial features ( both Lat
   2. DBSCAN
 ![](../../assets/html-reports/visualization_3.png)
 
- - **Outlier Points** 
+   - **Outlier Points** 
  ![](../../assets/html-reports/outlier_1.png)
  This sub section gives the graphical represenation based on lat-long (longitude on x-axis and latitude on y-axis) of the outlier points captured by cluster analysis based on DBSCAN algorithm for two types of distance measures - Euclidean and Haversine. 
   1. Based on Euclidean distance
  ![](../../assets/html-reports/outlier_2.png)
   2. Based on Haversine distance
  ![](../../assets/html-reports/outlier_3.png)
-
 
 - **Visualization by Geospatial Fields** Under this section, the raw data points are simply plotted inside a map for both Lat-Long and Geohash pairs. This does not have cluster wise differentiation. 
    - **Lat-Long pairs**
