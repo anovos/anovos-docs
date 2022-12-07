@@ -170,7 +170,8 @@ This section helps to analyze the geospatial related data features. The geospati
 
 - **Descriptive Analysis by Location Attributes**
 
-This section gives the descriptive summary of the geospatial features ( both Lat-long and Geohash fields). The descriptive tables are in two parts:
+This section gives the descriptive summary of the geospatial features ( both Lat-long and Geohash fields). 
+ - **Overall Summary**
   - For Lat-Long-Stats: Distinct {Lat,Long} pair, Distinct latitude, Distinct Longitude, Most Common {Lat,Long} Pair, Most Common {Lat,Long} pair occurence.
   - For Geohash-Stats: Total number of Distinct Geohashes, The Precision level observed for the Geohashes, The Most Common Geohash. 
  - **Top 100 Lat Long/Geohasg Distribution** gives the count of the Top 100 frequently seen lat-long pairs/geohash features in the dataset. The pairs are ranked by frequency of occurence.
@@ -200,7 +201,7 @@ This section gives the descriptive summary of the geospatial features ( both Lat
 ![](../../assets/html-reports/visualization_1.png)
  This sub section helps in visualization of the latitude-longitude pairs on a interactive map for both the underlying algorithms - K-Means and DBSCAN. Here the colours represent different clusters. 
 ![](../../assets/html-reports/visualization_2.png)
-! [](../../assets/html-reports/visualization_3.png)
+![](../../assets/html-reports/visualization_3.png)
 
  - **Outlier Points** 
  ![](../../assets/html-reports/outlier_1.png)
