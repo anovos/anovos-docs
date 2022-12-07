@@ -165,7 +165,7 @@ The stationarity & transformation view help us in determinining how much the dat
 
 This section helps to analyze the geospatial related data features which are automatically identified. 
 
-! [](https://raw.githubusercontent.com/anovos/anovos-docs/main/docs/assets/html-reports/geospatial_1.png)
+![](https://raw.githubusercontent.com/anovos/anovos-docs/main/docs/assets/html-reports/geospatial_1.png)
 
 - **Descriptive Analysis by Location Attributes**
 
@@ -173,40 +173,40 @@ This section gives the summary of the Lat-Long features and Geohash fields with 
 **Overall Summary** gives the count of the following stats -
 For Lat-Long-Stats: Distinct {Lat,Long} pair, Distinct latitude, Distinct Longitude, Most Common {Lat,Long} Pair, Most Common {Lat,Long} pair occurence.
 For Geohash-Stats: Total number of Distinct Geohashes, The Precision level observed for the Geohashes, The Most Common Geohash. 
-**Top 100 Lat Long** gives the count of the Top 100 frequently seen lat-long/geohash pairs in the dataset. 
+**Top 100 Lat Long/Geohasg Distribution** gives the count of the Top 100 frequently seen lat-long/geohash pairs in the dataset. 
 
-! [](https://raw.githubusercontent.com/anovos/anovos-docs/main/docs/assets/html-reports/descriptive_analysis_by_location_1.png)
-! [](https://raw.githubusercontent.com/anovos/anovos-docs/main/docs/assets/html-reports/descriptive_analysis_by_location_2.png)
+![](https://raw.githubusercontent.com/anovos/anovos-docs/main/docs/assets/html-reports/descriptive_analysis_by_location_1.png)
+![](https://raw.githubusercontent.com/anovos/anovos-docs/main/docs/assets/html-reports/descriptive_analysis_by_location_2.png)
 
 
 - **Clustering Geospatial Field**
  - **Cluster Identification** 
-! [](https://raw.githubusercontent.com/anovos/anovos-docs/main/docs/assets/html-reports/cluster_identification_1.png)
+![](https://raw.githubusercontent.com/anovos/anovos-docs/main/docs/assets/html-reports/cluster_identification_1.png)
      **Elbow Curve** showing the optimal number of clusters based on the lat-long and the geohash features. The elbow method uses the sum of squared distance (SSE) to choose an ideal value of k based on the distance between the data points and their assigned clusters.The algorithm used for this is KMeans
-     ! [](https://raw.githubusercontent.com/anovos/anovos-docs/main/docs/assets/html-reports/cluster_identification_2.png)
+     ![](https://raw.githubusercontent.com/anovos/anovos-docs/main/docs/assets/html-reports/cluster_identification_2.png)
 
      **Distribution of Silhouette scores across different parameters**: A silhouette provides a graphical representation of how well each feature has been matched to its own cluster. The silhouette ranges from -1 to +1, where a high value indicates that the feature is well matched to its own cluster and poorly matched to its neighbouring clusters. Underlying algorithm used: DBSCAN
-     ! [](https://raw.githubusercontent.com/anovos/anovos-docs/main/docs/assets/html-reports/cluster_identification_3.png)
+     ![](https://raw.githubusercontent.com/anovos/anovos-docs/main/docs/assets/html-reports/cluster_identification_3.png)
 
  - **Cluster Distribution** gives proportion of observations for the dataset contained in each cluster
- ! [](https://raw.githubusercontent.com/anovos/anovos-docs/main/docs/assets/html-reports/cluster_distribution_1.png)
- ! [](https://raw.githubusercontent.com/anovos/anovos-docs/main/docs/assets/html-reports/cluster_distribution_2.png)
- ! [](https://raw.githubusercontent.com/anovos/anovos-docs/main/docs/assets/html-reports/cluster_distribution_3.png)  
+ ![](https://raw.githubusercontent.com/anovos/anovos-docs/main/docs/assets/html-reports/cluster_distribution_1.png)
+ ![](https://raw.githubusercontent.com/anovos/anovos-docs/main/docs/assets/html-reports/cluster_distribution_2.png)
+ ![](https://raw.githubusercontent.com/anovos/anovos-docs/main/docs/assets/html-reports/cluster_distribution_3.png)  
 
 
  - **Visualization** 
-! [](https://raw.githubusercontent.com/anovos/anovos-docs/main/docs/assets/html-reports/visualization_1.png)
+![](https://raw.githubusercontent.com/anovos/anovos-docs/main/docs/assets/html-reports/visualization_1.png)
  This sub section helps in visualization of the latitude-longitude pairs on a geospatial world map for both the underlying algorithms - K-Means and DBSCAN.
-! [](https://raw.githubusercontent.com/anovos/anovos-docs/main/docs/assets/html-reports/visualization_2.png)
+![](https://raw.githubusercontent.com/anovos/anovos-docs/main/docs/assets/html-reports/visualization_2.png)
 ! [](https://raw.githubusercontent.com/anovos/anovos-docs/main/docs/assets/html-reports/visualization_3.png)
 
  - **Outlier Points** 
- ! [](https://raw.githubusercontent.com/anovos/anovos-docs/main/docs/assets/html-reports/outlier_1.png)
+ ![](https://raw.githubusercontent.com/anovos/anovos-docs/main/docs/assets/html-reports/outlier_1.png)
  This sub section gives the graphical represenation of the outlier points captured by cluster analysis. Two graphs will be generated for DBSCAN algorithm : for Euclidean and Haversine distance.
- ! [](https://raw.githubusercontent.com/anovos/anovos-docs/main/docs/assets/html-reports/outlier_2.png)
- ! [](https://raw.githubusercontent.com/anovos/anovos-docs/main/docs/assets/html-reports/outlier_3.png)
+ ![](https://raw.githubusercontent.com/anovos/anovos-docs/main/docs/assets/html-reports/outlier_2.png)
+ ![](https://raw.githubusercontent.com/anovos/anovos-docs/main/docs/assets/html-reports/outlier_3.png)
 
 
 - **Visualization by Geospatial Fields** Under this section, there are two subsections - Lat-Long-Plot and Geohash-Plot.
-! [](https://raw.githubusercontent.com/anovos/anovos-docs/main/docs/assets/html-reports/visualization_geospatial_latlong_2.png)
-! [](https://raw.githubusercontent.com/anovos/anovos-docs/main/docs/assets/html-reports/visualization_geospatial_geohash_2.png)
+![](https://raw.githubusercontent.com/anovos/anovos-docs/main/docs/assets/html-reports/visualization_geospatial_latlong_2.png)
+! (https://raw.githubusercontent.com/anovos/anovos-docs/main/docs/assets/html-reports/visualization_geospatial_geohash_2.png)
