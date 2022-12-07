@@ -172,8 +172,8 @@ This section helps to analyze the geospatial related data features. The geospati
 
 This section gives the descriptive summary of the geospatial features ( both Lat-long and Geohash fields). 
  - **Overall Summary**
-  - For Lat-Long-Stats: Distinct {Lat,Long} pair, Distinct latitude, Distinct Longitude, Most Common {Lat,Long} Pair, Most Common {Lat,Long} pair occurence.
-  - For Geohash-Stats: Total number of Distinct Geohashes, The Precision level observed for the Geohashes, The Most Common Geohash. 
+    1. For Lat-Long-Stats: Distinct {Lat,Long} pair, Distinct latitude, Distinct Longitude, Most Common {Lat,Long} Pair, Most Common {Lat,Long} pair occurence.
+    2. For Geohash-Stats: Total number of Distinct Geohashes, The Precision level observed for the Geohashes, The Most Common Geohash. 
  - **Top 100 Lat Long/Geohasg Distribution** gives the count of the Top 100 frequently seen lat-long pairs/geohash features in the dataset. The pairs are ranked by frequency of occurence.
 
 ![](../../assets/html-reports/descriptive_analysis_by_location_1.png)
@@ -210,6 +210,6 @@ This section gives the descriptive summary of the geospatial features ( both Lat
  ![](../../assets/html-reports/outlier_3.png)
 
 
-- **Visualization by Geospatial Fields** Under this section, the raw data points are simply plotted inside a map. This does not have cluster wise differentiation. 
+- **Visualization by Geospatial Fields** Under this section, the raw data points are simply plotted inside a map for both Lat-Long and Geohash pairs. This does not have cluster wise differentiation. 
 ![](../../assets/html-reports/visualization_geospatial_latlong_2.png)
 ![](../../assets/html-reports/visualization_geospatial_geohash_2.png)
