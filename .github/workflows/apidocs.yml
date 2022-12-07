@@ -1,0 +1,101 @@
+name: Update API Docs
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - pdoc-template/**
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Docs
+        uses: actions/checkout@v3
+
+      - name: Checkout Anovos
+        uses: actions/checkout@v3
+        with:
+          repository: anovos/anovos
+          path: anovos
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '11'
+
+      - uses: vemonet/setup-spark@v1
+        with:
+          spark-version: '3.2.2'
+          hadoop-version: '3.2'
+
+      - name: Pip cache
+        uses: actions/cache@v3.0.11
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-anovos-${{ hashFiles('./requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-anovos
+
+      - name: Install Anovos Python requirements
+        run: |
+          cd anovos
+          python -m pip install --upgrade pip
+          pip install wheel
+          pip install -r requirements.txt
+          # Install optional requirements
+          pip install feast==0.21.1
+
+      - name: Install Python requirements for API docs generation
+        run: |
+          pip install pdoc3
+
+      - name: Generate API docs
+        run: |
+          cd anovos/src/main
+          pdoc --output-dir=./api --template-dir=../../../pdoc-template --html anovos
+          mv ./api/anovos/* ./api/
+          rmdir ./api/anovos
+          find . -name '*.html' -exec sh -c 'mv "$0" "${0%.html}.md"' {} \;
+
+      - name: Modify overviews
+        run: |
+          # ensure that the overview is the first entry in each section
+          find . -name 'index.md' -exec sh -c 'mv "$0" "${0%/*}/_${0##*/}"' {} \;
+          # replace the headline
+          find . -name '_index.md' -exec sh -c 'sed -i "1s/.*/# Overview/" $0' {} \;
+          # replace the links in the main overview
+          sed -i "s/\/index\.html/\/_index\.html/" anovos/src/main/api/_index.md
+
+      - name: Merge API docs into docs
+        run: |
+          rm -rf docs/api || true
+          cp -r anovos/src/main/api docs/
+
+      - name: Update Licensing information
+        run: |
+          rm -rf docs/license.md || true
+          cp anovos/LICENSE docs/license.md
+
+      - name: Remove unnecessary files
+        run: |
+          rm -rf docs/api/version.md || true
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v4.2.3
+        with:
+          add-paths: |
+            docs/api/**
+            docs/license.md
+          title: Update API Docs & License Information
+          body: Automatically created via GitHub Actions
+          commit-message: Update API docs (${{ github.run_id}})
+          branch: update-api-docs-${{ github.run_id}}
+          delete-branch: true

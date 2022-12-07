@@ -7,7 +7,7 @@ The primary function dealt here is **anovos_report** which caters to the:
 - reading of available data produced from data analyzer module and chart objects as produced by the report preprocessing module
 - computation of additional charts based on available data
 - populating the reporting layer leveraging an open-sourced python package called datapane.
-- capability of producing stand alone reports for individual sections (Descriptive Statistics, Quality Check, Attribute Associations, Data Drift & Stability)
+- capability of producing stand alone reports for individual sections (Descriptive Statistics, Quality Check, Attribute Associations, Data Drift & Stability & Time Series Analyzer)
 
 The following parameters are specified in the function **anovos_report**:
 
@@ -21,3 +21,4 @@ The following parameters are specified in the function **anovos_report**:
 - **metricDict_path**: The path containing the metric dictionary 
 - **run_type**: Option to specify whether the execution happen locally or in EMR way
 - **final_report_path**: Path where the final report needs to be saved
+- **output_type**: Time category of analysis which can be between "Daily", "Hourly", "Weekly"

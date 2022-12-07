@@ -1,14 +1,19 @@
-# License Information
+# License
 
-## Anovos
+Copyright 2021-2022 Anovos Developers
 
-Copyright 2021 Anovos Developers
-
-Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at:
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at:
 
 [http://www.apache.org/licenses/LICENSE-2.0.](http://www.apache.org/licenses/LICENSE-2.0)
 
-Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 
 ```other
 Apache License
@@ -190,86 +195,170 @@ Apache License
 
 ```
 
-## Third-Party License overview of included 3rd party libraries
+## Licenses of third-party dependencies
 
 The Anovos project is licensed under the terms of the [Apache 2.0 License](http://www.apache.org/licenses/LICENSE-2.0).
 
-However, Anovos includes several third-party Open-Source libraries, which are licensed under their own respective Open-Source licenses.
+However, Anovos builds on several third-party open source libraries that are made available under the following
+licenses:
 
-### Pandas
+### Java dependencies
 
-License: BSD 3-Clause License [https://github.com/pandas-dev/pandas/blob/master/LICENSE](https://github.com/pandas-dev/pandas/blob/master/LICENSE)
+#### Apache Spark
 
-### scripy
+Apache License Version 2.0, see
+[https://github.com/apache/spark/blob/master/LICENSE](https://github.com/apache/spark/blob/master/LICENSE)
 
-License: BSD 3-Clause License [https://github.com/scipy/scipy/blob/master/LICENSE.txt](https://github.com/scipy/scipy/blob/master/LICENSE.txt)
+#### Histogrammar
 
-### scikit-learn
+Apache License Version 2.0, see
+[https://github.com/histogrammar/histogrammar-scala/blob/master/LICENSE](https://github.com/histogrammar/histogrammar-scala/blob/master/LICENSE)
 
-License: BSD 3-Clause License [https://github.com/scikit-learn/scikit-learn/blob/main/COPYING](https://github.com/scikit-learn/scikit-learn/blob/main/COPYING)
+#### Histogrammar-SparkSQL
 
-### joblib
+Apache License Version 2.0, see
+[https://github.com/histogrammar/histogrammar-scala/blob/master/LICENSE](https://github.com/histogrammar/histogrammar-scala/blob/master/LICENSE)
 
-License: BSD 3-Clause License
+### Python packages
 
-[https://github.com/joblib/joblib/blob/master/LICENSE.txt](https://github.com/joblib/joblib/blob/master/LICENSE.txt)
+#### black
 
-### boto3
+MIT License, see
+[https://github.com/psf/black/blob/main/LICENSE](https://github.com/psf/black/blob/main/LICENSE)
 
-License: Apache 2.0 License  [https://github.com/boto/boto3/blob/develop/LICENSE](https://github.com/boto/boto3/blob/develop/LICENSE)
+#### boto3
 
-### pyarrow
+Apache License Version 2.0, see
+[https://github.com/boto/boto3/blob/develop/LICENSE](https://github.com/boto/boto3/blob/develop/LICENSE)
 
-License: Apache 2.0 License
+#### cython
 
-[https://github.com/apache/arrow/blob/master/LICENSE.txt](https://github.com/apache/arrow/blob/master/LICENSE.txt)
+Apache License Version 2.0, see
+[https://github.com/cython/cython/blob/master/LICENSE.txt](https://github.com/cython/cython/blob/master/LICENSE.txt)
 
-### sparkpickle
+#### datapane
 
-License: Apache 2.0 License
+Apache License Version 2.0, see
+[https://github.com/datapane/datapane/blob/master/LICENSE](https://github.com/datapane/datapane/blob/master/LICENSE)
 
-[https://github.com/src-d/sparkpickle/blob/master/LICENSE](https://github.com/src-d/sparkpickle/blob/master/LICENSE)
+#### findspark
 
-### s3path
+BSD 3-Clause License, see
+[https://github.com/minrk/findspark/blob/main/LICENSE.md](https://github.com/minrk/findspark/blob/main/LICENSE.md)
 
-License: Apache-2.0 License
+#### fsspec
 
-[https://github.com/liormizr/s3path/blob/master/LICENSE](https://github.com/liormizr/s3path/blob/master/LICENSE)
+BSD 3-Clause License, see
+[https://github.com/fsspec/filesystem_spec/blob/master/LICENSE](https://github.com/fsspec/filesystem_spec/blob/master/LICENSE)
 
-### statsmodels
+#### isort
 
-License: BSD 3-Clause License
+MIT License, see
+[https://github.com/PyCQA/isort/blob/main/LICENSE](https://github.com/PyCQA/isort/blob/main/LICENSE)
 
-[https://github.com/statsmodels/statsmodels/blob/main/LICENSE.txt](https://github.com/statsmodels/statsmodels/blob/main/LICENSE.txt)
+#### loguru
 
-### pybind11
+MIT License, see
+[https://github.com/Delgan/loguru/blob/master/LICENSE](https://github.com/Delgan/loguru/blob/master/LICENSE)
 
-License: BSD 3-Clause License [https://github.com/pybind/pybind11/blob/master/LICENSE](https://github.com/pybind/pybind11/blob/master/LICENSE)
+#### matplotlib
 
-### popmon
+License agreement for matplotlib versions 1.3.0 and later, see
+[https://github.com/matplotlib/matplotlib/blob/main/LICENSE/LICENSE](https://github.com/matplotlib/matplotlib/blob/main/LICENSE/LICENSE)
 
-License: MIT License
+#### numpy
 
+BSD 3-Clause License, see
+[https://github.com/numpy/numpy/blob/main/LICENSE.txt](https://github.com/numpy/numpy/blob/main/LICENSE.txt)
+
+#### pandas
+
+BSD 3-Clause License, see
+[https://github.com/pandas-dev/pandas/blob/master/LICENSE](https://github.com/pandas-dev/pandas/blob/master/LICENSE)
+
+#### plotly
+
+MIT License, see
+[https://github.com/plotly/plotly.py/blob/master/LICENSE.txt](https://github.com/plotly/plotly.py/blob/master/LICENSE.txt)
+
+#### popmon
+
+MIT License, see
 [https://github.com/ing-bank/popmon/blob/master/LICENSE](https://github.com/ing-bank/popmon/blob/master/LICENSE)
 
-### seaborn
+#### py4j
 
-License: BSD 3-Clause License
+BSD 3-Clause License, see
+[https://github.com/py4j/py4j/blob/master/LICENSE.txt](https://github.com/py4j/py4j/blob/master/LICENSE.txt)
 
-[https://github.com/mwaskom/seaborn/blob/master/LICENSE](https://github.com/mwaskom/seaborn/blob/master/LICENSE)
+#### pyaml
 
-### varclushi
+MIT License, see
+[https://github.com/yaml/pyyaml/blob/master/LICENSE](https://github.com/yaml/pyyaml/blob/master/LICENSE)
 
-License: GPL 3.0 License
+#### pyarrow
 
+Apache License Version 2.0, see
+[https://github.com/apache/arrow/blob/master/LICENSE.txt](https://github.com/apache/arrow/blob/master/LICENSE.txt)
+
+#### pybind11
+
+BSD 3-Clause License, see
+[https://github.com/pybind/pybind11/blob/master/LICENSE](https://github.com/pybind/pybind11/blob/master/LICENSE)
+
+#### reverse_geocoder
+
+GNU Lesser General Public License Version 2.1, see
+[https://github.com/thampiman/reverse-geocoder/blob/master/LICENSE](https://github.com/thampiman/reverse-geocoder/blob/master/LICENSE)
+
+#### s3fs
+
+BSD 3-Clause License, see
+[https://github.com/fsspec/s3fs/blob/main/LICENSE.txt](https://github.com/fsspec/s3fs/blob/main/LICENSE.txt)
+
+#### s3path
+
+Apache License Version 2.0, see
+[https://github.com/liormizr/s3path/blob/master/LICENSE](https://github.com/liormizr/s3path/blob/master/LICENSE)
+
+#### scikit-learn
+
+BSD 3-Clause License, see
+[https://github.com/scikit-learn/scikit-learn/blob/main/COPYING](https://github.com/scikit-learn/scikit-learn/blob/main/COPYING)
+
+#### scipy
+
+BSD 3-Clause License, see
+[https://github.com/scipy/scipy/blob/master/LICENSE.txt](https://github.com/scipy/scipy/blob/master/LICENSE.txt)
+
+#### sentence-transformers
+
+Apache License Version 2.0, see
+[https://github.com/UKPLab/sentence-transformers/blob/master/LICENSE](https://github.com/UKPLab/sentence-transformers/blob/master/LICENSE)
+
+#### soupsieve
+
+MIT License, see
+[https://github.com/facelessuser/soupsieve/blob/main/LICENSE.md](https://github.com/facelessuser/soupsieve/blob/main/LICENSE.md)
+
+#### statsmodels
+
+BSD 3-Clause License, see
+[https://github.com/statsmodels/statsmodels/blob/main/LICENSE.txt](https://github.com/statsmodels/statsmodels/blob/main/LICENSE.txt)
+
+#### sympy
+
+BSD 3-Clause License, see
+[https://github.com/sympy/sympy/blob/master/LICENSE](https://github.com/sympy/sympy/blob/master/LICENSE)
+
+Note that some submodules are published under different Licenses.
+
+#### tensorflow
+
+Apache License Version 2.0, see
+[https://github.com/tensorflow/tensorflow/blob/master/LICENSE](https://github.com/tensorflow/tensorflow/blob/master/LICENSE)
+
+#### varclushi
+
+GNU General Public License 3.0, see
 [https://github.com/jingtt/varclushi/blob/master/LICENSE](https://github.com/jingtt/varclushi/blob/master/LICENSE)
-
-### pytest
-
-License: MIT License [https://docs.pytest.org/en/latest/license.html](https://docs.pytest.org/en/latest/license.html)
-
-### datapane
-
-License: Apache 2.0 License
-
-[https://github.com/datapane/datapane/blob/master/LICENSE](https://github.com/datapane/datapane/blob/master/LICENSE)

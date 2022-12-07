@@ -1,5 +1,8 @@
 name: Build docs
 on:
+  pull_request:
+    types:
+      - opened
   push:
     branches-ignore:
       - main
@@ -10,17 +13,26 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout main
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Set up Python
-        uses: actions/setup-python@v2.3.1
+        uses: actions/setup-python@v4
         with:
           python-version: '3.x'
+
+      - name: Pip cache
+        uses: actions/cache@v3.0.11
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-docs-${{ hashFiles('./requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-docs-
 
       - name: Install MkDocs
         run: |
           pip install --upgrade pip
-          pip install mkdocs mkdocs-material
+          pip install wheel
+          pip install -r requirements.txt
 
       - name: Build docs
         run: |
