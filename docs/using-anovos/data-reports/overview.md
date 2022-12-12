@@ -8,7 +8,7 @@ and its processing. Data reports are an important component of many data governa
 _Anovos_ generates reports in two steps:
 
 1. The data that will be included in the report is generated using the functions of the 
-   [`data_analyzer`](../../docs/anovos-modules-overview/data-analyzer/index.md)[`association_evaluator`](../../docs/anovos-modules-overview/association-evaluator/index.md)[`data_drift_stability`](../../docs/anovos-modules-overview/data_drift_and_stability_index/index.md)[`quality_checker`](../../docs/anovos-modules-overview/quality-checker/index.md) module.
+   [`data_analyzer`](../../docs/api/data-analyzer/_index.md)[`association_evaluator`](../../docs/api/data_analyzer/association-evaluator.md)[`data_drift_stability`](../../docs/api/drift_stability/index.md)[`quality_checker`](../../docs/api/data_analyzer/quality_checker.md) module.
    As all _Anovos_ data operations, this happens in a distributed fashion,
    fully utilizing the power of _Apache Spark_.
    We call the result the "intermediate report."
@@ -23,10 +23,10 @@ Using the configuration file, or through individual modules.
 ### Basic Report
 
 In case you do not need an exhaustive report that contains all the detailed outputs of the
-[`data_analyzer`](../../docs/anovos-modules-overview/data-analyzer/index.md),
-[`association_evaluator`](../../docs/anovos-modules-overview/association-evaluator/index.md),
-[`data_drift_stability`](../../docs/anovos-modules-overview/data_drift_and_stability_index/index.md), and
-[`quality_checker`](../../docs/anovos-modules-overview/quality-checker/index.md),
+[`data_analyzer`](../../docs/api/data-analyzer/_index.md),
+[`association_evaluator`](../../docs/api/data_analyzer/association-evaluator.md),
+[`data_drift_stability`](../../docs/api/drift_stability/_index.md), and
+[`quality_checker`](../../docs/api/data_analyzer/quality-checker.md),
 you can opt to generate a concise, but nevertheless fairly comprehensive basic report by adding the
 `anovos_basic_report` configuration block to the configuration file.
 
@@ -50,10 +50,10 @@ _💡 To learn more about these and configuration parameters, see the documentat
 ### Full Report
 
 The detailed and exhaustive full report contains a structured and well-formatted outputs of the
-[`data_analyzer`](../../docs/anovos-modules-overview/data-analyzer/index.md),
-[`association_evaluator`](../../docs/anovos-modules-overview/association-evaluator/index.md),
-[`data_drift_stability`](../../docs/anovos-modules-overview/data_drift_and_stability_index/index.md), and
-[`quality_checker`](../../docs/anovos-modules-overview/quality-checker/index.md).
+[`data_analyzer`](../../docs/api/data-analyzer/_index.md),
+[`association_evaluator`](../../docs/api/data_analyzer/association-evaluator.md),
+[`data_drift_stability`](../../docs/api/drift_stability/_index.md), and
+[`quality_checker`](../../docs/api/data_analyzer/quality-checker.md).
 These are displayed along with eye-catching visualizations that make it easy to capture data trends across different cut points.
 
 The full report is configured through two blocks in the configuration file: `report_preprocessing` and  `report_generation`.

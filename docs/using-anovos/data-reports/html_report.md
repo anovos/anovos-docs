@@ -192,7 +192,7 @@ This section gives the descriptive summary of the geospatial features ( both Lat
    - **Cluster Distribution** 
  ![](../../assets/html-reports/cluster_distribution_1.png)
   1. Distribution of Clusters(K-Means): This section gives a pie chart representing the distribution of clusters for K-Means alogorithm and Euclidean distance. For eg, in the figure below, cluster 7 contains 31.2% of the observations of the raw dataset. 
- ![](../../ssets/html-reports/cluster_distribution_2.png)
+ ![](../../assets/html-reports/cluster_distribution_2.png)
   2. Distribution of Clusters(DBSCAN): This section gives a similar pie chart for the algorithm DBSCAN and distance Haversine. Here cluster 0 has 99.8% of the observations. 
  ![](../../assets/html-reports/cluster_distribution_3.png)  
 
