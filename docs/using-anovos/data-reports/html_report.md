@@ -5,14 +5,14 @@ The final output is generated in the form of a HTML report. This has 8 sections 
 
 ### Executive Summary
 
-![](https://anovos.github.io/anovos-docs/assets/html-reports/executive-report-1.png)
+![](../../assets/html-reports/executive_summary_1.png)
 
 The **"Executive Summary"** gives an overall summary of the key statistics from the analyzed data. 
 
 - **1 & 2** specifies about the dimensions of data & nature of use case, i.e., whether target variable is involved or not.
 ![](https://anovos.github.io/anovos-docs/assets/html-reports/executive-report-2.png)
 - **3 & 4** covers the overall view of the data in a nutshell across some of the key metrices : Outliers, Significant Attribute, Positive Skewness, Negative Skewness, High Variance, High Correlation, High Kurtosis, Low Kurtosis.
-![](https://anovos.github.io/anovos-docs/assets/html-reports/executive-report-3.png)
+![](../../assets/html-reports/executive_summary_3.png)
 
 ### Wiki
 
@@ -22,10 +22,10 @@ The **"Wiki"** section has two different sections consisting of:
 
 - **Data Dictionary**: This section contains the details of the attributes present in the data frame. The user, if specifies the attribute wise definition at a specific path, then the details of the same will be populated along with the data type. Else, only the attribute wise datatype will be seen. This has a schema - attribute, definition (description), data_type
 
-![](https://anovos.github.io/anovos-docs/assets/html-reports/wiki-2.png)
+![](../../assets/html-reports/wiki_2.png)
 
 - **Metric Dictionary**: Details about the different sections of the report, along with the definitions of the metrics used in them. This could be a quick reference for the user. 
-![](https://anovos.github.io/anovos-docs/assets/html-reports/wiki-3.png)
+![](../../assets/html-reports/wiki_3.png)
 
 ### Descriptive Statistics
 
@@ -34,15 +34,15 @@ The **"Wiki"** section has two different sections consisting of:
 The **Descriptive Statistics** gives specific information about the data elements and their individual metrics. Descriptive Statistics consists of the following modules:
 
 - **Global Summary**: Details about the data dimensions and the attribute wise information. 
-![](https://anovos.github.io/anovos-docs/assets/html-reports/descriptive-statistics-2.png)
+![](../../assets/html-reports/descriptive_statistics_2.png)
 
 - **Statistics By Metric Type** includes the following modules:
     - **Measures of Counts** : Details about the attribute wise count, fill rate, etc.   
-    ![](https://anovos.github.io/anovos-docs/assets/html-reports/descriptive-statistics-3.png)
+    ![](../../assets/html-reports/descriptive_statistics_3.png)
     - **Measures of Central Tendency**: Details about the measurement of central tendency in terms of mean, median, mode.
-    ![](https://anovos.github.io/anovos-docs/assets/html-reports/descriptive-statistics-4.png)
+    ![](../../assets/html-reports/descriptive_statistics_4.png)
     - **Measures of Cardinality**: Details about the uniqueness in categories for each attribute.
-    ![](https://anovos.github.io/anovos-docs/assets/html-reports/descriptive-statistics-5.png)
+    ![](../../assets/html-reports/descriptive_statistics_5.png)
     - **Measures of Percentiles**: Indicates the different attribute value associated against the range of percentile cut offs. This helps to understand the spread of attributes. 
     ![](https://anovos.github.io/anovos-docs/assets/html-reports/descriptive-statistics-6.png)
     - **Measures of Dispersion**:  Explains how much the data is dispersed through metrics like Standard Deviation, Variance, Covariance, IQR and range for each attribute.
@@ -89,7 +89,7 @@ The **Quality Check** section consists of a qualitative inspection of the data a
     ![](https://anovos.github.io/anovos-docs/assets/html-reports/quality-check-9.png)
 
 ### Attribute Associations
-![](https://anovos.github.io/anovos-docs/assets/html-reports/attribute-association-1.png)
+![](../../assets/html-reports/attribute_association_1.png)
 
 Association analysis done for Attributes based on different statistical checks
 
