@@ -10,7 +10,7 @@ The final output is generated in the form of a HTML report. This has 8 sections 
 The **"Executive Summary"** gives an overall summary of the key statistics from the analyzed data. 
 
 - **1 & 2** specifies about the dimensions of data & nature of use case, i.e., whether target variable is involved or not.
-![](https://anovos.github.io/anovos-docs/assets/html-reports/executive-report-2.png)
+![](../../assets/html-reports/executive_summary_2.png)
 - **3 & 4** covers the overall view of the data in a nutshell across some of the key metrices : Outliers, Significant Attribute, Positive Skewness, Negative Skewness, High Variance, High Correlation, High Kurtosis, Low Kurtosis.
 ![](../../assets/html-reports/executive_summary_3.png)
 
