@@ -1,0 +1,2467 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Stable Features yield Resilient Models. Documentation for the Feature Engineering Library Anovos.">
+      
+      
+        <meta name="author" content="Anovos Developers, Mobilewalla">
+      
+      
+        <link rel="canonical" href="https://docs.anovos.ai/using-anovos/setting-up/on_azure_databricks.html">
+      
+      <link rel="icon" href="../../assets/favicon.png">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-8.5.10">
+    
+    
+      
+        <title>On Azure Databricks - Anovos Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.975780f9.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.2505c338.min.css">
+        
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+
+  <script id="__analytics">function __md_analytics(){window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga("create","UA-52258647-20","auto"),ga("set","anonymizeIp",!0),ga("send","pageview"),document.addEventListener("DOMContentLoaded",function(){document.forms.search&&document.forms.search.query.addEventListener("blur",function(){var e;this.value&&(e=document.location.pathname,ga("send","pageview",e+"?q="+this.value))}),document$.subscribe(function(){var a=document.forms.feedback;if(void 0!==a)for(var e of a.querySelectorAll("[type=submit]"))e.addEventListener("click",function(e){e.preventDefault();var t=document.location.pathname,e=this.getAttribute("data-md-value");ga("send","event","feedback","click",t,e),a.firstElementChild.disabled=!0;e=a.querySelector(".md-feedback__note [data-md-value='"+e+"']");e&&(e.hidden=!1)}),a.hidden=!1}),location$.subscribe(function(e){ga("send","pageview",e.pathname)})});var e=document.createElement("script");e.async=!0,e.src="https://www.google-analytics.com/analytics.js",document.getElementById("__analytics").insertAdjacentElement("afterEnd",e)}</script>
+
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+    
+<!-- Extra styles for API docs, cf. https://github.com/pdoc3/pdoc/blob/master/pdoc/templates/html.mako -->
+<link rel="preload stylesheet" as="style"
+      href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css"
+      integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style"
+      href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css"
+      integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/${hljs_style}.min.css" crossorigin>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js"
+        integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+
+<!-- Extra style sheets (can't be set in mkdocs.yml due to content hash) -->
+<link
+        rel="stylesheet"
+        href="../../assets/stylesheets/main.css"
+/>
+
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="" data-md-color-accent="">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#setting-up-anovos-on-azure-databricks" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+        <aside class="md-banner">
+          <div class="md-banner__inner md-grid md-typeset">
+            
+            
+<a href="https://join.slack.com/t/featureengineers/shared_invite/zt-17pkc3f5d-33SUtV8Wx48CpiIRNuQ7JA" style="color: white;">
+      <span class="twemoji fa-slack">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M94.12 315.1c0 25.9-21.16 47.06-47.06 47.06S0 341 0 315.1c0-25.9 21.16-47.06 47.06-47.06h47.06v47.06zm23.72 0c0-25.9 21.16-47.06 47.06-47.06s47.06 21.16 47.06 47.06v117.84c0 25.9-21.16 47.06-47.06 47.06s-47.06-21.16-47.06-47.06V315.1zm47.06-188.98c-25.9 0-47.06-21.16-47.06-47.06S139 32 164.9 32s47.06 21.16 47.06 47.06v47.06H164.9zm0 23.72c25.9 0 47.06 21.16 47.06 47.06s-21.16 47.06-47.06 47.06H47.06C21.16 243.96 0 222.8 0 196.9s21.16-47.06 47.06-47.06H164.9zm188.98 47.06c0-25.9 21.16-47.06 47.06-47.06 25.9 0 47.06 21.16 47.06 47.06s-21.16 47.06-47.06 47.06h-47.06V196.9zm-23.72 0c0 25.9-21.16 47.06-47.06 47.06-25.9 0-47.06-21.16-47.06-47.06V79.06c0-25.9 21.16-47.06 47.06-47.06 25.9 0 47.06 21.16 47.06 47.06V196.9zM283.1 385.88c25.9 0 47.06 21.16 47.06 47.06 0 25.9-21.16 47.06-47.06 47.06-25.9 0-47.06-21.16-47.06-47.06v-47.06h47.06zm0-23.72c-25.9 0-47.06-21.16-47.06-47.06 0-25.9 21.16-47.06 47.06-47.06h117.84c25.9 0 47.06 21.16 47.06 47.06 0 25.9-21.16 47.06-47.06 47.06H283.1z"/></svg>
+    </span>
+    Join us in the <strong>#anovos</strong> channel on the <em>Feature Engineers Community Slack!</em>
+</a>
+
+          </div>
+          
+        </aside>
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../index.html" title="Anovos Documentation" class="md-header__button md-logo" aria-label="Anovos Documentation" data-md-component="logo">
+      
+  <img src="../../assets/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Anovos Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              On Azure Databricks
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      <form class="md-header__option" data-md-component="palette">
+        
+          
+          
+          
+          <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="" data-md-color-accent=""  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+          
+            <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 0 1 7-7M9 21v-1h6v1a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1m3-17a5 5 0 0 0-5 5c0 2.05 1.23 3.81 3 4.58V16h4v-2.42c1.77-.77 3-2.53 3-4.58a5 5 0 0 0-5-5Z"/></svg>
+            </label>
+          
+        
+          
+          
+          
+          <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="" data-md-color-accent=""  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_2">
+          
+            <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 2.38 1.19 4.47 3 5.74V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.26c1.81-1.27 3-3.36 3-5.74a7 7 0 0 0-7-7M9 21a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-1H9v1Z"/></svg>
+            </label>
+          
+        
+      </form>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a
+  href="https://github.com/anovos/anovos"
+  title="Go to repository"
+  class="md-source"
+  data-md-component="source"
+>
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    anovos/anovos
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../index.html" title="Anovos Documentation" class="md-nav__button md-logo" aria-label="Anovos Documentation" data-md-component="logo">
+      
+  <img src="../../assets/logo.png" alt="logo">
+
+    </a>
+    Anovos Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a
+  href="https://github.com/anovos/anovos"
+  title="Go to repository"
+  class="md-source"
+  data-md-component="source"
+>
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    anovos/anovos
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../index.html" class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../about.html" class="md-nav__link">
+        About
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started.html" class="md-nav__link">
+        Getting Started 🚀
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4">
+          Using Anovos
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Using Anovos" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          Using Anovos
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_1" type="checkbox" id="__nav_4_1" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_1">
+          Setting up
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Setting up" data-md-level="2">
+        <label class="md-nav__title" for="__nav_4_1">
+          <span class="md-nav__icon md-icon"></span>
+          Setting up
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="locally.html" class="md-nav__link">
+        Locally
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="on_aws.html" class="md-nav__link">
+        On AWS EMR
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          On Azure Databricks
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="on_azure_databricks.html" class="md-nav__link md-nav__link--active">
+        On Azure Databricks
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-anovos-on-azure-databricks-using-dbfs" class="md-nav__link">
+    1. Anovos on Azure Databricks using DBFS
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Anovos on Azure Databricks using DBFS">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-11-installing-anovos-on-azure-databricks" class="md-nav__link">
+    Step 1.1: Installing Anovos on Azure Databricks
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 1.1: Installing Anovos on Azure Databricks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#alternative-manually-uploading-a-wheel-file" class="md-nav__link">
+    Alternative: Manually uploading a wheel file
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-use-a-development-version-of-anovos" class="md-nav__link">
+    Alternative: Use a development version of Anovos
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-12-prepare-and-copy-the-workflow-configuration-and-data-to-dbfs" class="md-nav__link">
+    Step 1.2: Prepare and copy the workflow configuration and data to DBFS
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 1.2: Prepare and copy the workflow configuration and data to DBFS">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#copying-files-to-dbfs-using-the-ui" class="md-nav__link">
+    Copying files to DBFS using the UI
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#copying-files-to-dbfs-using-the-cli" class="md-nav__link">
+    Copying files to DBFS using the CLI
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-13-create-a-workflow-script" class="md-nav__link">
+    Step 1.3: Create a workflow script
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-14-configure-and-launch-an-anovos-workflow-as-a-databricks-job" class="md-nav__link">
+    Step 1.4: Configure and launch an Anovos workflow as a Databricks job
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 1.4: Configure and launch an Anovos workflow as a Databricks job">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#141-using-the-python-job-type" class="md-nav__link">
+    1.4.1: Using the "Python" job type
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#142-using-the-spark-submit-job-type" class="md-nav__link">
+    1.4.2: Using the "Spark Submit" job type
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-15-retrieve-the-output" class="md-nav__link">
+    Step 1.5: Retrieve the output
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-anovos-on-azure-databricks-using-an-azure-blob-storage-container-mounted-to-dbfs" class="md-nav__link">
+    2. Anovos on Azure Databricks Using an Azure Blob Storage Container Mounted to DBFS
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Anovos on Azure Databricks Using an Azure Blob Storage Container Mounted to DBFS">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-21-installingdownloading-anovos" class="md-nav__link">
+    Step 2.1: Installing/Downloading Anovos
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-22-copy-the-dataset-to-an-azure-blob-storage-container" class="md-nav__link">
+    Step 2.2: Copy the dataset to an Azure Blob Storage container
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-23-mount-an-azure-blob-storage-container-as-a-dbfs-path-in-azure-databricks" class="md-nav__link">
+    Step 2.3: Mount an Azure Blob Storage Container as a DBFS path in Azure Databricks
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-24-update-the-workflow-configuration-for-all-input-and-output-paths-according-to-the-dbfs-mount-point" class="md-nav__link">
+    Step 2.4: Update the workflow configuration for all input and output paths according to the DBFS mount point
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-25-copy-the-updated-configuration-file-from-the-local-machine-to-the-azure-blob-storage-container" class="md-nav__link">
+    Step 2.5: Copy the updated configuration file from the local machine to the Azure Blob Storage container
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#remaining-steps" class="md-nav__link">
+    Remaining Steps
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="on_aks.html" class="md-nav__link">
+        On Azure Kubernetes
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="on_google_colab.html" class="md-nav__link">
+        On Google Colab
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="spark_cluster.html" class="md-nav__link">
+        On a Spark cluster
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../workflow.html" class="md-nav__link">
+        Workflow
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../config_file.html" class="md-nav__link">
+        Configuration
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_4" type="checkbox" id="__nav_4_4" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_4">
+          Data Reports
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Data Reports" data-md-level="2">
+        <label class="md-nav__title" for="__nav_4_4">
+          <span class="md-nav__icon md-icon"></span>
+          Data Reports
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../data-reports/overview.html" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../data-reports/intermediate_report.html" class="md-nav__link">
+        Intermediate Report
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../data-reports/final_report.html" class="md-nav__link">
+        Final Report
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../data-reports/html_report.html" class="md-nav__link">
+        HTML Report
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../feature_mapper.html" class="md-nav__link">
+        Feature Mapper
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mlflow.html" class="md-nav__link">
+        MLflow Integration
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../feature_store.html" class="md-nav__link">
+        Feature Store Integration
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../scaling.html" class="md-nav__link">
+        Scaling Up
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../limitations.html" class="md-nav__link">
+        Limitations
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../roadmap.html" class="md-nav__link">
+        Roadmap
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5">
+          Community
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Community" data-md-level="1">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          Community
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../community/contributing.html" class="md-nav__link">
+        Contributing
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../community/communication.html" class="md-nav__link">
+        Communication
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../community/code-of-conduct.html" class="md-nav__link">
+        Code of Conduct
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6" type="checkbox" id="__nav_6" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6">
+          API Docs
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="API Docs" data-md-level="1">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          API Docs
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/_index.html" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/workflow.html" class="md-nav__link">
+        <code>workflow</code>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6_3" type="checkbox" id="__nav_6_3" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6_3">
+          data_analyzer
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="data_analyzer" data-md-level="2">
+        <label class="md-nav__title" for="__nav_6_3">
+          <span class="md-nav__icon md-icon"></span>
+          data_analyzer
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/data_analyzer/_index.html" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/data_analyzer/association_eval_varclus.html" class="md-nav__link">
+        <code>association_eval_varclus</code>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/data_analyzer/association_evaluator.html" class="md-nav__link">
+        <code>association_evaluator</code>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/data_analyzer/geospatial_analyzer.html" class="md-nav__link">
+        <code>geospatial_analyzer</code>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/data_analyzer/quality_checker.html" class="md-nav__link">
+        <code>quality_checker</code>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/data_analyzer/stats_generator.html" class="md-nav__link">
+        <code>stats_generator</code>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/data_analyzer/ts_analyzer.html" class="md-nav__link">
+        <code>ts_analyzer</code>
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6_4" type="checkbox" id="__nav_6_4" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6_4">
+          data_ingest
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="data_ingest" data-md-level="2">
+        <label class="md-nav__title" for="__nav_6_4">
+          <span class="md-nav__icon md-icon"></span>
+          data_ingest
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/data_ingest/_index.html" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/data_ingest/data_ingest.html" class="md-nav__link">
+        <code>data_ingest</code>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/data_ingest/data_sampling.html" class="md-nav__link">
+        <code>data_sampling</code>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/data_ingest/geo_auto_detection.html" class="md-nav__link">
+        <code>geo_auto_detection</code>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/data_ingest/ts_auto_detection.html" class="md-nav__link">
+        <code>ts_auto_detection</code>
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6_5" type="checkbox" id="__nav_6_5" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6_5">
+          data_report
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="data_report" data-md-level="2">
+        <label class="md-nav__title" for="__nav_6_5">
+          <span class="md-nav__icon md-icon"></span>
+          data_report
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/data_report/_index.html" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/data_report/basic_report_generation.html" class="md-nav__link">
+        <code>basic_report_generation</code>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/data_report/report_generation.html" class="md-nav__link">
+        <code>report_generation</code>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/data_report/report_preprocessing.html" class="md-nav__link">
+        <code>report_preprocessing</code>
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6_6" type="checkbox" id="__nav_6_6" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6_6">
+          data_transformer
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="data_transformer" data-md-level="2">
+        <label class="md-nav__title" for="__nav_6_6">
+          <span class="md-nav__icon md-icon"></span>
+          data_transformer
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/data_transformer/_index.html" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/data_transformer/datetime.html" class="md-nav__link">
+        <code>datetime</code>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/data_transformer/geo_utils.html" class="md-nav__link">
+        <code>geo_utils</code>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/data_transformer/geospatial.html" class="md-nav__link">
+        <code>geospatial</code>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/data_transformer/transformers.html" class="md-nav__link">
+        <code>transformers</code>
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6_7" type="checkbox" id="__nav_6_7" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6_7">
+          drift_stability
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="drift_stability" data-md-level="2">
+        <label class="md-nav__title" for="__nav_6_7">
+          <span class="md-nav__icon md-icon"></span>
+          drift_stability
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/drift_stability/_index.html" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/drift_stability/drift_detector.html" class="md-nav__link">
+        <code>drift_detector</code>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/drift_stability/stability.html" class="md-nav__link">
+        <code>stability</code>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/drift_stability/validations.html" class="md-nav__link">
+        <code>validations</code>
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6_8" type="checkbox" id="__nav_6_8" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6_8">
+          feature_recommender
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="feature_recommender" data-md-level="2">
+        <label class="md-nav__title" for="__nav_6_8">
+          <span class="md-nav__icon md-icon"></span>
+          feature_recommender
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/feature_recommender/_index.html" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/feature_recommender/featrec_init.html" class="md-nav__link">
+        <code>featrec_init</code>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/feature_recommender/feature_explorer.html" class="md-nav__link">
+        <code>feature_explorer</code>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/feature_recommender/feature_mapper.html" class="md-nav__link">
+        <code>feature_mapper</code>
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6_9" type="checkbox" id="__nav_6_9" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6_9">
+          feature_store
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="feature_store" data-md-level="2">
+        <label class="md-nav__title" for="__nav_6_9">
+          <span class="md-nav__icon md-icon"></span>
+          feature_store
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/feature_store/_index.html" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/feature_store/feast_exporter.html" class="md-nav__link">
+        <code>feast_exporter</code>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/feature_store/feature_retrieval.html" class="md-nav__link">
+        <code>feature_retrieval</code>
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6_10" type="checkbox" id="__nav_6_10" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6_10">
+          shared
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="shared" data-md-level="2">
+        <label class="md-nav__title" for="__nav_6_10">
+          <span class="md-nav__icon md-icon"></span>
+          shared
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/shared/_index.html" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/shared/spark.html" class="md-nav__link">
+        <code>spark</code>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/shared/utils.html" class="md-nav__link">
+        <code>utils</code>
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../license.html" class="md-nav__link">
+        License
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-anovos-on-azure-databricks-using-dbfs" class="md-nav__link">
+    1. Anovos on Azure Databricks using DBFS
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Anovos on Azure Databricks using DBFS">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-11-installing-anovos-on-azure-databricks" class="md-nav__link">
+    Step 1.1: Installing Anovos on Azure Databricks
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 1.1: Installing Anovos on Azure Databricks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#alternative-manually-uploading-a-wheel-file" class="md-nav__link">
+    Alternative: Manually uploading a wheel file
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-use-a-development-version-of-anovos" class="md-nav__link">
+    Alternative: Use a development version of Anovos
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-12-prepare-and-copy-the-workflow-configuration-and-data-to-dbfs" class="md-nav__link">
+    Step 1.2: Prepare and copy the workflow configuration and data to DBFS
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 1.2: Prepare and copy the workflow configuration and data to DBFS">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#copying-files-to-dbfs-using-the-ui" class="md-nav__link">
+    Copying files to DBFS using the UI
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#copying-files-to-dbfs-using-the-cli" class="md-nav__link">
+    Copying files to DBFS using the CLI
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-13-create-a-workflow-script" class="md-nav__link">
+    Step 1.3: Create a workflow script
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-14-configure-and-launch-an-anovos-workflow-as-a-databricks-job" class="md-nav__link">
+    Step 1.4: Configure and launch an Anovos workflow as a Databricks job
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 1.4: Configure and launch an Anovos workflow as a Databricks job">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#141-using-the-python-job-type" class="md-nav__link">
+    1.4.1: Using the "Python" job type
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#142-using-the-spark-submit-job-type" class="md-nav__link">
+    1.4.2: Using the "Spark Submit" job type
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-15-retrieve-the-output" class="md-nav__link">
+    Step 1.5: Retrieve the output
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-anovos-on-azure-databricks-using-an-azure-blob-storage-container-mounted-to-dbfs" class="md-nav__link">
+    2. Anovos on Azure Databricks Using an Azure Blob Storage Container Mounted to DBFS
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Anovos on Azure Databricks Using an Azure Blob Storage Container Mounted to DBFS">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-21-installingdownloading-anovos" class="md-nav__link">
+    Step 2.1: Installing/Downloading Anovos
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-22-copy-the-dataset-to-an-azure-blob-storage-container" class="md-nav__link">
+    Step 2.2: Copy the dataset to an Azure Blob Storage container
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-23-mount-an-azure-blob-storage-container-as-a-dbfs-path-in-azure-databricks" class="md-nav__link">
+    Step 2.3: Mount an Azure Blob Storage Container as a DBFS path in Azure Databricks
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-24-update-the-workflow-configuration-for-all-input-and-output-paths-according-to-the-dbfs-mount-point" class="md-nav__link">
+    Step 2.4: Update the workflow configuration for all input and output paths according to the DBFS mount point
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-25-copy-the-updated-configuration-file-from-the-local-machine-to-the-azure-blob-storage-container" class="md-nav__link">
+    Step 2.5: Copy the updated configuration file from the local machine to the Azure Blob Storage container
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#remaining-steps" class="md-nav__link">
+    Remaining Steps
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  <a href="https://github.com/anovos/anovos-docs/edit/main/docs/using-anovos/setting-up/on_azure_databricks.md" title="Edit this page" class="md-content__button md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z"/></svg>
+  </a>
+
+
+<h1 id="setting-up-anovos-on-azure-databricks">Setting up Anovos on Azure Databricks</h1>
+<p><a href="https://azure.microsoft.com/services/databricks/">Azure Databricks</a>
+is a hosted version of <a href="https://spark.apache.org/">Apache Spark</a> on <a href="https://azure.microsoft.com/">Microsoft Azure</a>.
+It is a convenient way to handle big data workloads of Spark without having to set up and maintain your own cluster.</p>
+<p>To learn more about Azure Databricks, have a look at
+<a href="https://databricks.com/introducing-azure-databricks">the official documentation</a>
+or the following introductory tutorials:</p>
+<ul>
+<li><a href="https://www.sqlshack.com/a-beginners-guide-to-azure-databricks/">A beginner’s guide to Azure Databricks</a></li>
+<li><a href="https://medium.com/@jcbaey/azure-databricks-hands-on-6ed8bed125c7">Azure Databricks Hands-on</a></li>
+</ul>
+<p>Currently, <em>Anovos</em> supports two ways of running workflows on Azure Databricks:</p>
+<ol>
+<li>Processing datasets stored directly on DBFS</li>
+<li>Processing datasets stored on <a href="https://azure.microsoft.com/services/storage/blobs/">Azure Blob Storage</a></li>
+</ol>
+<p>Generally, we recommend the first option, as it requires slightly less configuration.
+However, if you're already storing your datasets on Azure Blob Storage, mounting the respective containers
+to DBFS allows you to directly process them with <em>Anovos</em>.</p>
+<h2 id="1-anovos-on-azure-databricks-using-dbfs">1. <em>Anovos</em> on Azure Databricks using DBFS</h2>
+<p>The following steps are required for running <em>Anovos</em> workloads on Azure Databricks that process datasets stored
+on DBFS.</p>
+<h3 id="step-11-installing-anovos-on-azure-databricks">Step 1.1: Installing <em>Anovos</em> on Azure Databricks</h3>
+<p>To make <em>Anovos</em> available on Azure Databricks, you need to provide access to the <em>Anovos</em> Python package.</p>
+<p>The easiest way is to point Azure Databricks to the
+<a href="https://pypi.org/project/anovos/">current release of <em>Anovos</em> on the Python Package Index (PyPI)</a>.
+(This is where <code>pip install anovos</code> goes to fetch <em>Anovos</em> when installing from the terminal.)
+This has the advantage that you will get a well-tested and stable version of <em>Anovos</em>. We recommend this option.
+If you choose this option then you can directly go to Step 2.</p>
+<p>But if you need to make custom modifications to <em>Anovos</em> or need access to new features or bugfixes that have
+not been released yet, you can choose any of the options below.
+(We will configure Azure Databricks to retrieve the correct <em>Anovos</em> Python package as part of Step 4.)</p>
+<h4 id="alternative-manually-uploading-a-wheel-file">Alternative: Manually uploading a wheel file</h4>
+<p>Instead of pointing Azure Databricks to the Python Package Index (PyPI),
+you can make <em>Anovos</em> available by downloading the respective wheel file
+from PyPI yourself and manually uploading it to Azure Databricks.</p>
+<p>You'll find the link to the latest wheel file on
+<a href="https://pypi.org/project/anovos/#files">the "Download files" tab</a>, it's the file with the extension <code>.whl</code>
+(for example: <code>anovos-1.0.1-py3-none-any.whl</code>).
+If you'd like to use an older version, you can navigate to the respective version in the
+<a href="https://pypi.org/project/anovos/#history">release history</a> and access the "Download files" tab
+from there.</p>
+<p>Download the <em>Anovos</em> wheel file to your local machine and move on to Step 2.</p>
+<h4 id="alternative-use-a-development-version-of-anovos">Alternative: Use a development version of <em>Anovos</em></h4>
+<p>If you would like to try the latest version of <em>Anovos</em> on Azure Databricks
+(or would like to make custom modifications to the library),
+you can also create a wheel file yourself.</p>
+<p>First, clone the <em>Anovos</em> GitHub repository to your local machine:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>git clone --depth <span class="m">1</span> &lt;https://github.com/anovos/anovos.git&gt;
+</code></pre></div>
+<p>💡 <em>Using the <code>--branch</code> flag allows you to select a specific release of Anovos.</em>
+   <em>For example, adding <code>--branch v1.0.1</code> will give you the state of the 1.0.1 release.</em>
+   <em>If you omit the flag, you will get the latest development version of Anovos, which might not</em>
+   <em>be fully functional or exhibit unexpected behavior.</em></p>
+<p>After cloning, go to the <code>anovos</code> directory that was automatically created in the process
+and execute the following command to clean and prepare the environment:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>make clean
+</code></pre></div>
+<p>It is a good practice to always run this command prior to generating a wheel file or another kind
+of build artifact.</p>
+<p>💡 <em>To be able to create a wheel file, <code>wheel</code>, <code>build</code>, and <code>setuptools</code> need to be installed</em>
+   <em>in the current Python environment. You can do so by running <code>pip install build wheel setuptools</code>.</em></p>
+<p>Then, to create the wheel file, run the following command directly inside the <code>anovos</code> folder:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>python -m build --wheel --outdir dist/ .
+</code></pre></div>
+<p>Once the process is finished, the folder <code>dist</code> will contain the wheel file.
+It will have the file extension <code>*.whl</code> and might carry the latest version in its name.</p>
+<p>💡 <em>The version in the file name will be that of the latest version of Anovos,</em>
+   <em>even if you cloned the repository yourself and used the latest state of the code.</em>
+   <em>This is due to the fact that the version is only updated right before new release is published.</em>
+   <em>To avoid confusion, it's a good practice to rename the wheel file to a custom name.</em></p>
+<h3 id="step-12-prepare-and-copy-the-workflow-configuration-and-data-to-dbfs">Step 1.2: Prepare and copy the workflow configuration and data to DBFS</h3>
+<p>To run an <em>Anovos</em> workflow, both the data to be processed and the workflow configuration
+need to be stored on DBFS.</p>
+<p>You can either use the UI or the CLI to copy files from your local machine to DBFS.
+For detailed instructions, see the respective subsections below.</p>
+<p>In this tutorial, we will use the "income dataset" and an accompanying pre-defined workflow.</p>
+<p>You can obtain these files by cloning the <em>Anovos</em> GitHub repository:</p>
+<p>💡 <em>Note that you need to use the dataset version and workflow configuration files from the same _Anovos</em> version_
+   <em>that you have set up in Step 2.1.</em>
+   <em>Sometimes the version on PyPI that you obtain when running <code>pip install anovos</code> version is older than the latest</em>
+   <em>development version on GitHub.</em></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>git clone https://github.com/anovos/anovos.git
+</code></pre></div>
+<p>You'll find the dataset under <code>examples/data/income_dataset</code> and the configuration file
+under <code>config/configs_income_azure.yaml</code>.
+You'll also need the <code>metric_dictionary.csv</code> file found under <code>data/</code>.</p>
+<p>The <code>configs_income_azure.yaml</code> file contains the definition of the <em>Anovos</em> workflow.
+(To learn more about this file, see <a href="../config_file.html">📖 Configuring Workloads</a>.)</p>
+<p>First, you should have a look at the configured input paths to make sure that <em>Anovos</em> can find the data to be processed.
+It is also important to check that the output paths are set to a location on DBFS that suits your needs.</p>
+<p>For example, in the <code>input_dataset</code> block, you can see that by default the <code>file_path</code> is set to
+<code>dbfs:/FileStore/tables/income_dataset/csv/</code>.
+If you would like to store your data at a different location, you need to adapt this path accordingly.</p>
+<p>Output paths are defined in several blocks.</p>
+<p>The output path for the report data is specified as <code>master_path</code> in the blocks <code>report_preprocessing</code> and
+<code>report_generation</code>.
+The path for the report is specified as <code>final_report_path</code> in the <code>report_generation</code> block.
+In this tutorial, by default, all these paths are set to <code>dbfs:/FileStore/tables/report_stats</code>.</p>
+<p>The location where the processed data is stored is given by <code>file_path</code> in the blocks <code>write_main</code>,
+<code>write_intermediate</code>, and <code>write_stats</code>.
+In this tutorial, by default, these are set to sub-folders of <code>dbfs:/FileStore/tables/result</code>.</p>
+<p>Finally, you need to ensure that the path to the <code>metric_dictionary.csv</code> file as well as the
+<code>data_dictionary.csv</code> file, which is part of the "income dataset", are correctly specified in the
+<code>report_generation</code> block.</p>
+<p>You can also make other changes to the workflow.
+For example, you can define which columns from the input dataset are used in the workflow.
+To try it yourself, find the <code>delete_column</code> configuration in the <code>input_dataset</code> block and add the column <code>workclass</code>
+to the list of columns to be deleted:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nt">delete_column</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&#39;logfnl&#39;</span><span class="p p-Indicator">,</span><span class="s">&#39;workclass&#39;</span><span class="p p-Indicator">]</span><span class="w"></span>
+</code></pre></div>
+<p>To learn more about defining workflows through config files, see
+<a href="../config_file.html">📖 Configuring Workloads</a>.</p>
+<p>Once the <code>configs_income_azure.yaml</code> file is complete, you can copy this file and the dataset to DBFS.
+For this, you can choose to either upload the files through the UI or use the Azure Databricks CLI.
+We describe both options in the following sections.</p>
+<p>In any case, make sure that you place the data files in the location defined in the configuration file.
+You should also remember the location of the <code>configs_income_azure.yaml</code>, as you will need this information
+in the subsequent steps.</p>
+<p>(For this tutorial, we have decided to place all files under <code>dbfs:FileStore/tables/</code>.)</p>
+<h4 id="copying-files-to-dbfs-using-the-ui">Copying files to DBFS using the UI</h4>
+<p><img alt="Uploading files through the Databricks UI" src="../../assets/azure_databricks_images/image1.png" /></p>
+<ol>
+<li>Launch the Azure Databricks workspace.</li>
+<li>Enter the data menu.</li>
+<li>Upload files by dragging files onto the marked area or click on it to upload using the file browser.</li>
+</ol>
+<p>For more detailed instructions, see the
+<a href="https://docs.microsoft.com/azure/databricks/data/databricks-file-system#dbfs-and-local-driver-node-paths">Databricks documentation</a>.</p>
+<h4 id="copying-files-to-dbfs-using-the-cli">Copying files to DBFS using the CLI</h4>
+<ol>
+<li>Install <code>databricks-cli</code> into a local Python environment by running <code>pip install databricks-cli</code>.</li>
+<li>Generate a personal access token for your Databricks workspace by going to <em>Settings</em> &gt; <em>User Settings</em> &gt;
+   <em>Generate new token</em>. For details, see the
+  <a href="https://docs.microsoft.com/azure/databricks/dev-tools/api/latest/authentication">Databricks documentation</a>.</li>
+<li>Configure the CLI to access your workspace by running <code>databricks configure --token</code>.</li>
+<li>Enter the URL of the databricks host (the domain of your workspace,
+   usually of the pattern <code>https://&lt;UNIQUE ID OF YOUR WORKSPACE&gt;.azuredatabricks.net/</code>) and the token when prompted
+   for it.</li>
+<li>To verify the configuration, run <code>databricks fs ls</code> and check whether you are able to see the files stored on DBFS.</li>
+<li>Then copy the files using the <code>dbfs cp</code> command:</li>
+</ol>
+<p>For example:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>dbfs cp anovos/config/configs_income_azure.yaml dbfs:/FileStore/tables/configs_income_azure.yaml
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>dbfs cp anovos/data/metric_dictionary.csv dbfs:/FileStore/tables/metric_dictionary.csv
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>dbfs cp -r anovos/examples/data/income_dataset dbfs:/FileStore/tables/income_dataset
+</code></pre></div>
+<p>For more information on the Databricks CLI, see the
+<a href="https://docs.microsoft.com/azure/databricks/dev-tools/cli/">Databricks documentation</a>.</p>
+<h3 id="step-13-create-a-workflow-script">Step 1.3: Create a workflow script</h3>
+<p>To launch the workflow on Azure Databricks, we need a single Python script as the entry point.
+Hence, we'll create a <code>main.py</code> script that invokes the <em>Anovos'</em> workflow runner:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kn">import</span> <span class="nn">sys</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="kn">from</span> <span class="nn">anovos</span> <span class="kn">import</span> <span class="n">workflow</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="n">workflow</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">config_path</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">run_type</span><span class="o">=</span><span class="s2">&quot;databricks&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>Upload this script to DBFS as well using either of the methods described above.
+Again, you can place this file at a location of your choosing.
+In this tutorial, we have placed it at <code>dbfs:/FileStore/tables/scripts/main.py</code>.</p>
+<h3 id="step-14-configure-and-launch-an-anovos-workflow-as-a-databricks-job">Step 1.4: Configure and launch an <em>Anovos</em> workflow as a Databricks job</h3>
+<p>There are several types of jobs available on the Azure Databricks platform.
+For <em>Anovos</em>, the following job types are suitable choices:</p>
+<ul>
+<li>
+<p><strong>"Python:"</strong> The job runs from a single Python script. <em>Anovos</em> and the required Scala
+  dependencies are installed through the respective package repositories.</p>
+</li>
+<li>
+<p><strong>"Spark Submit:"</strong> The job is invoked through a bare <code>spark-submit</code> call. The installation
+  of <em>Anovos</em>  is handled by a cluster initialization script and the required Scala dependencies
+  have to be provided as JAR files through DBFS.</p>
+</li>
+</ul>
+<p>Note that there are several limitations for "Spark Submit" tasks:
+  You can only run them on new clusters and autoscaling is not available.
+  For more information, see the <a href="https://docs.microsoft.com/azure/databricks/data-engineering/jobs/jobs">Databricks documentation on jobs</a>.</p>
+<p>Unless you require the fine-grained control that this option offers with regard to
+  cluster initialization and <code>spark-submit</code> options, we recommend to select "Python" as the
+  job type.</p>
+<h4 id="141-using-the-python-job-type">1.4.1: Using the "Python" job type</h4>
+<p>Once all files have been copied to DBFS, we can create an Azure Databricks job
+that starts a cluster and launches the <em>Anovos</em> workflow.</p>
+<p>Here's an example of a job configuration:
+<img alt="Job configuration" src="../../assets/azure_databricks_images/image2.png" /></p>
+<p>You can see that we set the "Type" to "Python" and have provided the path of the <code>main.py</code> script.
+In the parameters section, we pass the DBFS path of the config file.</p>
+<p>The cluster configuration comprises settings for the Databricks Runtime, the number of workers,
+worker and driver types, as well as the cluster's scaling behavior.</p>
+<p>Here's an example of a cluster configuration for this tutorials:
+<img alt="Cluster configuration" src="../../assets/azure_databricks_images/image12.png" /></p>
+<p>For more detailed information, refer to the
+<a href="https://docs.microsoft.com/azure/databricks/clusters/configure#cluster-configurations">Databricks documentation</a>.</p>
+<p>To give the Databricks platform access to <em>Anovos</em>, click on "Advanced options" and select "Add dependent libraries"
+in the <em>Job Configuration Window</em>.</p>
+<p>If you chose the default way of obtaining <em>Anovos</em> directly from the Python Package Index,
+select "PyPI" as the "Library Source" and enter <code>anovos</code> as the "Package":
+<img alt="Adding Anovos through PyPI" src="../../assets/azure_databricks_images/image8.png" /></p>
+<p>💡 <em>In case you encounter the error <code>"ImportError: cannot import name 'soft_unicode' from 'markupsafe'"</code></em>
+   <em>while running the job, then you need to add <code>markupsafe==2.0.1</code> as another dependency from PyPI.</em>
+<img alt="Adding Anovos through PyPI" src="../../assets/azure_databricks_images/image18.png" /></p>
+<p>If you chose to provide your own wheel file, select "Upload" as the library source and follow the instructions.</p>
+<p>In addition to the <em>Anovos</em> wheel file, we need to provide the <code>histogrammar</code> package to Azure Databricks.
+<em>Anovos</em> uses this library internally to compute correlation matrices.</p>
+<p>Following the same procedure as for <em>Anovos</em>, you can add <code>histogrammar</code> as a dependent library.
+This time, we use "Maven" as the "Library Source".</p>
+<p>Then, select <code>io.github.histogrammar:histogrammar-sparksql_2.12:1.0.20</code>
+and <code>io.github.histogrammar:histogrammar_2.12:1.0.20</code> as the "Coordinates"
+(copy the coordinate one by one, paste in Coordinates box and then add it by clicking on Install button):
+<img alt="Adding Histogrammar through Maven" src="../../assets/azure_databricks_images/image9.png" /></p>
+<p>(In case you're running <em>Anovos</em> on Spark 2.4.x, you need to add
+<code>io.github.histogrammar:histogrammar-sparksql_2.11:1.0.20</code> and <code>io.github.histogrammar:histogrammar_2.11:1.0.20</code>)</p>
+<p>Once the job is configured, click "Create" to instantiate it.
+Then, you'll see the full task configuration:
+<img alt="Task Details" src="../../assets/azure_databricks_images/image10.png" /></p>
+<p>On the subsequent screen, click on "Run now" to launch the job:
+<img alt="Active and completed runs" src="../../assets/azure_databricks_images/image5.png" /></p>
+<p>For more information on creating and maintaining jobs, see the
+<a href="https://docs.microsoft.com/azure/databricks/jobs">Databricks documentation</a>.</p>
+<h4 id="142-using-the-spark-submit-job-type">1.4.2: Using the "Spark Submit" job type</h4>
+<p><em>Anovos</em> internally uses the <code>histogrammar</code> library to compute correlation matrices.
+Hence, we need to provide the package to Azure Databricks.</p>
+<p>As the "Spark Submit" job type requires any dependency to be available through DBFS,
+you first need to upload the <code>histogrammar</code> JAR files to DBFS.</p>
+<p>If you're using Spark 3.x, download the following files and upload them to DBFS:</p>
+<ul>
+<li><a href="https://mvnrepository.com/artifact/io.github.histogrammar/histogrammar_2.12/1.0.20"><code>io.github.histogrammar.histogrammar_2.12-1.0.20.jar</code></a></li>
+<li><a href="https://mvnrepository.com/artifact/io.github.histogrammar/histogrammar-sparksql_2.12/1.0.20"><code>io.github.histogrammar.histogrammar-sparksql_2.12-1.0.20.jar</code></a></li>
+</ul>
+<p>If you're using Spark 2.x, download the following files and upload them to DBFS:</p>
+<ul>
+<li><a href="https://mvnrepository.com/artifact/io.github.histogrammar/histogrammar_2.11/1.0.20"><code>io.github.histogrammar.histogrammar_2.11-1.0.20.jar</code></a></li>
+<li><a href="https://mvnrepository.com/artifact/io.github.histogrammar/histogrammar-sparksql_2.11/1.0.20"><code>io.github.histogrammar.histogrammar-sparksql_2.11-1.0.20.jar</code></a></li>
+</ul>
+<p>Once these files have been uploaded to DBFS, we can create an Azure Databricks job
+that starts a cluster and launches the <em>Anovos</em> workflow.</p>
+<p>Here's an example of a job configuration:
+<img alt="Job configuration" src="../../assets/azure_databricks_images/image16.png" /></p>
+<p>You can see that we set the "Type" to "Spark Submit".</p>
+<p>In the parameters section, we pass the DBFS paths of the <code>histogrammar</code> JAR files, the sample class,
+the <code>main.py</code> script, and configuration file.</p>
+<p>For example:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="p">[</span><span class="s2">&quot;--jars&quot;</span><span class="p">,</span><span class="s2">&quot;dbfs:/FileStore/tables/histogramm_jar/histogrammar_sparksql_2_12_1_0_20.jar,dbfs:/FileStore/tables/histogramm_jar/histogrammar_2_12_1_0_20.jar&quot;</span><span class="p">,</span><span class="s2">&quot;--class&quot;</span><span class="p">,</span><span class="s2">&quot;org.apache.spark.examples.SparkPi&quot;</span><span class="p">,</span><span class="s2">&quot;/dbfs/FileStore/tables/scripts/main.py&quot;</span><span class="p">,</span><span class="s2">&quot;/dbfs/FileStore/tables/configs_income_azure.yaml&quot;</span><span class="p">]</span><span class="w"></span>
+</code></pre></div>
+<p>The cluster configuration comprises settings for the Databricks Runtime, the number of workers,
+worker and driver types.
+(Note that autoscaling is not available for "Spark Submit" jobs on Azure Databricks.)</p>
+<p>Here's an example of a cluster configuration for this tutorial:
+<img alt="Cluster configuration" src="../../assets/azure_databricks_images/image17.png" /></p>
+<p>For more detailed information, refer to the
+<a href="https://docs.microsoft.com/azure/databricks/clusters/configure#cluster-configurations">Databricks documentation</a>.</p>
+<p>To give the Databricks platform access to <em>Anovos</em>, you need to create a shell script that is executed upon cluster
+initialization and fetches the package from PyPI.</p>
+<p>The <code>anovos_packages.sh</code> script contains just one line:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>sudo pip3 install anovos
+</code></pre></div>
+<p>Note that you should specify the version of <em>Anovos</em> if you're running production workloads
+to ensure reproducibility:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>sudo pip3 install <span class="nv">anovos</span><span class="o">==</span><span class="m">1</span>.0.1
+</code></pre></div>
+<p>Place this script on DBFS as well.</p>
+<p>During cluster configuration, click on "Advanced options"
+and specify the path to the script in the "Init Script" section:</p>
+<p><img alt="Path of .sh file" src="../../assets/azure_databricks_images/image13.png" /></p>
+<p>To enable logging, configure a DBFS path in the "Log" section:</p>
+<p><img alt="Path for saving logs" src="../../assets/azure_databricks_images/image15.png" /></p>
+<p>Once the job is configured, click "Create" to instantiate it.</p>
+<p>On the subsequent screen, click on "Run now" to launch the job:</p>
+<p><img alt="Active and completed runs" src="../../assets/azure_databricks_images/image5.png" /></p>
+<p>For more information on creating and maintaining jobs, see the
+<a href="https://docs.microsoft.com/azure/databricks/jobs">Azure Databricks documentation</a>.</p>
+<h3 id="step-15-retrieve-the-output">Step 1.5: Retrieve the output</h3>
+<p>Once the job finishes successfully, it will show up under "Completed runs".</p>
+<p>The intermediate data and the report data are saved at the <code>master_path</code> and the <code>final_report_path</code>
+specified in the <code>configs_income_azure.yaml</code> file.
+In this tutorial, we have set these paths to <code>dbfs:FileStore/tables/report_stats/</code>.</p>
+<p>To retrieve the HTML report and the report data, you can either go to this path in the UI and copy the files,
+or use the CLI to copy everything to your local machine:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>dbfs cp -r dbfs:/FileStore/tables/report_stats/ ./
+</code></pre></div>
+<p>For more details regarding accessing files on DBFS, see the instructions on uploading files to DBFS in Step 2.</p>
+<h2 id="2-anovos-on-azure-databricks-using-an-azure-blob-storage-container-mounted-to-dbfs">2. Anovos on Azure Databricks Using an Azure Blob Storage Container Mounted to DBFS</h2>
+<h3 id="step-21-installingdownloading-anovos">Step 2.1: Installing/Downloading Anovos</h3>
+<p>This step is identical to
+<a href="#step-11-installing-anovos-on-azure-databricks">Step 1.1: Installing <em>Anovos</em> on Azure Databricks</a>.</p>
+<h3 id="step-22-copy-the-dataset-to-an-azure-blob-storage-container">Step 2.2: Copy the dataset to an Azure Blob Storage container</h3>
+<p>To run an <em>Anovos</em> workflow, the dataset needs to be stored on an Azure Blob Storage container.
+You can either use the UI by clicking the upload button or the CLI to copy files from your local machine
+to an Azure Blob Storage container.
+For detailed instructions, see the respective subsections below.</p>
+<p>In this tutorial, we will use the "income dataset" provided with <em>Anovos</em> and an accompanying pre-defined workflow.
+You can obtain these files by cloning the <em>Anovos</em> GitHub repository:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>git clone https://github.com/anovos/anovos.git
+</code></pre></div>
+<p>Afterwards, you'll find the dataset under <code>examples/data/income_dataset</code></p>
+<p>💡 <em>Note that you need to use the dataset version and workflow configuration files from the same _Anovos</em> version_
+   <em>that you have set up in Step 2.1.</em>
+   <em>Sometimes the version on PyPI that you obtain when running <code>pip install anovos</code> version is older than the latest</em>
+   <em>development version on GitHub.</em></p>
+<p>The syntax to upload a file using the command line are as follows:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>azcopy copy source_file <span class="s2">&quot;&lt;storage-account-name&gt;.blob.core.windows.net/&lt;container-name&gt;?&lt;sas-token&gt;&quot;</span>
+</code></pre></div>
+<p>To learn more about transferring data to Azure Blob Storage containers, please refer to the
+<a href="https://docs.microsoft.com/en-us/azure/storage/common/storage-use-azcopy-files">Azure documentation</a>.</p>
+<h3 id="step-23-mount-an-azure-blob-storage-container-as-a-dbfs-path-in-azure-databricks">Step 2.3: Mount an Azure Blob Storage Container as a DBFS path in Azure Databricks</h3>
+<p>To access files in an Azure Blob Storage container for running <em>Anovos</em> in Azure Databricks platform,
+you need to mount that container in the DBFS path.</p>
+<p>To mount the Azure Blob Storage container, execute the following commands in an Azure Databricks notebook:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="n">dbutils</span><span class="o">.</span><span class="n">fs</span><span class="o">.</span><span class="n">mount</span><span class="p">(</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>    <span class="n">source</span> <span class="o">=</span> <span class="s2">&quot;wasbs://&lt;container-name&gt;@&lt;storage-account-name&gt;.blob.core.windows.net&quot;</span><span class="p">,</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>    <span class="n">mount_point</span> <span class="o">=</span> <span class="s2">&quot;/mnt/&lt;mount-name&gt;&quot;</span><span class="p">,</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>    <span class="n">extra_configs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;fs.azure.sas.&lt;container-name&gt;.&lt;storage-account-name&gt;.blob.core.windows.net&quot;</span><span class="p">:</span><span class="s2">&quot;&lt;sas-token&gt;&quot;</span><span class="p">})</span>
+</code></pre></div>
+<p>Here,
+- <code>&lt;storage-account-name&gt;</code> is the name of your Azure Blob Storage account
+- <code>&lt;container-name&gt;</code> is the name of a container in your Azure Blob Storage account
+- <code>&lt;mount-name&gt;</code> is the DBFS path where the Blob Storage container or a folder inside the container will be mounted to
+- <code>&lt;sas_token&gt;</code> is the SAS token for that storage account</p>
+<p>To learn more about mounting Azure Blob Storage containers in DBFS, please refer to
+<a href="https://docs.microsoft.com/en-us/azure/databricks/data/data-sources/azure/azure-storage">the Azure Blob Storage documentation</a>.</p>
+<p>💡 <em>Note that you only need to mount the container once.</em>
+   <em>The container will remain mounted at the given mount point.</em>
+   <em>To unmount a container, you can run <code>dbutils.fs.unmount("/mnt/&lt;mount-name&gt;")</code> in an Azure Databricks notebook.</em></p>
+<h3 id="step-24-update-the-workflow-configuration-for-all-input-and-output-paths-according-to-the-dbfs-mount-point">Step 2.4: Update the workflow configuration for all input and output paths according to the DBFS mount point</h3>
+<p>Once mounting is completed, the data is present in DBFS at the path specified as the mount point.
+All operations performed by <em>Anovos</em> when running a workflow will result in changes in the data stored in the
+Azure Blob Storage container.</p>
+<p>The example configuration file we use in this tutorial can be found at <code>config/configs_income_azure_blob_mount.yaml</code>
+in the <em>Anovos</em> repository.
+It will need to be updated to reflect the path of the mount point set above.</p>
+<p>In order for <em>Anovos</em> to be able to find the input data and write the output to the correct location,
+update all paths to contain the path of the mount point:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="nt">file_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;dbfs:/mnt/&lt;mount-name&gt;/...&quot;</span><span class="w"></span>
+</code></pre></div>
+<p>🤓 <em>Example:</em></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="w">  </span><span class="nt">read_dataset</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">    </span><span class="nt">file_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;dbfs:/mnt/anovos1/income_dataset/csv/&quot;</span><span class="w"></span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">    </span><span class="nt">file_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">csv</span><span class="w"></span>
+</code></pre></div>
+<p>Here, the mount points is <code>dbfs:/mnt/anovos1</code> and the input dataset is stored in a folder called <code>income_dataset/csv</code>
+within the Azure Blob Storage container.</p>
+<p>To learn more about the <em>Anovos</em> workflow configuration file and specifying paths for input and output data,
+have a look at the <a href="../config_file.html">Configuring Workloads</a> page.</p>
+<h3 id="step-25-copy-the-updated-configuration-file-from-the-local-machine-to-the-azure-blob-storage-container">Step 2.5: Copy the updated configuration file from the local machine to the Azure Blob Storage container</h3>
+<p>Once you have updated the configuration file, copy it to Azure Databricks using the same command that was used
+in <a href="#step-22-copy-the-dataset-to-an-azure-blob-storage-container">Step 2.2</a>.</p>
+<h3 id="remaining-steps">Remaining Steps</h3>
+<p>The remaining steps are the same as above, so please continue with
+<a href="#step-14-configure-and-launch-an-anovos-workflow-as-a-databricks-job">Step 1.4</a></p>
+
+
+  
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+    <nav class="md-footer__inner md-grid" aria-label="Footer" >
+      
+        
+        <a href="on_aws.html" class="md-footer__link md-footer__link--prev" aria-label="Previous: On AWS EMR" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              On AWS EMR
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="on_aks.html" class="md-footer__link md-footer__link--next" aria-label="Next: On Azure Kubernetes" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              On Azure Kubernetes
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+      
+      
+    
+    <a href="https://github.com/anovos" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+    </a>
+  
+    
+    
+      
+      
+    
+    <a href="https://join.slack.com/t/featureengineers/shared_invite/zt-17pkc3f5d-33SUtV8Wx48CpiIRNuQ7JA" target="_blank" rel="noopener" title="join.slack.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M94.12 315.1c0 25.9-21.16 47.06-47.06 47.06S0 341 0 315.1c0-25.9 21.16-47.06 47.06-47.06h47.06v47.06zm23.72 0c0-25.9 21.16-47.06 47.06-47.06s47.06 21.16 47.06 47.06v117.84c0 25.9-21.16 47.06-47.06 47.06s-47.06-21.16-47.06-47.06V315.1zm47.06-188.98c-25.9 0-47.06-21.16-47.06-47.06S139 32 164.9 32s47.06 21.16 47.06 47.06v47.06H164.9zm0 23.72c25.9 0 47.06 21.16 47.06 47.06s-21.16 47.06-47.06 47.06H47.06C21.16 243.96 0 222.8 0 196.9s21.16-47.06 47.06-47.06H164.9zm188.98 47.06c0-25.9 21.16-47.06 47.06-47.06 25.9 0 47.06 21.16 47.06 47.06s-21.16 47.06-47.06 47.06h-47.06V196.9zm-23.72 0c0 25.9-21.16 47.06-47.06 47.06-25.9 0-47.06-21.16-47.06-47.06V79.06c0-25.9 21.16-47.06 47.06-47.06 25.9 0 47.06 21.16 47.06 47.06V196.9zM283.1 385.88c25.9 0 47.06 21.16 47.06 47.06 0 25.9-21.16 47.06-47.06 47.06-25.9 0-47.06-21.16-47.06-47.06v-47.06h47.06zm0-23.72c-25.9 0-47.06-21.16-47.06-47.06 0-25.9 21.16-47.06 47.06-47.06h117.84c25.9 0 47.06 21.16 47.06 47.06 0 25.9-21.16 47.06-47.06 47.06H283.1z"/></svg>
+    </a>
+  
+    
+    
+      
+      
+    
+    <a href="https://twitter.com/anovos" target="_blank" rel="noopener" title="twitter.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.16e2a7d4.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.5a2dcb6a.min.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+      
+    
+    
+  </body>
+</html>
