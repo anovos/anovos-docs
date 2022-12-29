@@ -500,3 +500,91 @@ in [Step 2.2](#step-22-copy-the-dataset-to-an-azure-blob-storage-container).
 
 The remaining steps are the same as above, so please continue with
 [Step 1.4](#step-14-configure-and-launch-an-anovos-workflow-as-a-databricks-job)
+
+## 3. Anovos on Azure Databricks using direct access to Azure Blob Storage containers 
+
+### Step 3.1: Installing/Downloading Anovos
+
+This step is identical to
+[Step 1.1: Installing _Anovos_ on Azure Databricks](#step-11-installing-anovos-on-azure-databricks).
+
+### Step 3.2: Copy the dataset to an Azure Blob Storage container
+
+This step is identical to
+[Step 2.2: Copy the dataset to an Azure Blob Storage container](#step-22-copy-the-dataset-to-an-azure-blob-storage-container).
+
+### Step 3.3: Add the secret to the Spark configuration
+
+To access files in an Azure Blob Storage container for running _Anovos_ on the Azure Databricks platform,
+you need to either add the Storage account key or an SAS token to the Spark cluster configuration.
+
+The following command adds the Storage account key to the Spark cluster configuration: 
+
+```spark.conf.set("fs.azure.account.key.<storage-account-name>.dfs.core.windows.net", <storage-account-key>```
+
+Here,
+- `<storage-account-name>` is the name of your Azure Blob Storage account
+- `<storage-account-key>` is the value of the Storage account key (TODO: this is bad practice and should be solved with a secret)
+
+You can access the contents of a storage account using an SAS token as well.
+
+The following commands add the generated SAS token to the Spark cluster configuration:
+
+```
+spark.conf.set("fs.azure.account.auth.type.<storage-account-name>.dfs.core.windows.net", "SAS")
+spark.conf.set("fs.azure.sas.token.provider.type.<storage-account-name>.dfs.core.windows.net", "org.apache.hadoop.fs.azurebfs.sas.FixedSASTokenProvider")```
+spark.conf.set("fs.azure.sas.fixed.token.<storage-account-name>.dfs.core.windows.net", "<sas-token>")
+```
+
+To learn more about accessing Azure Blob Storage containers using the `abfss` protocol, please refer to
+[the Azure Blob Storage documentation](https://docs.microsoft.com/en-us/azure/databricks/data/data-sources/azure/azure-storage).
+
+### Step 3.4: Update the input and output paths in the _Anovos_ workflow configuration
+
+The input and output paths need to be prefixed with the following value: 
+
+```abfss://<container-name>@<storage-account-name>.dfs.core.windows.net/```
+
+Here,
+- `<storage-account-name>` is the name of your Azure Blob Storage account
+- `<storage-account-key>` is the value of the Storage account key (TODO: this is bad practice and should be solved with a secret)
+
+The example configuration file we use in this tutorial can be found at `config/configs_income_azure_blob_mount.yaml`
+in the [_Anovos_ GitHub repository](https://github.com/anovos/anovos).
+It will need to be updated to reflect the path of the Azure Blob Storage container's mount point set above.
+
+In order for _Anovos_ to be able to find the input data and write the output to the correct location,
+update all paths to contain the path of the mount point:
+
+```yaml
+file_path: "abfss://<container-name>@<storage-account-name>.dfs.core.windows.net/..."
+```
+
+🤓 _Example:_
+
+```yaml
+  read_dataset:
+    file_path: "abfss://<container-name>@<storage-account-name>.dfs.core.windows.net/income_dataset/csv/"
+    file_type: csv
+```
+
+Here, the URL points to the Storage container and account
+`abfss://<container-name>@<storage-account-name>.dfs.core.windows.net/`
+and the input dataset is stored in a folder called `income_dataset/csv` within the Azure Blob Storage container.
+
+To learn more about the _Anovos_ workflow configuration file and specifying paths for input and output data,
+have a look at the [Configuring Workloads](../config_file.md) page.
+
+### Step 3.5: Copy the updated configuration file to Databricks DBFS
+
+Once you have updated the configuration file, copy it to Azure Databricks using the same command that was used
+in [Step 1.2](#step-12-prepare-and-copy-the-workflow-configuration-and-data-to-dbfs).
+
+You can now configure the `file_path` to point to that location.
+
+### Remaining Steps
+
+The remaining steps are the same as above, so please continue with
+[Step 1.4](#step-14-configure-and-launch-an-anovos-workflow-as-a-databricks-job)
+
+
